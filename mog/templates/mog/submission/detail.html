@@ -1,0 +1,57 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load filters %}
+{% load security %}
+
+{% block title %}Submission {{ submission.id }}{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/codemirror/lib/codemirror.css' %}" rel="stylesheet" />
+
+    {% with turl=user|theme_url %}
+        {% if turl %}
+            <link href="{% static turl %}" rel="stylesheet" />
+        {% endif %}
+    {% endwith %}
+{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% with submissions=submission|put_into_array  %}
+                {% include 'mog/submission/_list.html' with submissions=submissions %}
+            {% endwith %}
+        </div>
+
+        <div class="col-md-12">
+            <div>
+                <small class="uniform-text uniform-big">Code</small>
+                <textarea id="source" class="{{ submission.compiler.language|lower }}">{{ submission.source }}</textarea>
+            </div>
+            {% if user|can_see_details_of:submission and submission.judgement_details %}
+                <div class="margin-top-20">
+                    <small class="uniform-text uniform-big">Judgement Details</small>
+                    <pre>{{ submission.judgement_details }}</pre>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/lib/codemirror.js' %}"></script>
+
+    {% static '' as BASE_URL %}
+
+    {% with mode=submission.compiler|compiler_mode %}
+        <script type="text/javascript" src="{{ BASE_URL }}mog/plugins/codemirror/mode/{{ mode }}/{{ mode }}.js"></script>
+        <script>
+            var sourceArea = document.getElementById('source');
+            CodeMirror.fromTextArea(sourceArea, {
+                mode: '{{ mode }}', theme: '{{ user|theme_name }}', readOnly: true, lineNumbers: true
+            });
+        </script>
+    {% endwith %}
+{% endblock %}

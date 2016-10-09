@@ -1,0 +1,72 @@
+{% load security %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center cell-small">Id</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">User</th>
+            <th class="text-center">Problem</th>
+            <th class="text-center">Result</th>
+            <th class="text-center">Time</th>
+            <th class="text-center">Mem</th>
+            <th class="text-center">Lang</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for submission in submissions %}
+            <tr>
+            {% with show_source=user|can_see_code_of:submission %}
+                {% with show_details=user|can_see_details_of:submission %}
+                    <td class="text-center">
+                        {% if show_source %}
+                            <a href="{% url 'mog:submission' submission.id %}" class="no-underline">{{ submission.id }}</a>
+                        {% else %}
+                            {{ submission.id }}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ submission.date|date:"d/m/Y G:i:s"}}
+                    </td>
+                    <td class="text-center">
+                        {% include 'mog/user/_link.html' with user=submission.user %}
+                    </td>
+                    <td>
+                        <a href="{% url 'mog:problem' submission.problem.id submission.problem.slug %}"
+                           class="no-underline">{{ submission.problem.full_title }}</a>
+                        {% if submission.hidden %}
+                            (Hidden)
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if show_details %}
+                            {% include 'mog/result/_colorized.html' with result=submission.result %}
+                        {% else %}
+                            -----
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if show_details %}
+                            {{ submission.execution_time }}
+                        {% else %}
+                            -----
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if show_details %}
+                            {{ submission.memory_used }}
+                        {% else %}
+                            -----
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ submission.compiler.name }}
+                    </td>
+                {% endwith %}
+            {% endwith %}
+            </tr>
+        {% empty %}
+            <tr><td colspan="8">No submissions!</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

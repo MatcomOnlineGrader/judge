@@ -1,0 +1,6 @@
+venv/
+media/
+api/fixtures/*.json
+.idea/
+*.pyc
+

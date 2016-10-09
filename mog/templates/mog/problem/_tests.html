@@ -1,0 +1,17 @@
+<table class="table table-bordered table-striped">
+    <tbody>
+        {% for test in tests %}
+            <tr>
+                <td>{{ test }}</td>
+                <td class="text-center">
+                    <a href="{% url 'mog:edit_test' problem.id %}?folder={{ folder }}&test={{ test }}" class="btn btn-link">Edit</a>
+                </td>
+                <td class="text-center">
+                    <a href="#" class="btn btn-link remove-test" data-test="{{ test }}" data-folder="{{ folder }}">Remove</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No tests!</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

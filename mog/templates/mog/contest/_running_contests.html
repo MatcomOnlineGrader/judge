@@ -1,0 +1,35 @@
+{% load filters %}
+
+<h3 class="title">Running Contests</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Contest</th>
+            <th class="text-center">Duration</th>
+            <th class="text-center">Remaining</th>
+            <th class="text-center">Registration</th>
+            <th class="text-center">Teams</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contest in running_contests %}
+            <tr>
+                <td>
+                    <a href="{% url 'mog:contest_problems' contest.id %}" class="no-underline">
+                        {{ contest.name }}
+                    </a>
+                    {% if not contest.visible %}
+                        ( Hidden )
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ contest.duration|format_time }}</td>
+                <td class="text-center">{{ contest.remaining_time|format_delta }}</td>
+                <td class="text-center">{{ contest.closed|yesno:"Closed,Open" }}</td>
+                <td class="text-center">{{ contest.allow_teams|yesno:"Yes,No" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No running contests!</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

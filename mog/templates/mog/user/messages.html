@@ -1,0 +1,72 @@
+{% extends 'mog/user/profile.html' %}
+
+{% load humanize %}
+
+{% block _messages %}active{% endblock %}
+
+{% block content2 %}
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#inbox">Inbox</a></li>
+                <li><a data-toggle="tab" href="#outbox">Outbox</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="inbox" class="tab-pane fade in active">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>From</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for message in inbox %}
+                                <tr>
+                                    <td>{% include 'mog/user/_link.html' with user=message.source %}</td>
+                                    <td>
+                                        <a href="#" data-toggle="modal"
+                                           data-target="#message-received-{{ message.id }}">{{ message.subject }}</a>
+                                        {% include 'mog/message/_message_received.html' with message=message %}
+                                    </td>
+                                    <td>{{ message.date|naturaltime }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="3">No message received!</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="outbox" class="tab-pane fade fade">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>To</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for message in outbox %}
+                                <tr>
+                                    <td>{% include 'mog/user/_link.html' with user=message.target %}</td>
+                                    <td>
+                                        <a href="#" data-toggle="modal"
+                                           data-target="#message-sent-{{ message.id }}">{{ message.subject }}</a>
+                                        {% include 'mog/message/_message_sent.html' with message=message %}
+                                    </td>
+                                    <td>{{ message.date|naturaltime }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="3">No message sent!</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'mog/base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% load filters %}
+{% load paginator %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="center title">Users</h3>
+        </div>
+
+        <div class="col-md-12">
+            <form action="{% url 'mog:users' %}" method="get" class="form-inline form-search pull-right">
+                <p>
+                    <input class="form-control" name="q" type="text"
+                           placeholder="Search by name ..." {% if query %}value="{{ query.q }}"{% endif %}/>
+                    <button type="submit" class="btn btn-default">Find</button>
+                </p>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class="cell-small">
+                        <div class="center">#</div>
+                    </th>
+                    <th>User</th>
+                    <th class="cell-small">
+                        <div class="center">Rating</div>
+                    </th>
+                    <th class="cell-small">
+                        <div class="center">Points</div>
+                    </th>
+                    <th class="cell-small">
+                        <div class="center">Solved</div>
+                    </th>
+                    <th class="cell-small">
+                        <div class="center">AC</div>
+                    </th>
+                    <th class="cell-small">
+                        <div class="center">Sub</div>
+                    </th>
+                    <th class="cell-medium">
+                        <div class="center">% AC</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for profile in profiles %}
+                    <tr {% if profile.user == user %}class="info"{% endif %}>
+                        {% with data=profile.user|user_stats %}
+                            <td>
+                                <div class="center">{{ forloop.counter0|add:page_obj.start_index }}</div>
+                            </td>
+                            <td>{% include 'mog/user/_link.html' with profile=profile %}</td>
+                            <td>
+                                <div class="center">{{ data.rating|colorize_rating }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ data.points }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ data.solved }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ data.accepted }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ data.submissions }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ data.accepted|percent:data.submissions }}%</div>
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8">No users to show!</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="text-center">
+                {% if query %}
+                    {{ page_obj|paginate:query }}
+                {% else %}
+                    {{ page_obj|paginate }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,3381 @@
+[{"model": "auth.user","pk": 24,"fields": {
+  "username": "abelramos",
+  "email": "a.ramos@lab.matcom.uh.cu",
+  "first_name": "Abel",
+  "last_name": "Ramos Encinosa"
+}},{"model": "auth.user","pk": 25,"fields": {
+  "username": "Sandor",
+  "email": "s.garcia@lab.matcom.uh.cu",
+  "first_name": "Sandor",
+  "last_name": "Vladimir Garcia Diaz"
+}},{"model": "auth.user","pk": 26,"fields": {
+  "username": "Ra",
+  "email": "kmilo@matcom.uh.cu",
+  "first_name": "Camilo",
+  "last_name": "A. Monreal Aguero"
+}},{"model": "auth.user","pk": 27,"fields": {
+  "username": "RiKr2",
+  "email": "r.fundora@lab.matcom.uh.cu",
+  "first_name": "Ricardo",
+  "last_name": "Fundora Hernandez"
+}},{"model": "auth.user","pk": 28,"fields": {
+  "username": "leandro",
+  "email": "l.castillo@lab.matcom.uh.cu",
+  "first_name": "Leandro",
+  "last_name": "Castillo Valdés"
+}},{"model": "auth.user","pk": 29,"fields": {
+  "username": "Milton",
+  "email": "m.llera@lab.matcom.uh.cu",
+  "first_name": "Milton",
+  "last_name": "Llera Montero"
+}},{"model": "auth.user","pk": 30,"fields": {
+  "username": "xc4",
+  "email": "j.arteaga@lab.matcom.uh.cu",
+  "first_name": "Javier",
+  "last_name": "Cabrera Arteaga"
+}},{"model": "auth.user","pk": 31,"fields": {
+  "username": "Norge",
+  "email": "n.vizcay@lab.matcom.uh.cu",
+  "first_name": "Norge",
+  "last_name": "Vizcay Zaldívar"
+}},{"model": "auth.user","pk": 32,"fields": {
+  "username": "Roger",
+  "email": "r.texido@lab.matcom.uh.cu",
+  "first_name": "Roger",
+  "last_name": "Rodriguez Texido"
+}},{"model": "auth.user","pk": 34,"fields": {
+  "username": "Raudel_UH",
+  "email": "ravelo@matcom.uh.cu",
+  "first_name": "Raudel",
+  "last_name": "Ravelo Suarez"
+}},{"model": "auth.user","pk": 35,"fields": {
+  "username": "Phantom",
+  "email": "m.baez@matcom.uh.cu",
+  "first_name": "Miguel",
+  "last_name": "A. Baez Fildo"
+}},{"model": "auth.user","pk": 36,"fields": {
+  "username": "ÂßĐØ",
+  "email": "a.solis@lab.matcom.uh.cu",
+  "first_name": "Abdel",
+  "last_name": "Rodriguez Solis"
+}},{"model": "auth.user","pk": 37,"fields": {
+  "username": "r_diaz",
+  "email": "r.diaz@lab.matcom.uh.cu",
+  "first_name": "Royland",
+  "last_name": "Diaz Olivera"
+}},{"model": "auth.user","pk": 38,"fields": {
+  "username": "otero1991",
+  "email": "dotero@matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Otero Baguer"
+}},{"model": "auth.user","pk": 40,"fields": {
+  "username": "Mark",
+  "email": "h.borbolla@lab.matcom.uh.cu",
+  "first_name": "Hiram",
+  "last_name": "Borbolla Hernandez"
+}},{"model": "auth.user","pk": 41,"fields": {
+  "username": "Anatoli Karpov",
+  "email": "r.cruz2@lab.matcom.uh.cu",
+  "first_name": "Reynaldo",
+  "last_name": "Cruz Fernandez"
+}},{"model": "auth.user","pk": 42,"fields": {
+  "username": "JJ",
+  "email": "j.zas@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "Javier Rodríguez Zas"
+}},{"model": "auth.user","pk": 44,"fields": {
+  "username": "ArmandoHeras",
+  "email": "a.heras@lab.matcom.uh.cu",
+  "first_name": "Armando",
+  "last_name": "Heras Tang"
+}},{"model": "auth.user","pk": 45,"fields": {
+  "username": "a_solis",
+  "email": "invalid@email.xyz",
+  "first_name": "a.solis",
+  "last_name": ""
+}},{"model": "auth.user","pk": 46,"fields": {
+  "username": "rlac",
+  "email": "r.aguilar@lab.matcom.uh.cu",
+  "first_name": "Reynaldo",
+  "last_name": "L. Aguilar Casajuana"
+}},{"model": "auth.user","pk": 47,"fields": {
+  "username": "Milanes",
+  "email": "m.milanes@lab.matcom.uh.cu",
+  "first_name": "Marcos",
+  "last_name": "Milanes de la Rosa"
+}},{"model": "auth.user","pk": 48,"fields": {
+  "username": "Karloz",
+  "email": "c.alvarez@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Alvarez Gener"
+}},{"model": "auth.user","pk": 49,"fields": {
+  "username": "agarwaen",
+  "email": "r.reyes@lab.matcom.uh.cu",
+  "first_name": "Ramon",
+  "last_name": "A. Reyes Fajardo"
+}},{"model": "auth.user","pk": 50,"fields": {
+  "username": "j_arrastia",
+  "email": "j.arrastia@lab.matcom.uh.cu",
+  "first_name": "Jean",
+  "last_name": "Le'Clerc Arrastia"
+}},{"model": "auth.user","pk": 51,"fields": {
+  "username": "jc",
+  "email": "j.gutierrez@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "Carlos Gutiérrez Pérez"
+}},{"model": "auth.user","pk": 52,"fields": {
+  "username": "charlie",
+  "email": "c.pena@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Antonio Peña Ramón"
+}},{"model": "auth.user","pk": 53,"fields": {
+  "username": "g_perez",
+  "email": "invalid@email.xyz_2",
+  "first_name": "Gabriela",
+  "last_name": "Perez Alvarez"
+}},{"model": "auth.user","pk": 54,"fields": {
+  "username": "efe",
+  "email": "f.alvarez@lab.matcom.uh.cu",
+  "first_name": "Frank",
+  "last_name": "E. Alvarez Borges"
+}},{"model": "auth.user","pk": 55,"fields": {
+  "username": "y_sanchez",
+  "email": "invalid@email.xyz_3",
+  "first_name": "Yasell",
+  "last_name": "Sanchez Rodriguez"
+}},{"model": "auth.user","pk": 56,"fields": {
+  "username": "a_guerra",
+  "email": "a.guerra@lab.matcom.uh.cu",
+  "first_name": "Andy",
+  "last_name": "Guerra Medina"
+}},{"model": "auth.user","pk": 57,"fields": {
+  "username": "r_sanchez",
+  "email": "invalid@email.xyz_4",
+  "first_name": "Ruben",
+  "last_name": "Sanchez Acosta"
+}},{"model": "auth.user","pk": 58,"fields": {
+  "username": "somoza",
+  "email": "invalid@email.xyz_5",
+  "first_name": "Alfredo",
+  "last_name": "Somoza Moreno"
+}},{"model": "auth.user","pk": 59,"fields": {
+  "username": "g_zaporta",
+  "email": "invalid@email.xyz_6",
+  "first_name": "g.zaporta",
+  "last_name": ""
+}},{"model": "auth.user","pk": 60,"fields": {
+  "username": "d_mesejo",
+  "email": "invalid@email.xyz_7",
+  "first_name": "Daniel",
+  "last_name": "A. Mesejo Leon"
+}},{"model": "auth.user","pk": 61,"fields": {
+  "username": "bone",
+  "email": "m.fuentes@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Fuentes Jimenez"
+}},{"model": "auth.user","pk": 62,"fields": {
+  "username": "w_torres",
+  "email": "w.torres@lab.matcom.uh.cu",
+  "first_name": "w.torres",
+  "last_name": ""
+}},{"model": "auth.user","pk": 63,"fields": {
+  "username": "g_fernandez",
+  "email": "invalid@email.xyz_8",
+  "first_name": "g.fernandez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 64,"fields": {
+  "username": "McClane",
+  "email": "d.viera@lab.matcom.uh.cu",
+  "first_name": "Darien",
+  "last_name": "Viera Barredo"
+}},{"model": "auth.user","pk": 65,"fields": {
+  "username": "Stark",
+  "email": "c.rubalcaba@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Enrique Rubalcaba Navarro"
+}},{"model": "auth.user","pk": 66,"fields": {
+  "username": "MaxRC",
+  "email": "invalid@email.xyz_9",
+  "first_name": "m.rodriguez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 67,"fields": {
+  "username": "lewis",
+  "email": "l.vazquez@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "M. Vazquez Rodriguez"
+}},{"model": "auth.user","pk": 68,"fields": {
+  "username": "Shamy",
+  "email": "a.gomez7@lab.matcom.uh.cu",
+  "first_name": "Amalia",
+  "last_name": "B. Gomez Marcheco"
+}},{"model": "auth.user","pk": 69,"fields": {
+  "username": "i_morales",
+  "email": "invalid@email.xyz_10",
+  "first_name": "Ismael",
+  "last_name": "Morales Chavez"
+}},{"model": "auth.user","pk": 70,"fields": {
+  "username": "j_karell",
+  "email": "invalid@email.xyz_11",
+  "first_name": "j.karell",
+  "last_name": ""
+}},{"model": "auth.user","pk": 71,"fields": {
+  "username": "ymedero90",
+  "email": "invalid@email.xyz_12",
+  "first_name": "Yoel",
+  "last_name": "Medero Vargas"
+}},{"model": "auth.user","pk": 72,"fields": {
+  "username": "l_bouza",
+  "email": "invalid@email.xyz_13",
+  "first_name": "l.bouza",
+  "last_name": ""
+}},{"model": "auth.user","pk": 73,"fields": {
+  "username": "L@zaro",
+  "email": "l.valdes@lab.matcom.uh.cu",
+  "first_name": "Lázaro",
+  "last_name": "Valdés Valdés"
+}},{"model": "auth.user","pk": 74,"fields": {
+  "username": "FallenGod",
+  "email": "invalid@email.xyz_14",
+  "first_name": "w.suarez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 75,"fields": {
+  "username": "m_napoles",
+  "email": "invalid@email.xyz_15",
+  "first_name": "Marco",
+  "last_name": "A. Napoles Suarez"
+}},{"model": "auth.user","pk": 76,"fields": {
+  "username": "g_sosa",
+  "email": "g.sosa@lab.matcom.uh.cu",
+  "first_name": "Gustavo",
+  "last_name": "Sosa Cuervo"
+}},{"model": "auth.user","pk": 77,"fields": {
+  "username": "e_espinosa",
+  "email": "invalid@email.xyz_16",
+  "first_name": "Ernesto",
+  "last_name": "Espinosa Sosa"
+}},{"model": "auth.user","pk": 78,"fields": {
+  "username": "e_campver",
+  "email": "e.campver@lab.matcom.uh.cu",
+  "first_name": "Eduardo",
+  "last_name": "Campver García"
+}},{"model": "auth.user","pk": 79,"fields": {
+  "username": "Legolas",
+  "email": "r.pena@lab.matcom.uh.cu",
+  "first_name": "Rodnel",
+  "last_name": "Pena Alvarado"
+}},{"model": "auth.user","pk": 80,"fields": {
+  "username": "l_laguna",
+  "email": "invalid@email.xyz_17",
+  "first_name": "l.laguna",
+  "last_name": ""
+}},{"model": "auth.user","pk": 81,"fields": {
+  "username": "sergio",
+  "email": "s.ponce@lab.matcom.uh.cu",
+  "first_name": "Sergio",
+  "last_name": "Ponce Dominguez"
+}},{"model": "auth.user","pk": 82,"fields": {
+  "username": "y_vera",
+  "email": "invalid@email.xyz_18",
+  "first_name": "Yordan",
+  "last_name": "I. Vera Rojas"
+}},{"model": "auth.user","pk": 83,"fields": {
+  "username": "Javico",
+  "email": "j.labori@lab.matcom.uh.cu",
+  "first_name": "Javier",
+  "last_name": "Labori Marquez"
+}},{"model": "auth.user","pk": 84,"fields": {
+  "username": "Nobu",
+  "email": "o.lopez@lab.matcom.uh.cu",
+  "first_name": "Osmayle",
+  "last_name": "Lopez"
+}},{"model": "auth.user","pk": 85,"fields": {
+  "username": "ShadowWalker",
+  "email": "r.sollet@lab.matcom.uh.cu",
+  "first_name": "Ronald",
+  "last_name": "Peña Sollet"
+}},{"model": "auth.user","pk": 86,"fields": {
+  "username": "w_cartaya",
+  "email": "invalid@email.xyz_19",
+  "first_name": "Wilfredo",
+  "last_name": "Cartaya Dichoza"
+}},{"model": "auth.user","pk": 87,"fields": {
+  "username": "lleonart",
+  "email": "invalid@email.xyz_20",
+  "first_name": "Ludwig",
+  "last_name": "Leonard\tLicenciado"
+}},{"model": "auth.user","pk": 88,"fields": {
+  "username": "Cucox",
+  "email": "r.arias@lab.matcom.uh.cu",
+  "first_name": "Raziel",
+  "last_name": "Arias Barro"
+}},{"model": "auth.user","pk": 89,"fields": {
+  "username": "r_pineiro",
+  "email": "invalid@email.xyz_21",
+  "first_name": "r.pineiro",
+  "last_name": ""
+}},{"model": "auth.user","pk": 90,"fields": {
+  "username": "Lian",
+  "email": "l.tam@lab.matcom.uh.cu",
+  "first_name": "Lian",
+  "last_name": "J. Tam Romero"
+}},{"model": "auth.user","pk": 91,"fields": {
+  "username": "Lazaro Kelsy",
+  "email": "l.casana@lab.matcom.uh.cu",
+  "first_name": "Lazaro",
+  "last_name": "K. Casana Fernandez"
+}},{"model": "auth.user","pk": 92,"fields": {
+  "username": "Eduardo Sánchez",
+  "email": "e.sanchez@lab.matcom.uh.cu",
+  "first_name": "Eduardo",
+  "last_name": "Sánchez González"
+}},{"model": "auth.user","pk": 93,"fields": {
+  "username": "l_mora",
+  "email": "invalid@email.xyz_22",
+  "first_name": "Linet",
+  "last_name": "Mora Garcia"
+}},{"model": "auth.user","pk": 94,"fields": {
+  "username": "a_leon2",
+  "email": "invalid@email.xyz_23",
+  "first_name": "Adrian",
+  "last_name": "Leon Morell"
+}},{"model": "auth.user","pk": 95,"fields": {
+  "username": "Pelusa",
+  "email": "m.puentes@lab.matcom.uh.cu",
+  "first_name": "Melisa",
+  "last_name": "Puentes Sanchez"
+}},{"model": "auth.user","pk": 96,"fields": {
+  "username": "y_febles",
+  "email": "invalid@email.xyz_24",
+  "first_name": "y.febles",
+  "last_name": ""
+}},{"model": "auth.user","pk": 97,"fields": {
+  "username": "the23",
+  "email": "a.perez@lab.matcom.uh.cu",
+  "first_name": "Alin",
+  "last_name": "A. Perez Diaz"
+}},{"model": "auth.user","pk": 98,"fields": {
+  "username": "j_soler",
+  "email": "invalid@email.xyz_25",
+  "first_name": "j.soler",
+  "last_name": ""
+}},{"model": "auth.user","pk": 99,"fields": {
+  "username": "j_estrada",
+  "email": "invalid@email.xyz_26",
+  "first_name": "j.estrada",
+  "last_name": ""
+}},{"model": "auth.user","pk": 100,"fields": {
+  "username": "apiad",
+  "email": "apiad@acm.org",
+  "first_name": "Alejandro",
+  "last_name": "Piad Morffis"
+}},{"model": "auth.user","pk": 101,"fields": {
+  "username": "f_garcia",
+  "email": "f.garcia@lab.matcom.uh.cu",
+  "first_name": "Fernando",
+  "last_name": "A. Garcia Vazquez"
+}},{"model": "auth.user","pk": 102,"fields": {
+  "username": "rafael",
+  "email": "r.marrero@lab.matcom.uh.cu",
+  "first_name": "Rafael",
+  "last_name": "Marrero Herrera"
+}},{"model": "auth.user","pk": 103,"fields": {
+  "username": "e_leon",
+  "email": "invalid@email.xyz_27",
+  "first_name": "e.leon",
+  "last_name": ""
+}},{"model": "auth.user","pk": 104,"fields": {
+  "username": "Noel",
+  "email": "noel93.ma@transnet.cu",
+  "first_name": "Noel",
+  "last_name": "Ramón Ibañez Roldán"
+}},{"model": "auth.user","pk": 105,"fields": {
+  "username": "g_gallardo",
+  "email": "invalid@email.xyz_28",
+  "first_name": "g.gallardo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 106,"fields": {
+  "username": "Denise",
+  "email": "airinap@infomed.sld.cu",
+  "first_name": "Denise",
+  "last_name": "Ayala Padron"
+}},{"model": "auth.user","pk": 107,"fields": {
+  "username": "j_diaz",
+  "email": "invalid@email.xyz_29",
+  "first_name": "j.diaz",
+  "last_name": ""
+}},{"model": "auth.user","pk": 108,"fields": {
+  "username": "Jon Snow",
+  "email": "g.eguinosa@lab.matcom.uh.cu",
+  "first_name": "Gelin",
+  "last_name": "Eguinosa Rosique"
+}},{"model": "auth.user","pk": 109,"fields": {
+  "username": "Yami",
+  "email": "y.reinoso@lab.matcom.uh.cu",
+  "first_name": "Yamilé",
+  "last_name": "Reynoso Diaz"
+}},{"model": "auth.user","pk": 110,"fields": {
+  "username": "a_betancourt",
+  "email": "invalid@email.xyz_30",
+  "first_name": "a.betancourt",
+  "last_name": ""
+}},{"model": "auth.user","pk": 111,"fields": {
+  "username": "d_gonzalez",
+  "email": "invalid@email.xyz_31",
+  "first_name": "d.gonzalez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 112,"fields": {
+  "username": "n_clavijo",
+  "email": "invalid@email.xyz_32",
+  "first_name": "n.clavijo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 113,"fields": {
+  "username": "Wilber",
+  "email": "w.concepcion@lab.matcom.uh.cu",
+  "first_name": "Wilber",
+  "last_name": "Concepcion Lugo"
+}},{"model": "auth.user","pk": 114,"fields": {
+  "username": "c_gomez",
+  "email": "invalid@email.xyz_33",
+  "first_name": "Carlos",
+  "last_name": "Gomez"
+}},{"model": "auth.user","pk": 115,"fields": {
+  "username": "katruno",
+  "email": "k.trueba@matcom.uh.cu",
+  "first_name": "Karel",
+  "last_name": "Trueba Nobregas"
+}},{"model": "auth.user","pk": 116,"fields": {
+  "username": "Camy",
+  "email": "c.mosquera@lab.matcom.uh.cu",
+  "first_name": "Camila",
+  "last_name": "Perez Mosquera"
+}},{"model": "auth.user","pk": 117,"fields": {
+  "username": "javiel",
+  "email": "invalid@email.xyz_34",
+  "first_name": "javiel",
+  "last_name": ""
+}},{"model": "auth.user","pk": 118,"fields": {
+  "username": "a_torres2",
+  "email": "a.torres2@lab.matcom.uh.cu",
+  "first_name": "Alexis",
+  "last_name": "Torres Valdés"
+}},{"model": "auth.user","pk": 119,"fields": {
+  "username": "YO_CR",
+  "email": "invalid@email.xyz_35",
+  "first_name": "Yasiel",
+  "last_name": "O. Segui Bonilla"
+}},{"model": "auth.user","pk": 120,"fields": {
+  "username": "seifert",
+  "email": "c.herrera@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Herrera Fumero"
+}},{"model": "auth.user","pk": 121,"fields": {
+  "username": "d_gonzalez2",
+  "email": "invalid@email.xyz_36",
+  "first_name": "d.gonzalez2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 122,"fields": {
+  "username": "Albertini",
+  "email": "invalid@email.xyz_37",
+  "first_name": "Alberto",
+  "last_name": "Rosado Lopez"
+}},{"model": "auth.user","pk": 123,"fields": {
+  "username": "Marye",
+  "email": "m.lorenzo2@lab.matcom.uh.cu",
+  "first_name": "Mariella",
+  "last_name": "Lorenzo Suarez"
+}},{"model": "auth.user","pk": 124,"fields": {
+  "username": "r_llobera",
+  "email": "invalid@email.xyz_38",
+  "first_name": "r.llobera",
+  "last_name": ""
+}},{"model": "auth.user","pk": 125,"fields": {
+  "username": "e_banos",
+  "email": "invalid@email.xyz_39",
+  "first_name": "e.banos",
+  "last_name": ""
+}},{"model": "auth.user","pk": 126,"fields": {
+  "username": "j_aguilar",
+  "email": "invalid@email.xyz_40",
+  "first_name": "Jose",
+  "last_name": "C. Aguilar Suarez"
+}},{"model": "auth.user","pk": 127,"fields": {
+  "username": "m_echemendia",
+  "email": "m.echemendia@lab.matcom.uh.cu",
+  "first_name": "Marlon",
+  "last_name": "Echemendia Drake"
+}},{"model": "auth.user","pk": 128,"fields": {
+  "username": "Nire",
+  "email": "n.montalvo@lab.matcom.uh.cu",
+  "first_name": "Nigreisy",
+  "last_name": "Montalvo Zulueta"
+}},{"model": "auth.user","pk": 129,"fields": {
+  "username": "j_tomas",
+  "email": "invalid@email.xyz_41",
+  "first_name": "j.tomas",
+  "last_name": ""
+}},{"model": "auth.user","pk": 130,"fields": {
+  "username": "mdarefull",
+  "email": "r.santana@lab.matcom.uh.cu",
+  "first_name": "Roberto",
+  "last_name": "Santana Perdomo"
+}},{"model": "auth.user","pk": 131,"fields": {
+  "username": "Qantz",
+  "email": "n.antunez@lab.matcom.uh.cu",
+  "first_name": "Noel",
+  "last_name": "Antunez Batista"
+}},{"model": "auth.user","pk": 132,"fields": {
+  "username": "alex23",
+  "email": "a.barrio@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Barrio Castillo"
+}},{"model": "auth.user","pk": 133,"fields": {
+  "username": "6107net",
+  "email": "g.llanes@lab.matcom.uh.cu",
+  "first_name": "Giolnet",
+  "last_name": "C. Llanes Aleman"
+}},{"model": "auth.user","pk": 134,"fields": {
+  "username": "Decoy",
+  "email": "a.rojas@lab.matcom.uh.cu",
+  "first_name": "Abdel",
+  "last_name": "Rojas Deriche"
+}},{"model": "auth.user","pk": 135,"fields": {
+  "username": "h_diaz2",
+  "email": "h.diaz2@lab.matcom.uh.cu",
+  "first_name": "Hiran",
+  "last_name": "L. Diaz de Acevedo Gua"
+}},{"model": "auth.user","pk": 136,"fields": {
+  "username": "Kpot",
+  "email": "d.capote@lab.matcon.uh.cu",
+  "first_name": "David",
+  "last_name": "E. Capote Gutierrez"
+}},{"model": "auth.user","pk": 137,"fields": {
+  "username": "Laila",
+  "email": "l.gonzalez2@lab.matcom.uh.cu",
+  "first_name": "Laila",
+  "last_name": "Gonzalez Fernandez"
+}},{"model": "auth.user","pk": 138,"fields": {
+  "username": "Oli",
+  "email": "o.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Olivia",
+  "last_name": "Rodriguez Valdes"
+}},{"model": "auth.user","pk": 139,"fields": {
+  "username": "Rafa",
+  "email": "r.martinez@lab.matcom.uh.cu",
+  "first_name": "Rafael",
+  "last_name": "Martinez Martinez"
+}},{"model": "auth.user","pk": 140,"fields": {
+  "username": "landy",
+  "email": "o.martinez@lab.matcom.uh.cu",
+  "first_name": "Orlando",
+  "last_name": "E. Martinez Durive"
+}},{"model": "auth.user","pk": 141,"fields": {
+  "username": "d_ramirez",
+  "email": "d.ramirez@lab.matcom.uh.cu",
+  "first_name": "Dianet",
+  "last_name": "Ramirez Castro"
+}},{"model": "auth.user","pk": 142,"fields": {
+  "username": "l_portilla",
+  "email": "l.portilla@lab.matcom.uh.cu",
+  "first_name": "Laura",
+  "last_name": "de la Portilla Fernan"
+}},{"model": "auth.user","pk": 143,"fields": {
+  "username": "c_valdivia",
+  "email": "c.valdivia@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "C. Valdivia Escalona"
+}},{"model": "auth.user","pk": 144,"fields": {
+  "username": "Saili",
+  "email": "s.vega@lab.matcom.uh.cu",
+  "first_name": "Saili",
+  "last_name": "Vega Verdecia"
+}},{"model": "auth.user","pk": 145,"fields": {
+  "username": "g_tizon",
+  "email": "juan.cierna@infomed.sld.cu",
+  "first_name": "Gilberto",
+  "last_name": "Tizon Gonzalez"
+}},{"model": "auth.user","pk": 146,"fields": {
+  "username": "a_gonzalez3",
+  "email": "a.gonzalez3@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Gonzalez Garcia"
+}},{"model": "auth.user","pk": 147,"fields": {
+  "username": "mario93",
+  "email": "m.muniz@lab.matcom.uh.cu",
+  "first_name": "Mario",
+  "last_name": "C. Muñiz Jimenez"
+}},{"model": "auth.user","pk": 148,"fields": {
+  "username": "JesusO",
+  "email": "j.cespedes@lab.matcom.uh.cu",
+  "first_name": "Jesus",
+  "last_name": "Gonzalez Cespedes"
+}},{"model": "auth.user","pk": 149,"fields": {
+  "username": "Kraken",
+  "email": "osvaldo@ger.ecasa.aviante.cu",
+  "first_name": "Ariel",
+  "last_name": "Diaz Perez"
+}},{"model": "auth.user","pk": 150,"fields": {
+  "username": "Jose Gabriel",
+  "email": "j.rios@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Gabriel Rios Perez"
+}},{"model": "auth.user","pk": 151,"fields": {
+  "username": "m_aguilera",
+  "email": "m.aguilera@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Aguilera Lopez"
+}},{"model": "auth.user","pk": 152,"fields": {
+  "username": "DJ",
+  "email": "d.diaz2@lab.matcom.uh.cu",
+  "first_name": "Dayron",
+  "last_name": "Jesus Diaz Diego"
+}},{"model": "auth.user","pk": 153,"fields": {
+  "username": "n_blasco",
+  "email": "n.blasco@lab.matcom.uh.cu",
+  "first_name": "Neisbet",
+  "last_name": "Blasco Fanego"
+}},{"model": "auth.user","pk": 154,"fields": {
+  "username": "Mariale",
+  "email": "m.orta@lab.matcom.uh.cu",
+  "first_name": "Maria",
+  "last_name": "A. Orta Estupiñan"
+}},{"model": "auth.user","pk": 155,"fields": {
+  "username": "j_martinez2",
+  "email": "j.martinez2",
+  "first_name": "Jorge",
+  "last_name": "A. Martinez Rodriguez"
+}},{"model": "auth.user","pk": 156,"fields": {
+  "username": "kike",
+  "email": "e.lastres@lab.matcom.uh.cu",
+  "first_name": "Enrique",
+  "last_name": "Lastres Alvarez"
+}},{"model": "auth.user","pk": 157,"fields": {
+  "username": "Somebody",
+  "email": "m.avila@matcom.uh.cu",
+  "first_name": "Marcel",
+  "last_name": "Lopez Avila"
+}},{"model": "auth.user","pk": 158,"fields": {
+  "username": "Albe",
+  "email": "a.rodriguez3@lab.matcom.uh.cu",
+  "first_name": "Alberto",
+  "last_name": "Rodriguez Gonzalez"
+}},{"model": "auth.user","pk": 159,"fields": {
+  "username": "f_fernandez",
+  "email": "f.fernandez@lab.matcom.uh.cu",
+  "first_name": "Fabian",
+  "last_name": "Fernandez Galban"
+}},{"model": "auth.user","pk": 160,"fields": {
+  "username": "Sora",
+  "email": "pjsora93@gmail.com",
+  "first_name": "Pedro",
+  "last_name": "J. Aldir Merino"
+}},{"model": "auth.user","pk": 161,"fields": {
+  "username": "Oscar",
+  "email": "o.matilla@lab.matcom.uh.cu",
+  "first_name": "Oscar",
+  "last_name": "Luis Matilla Cisneros"
+}},{"model": "auth.user","pk": 162,"fields": {
+  "username": "c_gonzalez",
+  "email": "c.gonzalez@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "A. Gonzalez Hevia"
+}},{"model": "auth.user","pk": 163,"fields": {
+  "username": "y_mederos",
+  "email": "invalid@email.xyz_42",
+  "first_name": "y.mederos",
+  "last_name": ""
+}},{"model": "auth.user","pk": 164,"fields": {
+  "username": "Dexter",
+  "email": "g.munoz@lab.matcom.uh.cu",
+  "first_name": "Gilberto",
+  "last_name": "Muñoz Hernández"
+}},{"model": "auth.user","pk": 165,"fields": {
+  "username": "marcel",
+  "email": "m.alfonso@lab.matcom.uh.cu",
+  "first_name": "Marcel",
+  "last_name": "Alfonso Rojas"
+}},{"model": "auth.user","pk": 166,"fields": {
+  "username": "e_guerra",
+  "email": "e.guerra@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "Guerra Romero"
+}},{"model": "auth.user","pk": 167,"fields": {
+  "username": "riki",
+  "email": "r.novas93@hotmail.com",
+  "first_name": "Ricardo",
+  "last_name": "M. Novas Villa"
+}},{"model": "auth.user","pk": 168,"fields": {
+  "username": "Claudia",
+  "email": "c.quintana@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "Quintana Wong"
+}},{"model": "auth.user","pk": 169,"fields": {
+  "username": "jag",
+  "email": "j.gonzalez@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "A. Gonzalez Cardenas"
+}},{"model": "auth.user","pk": 170,"fields": {
+  "username": "j_hoyos",
+  "email": "j.hoyos@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "L Hoyos Vazquez"
+}},{"model": "auth.user","pk": 171,"fields": {
+  "username": "Chris",
+  "email": "c.dominguez@lab.matcom.uh.cu",
+  "first_name": "Christian",
+  "last_name": "Dominguez Davila"
+}},{"model": "auth.user","pk": 172,"fields": {
+  "username": "Alejandro",
+  "email": "j.vazquez2@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Alejandro Vazquez Justiz"
+}},{"model": "auth.user","pk": 173,"fields": {
+  "username": "c_carmenates",
+  "email": "c.carmenates@lab.matcom.uh.cu",
+  "first_name": "Carolina",
+  "last_name": "Carmenates Gonzalez"
+}},{"model": "auth.user","pk": 174,"fields": {
+  "username": "El More",
+  "email": "y.morejon@lab.matcom.uh.cu",
+  "first_name": "Yasmany",
+  "last_name": "David Morejon Cruz"
+}},{"model": "auth.user","pk": 175,"fields": {
+  "username": "ShieraSeastar",
+  "email": "c.corrales@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "Elena Corrales Dean"
+}},{"model": "auth.user","pk": 176,"fields": {
+  "username": "Juan Pablo",
+  "email": "j.consuegra@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "Pablo Consuegra Ayala"
+}},{"model": "auth.user","pk": 177,"fields": {
+  "username": "DNB",
+  "email": "d.moliner@lab.matcom.uh.cu",
+  "first_name": "Deneb",
+  "last_name": "Moliner Morales"
+}},{"model": "auth.user","pk": 178,"fields": {
+  "username": "j_gomez2",
+  "email": "invalid@email.xyz_43",
+  "first_name": "Juan",
+  "last_name": "F. Gomez Fernandez"
+}},{"model": "auth.user","pk": 179,"fields": {
+  "username": "l_figueroa",
+  "email": "l.figueroa@lab.matcom.uh.cu",
+  "first_name": "Leandro",
+  "last_name": "Figueroa Morales"
+}},{"model": "auth.user","pk": 180,"fields": {
+  "username": "m_nieves",
+  "email": "invalid@email.xyz_44",
+  "first_name": "m.nieves",
+  "last_name": ""
+}},{"model": "auth.user","pk": 181,"fields": {
+  "username": "e_jorge",
+  "email": "e.jorge@lab.matcom.uh.cu",
+  "first_name": "Elvis",
+  "last_name": "L. Jorge Becil"
+}},{"model": "auth.user","pk": 182,"fields": {
+  "username": "l_villarejo",
+  "email": "invalid@email.xyz_45",
+  "first_name": "l.villarejo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 183,"fields": {
+  "username": "a_arredondo",
+  "email": "invalid@email.xyz_46",
+  "first_name": "a.arredondo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 184,"fields": {
+  "username": "z_gonzalez",
+  "email": "invalid@email.xyz_47",
+  "first_name": "z.gonzalez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 185,"fields": {
+  "username": "ruso",
+  "email": "arielelruso@yahoo.com",
+  "first_name": "Ariel",
+  "last_name": "Barrios Perez"
+}},{"model": "auth.user","pk": 186,"fields": {
+  "username": "rcc",
+  "email": "invalid@email.xyz_48",
+  "first_name": "rcc",
+  "last_name": ""
+}},{"model": "auth.user","pk": 187,"fields": {
+  "username": "Ø§Ð£Ł",
+  "email": "invalid@email.xyz_49",
+  "first_name": "Osdel",
+  "last_name": "Hernandez Hernandez"
+}},{"model": "auth.user","pk": 188,"fields": {
+  "username": "24Ismel3",
+  "email": "i.ruiz@lab.matcom.uh.cu",
+  "first_name": "Ismel",
+  "last_name": "Ruiz Marsan"
+}},{"model": "auth.user","pk": 189,"fields": {
+  "username": "gengar",
+  "email": "invalid@email.xyz_50",
+  "first_name": "Carlos",
+  "last_name": "A. Penton Aragon"
+}},{"model": "auth.user","pk": 190,"fields": {
+  "username": "a_leyva",
+  "email": "invalid@email.xyz_51",
+  "first_name": "a.leyva",
+  "last_name": ""
+}},{"model": "auth.user","pk": 191,"fields": {
+  "username": "Juan Eray",
+  "email": "j.alvarez2@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "Eray Alvarez Hernandez"
+}},{"model": "auth.user","pk": 192,"fields": {
+  "username": "r_rivero",
+  "email": "invalid@email.xyz_52",
+  "first_name": "r.rivero",
+  "last_name": ""
+}},{"model": "auth.user","pk": 193,"fields": {
+  "username": "maitets",
+  "email": "invalid@email.xyz_53",
+  "first_name": "maitets",
+  "last_name": ""
+}},{"model": "auth.user","pk": 194,"fields": {
+  "username": "acoto87",
+  "email": "invalid@email.xyz_54",
+  "first_name": "Alejandro",
+  "last_name": "Coto Gutiérrez"
+}},{"model": "auth.user","pk": 195,"fields": {
+  "username": "tamayo",
+  "email": "invalid@email.xyz_55",
+  "first_name": "Alejandro",
+  "last_name": "Tamayo Castillo"
+}},{"model": "auth.user","pk": 196,"fields": {
+  "username": "MarX",
+  "email": "mfornet94@gmail.com",
+  "first_name": "Marcelo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 197,"fields": {
+  "username": "j_monzon",
+  "email": "j.monzon@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "A. Monzon del Campo"
+}},{"model": "auth.user","pk": 198,"fields": {
+  "username": "Tigri2",
+  "email": "a.solano2@lab.matcom.uh.cu",
+  "first_name": "Alexander",
+  "last_name": "Solano Solano"
+}},{"model": "auth.user","pk": 199,"fields": {
+  "username": "h_perez",
+  "email": "h.perez@lab.matcom.uh.cu",
+  "first_name": "Héctor",
+  "last_name": "Pérez Fernández"
+}},{"model": "auth.user","pk": 200,"fields": {
+  "username": "omederos",
+  "email": "invalid@email.xyz_56",
+  "first_name": "omederos",
+  "last_name": ""
+}},{"model": "auth.user","pk": 201,"fields": {
+  "username": "eddy",
+  "email": "e.almuina@lab.matcom.uh.cu",
+  "first_name": "Eddy",
+  "last_name": "Nelson Almuiña Hernández"
+}},{"model": "auth.user","pk": 202,"fields": {
+  "username": "Cross",
+  "email": "m.castellanos@lab.matcom.uh.cu",
+  "first_name": "Mauricio",
+  "last_name": "Enrique Guerra Castellanos"
+}},{"model": "auth.user","pk": 203,"fields": {
+  "username": "NiloX",
+  "email": "d.gomez@lab.matcom.uh.cu",
+  "first_name": "Danilo",
+  "last_name": "Gómez Gómez"
+}},{"model": "auth.user","pk": 204,"fields": {
+  "username": "UHplusplus",
+  "email": "invalid@email.xyz_57",
+  "first_name": "UH++",
+  "last_name": ""
+}},{"model": "auth.user","pk": 205,"fields": {
+  "username": "UH01",
+  "email": "invalid@email.xyz_58",
+  "first_name": "UH01",
+  "last_name": ""
+}},{"model": "auth.user","pk": 206,"fields": {
+  "username": "UH02",
+  "email": "invalid@email.xyz_59",
+  "first_name": "UH02",
+  "last_name": ""
+}},{"model": "auth.user","pk": 207,"fields": {
+  "username": "UH03",
+  "email": "invalid@email.xyz_60",
+  "first_name": "UH03",
+  "last_name": ""
+}},{"model": "auth.user","pk": 208,"fields": {
+  "username": "UH04",
+  "email": "invalid@email.xyz_61",
+  "first_name": "UH04",
+  "last_name": ""
+}},{"model": "auth.user","pk": 209,"fields": {
+  "username": "UH05",
+  "email": "invalid@email.xyz_62",
+  "first_name": "UH05",
+  "last_name": ""
+}},{"model": "auth.user","pk": 210,"fields": {
+  "username": "UH06",
+  "email": "invalid@email.xyz_63",
+  "first_name": "UH06",
+  "last_name": ""
+}},{"model": "auth.user","pk": 211,"fields": {
+  "username": "UH07",
+  "email": "invalid@email.xyz_64",
+  "first_name": "UH07",
+  "last_name": ""
+}},{"model": "auth.user","pk": 212,"fields": {
+  "username": "d_mora",
+  "email": "d.mora@lab.matcom.uh.cu",
+  "first_name": "Daher",
+  "last_name": "Luis Mora Valdes"
+}},{"model": "auth.user","pk": 213,"fields": {
+  "username": "Luffy",
+  "email": "d.martin@lab.matcom.uh.cu",
+  "first_name": "Dean",
+  "last_name": "Perez Martin"
+}},{"model": "auth.user","pk": 214,"fields": {
+  "username": "Thebest",
+  "email": "a.hurtado@lab.matcom.uh.cu",
+  "first_name": "Alex",
+  "last_name": "Alain Hurtado Campuzano"
+}},{"model": "auth.user","pk": 215,"fields": {
+  "username": "Aoi",
+  "email": "m.pacheco@lab.matcom.uh.cu",
+  "first_name": "Marlon",
+  "last_name": "Pacheco Mauri"
+}},{"model": "auth.user","pk": 216,"fields": {
+  "username": "s_ubieta",
+  "email": "invalid@email.xyz_65",
+  "first_name": "Solangel",
+  "last_name": "Ubieta Rodriguez"
+}},{"model": "auth.user","pk": 217,"fields": {
+  "username": "o_martin",
+  "email": "o.martin@lab.matcom.uh.cu",
+  "first_name": "Oscar",
+  "last_name": "Martin Gonzalez-Chavez"
+}},{"model": "auth.user","pk": 218,"fields": {
+  "username": "shax",
+  "email": "invalid@email.xyz_66",
+  "first_name": "Luisniel",
+  "last_name": "Garcia Yumar"
+}},{"model": "auth.user","pk": 219,"fields": {
+  "username": "adejongh93",
+  "email": "a.dejongh@lab.matcom.uh.cu",
+  "first_name": "Arturo",
+  "last_name": "E. De Jongh González"
+}},{"model": "auth.user","pk": 220,"fields": {
+  "username": "y_arcia",
+  "email": "y.arcia@lab.matcom.uh.cu",
+  "first_name": "Yasmany",
+  "last_name": "Arcia Corcho"
+}},{"model": "auth.user","pk": 221,"fields": {
+  "username": "m_cardoso",
+  "email": "m.cardoso@lab.matcom.uh.cu",
+  "first_name": "Marco",
+  "last_name": "A. Cardoso Gutierrez"
+}},{"model": "auth.user","pk": 222,"fields": {
+  "username": "V_garcia",
+  "email": "V.garcia@lab.matcom.uh.cu",
+  "first_name": "Victor",
+  "last_name": "M. Garcia Pages"
+}},{"model": "auth.user","pk": 223,"fields": {
+  "username": "jessi",
+  "email": "j.ramos@lab.matcom.uh.cu",
+  "first_name": "Jessica",
+  "last_name": "Ramos Arencibia"
+}},{"model": "auth.user","pk": 224,"fields": {
+  "username": "m_sanda",
+  "email": "m.sanda@lab.matcom.uh.cu",
+  "first_name": "Miguel",
+  "last_name": "Sanda Finlay"
+}},{"model": "auth.user","pk": 225,"fields": {
+  "username": "m_losada",
+  "email": "invalid@email.xyz_67",
+  "first_name": "m.losada",
+  "last_name": ""
+}},{"model": "auth.user","pk": 226,"fields": {
+  "username": "lester",
+  "email": "lester@matcom.uh.cu",
+  "first_name": "Lester",
+  "last_name": "Sanchez Diaz"
+}},{"model": "auth.user","pk": 227,"fields": {
+  "username": "Jesus",
+  "email": "j.garnica@lab.matcom.uh.cu",
+  "first_name": "Jesús",
+  "last_name": "M. Garnica Bonome"
+}},{"model": "auth.user","pk": 228,"fields": {
+  "username": "d_rivero",
+  "email": "d.rivero@lab.matcom.uh.cu",
+  "first_name": "Dainel",
+  "last_name": "Rivero Valenciaga"
+}},{"model": "auth.user","pk": 229,"fields": {
+  "username": "a_suarez",
+  "email": "invalid@email.xyz_68",
+  "first_name": "a.suarez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 230,"fields": {
+  "username": "Ed!N3w",
+  "email": "e.nunez@lab.matcom.uh.cu",
+  "first_name": "Eduardo David",
+  "last_name": "Nuñez de Villavicencio Sanchez"
+}},{"model": "auth.user","pk": 231,"fields": {
+  "username": "da",
+  "email": "d.llivina@lab.matcom.uh.cu",
+  "first_name": "Daniela",
+  "last_name": "M. Llivina Moreno"
+}},{"model": "auth.user","pk": 232,"fields": {
+  "username": "Zoro",
+  "email": "j.puebla@lab.matcom.uh.cu",
+  "first_name": "Javier",
+  "last_name": "Puebla Perez"
+}},{"model": "auth.user","pk": 233,"fields": {
+  "username": "Ale",
+  "email": "a.roque@lab.matcom.uh.cu",
+  "first_name": "Alessa",
+  "last_name": "Perez Roque"
+}},{"model": "auth.user","pk": 234,"fields": {
+  "username": "Rox!",
+  "email": "r.linares@lab.matcom.uh.cu",
+  "first_name": "Rocío",
+  "last_name": "Cruz Linares"
+}},{"model": "auth.user","pk": 235,"fields": {
+  "username": "victor E",
+  "email": "v.puentes@lab.matcom.uh.cu",
+  "first_name": "Victor",
+  "last_name": "Ernesto Puentes Perez"
+}},{"model": "auth.user","pk": 236,"fields": {
+  "username": "j_hidalgo",
+  "email": "j.hidalgo@lab.matcom.uh.cu",
+  "first_name": "Jesse",
+  "last_name": "Johna González Hidalgo"
+}},{"model": "auth.user","pk": 237,"fields": {
+  "username": "d_miranda",
+  "email": "invalid@email.xyz_69",
+  "first_name": "David",
+  "last_name": "Miranda Becerra"
+}},{"model": "auth.user","pk": 238,"fields": {
+  "username": "g_yero",
+  "email": "invalid@email.xyz_70",
+  "first_name": "Giselle",
+  "last_name": "Yero"
+}},{"model": "auth.user","pk": 239,"fields": {
+  "username": "diana39",
+  "email": "d.perezdelgado@lab.matcom.uh.cu",
+  "first_name": "Diana",
+  "last_name": "Rosa Perez-Delgado"
+}},{"model": "auth.user","pk": 240,"fields": {
+  "username": "Amelia116",
+  "email": "a.rabanillo@lab.matcom.uh.cu",
+  "first_name": "Amelia",
+  "last_name": "Rabanillo Echaniz"
+}},{"model": "auth.user","pk": 241,"fields": {
+  "username": "JS",
+  "email": "invalid@email.xyz_71",
+  "first_name": "j.oliva",
+  "last_name": ""
+}},{"model": "auth.user","pk": 242,"fields": {
+  "username": "Shimoarika",
+  "email": "r.ocana@lab.matcom.uh.cu",
+  "first_name": "Rosa",
+  "last_name": "Amelia Ocaña Bermudez"
+}},{"model": "auth.user","pk": 243,"fields": {
+  "username": "Susaku",
+  "email": "a.curiel@lab.matcom.uh.cu",
+  "first_name": "Aryan",
+  "last_name": "Curiel Pardo"
+}},{"model": "auth.user","pk": 244,"fields": {
+  "username": "Rockman",
+  "email": "r.pozas@lab.matcom.uh.cu",
+  "first_name": "Roman",
+  "last_name": "Antonio Pozas Peñate"
+}},{"model": "auth.user","pk": 245,"fields": {
+  "username": "jonathaaan!",
+  "email": "j.figueroa@lab.matcom.uh.cu",
+  "first_name": "Jonathan",
+  "last_name": "Figueroa Rodriguez"
+}},{"model": "auth.user","pk": 246,"fields": {
+  "username": "krl",
+  "email": "c.leon@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Leon Gonzalez"
+}},{"model": "auth.user","pk": 247,"fields": {
+  "username": "a_rey",
+  "email": "a.rey@lab.matcom.uh.cu",
+  "first_name": "Andy",
+  "last_name": "Sánchez Rey"
+}},{"model": "auth.user","pk": 248,"fields": {
+  "username": "Raven",
+  "email": "invalid@email.xyz_72",
+  "first_name": "c.hurtado",
+  "last_name": ""
+}},{"model": "auth.user","pk": 249,"fields": {
+  "username": "r_navarro",
+  "email": "invalid@email.xyz_73",
+  "first_name": "r.navarro",
+  "last_name": ""
+}},{"model": "auth.user","pk": 250,"fields": {
+  "username": "a_ferrera",
+  "email": "invalid@email.xyz_74",
+  "first_name": "a.ferrera",
+  "last_name": ""
+}},{"model": "auth.user","pk": 251,"fields": {
+  "username": "Smallville",
+  "email": "a.dominguez2@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "E. Domínguez Rivero"
+}},{"model": "auth.user","pk": 252,"fields": {
+  "username": "craker",
+  "email": "d.clavijo@lab.matcom.uh.cu",
+  "first_name": "d.clavijo",
+  "last_name": ""
+}},{"model": "auth.user","pk": 253,"fields": {
+  "username": "El Joshu@",
+  "email": "j.cortina@lab.matcom.uh.cu",
+  "first_name": "Josué",
+  "last_name": "Cortina Suárez"
+}},{"model": "auth.user","pk": 254,"fields": {
+  "username": "Mat",
+  "email": "m.perez@lab.matcom.uh.cu",
+  "first_name": "Miguel",
+  "last_name": "A. Pérez Cutiño"
+}},{"model": "auth.user","pk": 255,"fields": {
+  "username": "m_pulgaron",
+  "email": "invalid@email.xyz_75",
+  "first_name": "m.pulgaron",
+  "last_name": ""
+}},{"model": "auth.user","pk": 256,"fields": {
+  "username": "HD",
+  "email": "h.quintero@lab.matcom.uh.cu",
+  "first_name": "Hector",
+  "last_name": "David Quintero Peña"
+}},{"model": "auth.user","pk": 257,"fields": {
+  "username": "peter",
+  "email": "p.rodriguez@lab.matcom.uh.cu",
+  "first_name": "p.rodriguez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 258,"fields": {
+  "username": "ferNaNdo",
+  "email": "f.martinez@lab.matcom.uh.cu",
+  "first_name": "Fernando",
+  "last_name": "Martínez Gonzalez"
+}},{"model": "auth.user","pk": 259,"fields": {
+  "username": "Ernest",
+  "email": "e.navarro@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "Navarro Diaz"
+}},{"model": "auth.user","pk": 260,"fields": {
+  "username": "a_vivero",
+  "email": "invalid@email.xyz_76",
+  "first_name": "a.vivero",
+  "last_name": ""
+}},{"model": "auth.user","pk": 261,"fields": {
+  "username": "a_iglesias",
+  "email": "a.iglesias@lab.matcom.uh.cu",
+  "first_name": "Alfredo",
+  "last_name": "Iglesias Santamaria"
+}},{"model": "auth.user","pk": 262,"fields": {
+  "username": "Kaiser",
+  "email": "c.suarez@lab.matcom.uh.cu",
+  "first_name": "César",
+  "last_name": "A. Suárez Nuñez"
+}},{"model": "auth.user","pk": 263,"fields": {
+  "username": "Carlos",
+  "email": "c.fleitas@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Fleitas Aparicio"
+}},{"model": "auth.user","pk": 264,"fields": {
+  "username": "Gabriel",
+  "email": "j.santana@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "G. Santana Ramos"
+}},{"model": "auth.user","pk": 265,"fields": {
+  "username": "i_garcia",
+  "email": "invalid@email.xyz_77",
+  "first_name": "Iván",
+  "last_name": "E. García Labrador"
+}},{"model": "auth.user","pk": 266,"fields": {
+  "username": "Dhampir",
+  "email": "j.poveda@lab.matcom.uh.cu",
+  "first_name": "Jesus",
+  "last_name": "Lopez Poveda"
+}},{"model": "auth.user","pk": 267,"fields": {
+  "username": "olivia",
+  "email": "virginiatlima@infomed.sld.cu",
+  "first_name": "Olivia",
+  "last_name": "Gonzalez Torres"
+}},{"model": "auth.user","pk": 268,"fields": {
+  "username": "Jose",
+  "email": "j.alvarez@lab.matcom.uh.cu",
+  "first_name": "Jose Luis",
+  "last_name": "Alvarez de la Campa Alvarez"
+}},{"model": "auth.user","pk": 270,"fields": {
+  "username": "NIORLYS",
+  "email": "n.campos@lab.matcom.uh.cu",
+  "first_name": "n.campos",
+  "last_name": ""
+}},{"model": "auth.user","pk": 271,"fields": {
+  "username": "L",
+  "email": "l.ulloa@lab.matcom.uh.cu",
+  "first_name": "Lian",
+  "last_name": "Ulloa Mc-Kion"
+}},{"model": "auth.user","pk": 272,"fields": {
+  "username": "i_iglesias",
+  "email": "i.iglesias@matcom.uh.cu",
+  "first_name": "Isabel",
+  "last_name": "C. Iglesias Santamaria"
+}},{"model": "auth.user","pk": 273,"fields": {
+  "username": "Javier",
+  "email": "j.camejo@lab.matcom.uh.cu",
+  "first_name": "Javier",
+  "last_name": "Miguel Camejo Romeo"
+}},{"model": "auth.user","pk": 274,"fields": {
+  "username": "apiad_2",
+  "email": "invalid@email.xyz_78",
+  "first_name": "apiad",
+  "last_name": ""
+}},{"model": "auth.user","pk": 275,"fields": {
+  "username": "Smoker",
+  "email": "invalid@email.xyz_79",
+  "first_name": "Ricardo",
+  "last_name": "J. Guevara Ricardo"
+}},{"model": "auth.user","pk": 276,"fields": {
+  "username": "Guía",
+  "email": "a.guia@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": ""
+}},{"model": "auth.user","pk": 277,"fields": {
+  "username": "RCG",
+  "email": "albem@infomed.sld.cu",
+  "first_name": "Rafael",
+  "last_name": "Collazo Girard"
+}},{"model": "auth.user","pk": 278,"fields": {
+  "username": "a_camejo",
+  "email": "a.camejo@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Valdes Camejo"
+}},{"model": "auth.user","pk": 279,"fields": {
+  "username": "andy",
+  "email": "andyg95@nauta.cu",
+  "first_name": "Andy",
+  "last_name": "Gonzalez"
+}},{"model": "auth.user","pk": 280,"fields": {
+  "username": "a_torres",
+  "email": "invalid@email.xyz_80",
+  "first_name": "a.torres",
+  "last_name": ""
+}},{"model": "auth.user","pk": 281,"fields": {
+  "username": "Ghost",
+  "email": "d.bode@lab.matcom.uh.cu",
+  "first_name": "Dennis",
+  "last_name": "Bode Sosa"
+}},{"model": "auth.user","pk": 282,"fields": {
+  "username": "rei",
+  "email": "invalid@email.xyz_81",
+  "first_name": "r.bullain",
+  "last_name": ""
+}},{"model": "auth.user","pk": 283,"fields": {
+  "username": "Fa",
+  "email": "f.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Fabio",
+  "last_name": "Rodriguez Sanchez"
+}},{"model": "auth.user","pk": 284,"fields": {
+  "username": "Massy",
+  "email": "m.sanchez@lab.matcom.uh.cu",
+  "first_name": "m.sanchez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 285,"fields": {
+  "username": "Kill'em@ll",
+  "email": "r.urquiza@lab.matcom.uh.cu",
+  "first_name": "Rolando",
+  "last_name": "Urquiza"
+}},{"model": "auth.user","pk": 286,"fields": {
+  "username": "Link",
+  "email": "yolanda@medicaribe.co.cu",
+  "first_name": "Javier",
+  "last_name": "Faife"
+}},{"model": "auth.user","pk": 287,"fields": {
+  "username": "EloyT",
+  "email": "invalid@email.xyz_82",
+  "first_name": "Alejandro",
+  "last_name": "Rivero Bandinez"
+}},{"model": "auth.user","pk": 288,"fields": {
+  "username": "s_diaz",
+  "email": "invalid@email.xyz_83",
+  "first_name": "s.diaz",
+  "last_name": ""
+}},{"model": "auth.user","pk": 289,"fields": {
+  "username": "Mandy",
+  "email": "a.olivera@lab.matcom.uh.cu",
+  "first_name": "a.olivera",
+  "last_name": ""
+}},{"model": "auth.user","pk": 290,"fields": {
+  "username": "Rober",
+  "email": "r.mesa@lab.matcom.uh.cu",
+  "first_name": "Roberto",
+  "last_name": "Mesa Valdes"
+}},{"model": "auth.user","pk": 291,"fields": {
+  "username": "b_vera",
+  "email": "invalid@email.xyz_84",
+  "first_name": "b.vera",
+  "last_name": ""
+}},{"model": "auth.user","pk": 292,"fields": {
+  "username": "Le Calore",
+  "email": "m.hermida@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Hermida Hadad"
+}},{"model": "auth.user","pk": 293,"fields": {
+  "username": "c_fonte",
+  "email": "invalid@email.xyz_85",
+  "first_name": "c.fonte",
+  "last_name": ""
+}},{"model": "auth.user","pk": 294,"fields": {
+  "username": "EDAI34_1_1",
+  "email": "invalid@email.xyz_86",
+  "first_name": "EDAI34_1_1",
+  "last_name": ""
+}},{"model": "auth.user","pk": 295,"fields": {
+  "username": "EDAI34_1_2",
+  "email": "invalid@email.xyz_87",
+  "first_name": "EDAI34_1_2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 296,"fields": {
+  "username": "EDAI34_1_3",
+  "email": "invalid@email.xyz_88",
+  "first_name": "EDAI34_1_3",
+  "last_name": ""
+}},{"model": "auth.user","pk": 297,"fields": {
+  "username": "EDAI34_1_4",
+  "email": "invalid@email.xyz_89",
+  "first_name": "EDAI34_1_4",
+  "last_name": ""
+}},{"model": "auth.user","pk": 298,"fields": {
+  "username": "EDAI34_1_5",
+  "email": "invalid@email.xyz_90",
+  "first_name": "EDAI34_1_5",
+  "last_name": ""
+}},{"model": "auth.user","pk": 299,"fields": {
+  "username": "EDAI34_1_6",
+  "email": "invalid@email.xyz_91",
+  "first_name": "EDAI34_1_6",
+  "last_name": ""
+}},{"model": "auth.user","pk": 300,"fields": {
+  "username": "EDAI34_1_7",
+  "email": "invalid@email.xyz_92",
+  "first_name": "EDAI34_1_7",
+  "last_name": ""
+}},{"model": "auth.user","pk": 301,"fields": {
+  "username": "EDAI34_1_8",
+  "email": "invalid@email.xyz_93",
+  "first_name": "EDAI34_1_8",
+  "last_name": ""
+}},{"model": "auth.user","pk": 302,"fields": {
+  "username": "EDAI34_2_1",
+  "email": "invalid@email.xyz_94",
+  "first_name": "EDAI34_2_1",
+  "last_name": ""
+}},{"model": "auth.user","pk": 303,"fields": {
+  "username": "EDAI34_2_2",
+  "email": "invalid@email.xyz_95",
+  "first_name": "EDAI34_2_2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 304,"fields": {
+  "username": "EDAI34_2_3",
+  "email": "invalid@email.xyz_96",
+  "first_name": "EDAI34_2_3",
+  "last_name": ""
+}},{"model": "auth.user","pk": 305,"fields": {
+  "username": "EDAI34_2_4",
+  "email": "invalid@email.xyz_97",
+  "first_name": "EDAI34_2_4",
+  "last_name": ""
+}},{"model": "auth.user","pk": 306,"fields": {
+  "username": "EDAI34_2_5",
+  "email": "invalid@email.xyz_98",
+  "first_name": "EDAI34_2_5",
+  "last_name": ""
+}},{"model": "auth.user","pk": 307,"fields": {
+  "username": "EDAI34_2_6",
+  "email": "invalid@email.xyz_99",
+  "first_name": "EDAI34_2_6",
+  "last_name": ""
+}},{"model": "auth.user","pk": 308,"fields": {
+  "username": "EDAI34_2_7",
+  "email": "invalid@email.xyz_100",
+  "first_name": "EDAI34_2_7",
+  "last_name": ""
+}},{"model": "auth.user","pk": 309,"fields": {
+  "username": "EDAI34_2_8",
+  "email": "invalid@email.xyz_101",
+  "first_name": "EDAI34_2_8",
+  "last_name": ""
+}},{"model": "auth.user","pk": 310,"fields": {
+  "username": "EDAI34_3_1",
+  "email": "invalid@email.xyz_102",
+  "first_name": "EDAI34_3_1",
+  "last_name": ""
+}},{"model": "auth.user","pk": 311,"fields": {
+  "username": "EDAI34_3_2",
+  "email": "invalid@email.xyz_103",
+  "first_name": "EDAI34_3_2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 312,"fields": {
+  "username": "EDAI34_3_3",
+  "email": "invalid@email.xyz_104",
+  "first_name": "EDAI34_3_3",
+  "last_name": ""
+}},{"model": "auth.user","pk": 313,"fields": {
+  "username": "EDAI34_3_4",
+  "email": "invalid@email.xyz_105",
+  "first_name": "EDAI34_3_4",
+  "last_name": ""
+}},{"model": "auth.user","pk": 314,"fields": {
+  "username": "EDAI34_3_5",
+  "email": "invalid@email.xyz_106",
+  "first_name": "EDAI34_3_5",
+  "last_name": ""
+}},{"model": "auth.user","pk": 315,"fields": {
+  "username": "EDAI34_3_6",
+  "email": "invalid@email.xyz_107",
+  "first_name": "EDAI34_3_6",
+  "last_name": ""
+}},{"model": "auth.user","pk": 316,"fields": {
+  "username": "EDAI34_3_7",
+  "email": "invalid@email.xyz_108",
+  "first_name": "EDAI34_3_7",
+  "last_name": ""
+}},{"model": "auth.user","pk": 317,"fields": {
+  "username": "EDAI34_3_8",
+  "email": "invalid@email.xyz_109",
+  "first_name": "EDAI34_3_8",
+  "last_name": ""
+}},{"model": "auth.user","pk": 318,"fields": {
+  "username": "d_alvarez",
+  "email": "invalid@email.xyz_110",
+  "first_name": "d.alvarez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 319,"fields": {
+  "username": "ln f(x)",
+  "email": "d.santiago@lab.matcom.uh.cu",
+  "first_name": "d.santiago",
+  "last_name": ""
+}},{"model": "auth.user","pk": 320,"fields": {
+  "username": "d_amaro",
+  "email": "invalid@email.xyz_111",
+  "first_name": "d.amaro",
+  "last_name": ""
+}},{"model": "auth.user","pk": 321,"fields": {
+  "username": "j_martin2",
+  "email": "invalid@email.xyz_112",
+  "first_name": "j.martin2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 322,"fields": {
+  "username": "d_rodriguez",
+  "email": "invalid@email.xyz_113",
+  "first_name": "d.rodriguez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 323,"fields": {
+  "username": "l_azua",
+  "email": "l.azua@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "M. Azua Torres"
+}},{"model": "auth.user","pk": 324,"fields": {
+  "username": "ArielxX",
+  "email": "a.cruz@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Cruz Cruz"
+}},{"model": "auth.user","pk": 325,"fields": {
+  "username": "Sun",
+  "email": "s.toste@lab.matcom.uh.cu",
+  "first_name": "s.toste",
+  "last_name": ""
+}},{"model": "auth.user","pk": 326,"fields": {
+  "username": "a_ruiz",
+  "email": "a.ruiz@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Ruiz González"
+}},{"model": "auth.user","pk": 327,"fields": {
+  "username": "s_leon",
+  "email": "s.leon@lab.matcom.uh.cu",
+  "first_name": "sherlhy",
+  "last_name": "leon lopez"
+}},{"model": "auth.user","pk": 328,"fields": {
+  "username": "Yane",
+  "email": "y.mirabal@lab.matcom.uh.cu",
+  "first_name": "Yaneisy",
+  "last_name": "Torres Mirabal"
+}},{"model": "auth.user","pk": 329,"fields": {
+  "username": "m_hernandez",
+  "email": "invalid@email.xyz_114",
+  "first_name": "m.hernandez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 330,"fields": {
+  "username": "hian",
+  "email": "invalid@email.xyz_115",
+  "first_name": "hian",
+  "last_name": ""
+}},{"model": "auth.user","pk": 331,"fields": {
+  "username": "BoxerTools",
+  "email": "e.torres@lab.matcom.uh.cu",
+  "first_name": "Eloy",
+  "last_name": "Pérez Torres"
+}},{"model": "auth.user","pk": 332,"fields": {
+  "username": "luis14",
+  "email": "invalid@email.xyz_116",
+  "first_name": "luis14",
+  "last_name": ""
+}},{"model": "auth.user","pk": 333,"fields": {
+  "username": "Z@ck",
+  "email": "j.chao@lab.matcom.uh.cu",
+  "first_name": "j.chao",
+  "last_name": ""
+}},{"model": "auth.user","pk": 334,"fields": {
+  "username": "El chino",
+  "email": "c.vara@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Rafael Guerra Vara"
+}},{"model": "auth.user","pk": 335,"fields": {
+  "username": "o_dominguez",
+  "email": "invalid@email.xyz_117",
+  "first_name": "o.dominguez",
+  "last_name": ""
+}},{"model": "auth.user","pk": 336,"fields": {
+  "username": "ezarza",
+  "email": "e.zarza@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "Zarza Reyes"
+}},{"model": "auth.user","pk": 337,"fields": {
+  "username": "rremedios",
+  "email": "r.remedios@lab.matcom.uh.cu",
+  "first_name": "Rene",
+  "last_name": "Hernandez Remedios"
+}},{"model": "auth.user","pk": 338,"fields": {
+  "username": "wlopez",
+  "email": "w.lopez@lab.matcom.uh.cu",
+  "first_name": "William",
+  "last_name": "Lopez Llopiz"
+}},{"model": "auth.user","pk": 339,"fields": {
+  "username": "cmilanes",
+  "email": "c.milanes@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "M. Milanes Pérez"
+}},{"model": "auth.user","pk": 340,"fields": {
+  "username": "mmorejo",
+  "email": "m.morejo@lab.matcom.uh.cu",
+  "first_name": "Mario",
+  "last_name": "A. Alvarez Morejó"
+}},{"model": "auth.user","pk": 341,"fields": {
+  "username": "eaparicio",
+  "email": "e.aparicio@lab.matcom.uh.cu",
+  "first_name": "Ernest",
+  "last_name": "Quintana Aparicio"
+}},{"model": "auth.user","pk": 342,"fields": {
+  "username": "yenny",
+  "email": "yenny@lab.matcom.uh.cu",
+  "first_name": "Yenny",
+  "last_name": "Noa Vargas"
+}},{"model": "auth.user","pk": 343,"fields": {
+  "username": "acoto",
+  "email": "a.coto@lab.matcom.uh.cu",
+  "first_name": "Alex",
+  "last_name": "R. Coto Santiesteban"
+}},{"model": "auth.user","pk": 1343,"fields": {
+  "username": "Jay-C",
+  "email": "j.martinez@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "C. Martínez Gonzále"
+}},{"model": "auth.user","pk": 1344,"fields": {
+  "username": "kiki",
+  "email": "e.cobreiro@lab.matcom.uh.cu",
+  "first_name": "Enrique",
+  "last_name": "Cobreiro Suarez"
+}},{"model": "auth.user","pk": 1345,"fields": {
+  "username": "UDL",
+  "email": "c.chall@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "David Muñiz Chall"
+}},{"model": "auth.user","pk": 1346,"fields": {
+  "username": "Ricardo",
+  "email": "r.mejias@lab.matcom.uh.cu",
+  "first_name": "Ricardo",
+  "last_name": "Mejias Travieso"
+}},{"model": "auth.user","pk": 1347,"fields": {
+  "username": "Madman",
+  "email": "a.diego@lab.matcom.uh.cu",
+  "first_name": "Andrei",
+  "last_name": "Diego Borisenko"
+}},{"model": "auth.user","pk": 1348,"fields": {
+  "username": "Kathy",
+  "email": "k.dipotet@lab.matcom.uh.cu",
+  "first_name": "Katherine",
+  "last_name": "Dipotet Griñan"
+}},{"model": "auth.user","pk": 1349,"fields": {
+  "username": "Freyre",
+  "email": "a.freyre@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Freyre Echevarría"
+}},{"model": "auth.user","pk": 1350,"fields": {
+  "username": "Patricia",
+  "email": "p.hector@lab.matcom.uh.cu",
+  "first_name": "Patricia",
+  "last_name": "Héctor Hernández"
+}},{"model": "auth.user","pk": 1351,"fields": {
+  "username": "Quesada",
+  "email": "j.quesada@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "A. Quesada Muñoz"
+}},{"model": "auth.user","pk": 1352,"fields": {
+  "username": "SOAD",
+  "email": "a.gonzalez2@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "E. González Betancourt"
+}},{"model": "auth.user","pk": 1353,"fields": {
+  "username": "Isa",
+  "email": "i.perez@lab.matcom.uh.cu",
+  "first_name": "Isabel",
+  "last_name": "Perez Duran"
+}},{"model": "auth.user","pk": 1354,"fields": {
+  "username": "Diana",
+  "email": "d.abreu@lab.matcom.uh.cu",
+  "first_name": "Diana",
+  "last_name": "Pérez Abreu"
+}},{"model": "auth.user","pk": 1355,"fields": {
+  "username": "Daili",
+  "email": "d.echevarria@lab.matcom.uh.cu",
+  "first_name": "Daili",
+  "last_name": "Echevarria Avila"
+}},{"model": "auth.user","pk": 1356,"fields": {
+  "username": "Leo",
+  "email": "l.garriga@lab.matcom.uh.cu",
+  "first_name": "Leandro",
+  "last_name": "Antonio Hernandez Garriga"
+}},{"model": "auth.user","pk": 1357,"fields": {
+  "username": "pfuentes",
+  "email": "p.fuentes@lab.matcom.uh.cu",
+  "first_name": "Pablo",
+  "last_name": "A. Fuentes Gonzále"
+}},{"model": "auth.user","pk": 1358,"fields": {
+  "username": "HERO",
+  "email": "c.aguilera@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "E. Aguilera Medina"
+}},{"model": "auth.user","pk": 1359,"fields": {
+  "username": "Heidy",
+  "email": "h.abreu@lab.matcom.uh.cu",
+  "first_name": "Heidy",
+  "last_name": "Abreu Fumero"
+}},{"model": "auth.user","pk": 1360,"fields": {
+  "username": "EGO",
+  "email": "p.zambrano@lab.matcom.uh.cu",
+  "first_name": "Pedro",
+  "last_name": "Enmanuel Fuentes Zambrano"
+}},{"model": "auth.user","pk": 1361,"fields": {
+  "username": "zero",
+  "email": "h.inguanzo@lab.matcom.uh.cu",
+  "first_name": "Humberto",
+  "last_name": "Javier Inguanzo Rey"
+}},{"model": "auth.user","pk": 1362,"fields": {
+  "username": "Fancy",
+  "email": "a.garcia3@lab.matcom.uh.cu",
+  "first_name": "Andy",
+  "last_name": "García Aguiar"
+}},{"model": "auth.user","pk": 1363,"fields": {
+  "username": "Fueron Eloy y HERO!!!",
+  "email": "y.belon@lab.matcom.uh.cu",
+  "first_name": "Yaser",
+  "last_name": "Belon Torres"
+}},{"model": "auth.user","pk": 1364,"fields": {
+  "username": "Annie",
+  "email": "a.hernandez@lab.matcom.uh.cu",
+  "first_name": "Annie",
+  "last_name": "Hernandez Perez"
+}},{"model": "auth.user","pk": 1365,"fields": {
+  "username": "RAGNAR",
+  "email": "l.morales@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "A. Morales Bringuez"
+}},{"model": "auth.user","pk": 1366,"fields": {
+  "username": "blondy",
+  "email": "y.tejeda@lab.matcom.uh.cu",
+  "first_name": "Yunior",
+  "last_name": "A. Tejeda Illana"
+}},{"model": "auth.user","pk": 1367,"fields": {
+  "username": "Manolito",
+  "email": "m.delgado@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Alejandro Delgado Alfonso"
+}},{"model": "auth.user","pk": 1368,"fields": {
+  "username": "Kirito",
+  "email": "e.pla@lab.matcom.uh.cu",
+  "first_name": "Enrique",
+  "last_name": "Pla Rey"
+}},{"model": "auth.user","pk": 1369,"fields": {
+  "username": "Elessar",
+  "email": "d.estevez@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Estévez Moya"
+}},{"model": "auth.user","pk": 1370,"fields": {
+  "username": "megarcia",
+  "email": "me.garcia@lab.matcom.uh.cu",
+  "first_name": "María",
+  "last_name": "Elena García Ochagavía"
+}},{"model": "auth.user","pk": 1371,"fields": {
+  "username": "hcanizares",
+  "email": "h.canizares@lab.matcom.uh.cu",
+  "first_name": "Hian",
+  "last_name": "Cañizares Díaz"
+}},{"model": "auth.user","pk": 1372,"fields": {
+  "username": "agarcia",
+  "email": "a.garcia@lab.matcom.uh.cu",
+  "first_name": "Antonio",
+  "last_name": "I. Garcia Rodriguez"
+}},{"model": "auth.user","pk": 1373,"fields": {
+  "username": "aalonso",
+  "email": "a.alonso@lab.matcom.uh.cu",
+  "first_name": "Aimee",
+  "last_name": "Alonso Reina"
+}},{"model": "auth.user","pk": 1374,"fields": {
+  "username": "sbecerra",
+  "email": "s.becerra@lab.matcom.uh.cu",
+  "first_name": "Susana",
+  "last_name": "Becerra Pino"
+}},{"model": "auth.user","pk": 1375,"fields": {
+  "username": "Vizard",
+  "email": "f.gamboa@lab.matcom.uh.cu",
+  "first_name": "Fabian",
+  "last_name": "Jesús Gamboa Céspedes"
+}},{"model": "auth.user","pk": 1376,"fields": {
+  "username": "omadero",
+  "email": "o.madero@lab.matcom.uh.cu",
+  "first_name": "Oscar",
+  "last_name": "L. Olazabal Madero"
+}},{"model": "auth.user","pk": 1377,"fields": {
+  "username": "Experto",
+  "email": "d.morgado@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Morgado Novoa"
+}},{"model": "auth.user","pk": 1378,"fields": {
+  "username": "Laur4!!!",
+  "email": "l.portell@lab.matcom.uh.cu",
+  "first_name": "Laura",
+  "last_name": "Beatriz Portell Avello"
+}},{"model": "auth.user","pk": 1379,"fields": {
+  "username": "RR",
+  "email": "r.baryolo@lab.matcom.uh.cu",
+  "first_name": "Raydel",
+  "last_name": "Alonso Baryolo"
+}},{"model": "auth.user","pk": 1380,"fields": {
+  "username": "josse",
+  "email": "j.caraballo@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "Carlos González Caraballo"
+}},{"model": "auth.user","pk": 1381,"fields": {
+  "username": "BlackTools",
+  "email": "e.torres@lab.matcom.uh.cu_2",
+  "first_name": "Eloy",
+  "last_name": "Pérez Torres"
+}},{"model": "auth.user","pk": 1382,"fields": {
+  "username": "Mauro García Marcos C123",
+  "email": "m.marcos@lab.matcom.uh.cu",
+  "first_name": "Mauro",
+  "last_name": "García Marcos"
+}},{"model": "auth.user","pk": 1383,"fields": {
+  "username": "Daniel De La Osa Fernandez ",
+  "email": "D.osa@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "de la Osa Fernández"
+}},{"model": "auth.user","pk": 1384,"fields": {
+  "username": "Victor Manuel Lantigua Cano C-112",
+  "email": "v.lantigua@lab.matcom.uh.cu",
+  "first_name": "Victor",
+  "last_name": "M. Lantigua Cano"
+}},{"model": "auth.user","pk": 1385,"fields": {
+  "username": "IvanGalban",
+  "email": "i.galban@lab.matcom.uh.cu",
+  "first_name": "Iván",
+  "last_name": "Galbán Smith"
+}},{"model": "auth.user","pk": 1386,"fields": {
+  "username": "MDKirito",
+  "email": "a.aragon@lab.matcom.uh.cu",
+  "first_name": "Andy",
+  "last_name": "Aragon De Jongh"
+}},{"model": "auth.user","pk": 1387,"fields": {
+  "username": "Murderer",
+  "email": "r.zahuis@lab.matcom.uh.cu",
+  "first_name": "Roberto",
+  "last_name": "Zahuis Benitez"
+}},{"model": "auth.user","pk": 1388,"fields": {
+  "username": "MIKE33",
+  "email": "m.ribalta@lab.matcom.uh.cu",
+  "first_name": "Michel",
+  "last_name": "J. Garcia Ribalta"
+}},{"model": "auth.user","pk": 1389,"fields": {
+  "username": "Nemesis",
+  "email": "e.pena@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Eduardo Peña González"
+}},{"model": "auth.user","pk": 1390,"fields": {
+  "username": "Elias ",
+  "email": "e.bestard@lab.matcom.uh.cu",
+  "first_name": "Elias",
+  "last_name": ""
+}},{"model": "auth.user","pk": 1391,"fields": {
+  "username": "JoseMa",
+  "email": "j.espinosa@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "M. Espinosa Delgado"
+}},{"model": "auth.user","pk": 1392,"fields": {
+  "username": "geidyta",
+  "email": "g.vazquez@lab.matcom.uh.cu",
+  "first_name": "Geidys",
+  "last_name": "Vázquez Haro"
+}},{"model": "auth.user","pk": 1393,"fields": {
+  "username": "Yudi",
+  "email": "y.cuquerella@lab.matcom.uh.cu",
+  "first_name": "Yudith",
+  "last_name": "Rodríguez Cuquerella"
+}},{"model": "auth.user","pk": 1394,"fields": {
+  "username": "Joker",
+  "email": "l.marante@lab.matcom.uh.cu",
+  "first_name": "Lázaro",
+  "last_name": "Manuel Marante Lozano"
+}},{"model": "auth.user","pk": 1395,"fields": {
+  "username": "Laura Manresa Gutierrez",
+  "email": "invalid@email.xyz_118",
+  "first_name": "Laura",
+  "last_name": ""
+}},{"model": "auth.user","pk": 1396,"fields": {
+  "username": "Jorge Castro Miranda (C 123)",
+  "email": "j.castro@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "Heriberto Castro Miranda"
+}},{"model": "auth.user","pk": 1397,"fields": {
+  "username": "MESSI",
+  "email": "e.ermus@lab.matcom.uh.cu",
+  "first_name": "Eduardo",
+  "last_name": "F. Gonzalez Ermus"
+}},{"model": "auth.user","pk": 1398,"fields": {
+  "username": "jsastre",
+  "email": "j.sastre@lab.matcom.uh.cu",
+  "first_name": "Jefry",
+  "last_name": "Sastre Perez"
+}},{"model": "auth.user","pk": 1399,"fields": {
+  "username": "Nightmare",
+  "email": "e.lias@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "L. Roque Lias"
+}},{"model": "auth.user","pk": 1400,"fields": {
+  "username": "Dani",
+  "email": "d.beltran@lab.matcom.uh.cu",
+  "first_name": "Daniela",
+  "last_name": "González Beltrán"
+}},{"model": "auth.user","pk": 1401,"fields": {
+  "username": "death91",
+  "email": "e.salazar@lab.matcom.uh.cu",
+  "first_name": "Edgar",
+  "last_name": "Salazar Rodriguez"
+}},{"model": "auth.user","pk": 1402,"fields": {
+  "username": "wsariol",
+  "email": "w.sariol@lab.matcom.uh.cu",
+  "first_name": "Wiliam",
+  "last_name": "Luis Sariol Nunez"
+}},{"model": "auth.user","pk": 1403,"fields": {
+  "username": "Abdel Chijona Alvarez C-123",
+  "email": "a.chijona@lab.matcom.uh.cu",
+  "first_name": "Abdel",
+  "last_name": "Chijona Alvarez"
+}},{"model": "auth.user","pk": 1404,"fields": {
+  "username": "Adrian Pérez Carmenates C213",
+  "email": "a.carmenates@lab.matcom.uh.cu",
+  "first_name": "Adrian",
+  "last_name": "Pérez Carmenates"
+}},{"model": "auth.user","pk": 1405,"fields": {
+  "username": "Alejandro Díaz Roque C-122",
+  "email": "a.diaz2@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Díaz Roque"
+}},{"model": "auth.user","pk": 1406,"fields": {
+  "username": "Yoyo",
+  "email": "j.perez2@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "Pérez Hernández"
+}},{"model": "auth.user","pk": 1407,"fields": {
+  "username": "El Tigri",
+  "email": "d.frometa@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Sean Meissimilly Frometa"
+}},{"model": "auth.user","pk": 1408,"fields": {
+  "username": "Uzumaki",
+  "email": "a.casas@lab.matcom.uh.cu",
+  "first_name": "Alexander",
+  "last_name": "Casas Ravelo"
+}},{"model": "auth.user","pk": 1409,"fields": {
+  "username": "grodriguez",
+  "email": "g.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Gabriela",
+  "last_name": "Rodríguez Santa Cruz Pacheco"
+}},{"model": "auth.user","pk": 1410,"fields": {
+  "username": "Esthefany",
+  "email": "e.alvarez@lab.matcom.uh.cu",
+  "first_name": "Esthefany",
+  "last_name": "Álvarez Carmenate"
+}},{"model": "auth.user","pk": 1411,"fields": {
+  "username": "Alejandro Barreto Núñez ",
+  "email": "a.barreto@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Barreto Núñez"
+}},{"model": "auth.user","pk": 1412,"fields": {
+  "username": "aPenton",
+  "email": "a.penton@lab.matcom.uh.cu",
+  "first_name": "Abel",
+  "last_name": "Penton Ibrahim"
+}},{"model": "auth.user","pk": 1413,"fields": {
+  "username": "SilverWolf",
+  "email": "d.medina@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Perez Medina"
+}},{"model": "auth.user","pk": 1414,"fields": {
+  "username": "Eric Nordelo c-213",
+  "email": "e.nordelo@lab.matcom.uh.cu",
+  "first_name": "Eric",
+  "last_name": "Nordelo Galiano"
+}},{"model": "auth.user","pk": 1415,"fields": {
+  "username": "bruno",
+  "email": "r.bruno@lab.matcom.uh.cu",
+  "first_name": "Rolando",
+  "last_name": "Mario Bruno Alfonso"
+}},{"model": "auth.user","pk": 1416,"fields": {
+  "username": "Amaury Díaz Caballero C-211",
+  "email": "a.caballero@lab.matcom.uh.cu",
+  "first_name": "Amaury",
+  "last_name": "A. Diaz Caballero"
+}},{"model": "auth.user","pk": 1417,"fields": {
+  "username": "dfraga",
+  "email": "d.fraga@lab.matcom.uh.cu",
+  "first_name": "Daniela",
+  "last_name": "A. Fraga Acosta"
+}},{"model": "auth.user","pk": 1418,"fields": {
+  "username": "lcorreia",
+  "email": "l.correia@lab.matcom.uh.cu",
+  "first_name": "Lucinio",
+  "last_name": "Correia"
+}},{"model": "auth.user","pk": 1419,"fields": {
+  "username": "lachy 39",
+  "email": "l.ortiz@lab.matcom.uh.cu",
+  "first_name": "Lázaro",
+  "last_name": "Javier García Ortíz"
+}},{"model": "auth.user","pk": 1420,"fields": {
+  "username": "rbermudez",
+  "email": "r.bermudez@lab.matcom.uh.cu",
+  "first_name": "Reinier",
+  "last_name": "Bermudez Valera"
+}},{"model": "auth.user","pk": 1421,"fields": {
+  "username": "C121-Jose Luis Fleitas Tamayo",
+  "email": "j.fleitas@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Luis Fleitas Tamayo"
+}},{"model": "auth.user","pk": 1422,"fields": {
+  "username": "lmorales2",
+  "email": "l.morales2@lab.matcom.uh.cu",
+  "first_name": "Laura",
+  "last_name": "Gonzalez Morales"
+}},{"model": "auth.user","pk": 1423,"fields": {
+  "username": "Arenas",
+  "email": "j.arenas@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Carlos Arenas Sanchez"
+}},{"model": "auth.user","pk": 1424,"fields": {
+  "username": "acurbelo",
+  "email": "a.curbelo@lab.matcom.uh.cu",
+  "first_name": "Amanda",
+  "last_name": "Curbelo Rosabal"
+}},{"model": "auth.user","pk": 1425,"fields": {
+  "username": "l@uri",
+  "email": "l.iniguez@lab.matcom.uh.cu",
+  "first_name": "Laura",
+  "last_name": "Iñiguez Gener"
+}},{"model": "auth.user","pk": 1426,"fields": {
+  "username": "Alex",
+  "email": "a.rodriguez2@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "R. Hernandez Rodriguez"
+}},{"model": "auth.user","pk": 1427,"fields": {
+  "username": "Sandor Martin Leyva c-112",
+  "email": "s.martin@lab.matcom.uh.cu",
+  "first_name": "Sandor",
+  "last_name": "Martin Leyva"
+}},{"model": "auth.user","pk": 1428,"fields": {
+  "username": "G I Joe",
+  "email": "j.albert@lab.matcom.uh.cu",
+  "first_name": "Joe",
+  "last_name": "Albert Carballido"
+}},{"model": "auth.user","pk": 1429,"fields": {
+  "username": "Stark15",
+  "email": "n.otero@lab.matcom.uh.cu",
+  "first_name": "Nelson",
+  "last_name": "Rodriguez Otero"
+}},{"model": "auth.user","pk": 1430,"fields": {
+  "username": "YagamiL",
+  "email": "y.llano@lab.matcom.uh.cu",
+  "first_name": "Yanoel",
+  "last_name": "Llano Boitel"
+}},{"model": "auth.user","pk": 1431,"fields": {
+  "username": "Wendy",
+  "email": "w.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Wendy",
+  "last_name": "Rodríguez Chang"
+}},{"model": "auth.user","pk": 1432,"fields": {
+  "username": "@lbert",
+  "email": "a.mesa@lab.matcom.uh.cu",
+  "first_name": "Alberto",
+  "last_name": "Ramos Mesa"
+}},{"model": "auth.user","pk": 1433,"fields": {
+  "username": "mmartinez",
+  "email": "m.martinez@lab.matcom.uh.cu",
+  "first_name": "Mandy",
+  "last_name": "Martinez Fernandez"
+}},{"model": "auth.user","pk": 1434,"fields": {
+  "username": "cbarcelo",
+  "email": "c.barcelo@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "Barceló Valdés"
+}},{"model": "auth.user","pk": 1435,"fields": {
+  "username": "Alejandro Mustelier C212",
+  "email": "a.mustelier@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "J. Mustelier Cornell"
+}},{"model": "auth.user","pk": 1436,"fields": {
+  "username": "jmachado",
+  "email": "j.machado@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "Arturo Machado Taboas"
+}},{"model": "auth.user","pk": 1437,"fields": {
+  "username": "Manuel",
+  "email": "m.millares@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Millares Alvarez"
+}},{"model": "auth.user","pk": 1438,"fields": {
+  "username": "crosabal",
+  "email": "c.rosabal@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "Gómez Rosabal"
+}},{"model": "auth.user","pk": 1439,"fields": {
+  "username": "Cl4u",
+  "email": "c.porto@lab.matcom.uh.cu",
+  "first_name": "Claudia",
+  "last_name": "Porto Capetillo"
+}},{"model": "auth.user","pk": 1440,"fields": {
+  "username": "Juancho",
+  "email": "j.morales@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "Enrique Morales Calvo"
+}},{"model": "auth.user","pk": 1441,"fields": {
+  "username": "Kappa",
+  "email": "l.bell@lab.matcom.uh.cu",
+  "first_name": "Liams",
+  "last_name": "A. Bell Lucio"
+}},{"model": "auth.user","pk": 1442,"fields": {
+  "username": "William Vazquez Noguerol C-121",
+  "email": "w.vazquez@lab.matcom.uh.cu",
+  "first_name": "William",
+  "last_name": "Vázquez Noguerol"
+}},{"model": "auth.user","pk": 1443,"fields": {
+  "username": "Vendetta",
+  "email": "a.padron@lab.matcom.uh.cu",
+  "first_name": "Alessandro",
+  "last_name": "Padron Reyes"
+}},{"model": "auth.user","pk": 1444,"fields": {
+  "username": "aamion",
+  "email": "a.amion@lab.matcom.uh.cu",
+  "first_name": "Alexander",
+  "last_name": "Amion Alboniga"
+}},{"model": "auth.user","pk": 1445,"fields": {
+  "username": "Silver Lynx",
+  "email": "r.horrach@lab.matcom.uh.cu",
+  "first_name": "Rafael",
+  "last_name": "Alejandro Horrach Santiago"
+}},{"model": "auth.user","pk": 1446,"fields": {
+  "username": "manuel_mauricio",
+  "email": "m.ordoqui@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Mauricio Martinez Ordoqui"
+}},{"model": "auth.user","pk": 1447,"fields": {
+  "username": "pgaleano",
+  "email": "p.galeano@lab.matcom.uh.cu",
+  "first_name": "Patricia",
+  "last_name": "Galeano Zaldivar"
+}},{"model": "auth.user","pk": 1448,"fields": {
+  "username": "Claris Batista Rodriguez",
+  "email": "c.batista@lab.matcom.uh.cu",
+  "first_name": "Claris",
+  "last_name": "Batista Rodriguez"
+}},{"model": "auth.user","pk": 1449,"fields": {
+  "username": "Leandro Milian Rodriguez C-111",
+  "email": "l.milian@lab.matcom.uh.cu",
+  "first_name": "Leandro",
+  "last_name": "J. Milian Rodriguez"
+}},{"model": "auth.user","pk": 1450,"fields": {
+  "username": "rmartell",
+  "email": "r.martell@lab.matcom.uh.cu",
+  "first_name": "Raul",
+  "last_name": "Martell Enriquez"
+}},{"model": "auth.user","pk": 1451,"fields": {
+  "username": "Whitefang",
+  "email": "ernel.gonzalez@lab.matcom.uh.cu",
+  "first_name": "Ernel",
+  "last_name": "Gonzalez Quiroga"
+}},{"model": "auth.user","pk": 1452,"fields": {
+  "username": "ybatista",
+  "email": "y.batista@lab.matcom.uh.cu",
+  "first_name": "Yasmany",
+  "last_name": "Batista Martinez"
+}},{"model": "auth.user","pk": 1453,"fields": {
+  "username": "Dimas de Jesus Veliz Blanco C-121",
+  "email": "d.veliz@lab.matcom.uh.cu",
+  "first_name": "Dimas",
+  "last_name": "de Jesús Veliz Blanco"
+}},{"model": "auth.user","pk": 1454,"fields": {
+  "username": "Hollow",
+  "email": "c.rey@lab.matcom.uh.cu",
+  "first_name": "Cristhian",
+  "last_name": "Rey Gil"
+}},{"model": "auth.user","pk": 1455,"fields": {
+  "username": "dkfgoi338",
+  "email": "e.parolis@lab.matcom.uh.cu",
+  "first_name": "epa",
+  "last_name": ""
+}},{"model": "auth.user","pk": 1456,"fields": {
+  "username": "Vivian",
+  "email": "v.plasencia@lab.matcom.uh.cu",
+  "first_name": "Vivian",
+  "last_name": "Plasencia Calaña"
+}},{"model": "auth.user","pk": 1457,"fields": {
+  "username": "Liliana Navarro Rodriguez c-211",
+  "email": "l.navarro@lab.matcom.uh.cu",
+  "first_name": "Liliana",
+  "last_name": "Navarro Rodriguez"
+}},{"model": "auth.user","pk": 1458,"fields": {
+  "username": "Osbel Ortega Valdes C-113",
+  "email": "o.ortega@lab.matcom.uh.cu",
+  "first_name": "Osbel",
+  "last_name": "Ortega Valdés"
+}},{"model": "auth.user","pk": 1459,"fields": {
+  "username": "FOR",
+  "email": "l.suarezargudin@lab.matcom.uh.cu",
+  "first_name": "Lazaro",
+  "last_name": "E. Suarez-Argudin del Toro"
+}},{"model": "auth.user","pk": 1460,"fields": {
+  "username": "Alejandro Nardo Gonzalez",
+  "email": "a.nardo@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "E. Nardo Gonzalez"
+}},{"model": "auth.user","pk": 1461,"fields": {
+  "username": "Luis Enrique",
+  "email": "l.enrique@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "Enrique Arias Curbelo"
+}},{"model": "auth.user","pk": 1462,"fields": {
+  "username": "AriaN",
+  "email": "a.leon@lab.matcom.uh.cu",
+  "first_name": "Arián",
+  "last_name": "León Benitez"
+}},{"model": "auth.user","pk": 1463,"fields": {
+  "username": "daro",
+  "email": "d.utra@lab.matcom.uh.cu",
+  "first_name": "Darian",
+  "last_name": "Lopez Utra"
+}},{"model": "auth.user","pk": 1464,"fields": {
+  "username": "dmuginga",
+  "email": "d.muginga@lab.matcom.uh.cu",
+  "first_name": "Domingo",
+  "last_name": "Adao Muginga"
+}},{"model": "auth.user","pk": 1465,"fields": {
+  "username": "Day",
+  "email": "d.fundora@lab.matcom.uh.cu",
+  "first_name": "Dayrene",
+  "last_name": "Fundora Gonzalez"
+}},{"model": "auth.user","pk": 1466,"fields": {
+  "username": "Sofi",
+  "email": "s.fernandez@lab.matcom.uh.cu",
+  "first_name": "Sofia",
+  "last_name": "Fernandez Leal"
+}},{"model": "auth.user","pk": 1467,"fields": {
+  "username": "Alejandro Sanchez C - 113",
+  "email": "a.sanchez@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Sánchez Morales"
+}},{"model": "auth.user","pk": 1468,"fields": {
+  "username": "yfonseca",
+  "email": "y.fonseca@lab.matcom.uh.cu",
+  "first_name": "Yasiel",
+  "last_name": "A. Fonseca Rodriguez"
+}},{"model": "auth.user","pk": 1469,"fields": {
+  "username": "Raidel Napoles",
+  "email": "r.napoles@lab.matcom.uh.cu",
+  "first_name": "Raidel",
+  "last_name": "Napoles Perez"
+}},{"model": "auth.user","pk": 1470,"fields": {
+  "username": "cmartinez",
+  "email": "c.martinez@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Martinez Alvarez"
+}},{"model": "auth.user","pk": 1471,"fields": {
+  "username": "ralvarez2",
+  "email": "r.alvarez2@lab.matcom.uh.cu",
+  "first_name": "Raúl",
+  "last_name": "Rodríguez Alvarez"
+}},{"model": "auth.user","pk": 1472,"fields": {
+  "username": "rbeola",
+  "email": "r.beola@lab.matcom.uh.cu",
+  "first_name": "Randy",
+  "last_name": "Beola Planche"
+}},{"model": "auth.user","pk": 1473,"fields": {
+  "username": "JCh",
+  "email": "j.aguilera@lab.matcom.uh.cu",
+  "first_name": "Jorge Christian",
+  "last_name": "Aguilera Navarro"
+}},{"model": "auth.user","pk": 1474,"fields": {
+  "username": "edomingos",
+  "email": "e.domingos@lab.matcom.uh.cu",
+  "first_name": "Evaristo",
+  "last_name": "Domingos Sebastiao"
+}},{"model": "auth.user","pk": 1475,"fields": {
+  "username": "Arlet Ponce Alvarez",
+  "email": "a.ponce@lab.matcom.uh.cu",
+  "first_name": "Arlet",
+  "last_name": "Ponce Alvarez"
+}},{"model": "auth.user","pk": 1476,"fields": {
+  "username": "Daniel ",
+  "email": "d.gonzalez4@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Gonzalez Fernandez"
+}},{"model": "auth.user","pk": 1477,"fields": {
+  "username": "ocruz",
+  "email": "o.cruz@lab.matcom.uh.cu",
+  "first_name": "Oscar",
+  "last_name": "L. Cruz Gonzalez"
+}},{"model": "auth.user","pk": 1478,"fields": {
+  "username": "Antonio",
+  "email": "a.vargas@lab.matcom.uh.cu",
+  "first_name": "Antonio",
+  "last_name": "Torres Vargas"
+}},{"model": "auth.user","pk": 1479,"fields": {
+  "username": "jmanuel",
+  "email": "j.manuel@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Domingos António Manuel"
+}},{"model": "auth.user","pk": 1480,"fields": {
+  "username": "Leandro Gonzalez Montesino",
+  "email": "l.montesino@lab.matcom.uh.cu",
+  "first_name": "Leandro",
+  "last_name": "Gonzalez Montesino"
+}},{"model": "auth.user","pk": 1481,"fields": {
+  "username": "J@ck_$p@rrow!!!",
+  "email": "a.sainz@lab.matcom.uh.cu",
+  "first_name": "Andres",
+  "last_name": "Sainz Alvarez"
+}},{"model": "auth.user","pk": 1482,"fields": {
+  "username": "W!LL_Turner",
+  "email": "a.cartaya@lab.matcom.uh.cu",
+  "first_name": "Alain",
+  "last_name": "Cartaya Salabarria"
+}},{"model": "auth.user","pk": 1483,"fields": {
+  "username": "mpiquito",
+  "email": "m.piquito@lab.matcom.uh.cu",
+  "first_name": "Mauricio",
+  "last_name": "Piquito Vieira"
+}},{"model": "auth.user","pk": 2483,"fields": {
+  "username": "rcruz3",
+  "email": "r.cruz3@lab.matcom.uh.cu",
+  "first_name": "Ruben",
+  "last_name": "Abel Rodriguez Cruz"
+}},{"model": "auth.user","pk": 2484,"fields": {
+  "username": "dsantana2",
+  "email": "d.santana2@lab.matcom.uh.cu",
+  "first_name": "Dianelis",
+  "last_name": "Hernández Santana"
+}},{"model": "auth.user","pk": 2485,"fields": {
+  "username": "kpadilla",
+  "email": "k.padilla@lab.matcom.uh.cu",
+  "first_name": "Kelly",
+  "last_name": "Padilla Moinelo"
+}},{"model": "auth.user","pk": 2486,"fields": {
+  "username": "lacosta",
+  "email": "l.acosta@lab.matcom.uh.cu",
+  "first_name": "Liz",
+  "last_name": "Acosta Caballero"
+}},{"model": "auth.user","pk": 2487,"fields": {
+  "username": "jmolina",
+  "email": "j.molina@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "Samuel Molina Martell"
+}},{"model": "auth.user","pk": 2488,"fields": {
+  "username": "jesperon",
+  "email": "j.esperon@lab.matcom.uh.cu",
+  "first_name": "Jessica",
+  "last_name": "Barbara Esperon Orozco"
+}},{"model": "auth.user","pk": 2489,"fields": {
+  "username": "jporras",
+  "email": "j.porras@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Carlos Cotiñas Porras"
+}},{"model": "auth.user","pk": 2490,"fields": {
+  "username": "CM",
+  "email": "c.gramatges@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Manuel Gramatges Hermida"
+}},{"model": "auth.user","pk": 2491,"fields": {
+  "username": "jroque",
+  "email": "jroque@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "José Roque Cires"
+}},{"model": "auth.user","pk": 2492,"fields": {
+  "username": "mbg",
+  "email": "m.borrageros@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": " Borrageros Graña"
+}},{"model": "auth.user","pk": 2493,"fields": {
+  "username": "dmesejo",
+  "email": "dmesejo@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Mesejo Leon"
+}},{"model": "auth.user","pk": 2494,"fields": {
+  "username": "degauche",
+  "email": "e.izquierdo@matcom.uh.cu",
+  "first_name": "El",
+  "last_name": "papa de yan piel"
+}},{"model": "auth.user","pk": 2495,"fields": {
+  "username": "operez",
+  "email": "o.perez@lab.matcom.uh.cu",
+  "first_name": "Odaleinys",
+  "last_name": "Pérez Pérez"
+}},{"model": "auth.user","pk": 2496,"fields": {
+  "username": "malvarez",
+  "email": "m.alvarez@lab.matcom.uh.cu",
+  "first_name": "Miguel",
+  "last_name": "A. Alvarez Morales"
+}},{"model": "auth.user","pk": 2497,"fields": {
+  "username": "legar",
+  "email": "legarcia@instec.cu",
+  "first_name": "Luis",
+  "last_name": "Enrique García Marrero"
+}},{"model": "auth.user","pk": 2498,"fields": {
+  "username": "abatista",
+  "email": "invalid@email.xyz_119",
+  "first_name": "Adrian",
+  "last_name": "Luis Batista Planas"
+}},{"model": "auth.user","pk": 2499,"fields": {
+  "username": "ibarbaro",
+  "email": "invalid@email.xyz_120",
+  "first_name": "Iram",
+  "last_name": "Barbaro Rivas Ortiz"
+}},{"model": "auth.user","pk": 2500,"fields": {
+  "username": "JoseA132",
+  "email": "j.romero@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "Ariel Romero"
+}},{"model": "auth.user","pk": 2501,"fields": {
+  "username": "lfleitas",
+  "email": "l.fleitas@lab.matcom.uh.cu",
+  "first_name": "Leonardo",
+  "last_name": "Fleitas Álvarez"
+}},{"model": "auth.user","pk": 2502,"fields": {
+  "username": "Ale13",
+  "email": "invalid@email.xyz_121",
+  "first_name": "Alejandro",
+  "last_name": "Ojeda Fernández"
+}},{"model": "auth.user","pk": 2503,"fields": {
+  "username": "agonzalez",
+  "email": "invalid@email.xyz_122",
+  "first_name": "Angel",
+  "last_name": "González"
+}},{"model": "auth.user","pk": 2504,"fields": {
+  "username": "facosta",
+  "email": "invalid@email.xyz_123",
+  "first_name": "Fabio",
+  "last_name": "Acosta"
+}},{"model": "auth.user","pk": 2505,"fields": {
+  "username": "jnunez",
+  "email": "invalid@email.xyz_124",
+  "first_name": "Jorge",
+  "last_name": "Núñez"
+}},{"model": "auth.user","pk": 2506,"fields": {
+  "username": "KFP_UCLV",
+  "email": "rfmorera@uclv.cu",
+  "first_name": "Rafael",
+  "last_name": "Alejandro Fernández Morera"
+}},{"model": "auth.user","pk": 2507,"fields": {
+  "username": "rguerrero",
+  "email": "invalid@email.xyz_125",
+  "first_name": "Ruddy",
+  "last_name": "Guerrero Álvarez"
+}},{"model": "auth.user","pk": 2508,"fields": {
+  "username": "dgonzalez",
+  "email": "invalid@email.xyz_126",
+  "first_name": "Daniset",
+  "last_name": "González Lima"
+}},{"model": "auth.user","pk": 2509,"fields": {
+  "username": "jguerra",
+  "email": "invalid@email.xyz_127",
+  "first_name": "José",
+  "last_name": "Guerra Carmenate"
+}},{"model": "auth.user","pk": 2510,"fields": {
+  "username": "egovea",
+  "email": "invalid@email.xyz_128",
+  "first_name": "Elio",
+  "last_name": "Alejandro Govea Aguilar"
+}},{"model": "auth.user","pk": 2511,"fields": {
+  "username": "mdiaz",
+  "email": "invalid@email.xyz_129",
+  "first_name": "Manuel",
+  "last_name": "Díaz Pérez"
+}},{"model": "auth.user","pk": 2512,"fields": {
+  "username": "Forte11",
+  "email": "invalid@email.xyz_130",
+  "first_name": "Javier",
+  "last_name": "Esteban Forte Reyes"
+}},{"model": "auth.user","pk": 2513,"fields": {
+  "username": "rruben",
+  "email": "invalid@email.xyz_131",
+  "first_name": "Raul",
+  "last_name": "Ruben Castro"
+}},{"model": "auth.user","pk": 2514,"fields": {
+  "username": "rmartinez",
+  "email": "invalid@email.xyz_132",
+  "first_name": "Ruben",
+  "last_name": "Martínez Magaña"
+}},{"model": "auth.user","pk": 2515,"fields": {
+  "username": "alurquiza",
+  "email": "alben@uci.cu",
+  "first_name": "Alben",
+  "last_name": "Luis Urquiza Rojas"
+}},{"model": "auth.user","pk": 2516,"fields": {
+  "username": "kenrique",
+  "email": "invalid@email.xyz_133",
+  "first_name": "Kedir",
+  "last_name": "Enrique Lluch"
+}},{"model": "auth.user","pk": 2517,"fields": {
+  "username": "ssantiesteban",
+  "email": "invalid@email.xyz_134",
+  "first_name": "Samuel",
+  "last_name": "Santiesteban Avila"
+}},{"model": "auth.user","pk": 2518,"fields": {
+  "username": "aborrego",
+  "email": "invalid@email.xyz_135",
+  "first_name": "Antonio",
+  "last_name": "Gonzalez Borrego"
+}},{"model": "auth.user","pk": 2519,"fields": {
+  "username": "rmartin",
+  "email": "invalid@email.xyz_136",
+  "first_name": "Roniel",
+  "last_name": "Martin Alvarez"
+}},{"model": "auth.user","pk": 2520,"fields": {
+  "username": "yguirola",
+  "email": "invalid@email.xyz_137",
+  "first_name": "Yosbel",
+  "last_name": "Lázaro Guirola Manresa"
+}},{"model": "auth.user","pk": 2521,"fields": {
+  "username": "rgonzalez",
+  "email": "invalid@email.xyz_138",
+  "first_name": "Raidel",
+  "last_name": "González Rojas"
+}},{"model": "auth.user","pk": 2522,"fields": {
+  "username": "lperez",
+  "email": "invalid@email.xyz_139",
+  "first_name": "Luis",
+  "last_name": "Manuel Pérez Batista"
+}},{"model": "auth.user","pk": 2523,"fields": {
+  "username": "dbenitez",
+  "email": "invalid@email.xyz_140",
+  "first_name": "Drymon",
+  "last_name": "Alfonso Benitez"
+}},{"model": "auth.user","pk": 2524,"fields": {
+  "username": "razcue",
+  "email": "razcue@estudiantes.uci.cu",
+  "first_name": "Rayko",
+  "last_name": "Azcue Perez"
+}},{"model": "auth.user","pk": 2525,"fields": {
+  "username": "jlenzano",
+  "email": "invalid@email.xyz_141",
+  "first_name": "Jose",
+  "last_name": "Ernesto Lenzano Ramirez"
+}},{"model": "auth.user","pk": 2526,"fields": {
+  "username": "jhernandez",
+  "email": "invalid@email.xyz_142",
+  "first_name": "Jorge",
+  "last_name": "Amado Hernandez Betancourt"
+}},{"model": "auth.user","pk": 2527,"fields": {
+  "username": "emartinez",
+  "email": "invalid@email.xyz_143",
+  "first_name": "Enrique",
+  "last_name": "Martínez González"
+}},{"model": "auth.user","pk": 2528,"fields": {
+  "username": "dqueralta",
+  "email": "invalid@email.xyz_144",
+  "first_name": "Dariam",
+  "last_name": "López de Queralta López"
+}},{"model": "auth.user","pk": 2529,"fields": {
+  "username": "aledesma",
+  "email": "invalid@email.xyz_145",
+  "first_name": "Andy",
+  "last_name": "Ledesma García"
+}},{"model": "auth.user","pk": 2530,"fields": {
+  "username": "dlima",
+  "email": "d.lima@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "L. Rodriguez Lima"
+}},{"model": "auth.user","pk": 2531,"fields": {
+  "username": "HaZaRd",
+  "email": "max.lopez@reduc.edu.cu ",
+  "first_name": "Ernesto",
+  "last_name": "Teruel Velazco"
+}},{"model": "auth.user","pk": 2532,"fields": {
+  "username": "frankr",
+  "email": "frankap@ucp.lt.rimed.cu",
+  "first_name": "",
+  "last_name": "Frank Arteaga Salgado"
+}},{"model": "auth.user","pk": 2533,"fields": {
+  "username": "abestard",
+  "email": "bestard_rivera@nauta.cu",
+  "first_name": "Alexander",
+  "last_name": "Bestard Rivera"
+}},{"model": "auth.user","pk": 2534,"fields": {
+  "username": "vedel",
+  "email": "invalid@email.xyz_146",
+  "first_name": "Victor",
+  "last_name": "Edel Sánchez Miranda"
+}},{"model": "auth.user","pk": 2535,"fields": {
+  "username": "edavid",
+  "email": "invalid@email.xyz_147",
+  "first_name": "Ernesto",
+  "last_name": "David Peña Herrera"
+}},{"model": "auth.user","pk": 2536,"fields": {
+  "username": "dgomez",
+  "email": "invalid@email.xyz_148",
+  "first_name": "Denis",
+  "last_name": "Gómez Cruz"
+}},{"model": "auth.user","pk": 2537,"fields": {
+  "username": "eteruel",
+  "email": "invalid@email.xyz_149",
+  "first_name": "Ernesto",
+  "last_name": "Teruel Velazco"
+}},{"model": "auth.user","pk": 2538,"fields": {
+  "username": "K2S",
+  "email": "invalid@email.xyz_150",
+  "first_name": "Kedir",
+  "last_name": "Enrique Lluch Milanés"
+}},{"model": "auth.user","pk": 2539,"fields": {
+  "username": "dcordb",
+  "email": "dcordb@uclv.cu",
+  "first_name": "Daniel",
+  "last_name": "Enrique Cordovés Borroto"
+}},{"model": "auth.user","pk": 2540,"fields": {
+  "username": "edenis",
+  "email": "invalid@email.xyz_151",
+  "first_name": "Edenis",
+  "last_name": "Denis González"
+}},{"model": "auth.user","pk": 2541,"fields": {
+  "username": "alben",
+  "email": "invalid@email.xyz_152",
+  "first_name": "Alben",
+  "last_name": "Luis Urquiza Rojas"
+}},{"model": "auth.user","pk": 2542,"fields": {
+  "username": "cacorrea",
+  "email": "invalid@email.xyz_153",
+  "first_name": "Carlos",
+  "last_name": "Andrés Correa Gillén"
+}},{"model": "auth.user","pk": 2543,"fields": {
+  "username": "alorenzol",
+  "email": "invalid@email.xyz_154",
+  "first_name": "Adrian",
+  "last_name": "Lorenzo Lambert Diego"
+}},{"model": "auth.user","pk": 2544,"fields": {
+  "username": "leonides",
+  "email": "invalid@email.xyz_155",
+  "first_name": "Leonides",
+  "last_name": "Rodríguez Martínez"
+}},{"model": "auth.user","pk": 2545,"fields": {
+  "username": "SOAP",
+  "email": "santiagodeveloper666@gmail.com",
+  "first_name": "Santiago",
+  "last_name": "Almeida Bolaños"
+}},{"model": "auth.user","pk": 2546,"fields": {
+  "username": "WendyDR",
+  "email": "w.diaz@lab.matcom.uh.cu",
+  "first_name": "Wendy",
+  "last_name": "Diaz Ramirez"
+}},{"model": "auth.user","pk": 2547,"fields": {
+  "username": "jrodriguez",
+  "email": "j.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "K. Hernandez Rodriguez"
+}},{"model": "auth.user","pk": 2548,"fields": {
+  "username": "Ricardo Ivan Valdes Rodriguez C-211",
+  "email": "r.valdes@lab.matcom.uh.cu",
+  "first_name": "Ricardo",
+  "last_name": "Ivan Valdes Rodriguez"
+}},{"model": "auth.user","pk": 2549,"fields": {
+  "username": "Adao Pascoal",
+  "email": "a.fernando@lab.matcom.uh.cu",
+  "first_name": "Adao",
+  "last_name": "Pascoal"
+}},{"model": "auth.user","pk": 2550,"fields": {
+  "username": "albeXL",
+  "email": "a.rosales@lab.matcom.uh.cu",
+  "first_name": "Alberto",
+  "last_name": "Gonzalez Rosales"
+}},{"model": "auth.user","pk": 2551,"fields": {
+  "username": "Kncio",
+  "email": "d.cancio@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Cancio Millián"
+}},{"model": "auth.user","pk": 2552,"fields": {
+  "username": "Wrath",
+  "email": "c.rodriguez@lab.matcom.uh.cu",
+  "first_name": "Christian",
+  "last_name": "Rodriguez Diaz"
+}},{"model": "auth.user","pk": 2553,"fields": {
+  "username": "Mephistopheles",
+  "email": "r.mendez@lab.matcom.uh.cu",
+  "first_name": "Richard",
+  "last_name": "Miguel Méndez Castillo"
+}},{"model": "auth.user","pk": 2554,"fields": {
+  "username": "hectoradrian",
+  "email": "h.castellanos@lab.matcom.uh.cu",
+  "first_name": "Hector",
+  "last_name": "Adrian Castellanos Loaces"
+}},{"model": "auth.user","pk": 2555,"fields": {
+  "username": "hector_b@rBOSS@",
+  "email": "j.salgado@lab.matcom.uh.cu",
+  "first_name": "José",
+  "last_name": "Jorge Rodríguez Salgado"
+}},{"model": "auth.user","pk": 2556,"fields": {
+  "username": "Emmanuel96",
+  "email": "e.rosa@lab.matcom.uh.cu",
+  "first_name": "Emmanuel",
+  "last_name": "de la Rosa Pita"
+}},{"model": "auth.user","pk": 2557,"fields": {
+  "username": "Jessie09",
+  "email": "j.quesada2@lab.matcom.uh.cu",
+  "first_name": "Jessica",
+  "last_name": "Quesada Delgado"
+}},{"model": "auth.user","pk": 2558,"fields": {
+  "username": "CiberLJBB",
+  "email": "l.barrios@lab.matcom.uh.cu",
+  "first_name": "Lázaro",
+  "last_name": "Jesús Baños Barrios"
+}},{"model": "auth.user","pk": 2559,"fields": {
+  "username": "fmujica",
+  "email": "f.mujica@lab.matcom.uh.cu",
+  "first_name": "Frankie",
+  "last_name": "Mujica Cal"
+}},{"model": "auth.user","pk": 2560,"fields": {
+  "username": "Jorgito",
+  "email": "j.enrriquez@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "L. Perez Enrriquez"
+}},{"model": "auth.user","pk": 2561,"fields": {
+  "username": "IB",
+  "email": "i.hernandez3@lab.matcom.uh.cu",
+  "first_name": "Isabella",
+  "last_name": "Hernandez Garcia"
+}},{"model": "auth.user","pk": 2562,"fields": {
+  "username": "ArielXL",
+  "email": "a.plasencia@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Plasencia Díaz"
+}},{"model": "auth.user","pk": 2563,"fields": {
+  "username": "root",
+  "email": "invalid@email.xyz_156",
+  "first_name": "root",
+  "last_name": ""
+}},{"model": "auth.user","pk": 2564,"fields": {
+  "username": "CoNKeR",
+  "email": "d.garcia@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Alberto Garcia Perez"
+}},{"model": "auth.user","pk": 2565,"fields": {
+  "username": "dmilanes",
+  "email": "d.milanes@lab.matcom.uh.cu",
+  "first_name": "Daniel",
+  "last_name": "Enrique Milanes Perez"
+}},{"model": "auth.user","pk": 2566,"fields": {
+  "username": "Wiz-Khalifa",
+  "email": "y.orosa@lab.matcom.uh.cu",
+  "first_name": "Yandy",
+  "last_name": "Sánchez Orosa"
+}},{"model": "auth.user","pk": 2567,"fields": {
+  "username": "Asterix",
+  "email": "l.padron@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "Ernesto Martínez Padrón"
+}},{"model": "auth.user","pk": 2568,"fields": {
+  "username": "Bon Jovi",
+  "email": "j.diaz2@lab.matcom.uh.cu",
+  "first_name": "Javier",
+  "last_name": "Diaz Rodriguez"
+}},{"model": "auth.user","pk": 2569,"fields": {
+  "username": "Chris Brown",
+  "email": "j.esquivel@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "Carlos Esquivel Lamis"
+}},{"model": "auth.user","pk": 2570,"fields": {
+  "username": "Ar1A",
+  "email": "d.yero@lab.matcom.uh.cu",
+  "first_name": "Douglas",
+  "last_name": "Yero Moreno"
+}},{"model": "auth.user","pk": 2571,"fields": {
+  "username": "H@ck",
+  "email": "d.quesada@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Orlando De Quesada Oliva"
+}},{"model": "auth.user","pk": 2572,"fields": {
+  "username": "fnaranjo",
+  "email": "f.naranjo@lab.matcom.uh.cu",
+  "first_name": "Frank",
+  "last_name": "Sadan Naranjo Nodo"
+}},{"model": "auth.user","pk": 2573,"fields": {
+  "username": "TeN[s]Ai",
+  "email": "J.CRUZ@lab.matcom.uh.cu",
+  "first_name": "Joel",
+  "last_name": "David Hernández Cruz"
+}},{"model": "auth.user","pk": 2574,"fields": {
+  "username": "jroque_2",
+  "email": "j.roque@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "J Roque Cirs"
+}},{"model": "auth.user","pk": 2575,"fields": {
+  "username": "Sc@reCroW",
+  "email": "m.martinez2@lab.matcom.uh.cu",
+  "first_name": "Miguel",
+  "last_name": "Angel Martinez Perez"
+}},{"model": "auth.user","pk": 2576,"fields": {
+  "username": "egrenot",
+  "email": "e.grenot@lab.matcom.uh.cu",
+  "first_name": "Elaine",
+  "last_name": "Grenot Castellano"
+}},{"model": "auth.user","pk": 2577,"fields": {
+  "username": "newBee",
+  "email": "h.riveron@lab.matcom.uh.cu",
+  "first_name": "Humberto",
+  "last_name": "Riveron Valdes"
+}},{"model": "auth.user","pk": 2578,"fields": {
+  "username": "dmanzanares",
+  "email": "d.manzanares@lab.matcom.uh.cu",
+  "first_name": "Darians",
+  "last_name": "Manzanares Suárez"
+}},{"model": "auth.user","pk": 2579,"fields": {
+  "username": "T@ylor",
+  "email": "t.tabares@lab.matcom.uh.cu",
+  "first_name": "Taylor",
+  "last_name": "Tabares Guzmán"
+}},{"model": "auth.user","pk": 2580,"fields": {
+  "username": "oliva",
+  "email": "a.oliva@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Oliva Gonzalez"
+}},{"model": "auth.user","pk": 2581,"fields": {
+  "username": "aching",
+  "email": "a.ching@lab.matcom.uh.cu",
+  "first_name": "Arlenis",
+  "last_name": "Ching Suárez"
+}},{"model": "auth.user","pk": 2582,"fields": {
+  "username": "Fr@nk",
+  "email": "f.delapaz@lab.matcom.uh.cu",
+  "first_name": "Frank",
+  "last_name": "Gamboa de la Paz"
+}},{"model": "auth.user","pk": 2583,"fields": {
+  "username": "Troy's Horse",
+  "email": "h.villarejo@lab.matcom.uh.cu",
+  "first_name": "Henrry",
+  "last_name": "B. Villarejo Reyes"
+}},{"model": "auth.user","pk": 2584,"fields": {
+  "username": "white",
+  "email": "a.fertel@lab.matcom.uh.cu",
+  "first_name": "Alexander",
+  "last_name": "A. Gonzalez Fertel"
+}},{"model": "auth.user","pk": 2585,"fields": {
+  "username": "asantiesteban",
+  "email": "a.santiesteban@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Coto Santiesteban"
+}},{"model": "auth.user","pk": 2586,"fields": {
+  "username": "M@rcel",
+  "email": "m.aguilar@lab.matcom.uh.cu",
+  "first_name": "Marcel",
+  "last_name": "Ernesto Sánchez Aguilar"
+}},{"model": "auth.user","pk": 2587,"fields": {
+  "username": "Grey!",
+  "email": "g.valdes@lab.matcom.uh.cu",
+  "first_name": "Greidy",
+  "last_name": "Valdes Vivanco"
+}},{"model": "auth.user","pk": 2588,"fields": {
+  "username": "Estevanell",
+  "email": "e.estevanell@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "Luis Estevanell Valladares"
+}},{"model": "auth.user","pk": 2589,"fields": {
+  "username": "Roberto Balboa",
+  "email": "r.balboa@lab.matcom.uh.cu",
+  "first_name": "Roberto",
+  "last_name": "Balboa González"
+}},{"model": "auth.user","pk": 2590,"fields": {
+  "username": "lsilva",
+  "email": "l.silva@lab.matcom.uh.cu",
+  "first_name": "Liset",
+  "last_name": "Silva Oropesa"
+}},{"model": "auth.user","pk": 2591,"fields": {
+  "username": "K!R!70",
+  "email": "g.cabrera@lab.matcom.uh.cu",
+  "first_name": "Gilbert",
+  "last_name": "Rafael Garcia Cabrera"
+}},{"model": "auth.user","pk": 2592,"fields": {
+  "username": "Kamina",
+  "email": "a.guevara@lab.matcom.uh.cu",
+  "first_name": "Andres",
+  "last_name": "R. Cruz Guevara"
+}},{"model": "auth.user","pk": 2593,"fields": {
+  "username": "dpradas",
+  "email": "d.pradas@lab.matcom.uh.cu",
+  "first_name": "Dariel",
+  "last_name": "Antonio Pradas Vargas"
+}},{"model": "auth.user","pk": 2594,"fields": {
+  "username": "oscarluis",
+  "email": "oscarluis@lab.matcom.uh.cu",
+  "first_name": "Oscar",
+  "last_name": "L. Vera Pérez"
+}},{"model": "auth.user","pk": 2595,"fields": {
+  "username": "jdelavega",
+  "email": "j.delavega@lab.matcom.uh.cu",
+  "first_name": "Jorge Ignacio",
+  "last_name": "Rodriguez de la Vega Castro"
+}},{"model": "auth.user","pk": 2596,"fields": {
+  "username": "dsuarez",
+  "email": "d.suarez@lab.matcom.uh.cu",
+  "first_name": "Dayron",
+  "last_name": "Suárez Moreira"
+}},{"model": "auth.user","pk": 2597,"fields": {
+  "username": "ParamountXSoul",
+  "email": "j.marchena@lab.matcom.uh.cu",
+  "first_name": "Jorge",
+  "last_name": "Marchena Menendez"
+}},{"model": "auth.user","pk": 2598,"fields": {
+  "username": "Exceded",
+  "email": "d.castillo@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Castillo Lopez"
+}},{"model": "auth.user","pk": 2599,"fields": {
+  "username": "Hipatia",
+  "email": "p.fonte@lab.matcom.uh.cu",
+  "first_name": "Paula",
+  "last_name": "Fonte Sánchez"
+}},{"model": "auth.user","pk": 2600,"fields": {
+  "username": "ameireles",
+  "email": "a.meireles@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Sanchez Meireles"
+}},{"model": "auth.user","pk": 2601,"fields": {
+  "username": "Steve - O",
+  "email": "h.vigil@lab.matcom.uh.cu",
+  "first_name": "Hector",
+  "last_name": "Jesus Vigil-Escalera Ramos"
+}},{"model": "auth.user","pk": 2602,"fields": {
+  "username": "wasp3",
+  "email": "g.morales@lab.matcom.uh.cu",
+  "first_name": "Gealber",
+  "last_name": "Morales Basalo"
+}},{"model": "auth.user","pk": 2603,"fields": {
+  "username": "HeLL",
+  "email": "r.fonteboa@lab.matcom.uh.cu",
+  "first_name": "Rogelio",
+  "last_name": "A. Fonteboa Zamora"
+}},{"model": "auth.user","pk": 2604,"fields": {
+  "username": "Gr@y",
+  "email": "m.toranzo@lab.matcom.uh.cu",
+  "first_name": "Marcos",
+  "last_name": "Toranzo Alfonso"
+}},{"model": "auth.user","pk": 2605,"fields": {
+  "username": "killer",
+  "email": "c.guevara@lab.matcom.uh.cu",
+  "first_name": "Cesar",
+  "last_name": "E. Guevara Moreno"
+}},{"model": "auth.user","pk": 2606,"fields": {
+  "username": "Varda",
+  "email": "a.carrillo@lab.matcom.uh.cu",
+  "first_name": "Aylin",
+  "last_name": "Carrillo Prieto"
+}},{"model": "auth.user","pk": 2607,"fields": {
+  "username": "abazan",
+  "email": "a.bazan@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "Bazan Rey"
+}},{"model": "auth.user","pk": 2608,"fields": {
+  "username": "ccuello",
+  "email": "c.cuello@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Rodriguez Cuello"
+}},{"model": "auth.user","pk": 2609,"fields": {
+  "username": "mguevara",
+  "email": "m.guevara@lab.matcom.uh.cu",
+  "first_name": "Marco",
+  "last_name": "Antonio Guevara Rodríguez"
+}},{"model": "auth.user","pk": 2610,"fields": {
+  "username": "Fidac",
+  "email": "e.quevedo@lab.matcom.uh.cu",
+  "first_name": "Ernesto",
+  "last_name": "Quevedo Caballero"
+}},{"model": "auth.user","pk": 2611,"fields": {
+  "username": "lalfonso",
+  "email": "l.alfonso@lab.matcom.uh.cu",
+  "first_name": "Lisbet",
+  "last_name": "de la Caridad Rodríguez Alfonso"
+}},{"model": "auth.user","pk": 2612,"fields": {
+  "username": "O7aKu",
+  "email": "j.fuste@lab.matcom.uh.cu",
+  "first_name": "Juan",
+  "last_name": "A. Fuste Rodriguez"
+}},{"model": "auth.user","pk": 2613,"fields": {
+  "username": "mugiwar@",
+  "email": "j.sanchez@lab.matcom.uh.cu",
+  "first_name": "Julio",
+  "last_name": "C Sanchez Garcia"
+}},{"model": "auth.user","pk": 2614,"fields": {
+  "username": "dfernandez",
+  "email": "d.fernandez@lab.matcom.uh.cu",
+  "first_name": "Dayana",
+  "last_name": "Perez Fernandez"
+}},{"model": "auth.user","pk": 2615,"fields": {
+  "username": "dcordero",
+  "email": "d.cordero@lab.matcom.uh.cu",
+  "first_name": "Dayron",
+  "last_name": "Cordero Ruiz"
+}},{"model": "auth.user","pk": 2616,"fields": {
+  "username": "asablon",
+  "email": "a.sablon@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Sablon Rodriguez"
+}},{"model": "auth.user","pk": 2617,"fields": {
+  "username": "leclerc",
+  "email": "leclerc@matcom.uh.cu",
+  "first_name": "Jean",
+  "last_name": "Le'Clerc Arrastia"
+}},{"model": "auth.user","pk": 2618,"fields": {
+  "username": "rochoa",
+  "email": "rochoa@lab.matcom.uh.cu",
+  "first_name": "Rafael",
+  "last_name": "Ochoa de la Cruz"
+}},{"model": "auth.user","pk": 2619,"fields": {
+  "username": "FERG",
+  "email": "f.rosales@lab.matcom.uh.cu",
+  "first_name": "Frank",
+  "last_name": "Elier Rosales Gonzalez"
+}},{"model": "auth.user","pk": 2620,"fields": {
+  "username": "A Sanchez",
+  "email": "a.sierra@lab.matcom.uh.cu",
+  "first_name": "Andy",
+  "last_name": "Sanchez Sierra"
+}},{"model": "auth.user","pk": 2621,"fields": {
+  "username": "Aluc@rd",
+  "email": "a.valencia@lab.matcom.uh.cu",
+  "first_name": "Ariel",
+  "last_name": "A. Valencia Hernandez"
+}},{"model": "auth.user","pk": 2622,"fields": {
+  "username": "Eduar2",
+  "email": "e.moreira@lab.matcom.uh.cu",
+  "first_name": "Eduardo",
+  "last_name": "Moreira Gonzalez"
+}},{"model": "auth.user","pk": 2623,"fields": {
+  "username": "mvillalba",
+  "email": "m.villalba@lab.matcom.uh.cu",
+  "first_name": "Masiel",
+  "last_name": "Villalba Carmenate"
+}},{"model": "auth.user","pk": 2624,"fields": {
+  "username": "strujillo",
+  "email": "s.trujillo@lab.matcom.uh.cu",
+  "first_name": "Samuel",
+  "last_name": "Hernández Trujillo"
+}},{"model": "auth.user","pk": 2625,"fields": {
+  "username": "harry",
+  "email": "h.masson@lab.matcom.uh.cu",
+  "first_name": "Hector",
+  "last_name": "Felipe Masson Rosquete"
+}},{"model": "auth.user","pk": 2626,"fields": {
+  "username": "hdo",
+  "email": "h.do@lab.matcom.uh.cu",
+  "first_name": "Hieu",
+  "last_name": "Do Ngoc"
+}},{"model": "auth.user","pk": 2627,"fields": {
+  "username": "jgambe",
+  "email": "j.gambe@lab.matcom.uh.cu",
+  "first_name": "Julio",
+  "last_name": "Daniel Gambe Alcorta"
+}},{"model": "auth.user","pk": 2628,"fields": {
+  "username": "hros18",
+  "email": "h.rosales@lab.matcom.uh.cu",
+  "first_name": "Harold",
+  "last_name": "Rosales Hernandez"
+}},{"model": "auth.user","pk": 2629,"fields": {
+  "username": "Marok",
+  "email": "m.flores@lab.matcom.uh.cu",
+  "first_name": "Marcos",
+  "last_name": "Alderete Flores"
+}},{"model": "auth.user","pk": 2630,"fields": {
+  "username": "Y@d!3L",
+  "email": "y.felipe@lab.matcom.uh.cu",
+  "first_name": "Yadiel",
+  "last_name": "Felipe Medina"
+}},{"model": "auth.user","pk": 2631,"fields": {
+  "username": "rgarricks",
+  "email": "r.garricks@lab.matcom.uh.cu",
+  "first_name": "Raylan",
+  "last_name": "Garricks Mola"
+}},{"model": "auth.user","pk": 2632,"fields": {
+  "username": "ygil",
+  "email": "y.gil@lab.matcom.uh.cu",
+  "first_name": "Yenli",
+  "last_name": "Gil Machado"
+}},{"model": "auth.user","pk": 2633,"fields": {
+  "username": "J0K3R",
+  "email": "a.perez3@lab.matcom.uh.cu",
+  "first_name": "Adrian",
+  "last_name": "Pérez Fernández"
+}},{"model": "auth.user","pk": 2634,"fields": {
+  "username": "JEF",
+  "email": "j.fuentes2@lab.matcom.uh.cu",
+  "first_name": "Jesus",
+  "last_name": "Enrique Fuentes Gonzalez"
+}},{"model": "auth.user","pk": 2635,"fields": {
+  "username": "rbarrera",
+  "email": "r.barrera@lab.matcom.uh.cu",
+  "first_name": "Reinaldo",
+  "last_name": "Barrera Travieso"
+}},{"model": "auth.user","pk": 2636,"fields": {
+  "username": "jmenendez",
+  "email": "j.menendez@lab.matcom.uh.cu",
+  "first_name": "Jose",
+  "last_name": "Diego Menendez del Cueto"
+}},{"model": "auth.user","pk": 2637,"fields": {
+  "username": "Sparta",
+  "email": "m.fernandez@lab.matcom.uh.cu",
+  "first_name": "Manuel",
+  "last_name": "Alejandro Fernandez Leon"
+}},{"model": "auth.user","pk": 2638,"fields": {
+  "username": "rramos",
+  "email": "r.ramos@lab.matcom.uh.cu",
+  "first_name": "Rayniel",
+  "last_name": "Ramos Gonzalez"
+}},{"model": "auth.user","pk": 2639,"fields": {
+  "username": "alfaro123",
+  "email": "l.alfaro@lab.matcom.uh.cu",
+  "first_name": "Liset",
+  "last_name": "Alfaro Gonzalez"
+}},{"model": "auth.user","pk": 2640,"fields": {
+  "username": "ravelo",
+  "email": "ravelo@lab.matcom.uh.cu",
+  "first_name": "Raudel",
+  "last_name": "Ravelo Suarez"
+}},{"model": "auth.user","pk": 2641,"fields": {
+  "username": "lchiu",
+  "email": "l.chiu@lab.matcom.uh.cu",
+  "first_name": "Liliette",
+  "last_name": "José Chiu Rodríguez"
+}},{"model": "auth.user","pk": 2642,"fields": {
+  "username": "rgarcia",
+  "email": "r.garcia@lab.matcom.uh.cu",
+  "first_name": "Rodrigo",
+  "last_name": "Sua Garcia Eternod"
+}},{"model": "auth.user","pk": 3642,"fields": {
+  "username": "asanchez3",
+  "email": "a.sanchez3@lab.matcom.uh.cu",
+  "first_name": "Adrian",
+  "last_name": "Gonzalez Sanchez"
+}},{"model": "auth.user","pk": 3643,"fields": {
+  "username": "cmolina",
+  "email": "c.molina@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Aryam Martínez Molina"
+}},{"model": "auth.user","pk": 3644,"fields": {
+  "username": "lfleitas_2",
+  "email": "l.fleitas@lab.matcom.uh.cu_2",
+  "first_name": "Leonardo",
+  "last_name": "Fleitas Alvarez"
+}},{"model": "auth.user","pk": 3645,"fields": {
+  "username": "ldiaz",
+  "email": "l.diaz@lab.matcom.uh.cu",
+  "first_name": "Luis",
+  "last_name": "Alberto Diaz Borge"
+}},{"model": "auth.user","pk": 3646,"fields": {
+  "username": "aramirez",
+  "email": "a.ramirez@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Ramirez Comesannas"
+}},{"model": "auth.user","pk": 3647,"fields": {
+  "username": "eramos",
+  "email": "e.ramos@lab.matcom.uh.cu",
+  "first_name": "Eziel",
+  "last_name": "Christians Ramos Pinon"
+}},{"model": "auth.user","pk": 3648,"fields": {
+  "username": "dtoledo",
+  "email": "d.toledo@lab.matcom.uh.cu",
+  "first_name": "David",
+  "last_name": "Toledo Wong"
+}},{"model": "auth.user","pk": 3649,"fields": {
+  "username": "arodriguez4",
+  "email": "a.rodriguez4@lab.matcom.uh.cu",
+  "first_name": "Alejandro",
+  "last_name": "Rodriguez Perez"
+}},{"model": "auth.user","pk": 4649,"fields": {
+  "username": "dalejandro",
+  "email": "invalid@email.xyz_157",
+  "first_name": "Daniel",
+  "last_name": "Alejandro Romero Geigel"
+}},{"model": "auth.user","pk": 4650,"fields": {
+  "username": "kdiaz",
+  "email": "invalid@email.xyz_158",
+  "first_name": "Karel",
+  "last_name": "Díaz Alfonso"
+}},{"model": "auth.user","pk": 4651,"fields": {
+  "username": "egonzalez",
+  "email": "invalid@email.xyz_159",
+  "first_name": "Eduardo",
+  "last_name": "González Castillo"
+}},{"model": "auth.user","pk": 4652,"fields": {
+  "username": "garmada",
+  "email": "invalid@email.xyz_160",
+  "first_name": "Guillermo",
+  "last_name": "Armada González"
+}},{"model": "auth.user","pk": 4653,"fields": {
+  "username": "clorenzo",
+  "email": "invalid@email.xyz_161",
+  "first_name": "Carlos",
+  "last_name": "Joel Lorenzo Batista"
+}},{"model": "auth.user","pk": 4654,"fields": {
+  "username": "cdiaz",
+  "email": "crdiaz@estudiantes.uci.cu",
+  "first_name": "Carlos",
+  "last_name": "Rafael Díaz Negrín"
+}},{"model": "auth.user","pk": 4655,"fields": {
+  "username": "jtexidor",
+  "email": "invalid@email.xyz_162",
+  "first_name": "José",
+  "last_name": "Carlos Rodríguez Texidor"
+}},{"model": "auth.user","pk": 4656,"fields": {
+  "username": "jbarrios",
+  "email": "invalid@email.xyz_163",
+  "first_name": "Jesús",
+  "last_name": "Hernández Barrios"
+}},{"model": "auth.user","pk": 4657,"fields": {
+  "username": "adanilo",
+  "email": "invalid@email.xyz_164",
+  "first_name": "Arián",
+  "last_name": "Danilo Escalona Márquez"
+}},{"model": "auth.user","pk": 4658,"fields": {
+  "username": "rperdomo",
+  "email": "invalid@email.xyz_165",
+  "first_name": "Raciel",
+  "last_name": "Perdomo Gómez"
+}},{"model": "auth.user","pk": 4659,"fields": {
+  "username": "ptorres",
+  "email": "invalid@email.xyz_166",
+  "first_name": "Pedro",
+  "last_name": "Torres Paredes"
+}},{"model": "auth.user","pk": 4660,"fields": {
+  "username": "jaleaga",
+  "email": "invalid@email.xyz_167",
+  "first_name": "Javier",
+  "last_name": "Aleaga García"
+}},{"model": "auth.user","pk": 4661,"fields": {
+  "username": "imachin",
+  "email": "invalid@email.xyz_168",
+  "first_name": "Israel",
+  "last_name": "Machin Planas"
+}},{"model": "auth.user","pk": 4662,"fields": {
+  "username": "aona",
+  "email": "invalid@email.xyz_169",
+  "first_name": "Andy",
+  "last_name": "Suárez Oña"
+}},{"model": "auth.user","pk": 4663,"fields": {
+  "username": "rramirez",
+  "email": "invalid@email.xyz_170",
+  "first_name": "Rolando",
+  "last_name": "Ramírez Hidalgo"
+}},{"model": "auth.user","pk": 4664,"fields": {
+  "username": "arodriguez",
+  "email": "invalid@email.xyz_171",
+  "first_name": "Adrián",
+  "last_name": "Rodríguez Alvarez"
+}},{"model": "auth.user","pk": 4665,"fields": {
+  "username": "acuza",
+  "email": "invalid@email.xyz_172",
+  "first_name": "Abel",
+  "last_name": "Cuza Del Pino"
+}},{"model": "auth.user","pk": 4666,"fields": {
+  "username": "lfundichely",
+  "email": "invalid@email.xyz_173",
+  "first_name": "Leandro",
+  "last_name": "Ernesto Fundichely Velazco"
+}},{"model": "auth.user","pk": 4667,"fields": {
+  "username": "dgfraga",
+  "email": "invalid@email.xyz_174",
+  "first_name": "Daniel",
+  "last_name": "Gómez Fraga"
+}},{"model": "auth.user","pk": 4668,"fields": {
+  "username": "aosorio",
+  "email": "invalid@email.xyz_175",
+  "first_name": "Alejandro",
+  "last_name": "González Osorio"
+}},{"model": "auth.user","pk": 4669,"fields": {
+  "username": "jlrodriguez",
+  "email": "invalid@email.xyz_176",
+  "first_name": "Jonathan",
+  "last_name": "Luis Rodríguez"
+}},{"model": "auth.user","pk": 4670,"fields": {
+  "username": "yallan",
+  "email": "invalid@email.xyz_177",
+  "first_name": "Yulian",
+  "last_name": "Allan Muñoz Todd"
+}},{"model": "auth.user","pk": 4671,"fields": {
+  "username": "yalcantara",
+  "email": "invalid@email.xyz_178",
+  "first_name": "Yuri",
+  "last_name": "Alcantara Olivero"
+}},{"model": "auth.user","pk": 4672,"fields": {
+  "username": "wmartinez",
+  "email": "invalid@email.xyz_179",
+  "first_name": "William",
+  "last_name": "Martinez Acosta"
+}},{"model": "auth.user","pk": 4673,"fields": {
+  "username": "ylaborde",
+  "email": "invalid@email.xyz_180",
+  "first_name": "Yordan",
+  "last_name": "Laborde Peña"
+}},{"model": "auth.user","pk": 4674,"fields": {
+  "username": "jponce",
+  "email": "invalid@email.xyz_181",
+  "first_name": "Jeiler",
+  "last_name": "Ponce Guilarte"
+}},{"model": "auth.user","pk": 4675,"fields": {
+  "username": "yguerra",
+  "email": "invalid@email.xyz_182",
+  "first_name": "Yunier",
+  "last_name": "Guerra Sánchez"
+}},{"model": "auth.user","pk": 4676,"fields": {
+  "username": "iaguilar",
+  "email": "invalid@email.xyz_183",
+  "first_name": "Ismael",
+  "last_name": "Aguilar Benítez"
+}},{"model": "auth.user","pk": 4677,"fields": {
+  "username": "jmilan",
+  "email": "invalid@email.xyz_184",
+  "first_name": "Julián",
+  "last_name": "Camilo Santana Milán"
+}},{"model": "auth.user","pk": 4678,"fields": {
+  "username": "amatos",
+  "email": "invalid@email.xyz_185",
+  "first_name": "Armando",
+  "last_name": "Díaz Matos"
+}},{"model": "auth.user","pk": 4679,"fields": {
+  "username": "mguerra",
+  "email": "invalid@email.xyz_186",
+  "first_name": "Marcos",
+  "last_name": "Martínez Guerra"
+}},{"model": "auth.user","pk": 4680,"fields": {
+  "username": "agil",
+  "email": "invalid@email.xyz_187",
+  "first_name": "Aurora",
+  "last_name": "Gil Pons"
+}},{"model": "auth.user","pk": 4681,"fields": {
+  "username": "epascual",
+  "email": "invalid@email.xyz_188",
+  "first_name": "Eduardo",
+  "last_name": "Pascual Aseff"
+}},{"model": "auth.user","pk": 4682,"fields": {
+  "username": "arivera",
+  "email": "invalid@email.xyz_189",
+  "first_name": "Alexander",
+  "last_name": "Bestard Rivera"
+}},{"model": "auth.user","pk": 4683,"fields": {
+  "username": "lcorrea",
+  "email": "invalid@email.xyz_190",
+  "first_name": "Luis",
+  "last_name": "Antonio Correa Leyva"
+}},{"model": "auth.user","pk": 4684,"fields": {
+  "username": "rhidalgo",
+  "email": "invalid@email.xyz_191",
+  "first_name": "Reynerio",
+  "last_name": "Hidalgo Salis"
+}},{"model": "auth.user","pk": 4685,"fields": {
+  "username": "btamayo",
+  "email": "invalid@email.xyz_192",
+  "first_name": "Brenda",
+  "last_name": "Tamayo Oca"
+}},{"model": "auth.user","pk": 4686,"fields": {
+  "username": "mgailard",
+  "email": "invalid@email.xyz_193",
+  "first_name": "Michael",
+  "last_name": "Gaillard"
+}},{"model": "auth.user","pk": 4687,"fields": {
+  "username": "mgonzalez",
+  "email": "invalid@email.xyz_194",
+  "first_name": "Michael",
+  "last_name": "Gonzáles"
+}},{"model": "auth.user","pk": 4688,"fields": {
+  "username": "jlesteiro",
+  "email": "invalid@email.xyz_195",
+  "first_name": "José",
+  "last_name": "Ángel Lesteiro Tejeda"
+}},{"model": "auth.user","pk": 4689,"fields": {
+  "username": "ydalmau",
+  "email": "invalid@email.xyz_196",
+  "first_name": "Yannier",
+  "last_name": "L. Dalmau Solano"
+}},{"model": "auth.user","pk": 4690,"fields": {
+  "username": "jrubiera",
+  "email": "invalid@email.xyz_197",
+  "first_name": "José",
+  "last_name": "Alejandro Rubiera Gimeno"
+}},{"model": "auth.user","pk": 4691,"fields": {
+  "username": "Y3s!c@",
+  "email": "y.abreu@lab.matcom.uh.cu",
+  "first_name": "Yesica",
+  "last_name": "Abreu Jimenez"
+}},{"model": "auth.user","pk": 4692,"fields": {
+  "username": "Galma",
+  "email": "g.arguelles@lab.matcom.uh.cu",
+  "first_name": "Gabriela",
+  "last_name": "Arguelles"
+}},{"model": "auth.user","pk": 4693,"fields": {
+  "username": "cferrando",
+  "email": "invalid@email.xyz_198",
+  "first_name": "c.ferrando",
+  "last_name": ""
+}},{"model": "auth.user","pk": 4694,"fields": {
+  "username": "DGC",
+  "email": "d.gomez2@lab.matcom.uh.cu",
+  "first_name": "Denis",
+  "last_name": "Gómez Cruz"
+}},{"model": "auth.user","pk": 4695,"fields": {
+  "username": "Leynier41",
+  "email": "l.gutierrez@lab.matcom.uh.cu",
+  "first_name": "Leynier",
+  "last_name": "Gutierrez Gonzalez"
+}},{"model": "auth.user","pk": 4696,"fields": {
+  "username": "LZD",
+  "email": "l.suarez@lab.matcom.uh.cu",
+  "first_name": "Lazaro",
+  "last_name": ""
+}},{"model": "auth.user","pk": 4697,"fields": {
+  "username": "cbermudez",
+  "email": "c.bermudez@lab.matcom.uh.cu",
+  "first_name": "Carlos",
+  "last_name": "Bermudez Porto"
+}},{"model": "auth.user","pk": 4698,"fields": {
+  "username": "aroque2",
+  "email": "invalid@email.xyz_199",
+  "first_name": "a.roque2",
+  "last_name": ""
+}},{"model": "auth.user","pk": 4699,"fields": {
+  "username": "shernandez",
+  "email": "s.hernandez@lab.matcom.uh.cu",
+  "first_name": "Samuel",
+  "last_name": "Hernandez Trujillo"
+}}]

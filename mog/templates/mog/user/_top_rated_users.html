@@ -1,0 +1,20 @@
+{% load filters %}
+
+<div>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center"><i class="glyphicon glyphicon-user"></i></th>
+            <th class="text-center"><i class="glyphicon glyphicon-bookmark"></i></th>
+        </tr>
+        {% for profile in top_rated_profiles %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">{% include 'mog/user/_link.html' with profile=profile %}</td>
+                <td class="text-center">{{ profile.rating|colorize_rating }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No users yet!</td></tr>
+        {% endfor %}
+    </table>
+</div>

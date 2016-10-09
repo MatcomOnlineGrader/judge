@@ -1,0 +1,38 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+
+{% block title %}Create problem{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="title">Create problem</h3>
+        </div>
+
+        <div class="col-md-12">
+            <form action="{% url 'mog:problem_create' %}" method="post">
+                {% csrf_token %}
+                {% include 'mog/includes/form.html' with form=form %}
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-3">
+                        <a href="{% url 'mog:index' %}" class="btn btn-lg btn-default btn-block">Cancel</a>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/editor.summernote/summernote.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/font-awesome/css/font-awesome.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'mog/plugins/editor.summernote/summernote.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/js/mog.js' %}"></script>
+{% endblock %}

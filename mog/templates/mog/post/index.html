@@ -1,0 +1,48 @@
+{% extends 'mog/base.html' %}
+
+{% load filters %}
+{% load humanize %}
+{% load paginator %}
+
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="center title">Posts</h3>
+        </div>
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Author</th>
+                        <th>Title</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in post_list %}
+                        <tr>
+                            <td>{% include 'mog/user/_link.html' with user=post.user %}</td>
+                            <td>
+                                <a href="{% url 'mog:post' post.id post.slug %}" class="no-underline">
+                                    {{ post.name }}
+                                </a>
+                            </td>
+                            <td>{{ post.creation_date | naturaltime }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No posts written yet!</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="text-center">
+                {{ page_obj|paginate }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

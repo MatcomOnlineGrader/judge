@@ -1,0 +1,115 @@
+{% extends 'mog/base.html' %}
+
+{% load paginator %}
+{% load filters %}
+{% load security %}
+
+{% block title %}Problems{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title">Problems</h3>
+        </div>
+
+        <div class="col-md-12">
+            {% if user|can_create_problem %}
+                <a href="{% url 'mog:problem_create' %}" class="btn btn-link pull-left no-underline">
+                    <i class="glyphicon glyphicon-pencil"></i> Create problem
+                </a>
+            {% endif %}
+
+            <form action="{% url 'mog:problems' %}" method="get" class="form-inline form-search pull-right">
+                <p>
+                    <input class="form-control" name="q" type="text"
+                           placeholder="Search by name ..." {% if query %}value="{{ query.q }}"{% endif %}/>
+                    <button type="submit" class="btn btn-default">Find</button>
+                </p>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="cell-small center">Code</th>
+                        <th>Title</th>
+                        <th class="cell-small center">Pts</th>
+                        <th class="cell-small center"><i class="glyphicon glyphicon-user"></i></th>
+                        <th class="cell-small center">AC</th>
+                        <th class="cell-small center">Sub</th>
+                        <th class="cell-medium center">% AC</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for problem in problem_list %}
+                        {% with status=problem|user_problem_status:user %}
+                            {% if status == 'accepted' %}
+                                <tr style="background-color: #DFF0D8;">
+                                    {% elif status == 'attempted' %}
+                                <tr style="background-color: #F2DEDE;">
+                                    {% else %}
+                                <tr class="">
+                            {% endif %}
+                        {% endwith %}
+
+                        <td>
+                            <a href="{% url 'mog:problem' problem.id problem.slug %}" class="no-underline">
+                                {{ problem.code }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'mog:problem' problem.id problem.slug %}" class="no-underline">
+                                {{ problem.title }}
+                            </a>
+                            {% if not problem.contest.visible %}
+                                (Hidden)
+                            {% endif %}
+                            {% if user|can_see_tags %}
+                                <div class="pull-right">
+                                    {% for tag in problem.tags.all %}
+                                        <a href="?tag={{ tag.name }}">
+                                            <span class="label label-default">{{ tag.name|lower }}</span>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>[points]</td>
+                        <td>
+                            <div class="center">{{ problem.user_submitted }}</div>
+                        </td>
+                        {% with acc=problem.accepted_submissions tot=problem.total_submissions %}
+                            <td>
+                                <div class="center">{{ acc }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ tot }}</div>
+                            </td>
+                            <td>
+                                <div class="center">{{ acc|percent:tot }}%</div>
+                            </td>
+                        {% endwith %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">No problems to show!</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="text-center">
+                {% if query %}
+                    {{ page_obj|paginate:query }}
+                {% else %}
+                    {{ page_obj|paginate }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

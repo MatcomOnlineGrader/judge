@@ -1,0 +1,22 @@
+{% extends 'mog/base.html' %}
+
+{% load security %}
+
+{% block title %}Contests{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if user|can_create_contest %}
+                <a href="{% url 'mog:contest_create' %}" class="btn btn-link pull-right"><i class="glyphicon glyphicon-pencil"></i> Create contest</a>
+            {% endif %}
+            {% include 'mog/contest/_running_contests.html' %}
+        </div>
+        <div class="col-md-12">
+            {% include 'mog/contest/_coming_contests.html' %}
+        </div>
+        <div class="col-md-12">
+            {% include 'mog/contest/_past_contests.html' %}
+        </div>
+    </div>
+{% endblock %}

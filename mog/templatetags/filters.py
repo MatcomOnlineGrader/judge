@@ -1,0 +1,219 @@
+from django.utils.safestring import mark_safe
+from django import template
+from api.models import Division, Result
+from django import forms
+
+register = template.Library()
+
+
+def get_color(rating):
+    value = rating
+    if type(value) is None:
+        value = 0
+    value = max(value, 0)
+    division = Division.objects.order_by('rating') \
+        .filter(rating__lte=value).last()
+    return division.color
+
+
+@register.filter()
+def put_into_array(obj):
+    return [obj]
+
+
+@register.filter()
+def user_color(user):
+    return get_color(user.profile.rating if hasattr(user, 'profile') else 0)
+
+
+@register.filter()
+def rating_color(rating):
+    return get_color(rating or 0)
+
+
+@register.filter(needs_autoscape=True)
+def colorize_rating(rating):
+    html = '<strong style="color:{0};">{1}</strong>'.format(
+        get_color(rating), rating
+    )
+    return mark_safe(html)
+
+
+@register.filter()
+def rating(user):
+    return user.profile.rating if hasattr(user, 'profile') else 0
+
+
+@register.filter()
+def percent(num, den):
+    return 0 if den == 0 else num * 100 / den
+
+
+@register.filter()
+def user_stats(user):
+    data = {
+        'rating': 0, 'points': 0, 'solved': 0,
+        'accepted': 0, 'submissions': 0,
+    }
+    if hasattr(user, 'profile'):
+        profile = user.profile
+        data['rating'] = profile.rating
+        data['points'] = profile.points
+        data['solved'] = profile.solved_problems
+        data['accepted'] = profile.accepted_submissions
+        data['submissions'] = profile.total_submissions
+    return data
+
+
+@register.filter()
+def avatar(user):
+    if not hasattr(user, 'profile') or not user.profile.avatar:
+        return '/static/mog/images/avatar.jpg'
+    return user.profile.avatar.url
+
+
+modes = {
+    'gcc': ('clike', 'text/x-csrc'),
+    'c++': ('clike', 'text/x-c++src'),
+    'cpp': ('clike', 'text/x-c++src'),
+    'csharp': ('clike', 'text/x-csharp'),
+    'java': ('clike', 'text/x-java'),
+    'pascal': ('pascal', 'text/x-pascal'),
+    'python': ('python', 'text/x-python'),
+    'haskell': ('haskell', 'text/x-haskell'),
+    'fsharp': ('mllike', 'text/x-fsharp'),
+    'sql': ('sql', 'text/x-sql'),
+    'asm': ('gas', 'text/x-gas'),
+}
+
+
+@register.filter()
+def compiler_mime(compiler):
+    if compiler is None or not hasattr(compiler, 'name'):
+        return 'default'
+    return modes.get(compiler.language.lower(), ('default', 'default'))[1]
+
+
+@register.filter()
+def compiler_mode(compiler):
+    if compiler is None or not hasattr(compiler, 'name'):
+        return None
+    return modes.get(compiler.language.lower(), ('default', 'default'))[0]
+
+
+@register.filter()
+def theme_name(user):
+    if hasattr(user, 'profile'):
+        return user.profile.theme
+    return 'default'
+
+
+@register.filter()
+def theme_url(user):
+    if hasattr(user, 'profile'):
+        return 'mog/plugins/codemirror/theme/%s.css' % user.profile.theme
+    return None
+
+
+@register.filter()
+def user_problem_status(problem, user):
+    # TODO: Maybe pass this query to the model with the
+    # purpose of add cache ?
+    if user.is_authenticated:
+        submissions = problem.submissions.filter(user=user)
+        if submissions.filter(result__name__iexact='accepted').count() > 0:
+            return 'accepted'
+        if submissions.count() > 0:
+            return 'attempted'
+
+
+@register.filter()
+def inteq(a, b):
+    if a is None or b is None:
+        return False
+    a, b = str(a), str(b)
+    if not a.isdigit() or not b.isdigit():
+        return False
+    return a == b
+
+
+@register.filter()
+def result_id(name):
+    return Result.objects.get(name__iexact=name).id
+
+
+
+@register.filter()
+def explore(obj):
+    return str(dir(obj))
+
+@register.filter()
+def type_(obj):
+    return str(type(obj))
+
+
+@register.filter()
+def is_checkbox(field):
+    return type(field.field) is forms.fields.BooleanField
+
+
+@register.filter()
+def explore_dict(obj):
+    return '\n'.join(str((k, v)) for k, v in obj.items())
+
+
+@register.filter()
+def to(lo, hi):
+    return range(lo, hi + 1)
+
+
+@register.filter()
+def add_class(element, _class):
+    if isinstance(element.field, forms.fields.FileField):
+        return element.as_widget()
+    return element.as_widget(attrs={'class': _class, 'placeholder': element.label})
+
+
+@register.filter()
+def unseen_comments(user, post):
+    return post.unseen_comments(user)
+
+
+@register.filter()
+def format_minutes(minutes):
+    minutes = int(minutes)
+    d = minutes / 60 / 24
+    minutes %= (60 * 24)
+    h = minutes / 60
+    minutes %=  60
+    m = minutes
+    return '%d:%02d:%02d' % (d, h, m) if d > 0 else\
+        '%02d:%02d' % (h, m)
+
+
+@register.filter()
+def format_delta(delta):
+    return format_minutes(int(delta.total_seconds()) // 60)
+
+
+@register.filter()
+def format_time(time):
+    return format_minutes(int(time.total_seconds()) // 60)
+
+
+@register.filter()
+def result_by_name(name):
+    return Result.objects.get(name__iexact=name).id
+
+
+@register.filter()
+def first_problem(contest):
+    return contest.problems.order_by('position').first()
+
+
+@register.filter()
+def get_instance(user, contest):
+    try:
+        return user.instances.get(contest=contest)
+    except Exception, e:
+        return None

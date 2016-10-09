@@ -1,0 +1,7 @@
+{% load filters %}
+
+{% if profile %}
+    <strong><a class="user" href="{% url 'mog:user' profile.user.id %}" style="color: {{ profile.rating|rating_color }};">{{ profile.user.username }}</a></strong>
+{% else %}
+    <strong><a class="user" href="{% url 'mog:user' user.id %}" style="color: {{ user|user_color }};">{{ user.username }}</a></strong>
+{% endif %}

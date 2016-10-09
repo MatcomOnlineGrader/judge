@@ -1,0 +1,264 @@
+{% load static %}
+{% load security %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{% static 'mog/plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'mog/css/body.min.css' %}" rel="stylesheet"/>
+
+        {% block mathjax %}
+            <script type="text/x-mathjax-config">
+                MathJax.Hub.Config({
+                    extensions: ["tex2jax.js"],
+                    jax: ["input/TeX", "output/HTML-CSS"],
+                    tex2jax: {
+                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                        processEscapes: true
+                    },
+                    "HTML-CSS": { availableFonts: ["TeX"] }
+                });
+            </script>
+        {% endblock %}
+
+        <script type="text/javascript" async
+                src="{% static 'mog/plugins/MathJax/MathJax.js' %}">
+        </script>
+
+        {% block styles %}
+            {# Additional styles here! #}
+        {% endblock %}
+
+        <style>
+            .no-underline {
+                text-decoration: none !important;
+            }
+
+            /* USED IN HOME */
+            .first-post {
+                margin-top: 0 !important;
+            }
+
+            /* USED IN SUBMIT */
+            .CodeMirror {
+                border: 1px solid #DDD;
+                height: auto;
+            }
+
+            /* COMMENTS */
+            img.media-object {
+                height: 64px; width: 64px;
+            }
+
+            /* BIG TITLE IN SOME PAGES */
+            h1.title, h2.title, h3.title, h4.title, h5.title {
+                margin-top: 0 !important;
+            }
+
+            /* UNIFORM TEXT (used as small/medium titles) */
+            .uniform-text {
+                font-weight: bold;
+                color: #999;
+                text-transform: uppercase;
+            }
+
+            .uniform-text.uniform-small {  font-size: 11px; }
+            .uniform-text.uniform-medium { font-size: 13px; }
+            .uniform-text.uniform-big { font-size: 15px; }
+
+            /* MARGIN  SHORTCUTS */
+            .margin-left-0 { margin-left: 25px !important; }
+            .margin-left-5 { margin-left: 25px !important; }
+            .margin-left-10 { margin-left: 25px !important; }
+            .margin-left-15 { margin-left: 25px !important; }
+            .margin-left-20 { margin-left: 25px !important; }
+            .margin-left-25 { margin-left: 25px !important; }
+
+            .margin-top-0 { margin-top: 0px !important; }
+            .margin-top-5 { margin-top: 5px !important; }
+            .margin-top-10 { margin-top: 10px !important; }
+            .margin-top-15 { margin-top: 15px !important; }
+            .margin-top-20 { margin-top: 20px !important; }
+            .margin-top-25 { margin-top: 25px !important; }
+
+            .margin-bottom-0 { margin-bottom: 0px !important; }
+            .margin-bottom-5 { margin-bottom: 5px !important; }
+            .margin-bottom-10 { margin-bottom: 10px !important; }
+            .margin-bottom-15 { margin-bottom: 15px !important; }
+            .margin-bottom-20 { margin-bottom: 20px !important; }
+            .margin-bottom-25 { margin-bottom: 25px !important; }
+
+            .padding-0 { padding: 0 !important; }
+            .margin-0 { margin: 0 !important; }
+
+            /* Used mostly in wells */
+            .bckg-white {
+                background-color: white !important;
+            }
+
+            /* Contest Standing */
+            .problem-solved { background-color: #DFF0D8; color: #468847; }
+            .problem-failed { background-color: #F2DEDE; color: #B94A48; }
+            .problem-solved-first { background-color: #B9D4AC; color: #39703A; }
+            .contest-solved-first { background-color: #d49836; color: #704e1b; }
+
+            .token-input-list-facebook {
+                width: 100% !important;
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'mog:index' %}">Home</a></li>
+                        <li><a href="{% url 'mog:users' %}">Users</a></li>
+                        <li><a href="{% url 'mog:problems' %}">Problems</a></li>
+                        <li><a href="{% url 'mog:contests' %}">Contests</a></li>
+                        <li><a href="{% url 'mog:posts' %}">Posts</a></li>
+                        <li><a href="{% url 'mog:submissions' %}">Submissions</a></li>
+                        <li><a href="{% url 'mog:faq' %}">FAQ</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav pull-right">
+                        {% block user_login %}
+                            {% include 'mog/user/_login.html' %}
+                        {% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#">
+                                <img src="{% static 'mog/images/logo.gif' %}" class="img-responsive"/>
+                            </a>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="pull-right">
+                                <a href="#" class="no-underline">
+                                    <img src="{% static 'mog/images/spa-flag.png' %}" alt="Spanish" class="flagSizeSmall"/>
+                                </a>
+                                |
+                                <a href="#" class="no-underline">
+                                    <img src="{% static 'mog/images/eng-flag.png' %}" alt="English" class="flagSizeSmall"/>
+                                </a>
+                            </div>
+                            <h1>
+                                Matcom Online Grader<br/>
+                                <small>Faculty of Mathematics and Computer Science of University of Havana</small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% block messages %}
+                {% include 'mog/includes/_messages.html' with messages=messages %}
+            {% endblock %}
+
+            {% block main %}
+                <div class="row">
+                    <div class="col-md-3">
+                        {% block left %}
+                            <div class="row">
+                                {% if user.is_authenticated %}
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <div class="text-center">
+                                                        {% include 'mog/user/_link.html' with user=user %}
+                                                    </div>
+                                                    <div class="text-center">
+                                                        {% include 'mog/user/_image80.html' with user=user %}
+                                                    </div>
+                                                    {% if user|is_admin %}
+                                                        <div class="text-center">
+                                                            ( administrator )
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="center">Rating</div>
+                                                </td>
+                                                <td>
+                                                    <div class="center">Points</div>
+                                                </td>
+                                                <td>
+                                                    <div class="center">Solved</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                {% with profile=user.profile %}
+                                                    <td>
+                                                        <div class="center">{{ profile.rating }}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="center">{{ profile.points }}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="center">{{ profile.solved_problems }}</div>
+                                                    </td>
+                                                {% endwith %}
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                                <div class="col-md-12">
+                                    <small class="uniform-text uniform-medium">Top rated users</small>
+                                    {% include 'mog/user/_top_rated_users.html' %}
+                                </div>
+                                <div class="col-md-12">
+                                    <small class="uniform-text uniform-medium">Recent posts</small>
+                                    {% include 'mog/post/_recent_modified_posts.html' with posts=recent_modified_posts %}
+                                </div>
+                            </div>
+                        {% endblock %}
+                    </div>
+                    <div class="col-md-9">
+                        <section>
+                            {% block content %}{% endblock %}
+                        </section>
+                    </div>
+                </div>
+            {% endblock %}
+
+            <hr>
+
+            <footer>
+                <div class="center">
+                    <p>&copy; {% now "Y" %} - MOG Version: 3.0</p>
+                    <p>Grader Version: 2.0.0.22</p>
+                    <p>Server Time: {% now "jS F Y H:i" %}</p>
+                </div>
+            </footer>
+        </div>
+
+        <script type="text/javascript" src="{% static 'mog/plugins/jquery/js/jquery-3.1.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'mog/plugins/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+
+        {% block scripts %}
+            {# Additional scripts here! #}
+        {% endblock %}
+
+        <script>
+            $(document).ready(function () {
+                if (window.MOG !== undefined)
+                    window.MOG.initializeSummernote({{ user|is_admin|yesno:"true,false" }});
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,89 @@
+{% extends 'mog/base.html' %}
+
+{% load security %}
+{% load filters %}
+
+{% block title %}{{ problem.title }} | Tests{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1 class="title">Edit Test Cases</h1>
+            <h3 class="title">
+                <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.title }}</a>
+            </h3>
+        </div>
+
+        <form action="{% url 'mog:problem_tests' problem.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="well bckg-white">
+                            <small class="uniform-text uniform-medium">Sample Inputs</small>
+                            {% include 'mog/problem/_tests.html' with tests=sample_inputs folder='sample inputs' %}
+                            <input name="sample_inputs" type="file" multiple="multiple" value="">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well bckg-white">
+                            <small class="uniform-text uniform-medium">Sample Outputs</small>
+                            {% include 'mog/problem/_tests.html' with tests=sample_outputs folder='sample outputs' %}
+                            <input name="sample_outputs" type="file" multiple="multiple" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="well bckg-white">
+                            <small class="uniform-text uniform-medium">Inputs</small>
+                            {% include 'mog/problem/_tests.html' with tests=inputs folder='inputs' %}
+                            <input name="inputs" type="file" multiple="multiple" value="">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well bckg-white">
+                            <small class="uniform-text uniform-medium">Outputs</small>
+                            {% include 'mog/problem/_tests.html' with tests=outputs folder='outputs' %}
+                            <input name="outputs" type="file" multiple="multiple" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a type="button" class="btn btn-default"
+                       href="{% url 'mog:problem' problem.id problem.slug %}">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.remove-test').each(function() {
+                var button = $(this);
+                button.click(function() {
+                    var html = [
+                            '<form action="{% url "mog:remove_test" problem.id %}" method="post">',
+                            '    <input type="hidden" value="{{ csrf_token  }}" name="csrfmiddlewaretoken" />',
+                            '    <input type="hidden" value="' + button.data('test') + '" name="test" />',
+                            '    <input type="hidden" value="' + button.data('folder') + '" name="folder" />',
+                            '</form>'
+                    ];
+                    var form = $(html.join(''));
+                    button.append(form);
+                    form.submit();
+                });
+            });
+        });
+    </script>
+{% endblock %}

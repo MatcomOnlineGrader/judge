@@ -1,0 +1,138 @@
+{% extends 'mog/base.html' %}
+
+{% load security %}
+{% load filters %}
+
+{% block title %}{{ problem.title }}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=problem.contest %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h3 class="title">{{ problem.letter }} - {{ problem.title }}</h3>
+            </div>
+
+            {% if user|can_edit_problem:problem %}
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-4">
+                        <a href="#" data-toggle="modal" data-target="#remove-problem-{{ problem.id }}" class="no-underline">
+                            <i class="glyphicon glyphicon-remove"></i> Remove problem
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'mog:problem_tests' problem.id %}" class="no-underline">
+                            <i class="glyphicon glyphicon-list"></i> Edit tests
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'mog:problem_edit' problem.id %}" class="no-underline">
+                            <i class="glyphicon glyphicon-pencil"></i> Edit problem
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12">
+                <h5>Time limit: {{ problem.time_limit }} second{{ problem.time_limit|pluralize }}</h5>
+                <h5>Memory limit: {{ problem.memory_limit }} megabyte{{ problem.memory_limit|pluralize }}</h5>
+            </div>
+
+            <div class="col-md-12 margin-bottom-10">
+                <ul class="nav nav-pills nav-justified">
+                    <li role="presentation">
+                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}">All submissions</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&result={{ 'accepted'|result_by_name }}">Accepted submissions</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li role="presentation">
+                            <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&username={{ user.username }}">My submissions</a>
+                        </li>
+                        {# TODO: require authentication to download PDF #}
+                        <li role="presentation"><a href="#">PDF</a></li>
+                    {% endif %}
+                    <li role="presentation"><a href="{% url 'mog:submit' problem.id %}">Submit</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="body" class="col-md-12">
+            <p>{{ problem.body|safe }}</p>
+        </div>
+
+        <div id="input" class="col-md-12">
+            <h4 class="text-center">Input</h4>
+            <p>{{ problem.input|safe }}</p>
+        </div>
+
+        <div id="output" class="col-md-12">
+            <h4 class="text-center">Output</h4>
+            <p>{{ problem.output|safe }}</p>
+        </div>
+
+        <div id="tests" class="col-md-12">
+            <h4 class="text-center">Sample test(s)</h4>
+
+            <div class="sample-tests">
+                {% for si, so in samples %}
+                    <div class="sample-test">
+                        <div class="input">
+                            <div class="title">Input</div>
+                            <div class="pre"><span class="text">{{ si }}</span></div>
+                        </div>
+                        <div class="output">
+                            <div class="title">Output</div>
+                            <div class="pre"><span class="text">{{ so }}</span></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if problem.hints %}
+            <div id="hints" class="col-md-12">
+                <h4 class="text-center">Hints</h4>
+                {{ problem.hints|safe }}
+            </div>
+        {% endif %}
+    </div>
+
+    {% if user|can_edit_problem:problem %}
+        <div class="modal fade" id="remove-problem-{{ problem.id }}" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            Delete Problem
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-justify">
+                            If you remove <i><b>{{ problem.title }}</b></i> all submissions related with it
+                            will be removed too.
+                        </p>
+                        <p class="text-center">
+                            <span class="glyphicon glyphicon-warning-sign"
+                                  style="color: orange; font-size: 50px; font-weight: normal;"></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'mog:problem_remove' problem.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

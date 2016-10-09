@@ -1,0 +1,65 @@
+{% extends 'mog/base.html' %}
+
+{% load paginator %}
+{% load humanize %}
+{% load filters %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title">Submissions</h3>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <form action="{% url 'mog:submissions' %}" method="get" class="form-inline">
+                <div class="form-group">
+                    <label for="username" class="sr-only">Username</label>
+                    <input id="username" name="username" type="text" class="form-control" value="{{ query.username }}"  placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label for="problem" class="sr-only">Problem</label>
+                    <input id="problem" name="problem" type="text" class="form-control" value="{{ query.problem }}" placeholder="Problem">
+                </div>
+                <div class="form-group">
+                    <label for="result" class="sr-only">Result</label>
+                    <select id="result" name="result" class="form-control">
+                        <option value="" selected>-- Select result --</option>
+                        {% for result in results %}
+                            <option value="{{ result.id }}"
+                                    {% if query.result|inteq:result.id %}selected{% endif %}>{{ result.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="compiler" class="sr-only">Language</label>
+                    <select id="compiler" name="compiler" class="form-control">
+                        <option value="" selected>-- Select compiler --</option>
+                        {% for compiler in compilers %}
+                            <option value="{{ compiler.id }}"
+                                    {% if query.compiler|inteq:compiler.id %}selected{% endif %}>{{ compiler.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Filter</button>
+            </form>
+
+            <hr />
+        </div>
+
+        <div class="col-md-12">
+            {% include 'mog/submission/_list.html' with submissions=submission_list %}
+        </div>
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="text-center">
+                {% if query %}
+                    {{ page_obj|paginate:query }}
+                {% else %}
+                    {{ page_obj|paginate }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

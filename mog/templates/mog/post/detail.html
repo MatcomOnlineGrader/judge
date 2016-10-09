@@ -1,0 +1,57 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load humanize %}
+{% load filters %}
+{% load security %}
+
+{% block title %}{{ post.name }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 well bckg-white">
+            {% include 'mog/post/_post.html' with post=post %}
+            {% if user|can_edit_post:post %}
+                <a href="{% url 'mog:post_edit' post.id %}" class="btn btn-link pull-right no-underline">
+                    <i class="glyphicon glyphicon-pencil"></i> Edit post
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="col-md-12">
+            {% for comment in post.sorted_comments %}
+                <div class="media">
+                    <div class="media-left">
+                        <a href="{% url 'mog:user' comment.user.id %}">
+                            <img class="media-object" src="{{ comment.user|avatar }}" alt="{{ comment.user.username }}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        {% include 'mog/user/_link.html' with user=comment.user %}
+                        <small class="uniform-text uniform-small pull-right">{{ comment.date|naturaltime }}</small>
+                        <p>{{ comment.body|safe }}</p>
+                    </div>
+                </div>
+
+                <hr />
+            {% endfor %}
+        </div>
+
+        {% if user.is_authenticated %}
+            <div class="col-md-12">
+                <form action="{% url 'mog:post' post.id post.slug %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="user" value="{{ user.id }}">
+                    <input type="hidden" name="post" value="{{ post.id }}">
+                    <div class="form-group">
+                        <label for="comment">
+                            <small class="uniform-text uniform-small">Add your comment here</small>
+                        </label>
+                        <textarea id="comment" name="body" class="form-control" rows="10"></textarea>
+                    </div>
+                    <input type="submit" value="Send" class="btn btn-primary pull-right">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

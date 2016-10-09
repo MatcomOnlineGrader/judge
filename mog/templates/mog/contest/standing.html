@@ -1,0 +1,115 @@
+{% extends 'mog/base.html' %}
+
+{% load filters %}
+{% load humanize %}
+
+{% block title %}{{ contest.name }} | Standing{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1 class="title">Standing</h1>
+            <h3 class="title"><a href="{% url 'mog:contest_problems' contest.pk %}">{{ contest.name }}</a></h3>
+            {% if instance %}
+                {% if instance.is_running %}
+                    <h5 class="title">{{ instance.relative_time|format_delta }} / -{{ instance.remaining_time|format_delta }}</h5>
+                {% endif %}
+            {% else %}
+                {% if contest.is_running %}
+                    <h5 class="title">{{ contest.relative_time|format_delta }} / -{{ contest.remaining_time|format_delta }}</h5>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="cell-small">Rank</th>
+                        <th>Contestant / Team</th>
+                        <th class="text-center cell-small">Solved</th>
+                        <th class="text-center cell-small">Penalty</th>
+                        {% for problem in problems %}
+                            <th class="text-center cell-medium">
+                                <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.letter }}</a>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instance in instances %}
+                        <tr class="standing-row">
+                            <td class="text-center">{{ instance.rank }}</td>
+
+                            <td>
+                                <div style="min-height: 45px;">
+                                    {% if not instance.real %}
+                                        (~)
+                                    {% endif %}
+
+                                    {% if instance.team %}
+                                        {{ instance.team.name }}
+                                        (
+                                        {% for profile in instance.team.users %}
+                                            {% if forloop.counter > 1 %},{% endif %}
+                                            {% include 'mog/user/_link.html' with profile=profile %}
+                                        {% endfor %}
+                                        )
+                                    {% else %}
+                                        {% include 'mog/user/_link.html' with user=instance.user %}
+                                        {% with institution=instance.user.profile.institution %}
+                                            {% if institution %}
+                                                <p><small>{{ institution.name }}</small></p>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endif %}
+                                </div>
+                            </td>
+
+                            <td class="text-center">{{ instance.solved }}</td>
+
+                            <td class="text-center">{{ instance.penalty|format_minutes }}</td>
+
+                            {% for problem in instance.problems %}
+                                {% if problem.accepted %}
+                                    {% if problem.contest_first_solved %}
+                                        <td class="text-center contest-solved-first">
+                                    {% elif problem.first %}
+                                        <td class="text-center problem-solved-first">
+                                    {% else %}
+                                        <td class="text-center problem-solved">
+                                    {% endif %}
+                                {% elif problem.attempts > 0 %}
+                                    <td class="text-center problem-failed">
+                                {% else %}
+                                    <td class="text-center">
+                                {% endif %}
+                                        {% if problem.accepted %}
+                                            <div>
+                                                {{ problem.acc_delta|format_delta }}
+                                            </div>
+                                        {% endif %}
+                                        {% if problem.attempts > 0 %}
+                                            <small>(-{{ problem.attempts }})</small>
+                                        {% endif %}
+                                    </td>
+                            {% endfor %}
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="{{ problems|length|add:2 }}">No one registered for this contest!</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12">
+            <form action="{% url 'mog:contest_standing' contest.pk %}" method="get" style="margin-left: 20px !important;">
+                <div class="checkbox">
+                    <input id="show_virtual" type="checkbox" name="show_virtual"
+                           onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
+                    <label for="show_virtual">Show virtual participations (~)</label>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

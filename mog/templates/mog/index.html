@@ -1,0 +1,20 @@
+{% extends 'mog/base.html' %}
+
+{% load paginator %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-12 well bckg-white">
+                {% include 'mog/post/_post.html' with post=post %}
+                <p><a href="{% url 'mog:post' post.id post.slug %}" class="no-underline">Read more</a></p>
+            </div>
+        {% endfor %}
+
+        <div class="col-md-12 text-center">
+            {{ posts|paginate }}
+        </div>
+    </div>
+{% endblock %}

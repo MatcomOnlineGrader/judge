@@ -1,0 +1,216 @@
+﻿img.flagSizeSmall {
+    height: 15px;
+    width: 20px
+}
+
+body {
+    padding-top: 40px;
+    padding-bottom: 30px
+}
+
+a.user:hover {
+    text-decoration: none
+}
+
+textarea {
+    height: 300px;
+    width: 98%
+}
+
+.comment {
+    height: 100px;
+    width: 80%
+}
+
+.message {
+    height: 100px;
+    width: 50%
+}
+
+.sample-tests .input, .sample-tests .output {
+    border: 1px solid #888
+}
+
+.sample-tests .output {
+    margin-bottom: 1em;
+    position: relative;
+    top: -1px
+}
+
+.sample-tests .pre {
+    padding: .25em;
+    margin: 0;
+    background-color: #efefef
+}
+
+.sample-tests {
+    font-family: Consolas, "Lucida Console", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier;
+    font-size: .9em
+}
+
+.sample-tests .title {
+    font-size: 1.3em;
+    padding: .25em;
+    border-bottom: 1px solid #888;
+    text-transform: lowercase;
+    font-weight: bold
+}
+
+.standings .cell {
+    text-align: center;
+    min-width: 75px;
+    max-width: 75px;
+    font-size: 13px;
+    padding-top: 15px;
+    padding: 10px 0
+}
+
+.cell-small {
+    width: 20px
+}
+
+.cell-problem-letter {
+    width: 40px
+}
+
+.cell-medium {
+    width: 70px
+}
+
+.standings .user {
+    min-width: 50px;
+    max-width: 100px
+}
+
+.standing .problem {
+    text-align: center
+}
+
+.text {
+    white-space: pre
+}
+
+.center {
+    text-align: center
+}
+
+.right {
+    text-align: right
+}
+
+.statement h5, .statement h4, .statement h3, .statement h2 {
+    text-align: center
+}
+
+.form-signin {
+    max-width: 700px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05)
+}
+
+.form-signin .form-signin-heading {
+    margin-bottom: 10px
+}
+
+.alert-problem-first {
+    background-color: #b9d4ac;
+    color: #39703a
+}
+
+.alert-contest-first {
+    background-color: #b9d4ac;
+    color: #39703a
+}
+
+.alert-failed {
+    background-color: #f2dede;
+    color: #b94a48
+}
+
+.alert-solved {
+    background-color: #dff0d8;
+    color: #468847
+}
+
+.alert-frozen {
+    background-color: #e5e5e5;
+    color: #717171
+}
+
+.white {
+    background-image: url("images/white.gif")
+}
+
+.blue {
+    background-image: url("images/blue.gif")
+}
+
+.green {
+    background-image: url("images/green.gif")
+}
+
+.red {
+    background-image: url("images/red.gif")
+}
+
+.yellow {
+    background-image: url("images/yellow.gif")
+}
+
+.orange {
+    background-image: url("images/orange.gif")
+}
+
+.purple {
+    background-image: url("images/purple.gif")
+}
+
+.black {
+    background-image: url("images/black.gif")
+}
+
+.gray {
+    background-image: url("images/gray.gif")
+}
+
+.brown {
+    background-image: url("images/brown.gif")
+}
+
+.light-green {
+    background-image: url("images/light-green.gif")
+}
+
+.light-blue {
+    background-image: url("images/light-blue.gif")
+}
+
+.pink {
+    background-image: url("images/pink.gif")
+}
+
+.ballom {
+    background-size: 11px 24px;
+    width: 11px;
+    height: 24px
+}
+
+.margin-bottom-0 { margin-bottom: 0 !important; }
+.margin-bottom-5 { margin-bottom: 5px !important; }
+.margin-bottom-10 { margin-bottom: 10px !important; }
+.margin-bottom-15 { margin-bottom: 15px !important; }
+.margin-bottom-20 { margin-bottom: 15px !important; }
+
+.margin-top-0 { margin-top: 0 !important; }
+.margin-top-5 { margin-top: 5px !important; }
+.margin-top-10 { margin-top: 10px !important; }
+.margin-top-15 { margin-top: 15px !important; }
+.margin-top-20 { margin-top: 15px !important; }

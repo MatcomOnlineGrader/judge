@@ -1,0 +1,119 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load filters %}
+
+{% block title %}Submit{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/codemirror/lib/codemirror.css' %}" rel="stylesheet"/>
+
+    {% with turl=user|theme_url %}
+        {% if turl %}
+            <link href="{% static turl %}" rel="stylesheet"/>
+        {% endif %}
+    {% endwith %}
+
+    <style>
+        .CodeMirror-scroll {
+            min-height: 250px;
+        }
+    </style>
+{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=problem.contest submit_active='active' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title">Submit</h3>
+        </div>
+
+        <div class="col-md-10 col-md-offset-1">
+            <form action="{% url 'mog:submit' problem.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="problem" class="center">Problem</label>
+                            <select id="problem" name="problem" class="form-control">
+                                {% for p in problem.contest.get_problems %}
+                                    <option value="{{ p.id }}"
+                                            {% if p == problem %}selected{% endif %}>{{ p.full_title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="compiler" class="center">Compiler</label>
+                            <select id="compiler" name="compiler" class="form-control"
+                                    onchange="compilerChanged(this);">
+                                {% for compiler in compilers %}
+                                    <option value="{{ compiler.id }}"
+                                            {% if user.profile.compiler_id == compiler.id %}selected="selected"{% endif %}>
+                                        {{ compiler.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea id="source" name="source"></textarea>
+                    </div>
+                </div>
+
+                <div class="row margin-top-5">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="file" name="file" class="btn btn-default"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="submit" value="SUBMIT" class="btn btn-primary pull-right">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/lib/codemirror.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/clike/clike.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/pascal/pascal.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/python/python.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/mllike/mllike.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/sql/sql.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/gas/gas.js' %}"></script>
+
+    <script>
+        var compilerModes = {};
+        {% for compiler in compilers %}
+            // MIME type for language {{ compiler.name|trim }} ({{ compiler.language|trim }})
+            compilerModes[{{ compiler.id }}] = '{{ compiler|compiler_mode }}';
+        {% endfor %}
+
+        var sourceArea = document.getElementById('source');
+        var codeMirror = CodeMirror.fromTextArea(sourceArea, {
+            lineNumbers: true, indentUnit: 4, theme: '{{ user|theme_name }}'
+        });
+
+        function compilerChanged(compilersHolder) {
+            codeMirror.setOption('mode',
+                    compilerModes[compilersHolder.options[compilersHolder.selectedIndex].value] || 'default'
+            );
+            console.log(codeMirror.getOption('mode'));
+        }
+
+        compilerChanged(document.getElementById('compiler'));
+    </script>
+{% endblock %}
