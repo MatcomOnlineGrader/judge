@@ -31,3 +31,10 @@ urlpatterns = [
     url(r'^mog/account/password_reset_complete/$', auth_views.password_reset_complete,
         {'template_name': 'mog/account/password_reset_complete.html'}, name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
