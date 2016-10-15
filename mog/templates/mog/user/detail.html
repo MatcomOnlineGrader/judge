@@ -27,7 +27,7 @@
                             <td class="text-center">{{ data.solved }}</td>
                             <td class="text-center">
                                 <a class="no-underline"
-                                   href="{% url 'mog:submissions' %}?username={{ user_in_profile.username }}&result={{ 'accepted'|result_id }}">{{ data.accepted }}</a>
+                                   href="{% url 'mog:submissions' %}?username={{ user_in_profile.username }}&result={{ 'accepted'|result_by_name }}">{{ data.accepted }}</a>
                             </td>
                             <td class="text-center">
                                 <a class="no-underline"

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 {% load security %}
 
 <!DOCTYPE html>
@@ -117,7 +118,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'mog:index' %}">Home</a></li>
-                        <li><a href="{% url 'mog:users' %}">Users</a></li>
+                        <li><a href="{% url 'mog:users' %}">{% trans 'Users' %}</a></li>
                         <li><a href="{% url 'mog:problems' %}">Problems</a></li>
                         <li><a href="{% url 'mog:contests' %}">Contests</a></li>
                         <li><a href="{% url 'mog:posts' %}">Posts</a></li>
@@ -144,13 +145,21 @@
                         </div>
                         <div class="col-md-9">
                             <div class="pull-right">
-                                <a href="#" class="no-underline">
-                                    <img src="{% static 'mog/images/spa-flag.png' %}" alt="Spanish" class="flagSizeSmall"/>
-                                </a>
+                                <form action="/i18n/setlang/" method="post" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="es" />
+                                    <a href="javascript:;" class="no-underline" onclick="this.parentNode.submit();">
+                                        <img src="{% static 'mog/images/spa-flag.png' %}" alt="Spanish" class="flagSizeSmall"/>
+                                    </a>
+                                </form>
                                 |
-                                <a href="#" class="no-underline">
-                                    <img src="{% static 'mog/images/eng-flag.png' %}" alt="English" class="flagSizeSmall"/>
-                                </a>
+                                <form action="/i18n/setlang/" method="post" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="en" />
+                                    <a href="javascript:;" class="no-underline" onclick="this.parentNode.submit();">
+                                        <img src="{% static 'mog/images/eng-flag.png' %}" alt="English" class="flagSizeSmall"/>
+                                    </a>
+                                </form>
                             </div>
                             <h1>
                                 Matcom Online Grader<br/>

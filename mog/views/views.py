@@ -5,6 +5,9 @@ from api.models import Post
 
 
 def index(request):
+    print '-' * 100
+    print request.LANGUAGE_CODE
+    print '-' * 100
     post_list = Post.objects.filter(show_in_main_page=True)\
         .order_by('-creation_date').select_related('user')
     paginator = Paginator(post_list, 5)

@@ -22,6 +22,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     url(r'^mog/', include('mog.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^mog/account/password_reset/$', auth_views.password_reset,
         {'template_name': 'mog/account/password_reset.html'}, name='password_reset'),
     url(r'^mog/account/password_reset_done/$', auth_views.password_reset_done,
