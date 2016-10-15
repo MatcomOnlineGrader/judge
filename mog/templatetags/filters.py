@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django import template
 from api.models import Division, Result
@@ -5,25 +6,49 @@ from django import forms
 
 register = template.Library()
 
+# Cache
+divisions = None      # Divisions ( cached forever )
+results = None        # Submission results ( cached forever )
+ratings = {}          # User ratings ( cached by one minute )
+
 
 def get_color(rating):
+    """Given a rating value returns the color of the corresponding division"""
+    global divisions
     value = rating
     if type(value) is None:
         value = 0
     value = max(value, 0)
-    division = Division.objects.order_by('rating') \
-        .filter(rating__lte=value).last()
-    return division.color
+    if not divisions:
+        divisions = Division.objects.order_by('-rating').all()
+    for division in divisions:
+        if value >= division.rating:
+            return division.color
+    return 'black'
 
 
 @register.filter()
 def put_into_array(obj):
+    """Used to put a single submission into an array and reuse
+     submission lists template.
+    """
     return [obj]
 
 
 @register.filter()
+def rating(user):
+    global ratings
+    if user.id not in ratings or (timezone.now() - ratings[user.id]['updated']).seconds > 60:
+        ratings[user.id] = {
+            'updated': timezone.now(),
+            'rating': user.profile.rating if hasattr(user, 'profile') else 0
+        }
+    return ratings[user.id]['rating']
+
+
+@register.filter()
 def user_color(user):
-    return get_color(user.profile.rating if hasattr(user, 'profile') else 0)
+    return get_color(rating(user))
 
 
 @register.filter()
@@ -37,11 +62,6 @@ def colorize_rating(rating):
         get_color(rating), rating
     )
     return mark_safe(html)
-
-
-@register.filter()
-def rating(user):
-    return user.profile.rating if hasattr(user, 'profile') else 0
 
 
 @register.filter()
@@ -138,28 +158,9 @@ def inteq(a, b):
 
 
 @register.filter()
-def result_id(name):
-    return Result.objects.get(name__iexact=name).id
-
-
-
-@register.filter()
-def explore(obj):
-    return str(dir(obj))
-
-@register.filter()
-def type_(obj):
-    return str(type(obj))
-
-
-@register.filter()
 def is_checkbox(field):
     return type(field.field) is forms.fields.BooleanField
 
-
-@register.filter()
-def explore_dict(obj):
-    return '\n'.join(str((k, v)) for k, v in obj.items())
 
 
 @register.filter()
@@ -203,7 +204,12 @@ def format_time(time):
 
 @register.filter()
 def result_by_name(name):
-    return Result.objects.get(name__iexact=name).id
+    global results
+    if not results:
+        results = {}
+        for result in Result.objects.all():
+            results[result.name.lower()] = result.id
+    return results[name.lower()]
 
 
 @register.filter()
@@ -217,3 +223,19 @@ def get_instance(user, contest):
         return user.instances.get(contest=contest)
     except Exception, e:
         return None
+
+
+# Remove following filters
+@register.filter()
+def explore(obj):
+    return str(dir(obj))
+
+
+@register.filter()
+def type_(obj):
+    return str(type(obj))
+
+
+@register.filter()
+def explore_dict(obj):
+    return '\n'.join(str((k, v)) for k, v in obj.items())
