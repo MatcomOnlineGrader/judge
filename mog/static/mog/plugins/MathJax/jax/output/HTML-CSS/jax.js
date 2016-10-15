@@ -1,14 +1,24 @@
-/*
- *  /MathJax/jax/output/HTML-CSS/jax.js
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
+/*************************************************************
  *
+ *  MathJax/jax/output/HTML-CSS/jax.js
+ *
+ *  Implements the HTML-CSS OutputJax that displays mathematics
+ *  using HTML and CSS to position the characters from math fonts
+ *  in their proper locations.
+ *  
+ *  ---------------------------------------------------------------------
+ *  
  *  Copyright (c) 2009-2015 The MathJax Consortium
- *
+ * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,4 +26,3189 @@
  *  limitations under the License.
  */
 
-(function(h,b,d){var g,i=b.Browser.isMobile;var e=function(){var k=[].slice.call(arguments,0);k[0][0]=["HTML-CSS",k[0][0]];return MathJax.Message.Set.apply(MathJax.Message,k)};var f=MathJax.Object.Subclass({timeout:(i?15:8)*1000,comparisonFont:["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],testSize:["40px","50px","60px","30px","20px"],FedoraSTIXcheck:{family:"STIXSizeOneSym",testString:"abcABC",noStyleChar:true},Init:function(){this.div=MathJax.HTML.addElement(document.body,"div",{style:{position:"absolute",width:0,height:0,overflow:"hidden",padding:0,border:0,margin:0}},[["div",{id:"MathJax_Font_Test",style:{position:"absolute",visibility:"hidden",top:0,left:0,width:"auto",padding:0,border:0,margin:0,whiteSpace:"nowrap",textAlign:"left",textIndent:0,textTransform:"none",lineHeight:"normal",letterSpacing:"normal",wordSpacing:"normal",fontSize:this.testSize[0],fontWeight:"normal",fontStyle:"normal",fontSizeAdjust:"none"}},[""]]]).firstChild;this.text=this.div.firstChild},findFont:function(p,l){var o=null;if(l&&this.testCollection(l)){o=l}else{for(var n=0,k=p.length;n<k;n++){if(p[n]===l){continue}if(this.testCollection(p[n])){o=p[n];break}}}if(o==="STIX"&&this.testFont(this.FedoraSTIXcheck)){o=null}return o},testCollection:function(l){var k={testString:"() {} []"};k.family={TeX:"MathJax_Size1",STIX:"STIXSizeOneSym"}[l]||l.replace(/-(Math)?/,"")+"MathJax_Size1";if(l==="STIX"){k.noStyleChar=true}return this.testFont(k)},testFont:function(n){if(n.isWebFont&&d.FontFaceBug){this.div.style.fontWeight=this.div.style.fontStyle="normal"}else{this.div.style.fontWeight=(n.weight||"normal");this.div.style.fontStyle=(n.style||"normal")}var p=n.familyFixed||n.family;if(!n.isWebFont&&!p.match(/^(STIX|MathJax)|'/)){p=p.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/ Jax/,"Jax")+"','"+p+"','"+p+"-";if(n.weight){p+="Bold"}if(n.style){p+="Italic"}if(!n.weight&&!n.style){p+="Regular"}n.familyFixed=p="'"+p+"'"}var l=this.getComparisonWidths(n.testString,n.noStyleChar);var q=null;if(l){this.div.style.fontFamily=p+","+this.comparisonFont[0];if(this.div.offsetWidth==l[0]){this.div.style.fontFamily=p+","+this.comparisonFont[l[2]];if(this.div.offsetWidth==l[1]){q=false}}if(q===null&&(this.div.offsetWidth!=l[3]||this.div.offsetHeight!=l[4])){if(!n.noStyleChar&&d.FONTDATA&&d.FONTDATA.hasStyleChar){for(var o=0,k=this.testSize.length;o<k;o++){if(this.testStyleChar(n,this.testSize[o])){q=true;k=0}}}else{q=true}}}if(d.safariTextNodeBug){this.div.innerHTML=""}else{this.text.nodeValue=""}return q},styleChar:"\uEFFD",versionChar:"\uEFFE",compChar:"\uEFFF",testStyleChar:function(m,p){var s=3+(m.weight?2:0)+(m.style?4:0);var l="",o=0;var r=this.div.style.fontSize;this.div.style.fontSize=p;if(d.msieItalicWidthBug&&m.style==="italic"){this.text.nodeValue=l=this.compChar;o=this.div.offsetWidth}if(d.safariTextNodeBug){this.div.innerHTML=this.compChar+l}else{this.text.nodeValue=this.compChar+l}var k=this.div.offsetWidth-o;if(d.safariTextNodeBug){this.div.innerHTML=this.styleChar+l}else{this.text.nodeValue=this.styleChar+l}var q=Math.floor((this.div.offsetWidth-o)/k+0.5);if(q===s){if(d.safariTextNodeBug){this.div.innerHTML=this.versionChar+l}else{this.text.nodeValue=this.versionChar+l}m.version=Math.floor((this.div.offsetWidth-o)/k+1.5)/2}this.div.style.fontSize=r;return(q===s)},getComparisonWidths:function(p,n){if(d.FONTDATA&&d.FONTDATA.hasStyleChar&&!n){p+=this.styleChar+" "+this.compChar}if(d.safariTextNodeBug){this.div.innerHTML=p}else{this.text.nodeValue=p}this.div.style.fontFamily=this.comparisonFont[0];var l=this.div.offsetWidth;this.div.style.fontFamily=d.webFontDefault;var r=this.div.offsetWidth,o=this.div.offsetHeight;for(var q=1,k=this.comparisonFont.length;q<k;q++){this.div.style.fontFamily=this.comparisonFont[q];if(this.div.offsetWidth!=l){return[l,this.div.offsetWidth,q,r,o]}}return null},loadWebFont:function(l){b.Startup.signal.Post("HTML-CSS Jax - Web-Font "+d.fontInUse+"/"+l.directory);var o=e(["LoadWebFont","Loading web-font %1",d.fontInUse+"/"+l.directory]);var k=MathJax.Callback({});var m=MathJax.Callback(["loadComplete",this,l,o,k]);h.timer.start(h,[this.checkWebFont,l,m],0,this.timeout);return k},loadComplete:function(m,p,l,k){MathJax.Message.Clear(p);if(k===h.STATUS.OK){this.webFontLoaded=true;l();return}this.loadError(m);if(b.Browser.isFirefox&&d.allowWebFonts){var o=document.location.protocol+"//"+document.location.hostname;if(document.location.port!=""){o+=":"+document.location.port}o+="/";if(h.fileURL(d.webfontDir).substr(0,o.length)!==o){this.firefoxFontError(m)}}if(!this.webFontLoaded){d.loadWebFontError(m,l)}else{l()}},loadError:function(k){e(["CantLoadWebFont","Can't load web font %1",d.fontInUse+"/"+k.directory],null,2000);b.Startup.signal.Post(["HTML-CSS Jax - web font error",d.fontInUse+"/"+k.directory,k])},firefoxFontError:function(k){e(["FirefoxCantLoadWebFont","Firefox can't load web fonts from a remote host"],null,3000);b.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error")},checkWebFont:function(k,l,m){if(k.time(m)){return}if(d.Font.testFont(l)){m(k.STATUS.OK)}else{setTimeout(k,k.delay)}},fontFace:function(o){var p=d.allowWebFonts;var r=d.FONTDATA.FONTS[o];if(d.msieFontCSSBug&&!r.family.match(/-Web$/)){r.family+="-Web"}if(r.isWebFont){delete r.familyFixed}var k=d.webfontDir+"/"+p;var n=h.fileURL(k);var m=o.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");if(!m.match(/-/)){m+="-Regular"}if(p==="svg"){m+=".svg#"+m}else{m+="."+p}var l=h.fileRev(k+"/"+m.replace(/#.*/,""));var q={"font-family":r.family,src:"url('"+n+"/"+m+l+"')"};if(p==="otf"){m=m.replace(/otf$/,"woff");l=h.fileRev(k+"/"+m);q.src+=" format('opentype')";n=h.fileURL(d.webfontDir+"/woff");q.src="url('"+n+"/"+m+l+"') format('woff'), "+q.src}else{if(p!=="eot"){q.src+=" format('"+p+"')"}}if(!(d.FontFaceBug&&r.isWebFont)){if(o.match(/-bold/)){q["font-weight"]="bold"}if(o.match(/-italic/)){q["font-style"]="italic"}}return q}});var j,a,c;d.Augment({config:{styles:{".MathJax":{display:"inline","font-style":"normal","font-weight":"normal","line-height":"normal","font-size":"100%","font-size-adjust":"none","text-indent":0,"text-align":"left","text-transform":"none","letter-spacing":"normal","word-spacing":"normal","word-wrap":"normal","white-space":"nowrap","float":"none",direction:"ltr","max-width":"none","max-height":"none","min-width":0,"min-height":0,border:0,padding:0,margin:0},".MathJax:focus, body :focus .MathJax":{display:"inline-table"},".MathJax_Display":{position:"relative",display:"block!important","text-indent":0,"max-width":"none","max-height":"none","min-width":0,"min-height":0,width:"100%"},".MathJax img, .MathJax nobr, .MathJax a":{border:0,padding:0,margin:0,"max-width":"none","max-height":"none","min-width":0,"min-height":0,"vertical-align":0,"line-height":"normal","text-decoration":"none"},"img.MathJax_strut":{border:"0!important",padding:"0!important",margin:"0!important","vertical-align":"0!important"},".MathJax span":{display:"inline",position:"static",border:0,padding:0,margin:0,"vertical-align":0,"line-height":"normal","text-decoration":"none"},".MathJax nobr":{"white-space":"nowrap!important"},".MathJax img":{display:"inline!important","float":"none!important"},".MathJax *":{transition:"none","-webkit-transition":"none","-moz-transition":"none","-ms-transition":"none","-o-transition":"none"},".MathJax_Processing":{visibility:"hidden",position:"fixed",width:0,height:0,overflow:"hidden"},".MathJax_Processed":{display:"none!important"},".MathJax_ExBox":{display:"block!important",overflow:"hidden",width:"1px",height:"60ex","min-height":0,"max-height":"none"},".MathJax .MathJax_EmBox":{display:"block!important",overflow:"hidden",width:"1px",height:"60em","min-height":0,"max-height":"none"},".MathJax .MathJax_HitBox":{cursor:"text",background:"white",opacity:0,filter:"alpha(opacity=0)"},".MathJax .MathJax_HitBox *":{filter:"none",opacity:1,background:"transparent"},"#MathJax_Tooltip":{position:"absolute",left:0,top:0,width:"auto",height:"auto",display:"none"},"#MathJax_Tooltip *":{filter:"none",opacity:1,background:"transparent"},"@font-face":{"font-family":"MathJax_Blank",src:"url('about:blank')"}}},settings:b.config.menuSettings,Font:null,webFontDefault:"MathJax_Blank",allowWebFonts:"otf",maxStretchyParts:1000,fontName:{TeXLocal:"TeX",TeXWeb:["","TeX"],TeXImage:["",""],STIXLocal:["STIX","STIX-Web"],STIXWeb:"STIX-Web",AsanaMathWeb:"Asana-Math",GyrePagellaWeb:"Gyre-Pagella",GyreTermesWeb:"Gyre-Termes",LatinModernWeb:"Latin-Modern",NeoEulerWeb:"Neo-Euler"},fontInUse:"generic",FONTDATA:{TeX_factor:1,baselineskip:1.2,lineH:0.8,lineD:0.2,ffLineH:0.8,FONTS:{},VARIANT:{normal:{fonts:[]},"-generic-variant":{},"-largeOp":{},"-smallOp":{}},RANGES:[],DELIMITERS:{},RULECHAR:45,REMAP:{}},Config:function(){if(!this.require){this.require=[]}this.Font=f();this.SUPER(arguments).Config.call(this);var m=this.settings,l=this.config,k=m.font;if(this.adjustAvailableFonts){this.adjustAvailableFonts(l.availableFonts)}if(m.scale){l.scale=m.scale}if(k&&k!=="Auto"&&this.fontName[k]){l.availableFonts=[];delete l.fonts;if(this.fontName[k] instanceof Array){l.preferredFont=this.fontName[k][0];l.webFont=this.fontName[k][1]}else{l.preferredFont=l.webFont=this.fontName[k]}if(l.preferredFont){l.availableFonts[0]=l.preferredFont}}if(l.fonts){l.availableFonts=l.fonts;l.preferredFont=l.webFont=l.fonts[0];if(l.webFont==="STIX"){l.webFont+="-Web"}}k=this.Font.findFont(l.availableFonts,l.preferredFont);if(!k&&this.allowWebFonts){k=l.webFont;if(k){this.webFonts=true}}if(!k&&this.config.imageFont){k=l.imageFont;this.imgFonts=true}if(k){this.fontInUse=k;this.fontDir+="/"+k;this.webfontDir+="/"+k;this.require.push(this.fontDir+"/fontdata.js");if(this.imgFonts){this.require.push(this.directory+"/imageFonts.js");b.Startup.signal.Post("HTML-CSS Jax - using image fonts")}}else{e(["CantFindFontUsing","Can't find a valid font using %1","["+this.config.availableFonts.join(", ")+"]"],null,3000);b.Startup.signal.Post("HTML-CSS Jax - no valid font")}this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js")},Startup:function(){j=MathJax.Extension.MathEvents.Event;a=MathJax.Extension.MathEvents.Touch;c=MathJax.Extension.MathEvents.Hover;this.ContextMenu=j.ContextMenu;this.Mousedown=j.AltContextMenu;this.Mouseover=c.Mouseover;this.Mouseout=c.Mouseout;this.Mousemove=c.Mousemove;this.hiddenDiv=this.Element("div",{style:{visibility:"hidden",overflow:"hidden",position:"absolute",top:0,height:"1px",width:"auto",padding:0,border:0,margin:0,textAlign:"left",textIndent:0,textTransform:"none",lineHeight:"normal",letterSpacing:"normal",wordSpacing:"normal"}});if(!document.body.firstChild){document.body.appendChild(this.hiddenDiv)}else{document.body.insertBefore(this.hiddenDiv,document.body.firstChild)}this.hiddenDiv=this.addElement(this.hiddenDiv,"div",{id:"MathJax_Hidden"});var l=this.addElement(this.hiddenDiv,"div",{style:{width:"5in"}});this.pxPerInch=l.offsetWidth/5;this.hiddenDiv.removeChild(l);this.startMarker=this.createStrut(this.Element("span"),10,true);this.endMarker=this.addText(this.Element("span"),"x").parentNode;this.HDspan=this.Element("span");if(this.operaHeightBug){this.createStrut(this.HDspan,0)}if(this.msieInlineBlockAlignBug){this.HDimg=this.addElement(this.HDspan,"img",{style:{height:"0px",width:"1px"}});try{this.HDimg.src="about:blank"}catch(k){}}else{this.HDimg=this.createStrut(this.HDspan,0)}this.EmExSpan=this.Element("span",{style:{position:"absolute","font-size-adjust":"none"}},[["span",{className:"MathJax_ExBox"}],["span",{className:"MathJax"},[["span",{className:"MathJax_EmBox"}]]]]);this.linebreakSpan=this.Element("span",null,[["hr",{style:{width:"100%",size:1,padding:0,border:0,margin:0}}]]);return h.Styles(this.config.styles,["InitializeHTML",this])},removeSTIXfonts:function(n){for(var l=0,k=n.length;l<k;l++){if(n[l]==="STIX"){n.splice(l,1);k--;l--}}if(this.config.preferredFont==="STIX"){this.config.preferredFont=n[0]}},PreloadWebFonts:function(){if(!d.allowWebFonts||!d.config.preloadWebFonts){return}for(var l=0,k=d.config.preloadWebFonts.length;l<k;l++){var n=d.FONTDATA.FONTS[d.config.preloadWebFonts[l]];if(!n.available){d.Font.testFont(n)}}},InitializeHTML:function(){this.PreloadWebFonts();this.getDefaultExEm();if(this.defaultEm){return}var k=MathJax.Callback();h.timer.start(h,function(l){if(l.time(k)){b.signal.Post(["HTML-CSS Jax - no default em size"]);return}d.getDefaultExEm();if(d.defaultEm){k()}else{setTimeout(l,l.delay)}},this.defaultEmDelay,this.defaultEmTimeout);return k},defaultEmDelay:100,defaultEmTimeout:1000,getDefaultExEm:function(){document.body.appendChild(this.EmExSpan);document.body.appendChild(this.linebreakSpan);this.defaultEx=this.EmExSpan.firstChild.offsetHeight/60;this.defaultEm=this.EmExSpan.lastChild.firstChild.offsetHeight/60;this.defaultWidth=this.linebreakSpan.firstChild.offsetWidth;document.body.removeChild(this.linebreakSpan);document.body.removeChild(this.EmExSpan)},preTranslate:function(q){var p=q.jax[this.id],B,x=p.length,w,E,u,A,s,C,l,D,k,F,t,r=false,y,o=this.config.linebreaks.automatic,v=this.config.linebreaks.width;if(o){r=(v.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/)!=null);if(r){v=v.replace(/\s*container\s*/,"")}else{t=this.defaultWidth}if(v===""){v="100%"}}else{t=100000}for(B=0;B<x;B++){E=p[B];if(!E.parentNode){continue}u=E.previousSibling;if(u&&String(u.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/)){u.parentNode.removeChild(u)}l=E.MathJax.elementJax;if(!l){continue}l.HTMLCSS={display:(l.root.Get("display")==="block")};A=s=this.Element("span",{className:"MathJax",id:l.inputID+"-Frame",isMathJax:true,jaxID:this.id,oncontextmenu:j.Menu,onmousedown:j.Mousedown,onmouseover:j.Mouseover,onmouseout:j.Mouseout,onmousemove:j.Mousemove,onclick:j.Click,ondblclick:j.DblClick,onkeydown:j.Keydown,tabIndex:b.getTabOrder(l)});if(b.Browser.noContextMenu){A.ontouchstart=a.start;A.ontouchend=a.end}if(l.HTMLCSS.display){s=this.Element("div",{className:"MathJax_Display"});s.appendChild(A)}else{if(this.msieDisappearingBug){A.style.display="inline-block"}}s.className+=" MathJax_Processing";E.parentNode.insertBefore(s,E);E.parentNode.insertBefore(this.EmExSpan.cloneNode(true),E);s.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),s)}var z=[];for(B=0;B<x;B++){E=p[B];if(!E.parentNode){continue}C=E.previousSibling;s=C.previousSibling;l=E.MathJax.elementJax;if(!l){continue}D=C.firstChild.offsetHeight/60;k=C.lastChild.firstChild.offsetHeight/60;y=s.previousSibling.firstChild.offsetWidth;if(r){t=y}if(D===0||D==="NaN"){z.push(s);l.HTMLCSS.isHidden=true;D=this.defaultEx;k=this.defaultEm;y=this.defaultWidth;if(r){t=y}}F=(this.config.matchFontHeight?D/this.TeX.x_height/k:1);F=Math.floor(Math.max(this.config.minScaleAdjust/100,F)*this.config.scale);l.HTMLCSS.scale=F/100;l.HTMLCSS.fontSize=F+"%";l.HTMLCSS.em=l.HTMLCSS.outerEm=k;this.em=k*F/100;l.HTMLCSS.ex=D;l.HTMLCSS.cwidth=y/this.em;l.HTMLCSS.lineWidth=(o?this.length2em(v,1,t/this.em):1000000)}for(B=0,w=z.length;B<w;B++){this.hiddenDiv.appendChild(z[B]);this.addElement(this.hiddenDiv,"br")}for(B=0;B<x;B++){E=p[B];if(!E.parentNode){continue}C=p[B].previousSibling;l=p[B].MathJax.elementJax;if(!l){continue}A=C.previousSibling;if(!l.HTMLCSS.isHidden){A=A.previousSibling}A.parentNode.removeChild(A);C.parentNode.removeChild(C)}q.HTMLCSSeqn=q.HTMLCSSlast=0;q.HTMLCSSi=-1;q.HTMLCSSchunk=this.config.EqnChunk;q.HTMLCSSdelay=false},PHASE:{I:1,II:2,III:3},Translate:function(l,p){if(!l.parentNode){return}if(p.HTMLCSSdelay){p.HTMLCSSdelay=false;b.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay))}var k=l.MathJax.elementJax,o=k.root,m=document.getElementById(k.inputID+"-Frame"),q=(k.HTMLCSS.display?(m||{}).parentNode:m);if(!q){return}this.getMetrics(k);if(this.scale!==1){m.style.fontSize=k.HTMLCSS.fontSize}this.initImg(m);this.initHTML(o,m);this.savePreview(l);try{o.setTeXclass();k.HTMLCSS.span=m;k.HTMLCSS.div=q;o.toHTML(m,q,this.PHASE.I)}catch(n){if(n.restart){while(m.firstChild){m.removeChild(m.firstChild)}}this.restorePreview(l);throw n}this.restorePreview(l);q.className=q.className.split(/ /)[0]+" MathJax_Processed";b.signal.Post(["New Math Pending",k.inputID]);p.HTMLCSSeqn+=(p.i-p.HTMLCSSi);p.HTMLCSSi=p.i;if(p.HTMLCSSeqn>=p.HTMLCSSlast+p.HTMLCSSchunk){this.postTranslate(p,true);p.HTMLCSSchunk=Math.floor(p.HTMLCSSchunk*this.config.EqnChunkFactor);p.HTMLCSSdelay=true}return false},savePreview:function(k){var l=k.MathJax.preview;if(l){k.MathJax.tmpPreview=document.createElement("span");l.parentNode.replaceChild(k.MathJax.tmpPreview,l)}},restorePreview:function(k){var l=k.MathJax.tmpPreview;if(l){l.parentNode.replaceChild(k.MathJax.preview,l);delete k.MathJax.tmpPreview}},getMetrics:function(k){var l=k.HTMLCSS;this.em=g.mbase.prototype.em=l.em*l.scale;this.outerEm=l.em;this.scale=l.scale;this.cwidth=l.cwidth;this.linebreakWidth=l.lineWidth},postTranslate:function(l,s){var p=l.jax[this.id],t,n,q,o;for(q=l.HTMLCSSlast,o=l.HTMLCSSeqn;q<o;q++){t=p[q];if(t&&t.MathJax.elementJax){var k=t.MathJax.elementJax.HTMLCSS.div;k.className=k.className.split(/ /)[0];if(t.MathJax.preview){t.MathJax.preview.innerHTML=""}}}for(q=l.HTMLCSSlast,o=l.HTMLCSSeqn;q<o;q++){t=p[q];if(t&&t.MathJax.elementJax){n=t.MathJax.elementJax;this.getMetrics(n);n.root.toHTML(n.HTMLCSS.span,n.HTMLCSS.div,this.PHASE.II)}}for(q=l.HTMLCSSlast,o=l.HTMLCSSeqn;q<o;q++){t=p[q];if(t&&t.MathJax.elementJax){n=t.MathJax.elementJax;this.getMetrics(n);n.root.toHTML(n.HTMLCSS.span,n.HTMLCSS.div,this.PHASE.III);if(n.HTMLCSS.isHidden){t.parentNode.insertBefore(n.HTMLCSS.div,t)}delete n.HTMLCSS.span;delete n.HTMLCSS.div;t.MathJax.state=n.STATE.PROCESSED;b.signal.Post(["New Math",t.MathJax.elementJax.inputID])}}if(this.forceReflow){var r=(document.styleSheets||[])[0]||{};r.disabled=true;r.disabled=false}l.HTMLCSSlast=l.HTMLCSSeqn},getJaxFromMath:function(k){if(k.parentNode.className==="MathJax_Display"){k=k.parentNode}do{k=k.nextSibling}while(k&&k.nodeName.toLowerCase()!=="script");return b.getJaxFor(k)},getHoverSpan:function(k,l){return k.root.HTMLspanElement()},getHoverBBox:function(k,n,o){var p=n.bbox,m=k.HTMLCSS.outerEm;var l={w:p.w*m,h:p.h*m,d:p.d*m};if(p.width){l.width=p.width}return l},Zoom:function(l,w,v,k,t){w.className="MathJax";w.style.fontSize=l.HTMLCSS.fontSize;var z=w.appendChild(this.EmExSpan.cloneNode(true));var o=z.lastChild.firstChild.offsetHeight/60;this.em=g.mbase.prototype.em=o;this.outerEm=o/l.HTMLCSS.scale;z.parentNode.removeChild(z);this.scale=l.HTMLCSS.scale;this.linebreakWidth=l.HTMLCSS.lineWidth;this.cwidth=l.HTMLCSS.cwidth;this.zoomScale=parseInt(b.config.menuSettings.zscale)/100;this.idPostfix="-zoom";l.root.toHTML(w,w);this.idPostfix="";this.zoomScale=1;var x=l.root.HTMLspanElement().bbox,n=x.width;if(n){if(x.tw){k=x.tw*o}if(x.w*o<k){k=x.w*o}w.style.width=Math.floor(k-1.5*d.em)+"px";w.style.display="inline-block";var m=(l.root.id||"MathJax-Span-"+l.root.spanID)+"-zoom";var p=document.getElementById(m).firstChild;while(p&&p.style.width!==n){p=p.nextSibling}if(p){var s=p.offsetWidth;p.style.width="100%";if(s>k){w.style.width=(s+100)+"px"}}}p=w.firstChild.firstChild.style;if(x.H!=null&&x.H>x.h){p.marginTop=d.Em(x.H-Math.max(x.h,d.FONTDATA.lineH))}if(x.D!=null&&x.D>x.d){p.marginBottom=d.Em(x.D-Math.max(x.d,d.FONTDATA.lineD))}if(x.lw<0){p.paddingLeft=d.Em(-x.lw)}if(x.rw>x.w){p.marginRight=d.Em(x.rw-x.w)}w.style.position="absolute";if(!n){v.style.position="absolute"}var u=w.offsetWidth,r=w.offsetHeight,y=v.offsetHeight,q=v.offsetWidth;w.style.position=v.style.position="";return{Y:-j.getBBox(w).h,mW:q,mH:y,zW:u,zH:r}},initImg:function(k){},initHTML:function(l,k){},initFont:function(k){var m=d.FONTDATA.FONTS,l=d.config.availableFonts;if(l&&l.length&&d.Font.testFont(m[k])){m[k].available=true;if(m[k].familyFixed){m[k].family=m[k].familyFixed;delete m[k].familyFixed}return null}if(!this.allowWebFonts){return null}m[k].isWebFont=true;if(d.FontFaceBug){m[k].family=k;if(d.msieFontCSSBug){m[k].family+="-Web"}}return h.Styles({"@font-face":this.Font.fontFace(k)})},Remove:function(k){var l=document.getElementById(k.inputID+"-Frame");if(l){if(k.HTMLCSS.display){l=l.parentNode}l.parentNode.removeChild(l)}delete k.HTMLCSS},getHD:function(l,m){if(l.bbox&&this.config.noReflows&&!m){return{h:l.bbox.h,d:l.bbox.d}}var k=l.style.position;l.style.position="absolute";this.HDimg.style.height="0px";l.appendChild(this.HDspan);var n={h:l.offsetHeight};this.HDimg.style.height=n.h+"px";n.d=l.offsetHeight-n.h;n.h-=n.d;n.h/=this.em;n.d/=this.em;l.removeChild(this.HDspan);l.style.position=k;return n},getW:function(o){var l,n,m=(o.bbox||{}).w,p=o;if(o.bbox&&this.config.noReflows&&o.bbox.exactW!==false){if(!o.bbox.exactW){if(o.style.paddingLeft){m+=this.unEm(o.style.paddingLeft)*(o.scale||1)}if(o.style.paddingRight){m+=this.unEm(o.style.paddingRight)*(o.scale||1)}}return m}if(o.bbox&&o.bbox.exactW){return m}if((o.bbox&&m>=0&&!this.initialSkipBug&&!this.msieItalicWidthBug)||this.negativeBBoxes||!o.firstChild){l=o.offsetWidth;n=o.parentNode.offsetHeight}else{if(o.bbox&&m<0&&this.msieNegativeBBoxBug){l=-o.offsetWidth,n=o.parentNode.offsetHeight}else{var k=o.style.position;o.style.position="absolute";p=this.startMarker;o.insertBefore(p,o.firstChild);o.appendChild(this.endMarker);l=this.endMarker.offsetLeft-p.offsetLeft;o.removeChild(this.endMarker);o.removeChild(p);o.style.position=k}}if(n!=null){o.parentNode.HH=n/this.em}return l/this.em},Measured:function(m,l){var n=m.bbox;if(n.width==null&&n.w&&!n.isMultiline){var k=this.getW(m);n.rw+=k-n.w;n.w=k;n.exactW=true}if(!l){l=m.parentNode}if(!l.bbox){l.bbox=n}return m},Remeasured:function(l,k){k.bbox=this.Measured(l,k).bbox},MeasureSpans:function(o){var r=[],t,q,n,u,k,p,l,s;for(q=0,n=o.length;q<n;q++){t=o[q];if(!t){continue}u=t.bbox;s=this.parentNode(t);if(u.exactW||u.width||u.w===0||u.isMultiline||(this.config.noReflows&&u.exactW!==false)){if(!s.bbox){s.bbox=u}continue}if(this.negativeBBoxes||!t.firstChild||(u.w>=0&&!this.initialSkipBug)||(u.w<0&&this.msieNegativeBBoxBug)){r.push([t])}else{if(this.initialSkipBug){k=this.startMarker.cloneNode(true);p=this.endMarker.cloneNode(true);t.insertBefore(k,t.firstChild);t.appendChild(p);r.push([t,k,p,t.style.position]);t.style.position="absolute"}else{p=this.endMarker.cloneNode(true);t.appendChild(p);r.push([t,null,p])}}}for(q=0,n=r.length;q<n;q++){t=r[q][0];u=t.bbox;s=this.parentNode(t);if((u.w>=0&&!this.initialSkipBug)||this.negativeBBoxes||!t.firstChild){l=t.offsetWidth;s.HH=s.offsetHeight/this.em}else{if(u.w<0&&this.msieNegativeBBoxBug){l=-t.offsetWidth,s.HH=s.offsetHeight/this.em}else{l=r[q][2].offsetLeft-((r[q][1]||{}).offsetLeft||0)}}l/=this.em;u.rw+=l-u.w;u.w=l;u.exactW=true;if(!s.bbox){s.bbox=u}}for(q=0,n=r.length;q<n;q++){t=r[q];if(t[1]){t[1].parentNode.removeChild(t[1]),t[0].style.position=t[3]}if(t[2]){t[2].parentNode.removeChild(t[2])}}},Em:function(k){if(Math.abs(k)<0.0006){return"0em"}return k.toFixed(3).replace(/\.?0+$/,"")+"em"},EmRounded:function(k){k=(Math.round(k*d.em)+0.05)/d.em;if(Math.abs(k)<0.0006){return"0em"}return k.toFixed(3).replace(/\.?0+$/,"")+"em"},unEm:function(k){return parseFloat(k)},Px:function(k){k*=this.em;var l=(k<0?"-":"");return l+Math.abs(k).toFixed(1).replace(/\.?0+$/,"")+"px"},unPx:function(k){return parseFloat(k)/this.em},Percent:function(k){return(100*k).toFixed(1).replace(/\.?0+$/,"")+"%"},length2em:function(r,l,p){if(typeof(r)!=="string"){r=r.toString()}if(r===""){return""}if(r===g.SIZE.NORMAL){return 1}if(r===g.SIZE.BIG){return 2}if(r===g.SIZE.SMALL){return 0.71}if(r==="infinity"){return d.BIGDIMEN}var o=this.FONTDATA.TeX_factor,s=(d.zoomScale||1)/d.em;if(r.match(/mathspace$/)){return d.MATHSPACE[r]*o}var n=r.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);var k=parseFloat(n[1]||"1"),q=n[2];if(p==null){p=1}if(l==null){l=1}if(q==="em"){return k*o}if(q==="ex"){return k*d.TeX.x_height*o}if(q==="%"){return k/100*p}if(q==="px"){return k*s}if(q==="pt"){return k/10*o}if(q==="pc"){return k*1.2*o}if(q==="in"){return k*this.pxPerInch*s}if(q==="cm"){return k*this.pxPerInch*s/2.54}if(q==="mm"){return k*this.pxPerInch*s/25.4}if(q==="mu"){return k/18*o*l}return k*p},thickness2em:function(l,k){var m=d.TeX.rule_thickness;if(l===g.LINETHICKNESS.MEDIUM){return m}if(l===g.LINETHICKNESS.THIN){return 0.67*m}if(l===g.LINETHICKNESS.THICK){return 1.67*m}return this.length2em(l,k,m)},getPadding:function(l){var n={top:0,right:0,bottom:0,left:0},k=false;for(var o in n){if(n.hasOwnProperty(o)){var m=l.style["padding"+o.charAt(0).toUpperCase()+o.substr(1)];if(m){n[o]=this.length2em(m);k=true}}}return(k?n:false)},getBorders:function(p){var m={top:0,right:0,bottom:0,left:0},n={},l=false;for(var q in m){if(m.hasOwnProperty(q)){var k="border"+q.charAt(0).toUpperCase()+q.substr(1);var o=p.style[k+"Style"];if(o){l=true;m[q]=this.length2em(p.style[k+"Width"]);n[k]=[p.style[k+"Width"],p.style[k+"Style"],p.style[k+"Color"]].join(" ")}}}m.css=n;return(l?m:false)},setBorders:function(k,l){if(l){for(var m in l.css){if(l.css.hasOwnProperty(m)){k.style[m]=l.css[m]}}}},createStrut:function(m,l,n){var k=this.Element("span",{isMathJax:true,style:{display:"inline-block",overflow:"hidden",height:l+"px",width:"1px",marginRight:"-1px"}});if(n){m.insertBefore(k,m.firstChild)}else{m.appendChild(k)}return k},createBlank:function(l,k,m){var n=this.Element("span",{isMathJax:true,style:{display:"inline-block",overflow:"hidden",height:"1px",width:this.Em(k)}});if(k<0){n.style.marginRight=n.style.width;n.style.width=0}if(m){l.insertBefore(n,l.firstChild)}else{l.appendChild(n)}return n},createShift:function(l,k,n){var m=this.Element("span",{style:{marginLeft:this.Em(k)},isMathJax:true});if(n){l.insertBefore(m,l.firstChild)}else{l.appendChild(m)}return m},createSpace:function(p,n,o,q,m,s){if(n<-o){o=-n}var r=this.Em(n+o),k=this.Em(-o);if(this.msieInlineBlockAlignBug){k=this.Em(d.getHD(p.parentNode,true).d-o)}if(p.isBox||s){var l=(p.scale==null?1:p.scale);p.bbox={exactW:true,h:n*l,d:o*l,w:q*l,rw:q*l,lw:0};p.style.height=r;p.style.verticalAlign=k;p.HH=(n+o)*l}else{p=this.addElement(p,"span",{style:{height:r,verticalAlign:k},isMathJax:true})}if(q>=0){p.style.width=this.Em(q);p.style.display="inline-block";p.style.overflow="hidden"}else{if(this.msieNegativeSpaceBug){p.style.height=""}p.style.marginLeft=this.Em(q);if(d.safariNegativeSpaceBug&&p.parentNode.firstChild==p){this.createBlank(p,0,true)}}if(m&&m!==g.COLOR.TRANSPARENT){p.style.backgroundColor=m;p.style.position="relative"}return p},createRule:function(r,n,p,s,l){if(n<-p){p=-n}var m=d.TeX.min_rule_thickness,o=1;if(s>0&&s*this.em<m){s=m/this.em}if(n+p>0&&(n+p)*this.em<m){o=1/(n+p)*(m/this.em);n*=o;p*=o}if(!l){l="solid"}else{l="solid "+l}var k={display:"inline-block",overflow:"hidden",verticalAlign:this.Em(-p)};if(s>n+p){k.borderTop=this.Px(n+p)+" "+l;k.width=this.Em(s);k.height=(this.msieRuleBug&&n+p>0?this.Em(n+p):0)}else{k.borderLeft=this.Px(s)+" "+l;k.width=(this.msieRuleBug&&s>0?this.Em(s):0);k.height=this.Em(n+p)}var q=this.addElement(r,"span",{style:k,noAdjust:true,HH:n+p,isMathJax:true,bbox:{h:n,d:p,w:s,rw:s,lw:0,exactW:true}});if(r.isBox||r.className=="mspace"){r.bbox=q.bbox,r.HH=n+p}return q},createFrame:function(s,q,r,u,x,l){if(q<-r){r=-q}var p=2*x;if(this.msieFrameSizeBug){if(u<p){u=p}if(q+r<p){q=p-r}}if(this.msieBorderWidthBug){p=0}var v=this.Em(q+r-p),k=this.Em(-r-x),o=this.Em(u-p);var m=this.Px(x)+" "+l;var n=this.addElement(s,"span",{style:{border:m,display:"inline-block",overflow:"hidden",width:o,height:v},bbox:{h:q,d:r,w:u,rw:u,lw:0,exactW:true},noAdjust:true,HH:q+r,isMathJax:true});if(k){n.style.verticalAlign=k}return n},parentNode:function(l){var k=l.parentNode;if(k.nodeName.toLowerCase()==="a"){k=k.parentNode}return k},createStack:function(m,o,l){if(this.msiePaddingWidthBug){this.createStrut(m,0)}var n=String(l).match(/%$/);var k=(!n&&l!=null?l:0);m=this.addElement(m,"span",{noAdjust:true,HH:0,isMathJax:true,style:{display:"inline-block",position:"relative",width:(n?"100%":this.Em(k)),height:0}});if(!o){m.parentNode.bbox=m.bbox={exactW:true,h:-this.BIGDIMEN,d:-this.BIGDIMEN,w:k,lw:this.BIGDIMEN,rw:(!n&&l!=null?l:-this.BIGDIMEN)};if(n){m.bbox.width=l}}return m},createBox:function(l,k){var m=this.addElement(l,"span",{style:{position:"absolute"},isBox:true,isMathJax:true});if(k!=null){m.style.width=k}return m},addBox:function(k,l){l.style.position="absolute";l.isBox=l.isMathJax=true;return k.appendChild(l)},placeBox:function(u,s,q,o){u.isMathJax=true;var v=d.parentNode(u),C=u.bbox,z=v.bbox;if(this.msiePlaceBoxBug){this.addText(u,this.NBSP)}if(this.imgSpaceBug){this.addText(u,this.imgSpace)}var w,F=0;if(u.HH!=null){w=u.HH}else{if(C){w=Math.max(3,C.h+C.d)}else{w=u.offsetHeight/this.em}}if(!u.noAdjust){w+=1;w=Math.round(w*this.em)/this.em;if(this.msieInlineBlockAlignBug){this.addElement(u,"img",{className:"MathJax_strut",border:0,src:"about:blank",isMathJax:true,style:{width:0,height:this.Em(w)}})}else{this.addElement(u,"span",{isMathJax:true,style:{display:"inline-block",width:0,height:this.Em(w)}});if(d.chromeHeightBug){w-=(u.lastChild.offsetHeight-Math.round(w*this.em))/this.em}}}if(C){if(this.initialSkipBug){if(C.lw<0){F=C.lw;d.createBlank(u,-F,true)}if(C.rw>C.w){d.createBlank(u,C.rw-C.w+0.1)}}if(!this.msieClipRectBug&&!C.noclip&&!o){var B=3/this.em;var A=(C.H==null?C.h:C.H),m=(C.D==null?C.d:C.D);var E=w-A-B,p=w+m+B,n=-1000,k=C.rw+1000;u.style.clip="rect("+this.Em(E)+" "+this.Em(k)+" "+this.Em(p)+" "+this.Em(n)+")"}}u.style.top=this.Em(-q-w);u.style.left=this.Em(s+F);if(C&&z){if(C.H!=null&&(z.H==null||C.H+q>z.H)){z.H=C.H+q}if(C.D!=null&&(z.D==null||C.D-q>z.D)){z.D=C.D-q}if(C.h+q>z.h){z.h=C.h+q}if(C.d-q>z.d){z.d=C.d-q}if(z.H!=null&&z.H<=z.h){delete z.H}if(z.D!=null&&z.D<=z.d){delete z.D}if(C.w+s>z.w){z.w=C.w+s;if(z.width==null){v.style.width=this.Em(z.w)}}if(C.rw+s>z.rw){z.rw=C.rw+s}if(C.lw+s<z.lw){z.lw=C.lw+s}if(C.width!=null&&!C.isFixed){if(z.width==null){v.style.width=z.width="100%";if(C.minWidth){v.style.minWidth=z.minWidth=C.minWidth}}u.style.width=C.width}if(C.tw){z.tw=C.tw}}},alignBox:function(s,o,q,v){if(v==null){v=0}this.placeBox(s,v,q);if(this.msiePlaceBoxBug){var m=s.lastChild;while(m&&m.nodeName!=="#text"){m=m.previousSibling}if(m){s.removeChild(m)}}var u=s.bbox;if(u.isMultiline){return}var t=u.width!=null&&!u.isFixed;var k=0,p=v-u.w/2,n="50%";if(this.initialSkipBug){k=u.w-u.rw-0.1;p+=u.lw}if(this.msieMarginScaleBug){p=(p*this.em)+"px"}else{p=this.Em(p)}if(t){p=(v===0?"":this.Em(v));n=(50-parseFloat(u.width)/2)+"%"}b.Insert(s.style,({right:{left:"",right:this.Em(k-v)},center:{left:n,marginLeft:p}})[o])},setStackWidth:function(l,k){if(typeof(k)==="number"){l.style.width=this.Em(Math.max(0,k));var m=l.bbox;if(m){m.w=k;m.exactW=true}m=l.parentNode.bbox;if(m){m.w=k;m.exactW=true}}else{l.style.width=l.parentNode.style.width="100%";if(l.bbox){l.bbox.width=k}if(l.parentNode.bbox){l.parentNode.bbox.width=k}}},createDelimiter:function(u,k,n,q,o){if(!k){u.bbox={h:0,d:0,w:this.TeX.nulldelimiterspace,lw:0};u.bbox.rw=u.bbox.w;this.createSpace(u,u.bbox.h,u.bbox.d,u.bbox.w);return}if(!q){q=1}if(!(n instanceof Array)){n=[n,n]}var t=n[1];n=n[0];var l={alias:k};while(l.alias){k=l.alias;l=this.FONTDATA.DELIMITERS[k];if(!l){l={HW:[0,this.FONTDATA.VARIANT[g.VARIANT.NORMAL]]}}}if(l.load){b.RestartAfter(h.Require(this.fontDir+"/fontdata-"+l.load+".js"))}for(var s=0,p=l.HW.length;s<p;s++){if(l.HW[s][0]*q>=n-0.01||(s==p-1&&!l.stretch)){if(l.HW[s][2]){q*=l.HW[s][2]}if(l.HW[s][3]){k=l.HW[s][3]}var r=this.addElement(u,"span");this.createChar(r,[k,l.HW[s][1]],q,o);u.bbox=r.bbox;u.offset=0.65*u.bbox.w;u.scale=q;return}}if(l.stretch){this["extendDelimiter"+l.dir](u,t,l.stretch,q,o)}},extendDelimiterV:function(A,t,E,F,w){var o=this.createStack(A,true);var v=this.createBox(o),u=this.createBox(o);this.createChar(v,(E.top||E.ext),F,w);this.createChar(u,(E.bot||E.ext),F,w);var m={bbox:{w:0,lw:0,rw:0}},D=m,p;var B=v.bbox.h+v.bbox.d+u.bbox.h+u.bbox.d;var r=-v.bbox.h;this.placeBox(v,0,r,true);r-=v.bbox.d;if(E.mid){D=this.createBox(o);this.createChar(D,E.mid,F,w);B+=D.bbox.h+D.bbox.d}if(E.min&&t<B*E.min){t=B*E.min}if(t>B){m=this.Element("span");this.createChar(m,E.ext,F,w);var C=m.bbox.h+m.bbox.d,l=C-0.05,x,q,z=(E.mid?2:1);q=x=Math.min(Math.ceil((t-B)/(z*l)),this.maxStretchyParts);if(!E.fullExtenders){l=(t-B)/(z*x)}var s=(x/(x+1))*(C-l);l=C-s;r+=s+l-m.bbox.h;while(z-->0){while(x-->0){if(!this.msieCloneNodeBug){p=m.cloneNode(true)}else{p=this.Element("span");this.createChar(p,E.ext,F,w)}p.bbox=m.bbox;r-=l;this.placeBox(this.addBox(o,p),0,r,true)}r+=s-m.bbox.d;if(E.mid&&z){this.placeBox(D,0,r-D.bbox.h,true);x=q;r+=-(D.bbox.h+D.bbox.d)+s+l-m.bbox.h}}}else{r+=(B-t)/2;if(E.mid){this.placeBox(D,0,r-D.bbox.h,true);r+=-(D.bbox.h+D.bbox.d)}r+=(B-t)/2}this.placeBox(u,0,r-u.bbox.h,true);r-=u.bbox.h+u.bbox.d;A.bbox={w:Math.max(v.bbox.w,m.bbox.w,u.bbox.w,D.bbox.w),lw:Math.min(v.bbox.lw,m.bbox.lw,u.bbox.lw,D.bbox.lw),rw:Math.max(v.bbox.rw,m.bbox.rw,u.bbox.rw,D.bbox.rw),h:0,d:-r,exactW:true};A.scale=F;A.offset=0.55*A.bbox.w;A.isMultiChar=true;this.setStackWidth(o,A.bbox.w)},extendDelimiterH:function(B,o,E,G,y){var r=this.createStack(B,true);var p=this.createBox(r),C=this.createBox(r);this.createChar(p,(E.left||E.rep),G,y);this.createChar(C,(E.right||E.rep),G,y);var l=this.Element("span");this.createChar(l,E.rep,G,y);var D={bbox:{h:-this.BIGDIMEN,d:-this.BIGDIMEN}},m;this.placeBox(p,-p.bbox.lw,0,true);var u=(p.bbox.rw-p.bbox.lw)+(C.bbox.rw-C.bbox.lw)-0.05,t=p.bbox.rw-p.bbox.lw-0.025,v;if(E.mid){D=this.createBox(r);this.createChar(D,E.mid,G,y);u+=D.bbox.w}if(E.min&&o<u*E.min){o=u*E.min}if(o>u){var F=l.bbox.rw-l.bbox.lw,q=F-0.05,z,s,A=(E.mid?2:1);s=z=Math.min(Math.ceil((o-u)/(A*q)),this.maxStretchyParts);if(!E.fillExtenders){q=(o-u)/(A*z)}v=(z/(z+1))*(F-q);q=F-v;t-=l.bbox.lw+v;while(A-->0){while(z-->0){if(!this.cloneNodeBug){m=l.cloneNode(true)}else{m=this.Element("span");this.createChar(m,E.rep,G,y)}m.bbox=l.bbox;this.placeBox(this.addBox(r,m),t,0,true);t+=q}if(E.mid&&A){this.placeBox(D,t,0,true);t+=D.bbox.w-v;z=s}}}else{t-=(u-o)/2;if(E.mid){this.placeBox(D,t,0,true);t+=D.bbox.w}t-=(u-o)/2}this.placeBox(C,t,0,true);B.bbox={w:t+C.bbox.rw,lw:0,rw:t+C.bbox.rw,h:Math.max(p.bbox.h,l.bbox.h,C.bbox.h,D.bbox.h),d:Math.max(p.bbox.d,l.bbox.d,C.bbox.d,D.bbox.d),exactW:true};B.scale=G;B.isMultiChar=true;this.setStackWidth(r,B.bbox.w)},createChar:function(s,p,n,k){s.isMathJax=true;var r=s,t="",o={fonts:[p[1]],noRemap:true};if(k&&k===g.VARIANT.BOLD){o.fonts=[p[1]+"-bold",p[1]]}if(typeof(p[1])!=="string"){o=p[1]}if(p[0] instanceof Array){for(var q=0,l=p[0].length;q<l;q++){t+=String.fromCharCode(p[0][q])}}else{t=String.fromCharCode(p[0])}if(p[4]){n*=p[4]}if(n!==1||p[3]){r=this.addElement(s,"span",{style:{fontSize:this.Percent(n)},scale:n,isMathJax:true});this.handleVariant(r,o,t);s.bbox=r.bbox}else{this.handleVariant(s,o,t)}if(p[2]){s.style.marginLeft=this.Em(p[2])}if(p[3]){s.firstChild.style.verticalAlign=this.Em(p[3]);s.bbox.h+=p[3];if(s.bbox.h<0){s.bbox.h=0}}if(p[5]){s.bbox.h+=p[5]}if(p[6]){s.bbox.d+=p[6]}if(this.AccentBug&&s.bbox.w===0){r.firstChild.nodeValue+=this.NBSP}},positionDelimiter:function(l,k){k-=l.bbox.h;l.bbox.d-=k;l.bbox.h+=k;if(k){if(this.safariVerticalAlignBug||this.konquerorVerticalAlignBug||(this.operaVerticalAlignBug&&l.isMultiChar)){if(l.firstChild.style.display===""&&l.style.top!==""){l=l.firstChild;k-=d.unEm(l.style.top)}l.style.position="relative";l.style.top=this.Em(-k)}else{l.style.verticalAlign=this.Em(k);if(d.ffVerticalAlignBug){d.createRule(l.parentNode,l.bbox.h,0,0);delete l.parentNode.bbox}}}},handleVariant:function(z,o,r){var y="",w,B,s,C,k=z,l=!!z.style.fontFamily;if(r.length===0){return}if(!z.bbox){z.bbox={w:0,h:-this.BIGDIMEN,d:-this.BIGDIMEN,rw:-this.BIGDIMEN,lw:this.BIGDIMEN}}if(!o){o=this.FONTDATA.VARIANT[g.VARIANT.NORMAL]}C=o;for(var A=0,x=r.length;A<x;A++){o=C;w=r.charCodeAt(A);B=r.charAt(A);if(w>=55296&&w<56319){A++;w=(((w-55296)<<10)+(r.charCodeAt(A)-56320))+65536;if(this.FONTDATA.RemapPlane1){var D=this.FONTDATA.RemapPlane1(w,o);w=D.n;o=D.variant}}else{var t,q,u=this.FONTDATA.RANGES;for(t=0,q=u.length;t<q;t++){if(u[t].name==="alpha"&&o.noLowerCase){continue}var p=o["offset"+u[t].offset];if(p&&w>=u[t].low&&w<=u[t].high){if(u[t].remap&&u[t].remap[w]){w=p+u[t].remap[w]}else{w=w-u[t].low+p;if(u[t].add){w+=u[t].add}}if(o["variant"+u[t].offset]){o=this.FONTDATA.VARIANT[o["variant"+u[t].offset]]}break}}}if(o.remap&&o.remap[w]){w=o.remap[w];if(o.remap.variant){o=this.FONTDATA.VARIANT[o.remap.variant]}}else{if(this.FONTDATA.REMAP[w]&&!o.noRemap){w=this.FONTDATA.REMAP[w]}}if(w instanceof Array){o=this.FONTDATA.VARIANT[w[1]];w=w[0]}if(typeof(w)==="string"){r=w+r.substr(A+1);x=r.length;A=-1;continue}s=this.lookupChar(o,w);B=s[w];if(l||(!this.checkFont(s,k.style)&&!B[5].img)){if(y.length){this.addText(k,y);y=""}var v=!!k.style.fontFamily||!!z.style.fontStyle||!!z.style.fontWeight||!s.directory||l;l=false;if(k!==z){v=!this.checkFont(s,z.style);k=z}if(v){k=this.addElement(z,"span",{isMathJax:true,subSpan:true})}this.handleFont(k,s,k!==z)}y=this.handleChar(k,s,B,w,y);if(!(B[5]||{}).space){if(B[0]/1000>z.bbox.h){z.bbox.h=B[0]/1000}if(B[1]/1000>z.bbox.d){z.bbox.d=B[1]/1000}}if(z.bbox.w+B[3]/1000<z.bbox.lw){z.bbox.lw=z.bbox.w+B[3]/1000}if(z.bbox.w+B[4]/1000>z.bbox.rw){z.bbox.rw=z.bbox.w+B[4]/1000}z.bbox.w+=B[2]/1000;if((B[5]||{}).isUnknown){z.bbox.exactW=false}}if(y.length){this.addText(k,y)}if(z.scale&&z.scale!==1){z.bbox.h*=z.scale;z.bbox.d*=z.scale;z.bbox.w*=z.scale;z.bbox.lw*=z.scale;z.bbox.rw*=z.scale}if(r.length==1&&s.skew&&s.skew[w]){z.bbox.skew=s.skew[w]}},checkFont:function(k,l){var m=(l.fontWeight||"normal");if(m.match(/^\d+$/)){m=(parseInt(m)>=600?"bold":"normal")}return(k.family.replace(/'/g,"")===l.fontFamily.replace(/'/g,"")&&(k.style||"normal")===(l.fontStyle||"normal")&&(k.weight||"normal")===m)},handleFont:function(m,k,o){m.style.fontFamily=k.family;if(!k.directory){m.style.fontSize=Math.floor(d.config.scale/d.scale+0.5)+"%"}if(!(d.FontFaceBug&&k.isWebFont)){var l=k.style||"normal",n=k.weight||"normal";if(l!=="normal"||o){m.style.fontStyle=l}if(n!=="normal"||o){m.style.fontWeight=n}}},handleChar:function(l,k,s,r,q){var p=s[5];if(p.space){if(q.length){this.addText(l,q)}d.createShift(l,s[2]/1000);return""}if(p.img){return this.handleImg(l,k,s,r,q)}if(p.isUnknown&&this.FONTDATA.DELIMITERS[r]){if(q.length){this.addText(l,q)}var o=l.scale;d.createDelimiter(l,r,0,1,k);if(this.FONTDATA.DELIMITERS[r].dir==="V"){l.style.verticalAlign=this.Em(l.bbox.d);l.bbox.h+=l.bbox.d;l.bbox.d=0}l.scale=o;s[0]=l.bbox.h*1000;s[1]=l.bbox.d*1000;s[2]=l.bbox.w*1000;s[3]=l.bbox.lw*1000;s[4]=l.bbox.rw*1000;return""}if(p.c==null){if(r<=65535){p.c=String.fromCharCode(r)}else{var m=r-65536;p.c=String.fromCharCode((m>>10)+55296)+String.fromCharCode((m&1023)+56320)}}if(d.ffFontOptimizationBug&&s[4]-s[2]>125){l.style.textRendering="optimizeLegibility"}if(p.rfix){this.addText(l,q+p.c);d.createShift(l,p.rfix/1000);return""}if(s[2]||!this.msieAccentBug||q.length){return q+p.c}d.createShift(l,s[3]/1000);d.createShift(l,(s[4]-s[3])/1000);this.addText(l,p.c);d.createShift(l,-s[4]/1000);return""},handleImg:function(l,k,p,o,m){return m},lookupChar:function(p,s){var o,k;if(!p.FONTS){var r=this.FONTDATA.FONTS;var q=(p.fonts||this.FONTDATA.VARIANT.normal.fonts);if(!(q instanceof Array)){q=[q]}if(p.fonts!=q){p.fonts=q}p.FONTS=[];for(o=0,k=q.length;o<k;o++){if(r[q[o]]){p.FONTS.push(r[q[o]]);r[q[o]].name=q[o]}}}for(o=0,k=p.FONTS.length;o<k;o++){var l=p.FONTS[o];if(typeof(l)==="string"){delete p.FONTS;this.loadFont(l)}if(l[s]){if(l[s].length===5){l[s][5]={}}if(d.allowWebFonts&&!l.available){this.loadWebFont(l)}else{return l}}else{this.findBlock(l,s)}}return this.unknownChar(p,s)},unknownChar:function(k,m){var l=(k.defaultFont||{family:d.config.undefinedFamily});if(k.bold){l.weight="bold"}if(k.italic){l.style="italic"}if(!l[m]){l[m]=[800,200,500,0,500,{isUnknown:true}]}b.signal.Post(["HTML-CSS Jax - unknown char",m,k]);return l},findBlock:function(l,q){if(l.Ranges){for(var p=0,k=l.Ranges.length;p<k;p++){if(q<l.Ranges[p][0]){return}if(q<=l.Ranges[p][1]){var o=l.Ranges[p][2];for(var n=l.Ranges.length-1;n>=0;n--){if(l.Ranges[n][2]==o){l.Ranges.splice(n,1)}}this.loadFont(l.directory+"/"+o+".js")}}}},loadFont:function(l){var k=MathJax.Callback.Queue();k.Push(["Require",h,this.fontDir+"/"+l]);if(this.imgFonts){if(!MathJax.isPacked){l=l.replace(/\/([^\/]*)$/,d.imgPacked+"/$1")}k.Push(["Require",h,this.webfontDir+"/png/"+l])}b.RestartAfter(k.Push({}))},loadWebFont:function(k){k.available=k.isWebFont=true;if(d.FontFaceBug){k.family=k.name;if(d.msieFontCSSBug){k.family+="-Web"}}b.RestartAfter(this.Font.loadWebFont(k))},loadWebFontError:function(l,k){b.Startup.signal.Post("HTML-CSS Jax - disable web fonts");l.isWebFont=false;if(this.config.imageFont&&this.config.imageFont===this.fontInUse){this.imgFonts=true;b.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");b.Startup.signal.Post("HTML-CSS Jax - using image fonts");e(["WebFontNotAvailable","Web-Fonts not available -- using image fonts instead"],null,3000);h.Require(this.directory+"/imageFonts.js",k)}else{this.allowWebFonts=false;k()}},Element:MathJax.HTML.Element,addElement:MathJax.HTML.addElement,TextNode:MathJax.HTML.TextNode,addText:MathJax.HTML.addText,ucMatch:MathJax.HTML.ucMatch,BIGDIMEN:10000000,ID:0,idPostfix:"",GetID:function(){this.ID++;return this.ID},MATHSPACE:{veryverythinmathspace:1/18,verythinmathspace:2/18,thinmathspace:3/18,mediummathspace:4/18,thickmathspace:5/18,verythickmathspace:6/18,veryverythickmathspace:7/18,negativeveryverythinmathspace:-1/18,negativeverythinmathspace:-2/18,negativethinmathspace:-3/18,negativemediummathspace:-4/18,negativethickmathspace:-5/18,negativeverythickmathspace:-6/18,negativeveryverythickmathspace:-7/18},TeX:{x_height:0.430554,quad:1,num1:0.676508,num2:0.393732,num3:0.44373,denom1:0.685951,denom2:0.344841,sup1:0.412892,sup2:0.362892,sup3:0.288888,sub1:0.15,sub2:0.247217,sup_drop:0.386108,sub_drop:0.05,delim1:2.39,delim2:1,axis_height:0.25,rule_thickness:0.06,big_op_spacing1:0.111111,big_op_spacing2:0.166666,big_op_spacing3:0.2,big_op_spacing4:0.6,big_op_spacing5:0.1,scriptspace:0.1,nulldelimiterspace:0.12,delimiterfactor:901,delimitershortfall:0.3,min_rule_thickness:1.25},NBSP:"\u00A0",rfuzz:0});MathJax.Hub.Register.StartupHook("mml Jax Ready",function(){g=MathJax.ElementJax.mml;g.mbase.Augment({toHTML:function(o){o=this.HTMLcreateSpan(o);if(this.type!="mrow"){o=this.HTMLhandleSize(o)}for(var l=0,k=this.data.length;l<k;l++){if(this.data[l]){this.data[l].toHTML(o)}}var s=this.HTMLcomputeBBox(o);var n=o.bbox.h,r=o.bbox.d,p=false,q;for(l=0,k=s.length;l<k;l++){q=s[l].HTMLspanElement().bbox;if(s[l].forceStretch||q.h!==n||q.d!==r){s[l].HTMLstretchV(o,n,r);p=true}else{if(s[l].needsBBox){p=true}}}if(p){this.HTMLcomputeBBox(o,true)}if(this.HTMLlineBreaks(o)){o=this.HTMLmultiline(o)}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);if(this.data.length===1&&this.data[0]){q=this.data[0].HTMLspanElement().bbox;if(q.skew){o.bbox.skew=q.skew}}return o},HTMLlineBreaks:function(){return false},HTMLmultiline:function(){g.mbase.HTMLautoloadFile("multiline")},HTMLcomputeBBox:function(q,p,o,k){if(o==null){o=0}if(k==null){k=this.data.length}var n=q.bbox={exactW:true},r=[];while(o<k){var l=this.data[o];if(!l){continue}if(!p&&l.HTMLcanStretch("Vertical")){r.push(l);l=(l.CoreMO()||l);r[r.length-1].needsBBox=(l!==this.data[o])}this.HTMLcombineBBoxes(l,n);o++}this.HTMLcleanBBox(n);return r},HTMLcombineBBoxes:function(k,l){if(l.w==null){this.HTMLemptyBBox(l)}var n=(k.bbox?k:k.HTMLspanElement());if(!n||!n.bbox){return}var m=n.bbox;if(m.d>l.d){l.d=m.d}if(m.h>l.h){l.h=m.h}if(m.D!=null&&m.D>l.D){l.D=m.D}if(m.H!=null&&m.H>l.H){l.H=m.H}if(n.style.paddingLeft){l.w+=d.unEm(n.style.paddingLeft)*(n.scale||1)}if(l.w+m.lw<l.lw){l.lw=l.w+m.lw}if(l.w+m.rw>l.rw){l.rw=l.w+m.rw}l.w+=m.w;if(n.style.paddingRight){l.w+=d.unEm(n.style.paddingRight)*(n.scale||1)}if(m.width){l.width=m.width;l.minWidth=m.minWidth}if(m.tw){l.tw=m.tw}if(m.ic){l.ic=m.ic}else{delete l.ic}if(l.exactW&&!m.exactW){l.exactW=m.exactW}},HTMLemptyBBox:function(k){k.h=k.d=k.H=k.D=k.rw=-d.BIGDIMEN;k.w=0;k.lw=d.BIGDIMEN;return k},HTMLcleanBBox:function(k){if(k.h===this.BIGDIMEN){k.h=k.d=k.H=k.D=k.w=k.rw=k.lw=0}if(k.D<=k.d){delete k.D}if(k.H<=k.h){delete k.H}},HTMLzeroBBox:function(){return{h:0,d:0,w:0,lw:0,rw:0}},HTMLcanStretch:function(l){if(this.isEmbellished()){var k=this.Core();if(k&&k!==this){return k.HTMLcanStretch(l)}}return false},HTMLstretchH:function(l,k){return this.HTMLspanElement()},HTMLstretchV:function(l,k,m){return this.HTMLspanElement()},HTMLnotEmpty:function(k){while(k){if((k.type!=="mrow"&&k.type!=="texatom")||k.data.length>1){return true}k=k.data[0]}return false},HTMLmeasureChild:function(l,k){if(this.data[l]){d.Measured(this.data[l].toHTML(k),k)}else{k.bbox=this.HTMLzeroBBox()}},HTMLboxChild:function(l,k){if(!this.data[l]){this.SetData(l,g.mrow())}return this.data[l].toHTML(k)},HTMLcreateSpan:function(k){if(this.spanID){var l=this.HTMLspanElement();if(l&&(l.parentNode===k||(l.parentNode||{}).parentNode===k)){while(l.firstChild){l.removeChild(l.firstChild)}l.bbox=this.HTMLzeroBBox();l.scale=1;l.isMultChar=l.HH=null;l.style.cssText="";return l}}if(this.href){k=d.addElement(k,"a",{href:this.href,isMathJax:true})}k=d.addElement(k,"span",{className:this.type,isMathJax:true});if(d.imgHeightBug){k.style.display="inline-block"}if(this["class"]){k.className+=" "+this["class"]}if(!this.spanID){this.spanID=d.GetID()}k.id=(this.id||"MathJax-Span-"+this.spanID)+d.idPostfix;k.bbox=this.HTMLzeroBBox();this.styles={};if(this.style){k.style.cssText=this.style;if(k.style.fontSize){this.mathsize=k.style.fontSize;k.style.fontSize=""}this.styles={border:d.getBorders(k),padding:d.getPadding(k)};if(this.styles.border){k.style.border=""}if(this.styles.padding){k.style.padding=""}}if(this.href){k.parentNode.bbox=k.bbox}this.HTMLaddAttributes(k);return k},HTMLaddAttributes:function(n){if(this.attrNames){var s=this.attrNames,o=g.nocopyAttributes,r=b.config.ignoreMMLattributes;var p=(this.type==="mstyle"?g.math.prototype.defaults:this.defaults);for(var l=0,k=s.length;l<k;l++){var q=s[l];if(r[q]==false||(!o[q]&&!r[q]&&p[q]==null&&typeof(n[q])==="undefined")){n.setAttribute(q,this.attr[q])}}}},HTMLspanElement:function(){if(!this.spanID){return null}return document.getElementById((this.id||"MathJax-Span-"+this.spanID)+d.idPostfix)},HTMLhandleVariant:function(l,k,m){d.handleVariant(l,k,m)},HTMLhandleSize:function(k){if(!k.scale){k.scale=this.HTMLgetScale();if(k.scale!==1){k.style.fontSize=d.Percent(k.scale)}}return k},HTMLhandleDir:function(l){var k=this.Get("dir",true);if(k){l.dir=k}return l},HTMLhandleColor:function(w){var y=this.getValues("mathcolor","color");if(this.mathbackground){y.mathbackground=this.mathbackground}if(this.background){y.background=this.background}if(this.style&&w.style.backgroundColor){y.mathbackground=w.style.backgroundColor;w.style.backgroundColor="transparent"}var t=(this.styles||{}).border,v=(this.styles||{}).padding;if(y.color&&!this.mathcolor){y.mathcolor=y.color}if(y.background&&!this.mathbackground){y.mathbackground=y.background}if(y.mathcolor){w.style.color=y.mathcolor}if((y.mathbackground&&y.mathbackground!==g.COLOR.TRANSPARENT)||t||v){var A=w.bbox,z=(A.exact?0:1/d.em),u=0,s=0,m=w.style.paddingLeft,q=w.style.paddingRight;if(this.isToken){u=A.lw;s=A.rw-A.w}if(m!==""){u+=d.unEm(m)*(w.scale||1)}if(q!==""){s-=d.unEm(q)*(w.scale||1)}var l=(d.PaddingWidthBug||A.keepPadding||A.exactW?0:s-u);var o=Math.max(0,d.getW(w)+l);var x=A.h+A.d,k=-A.d,r=0,p=0;if(o>0){o+=2*z;u-=z}if(x>0){x+=2*z;k-=z}s=-o-u;if(t){s-=t.right;k-=t.bottom;r+=t.left;p+=t.right;A.h+=t.top;A.d+=t.bottom;A.w+=t.left+t.right;A.lw-=t.left;A.rw+=t.right}if(v){x+=v.top+v.bottom;o+=v.left+v.right;s-=v.right;k-=v.bottom;r+=v.left;p+=v.right;A.h+=v.top;A.d+=v.bottom;A.w+=v.left+v.right;A.lw-=v.left;A.rw+=v.right}if(p){w.style.paddingRight=d.Em(p)}var n=d.Element("span",{id:"MathJax-Color-"+this.spanID+d.idPostfix,isMathJax:true,style:{display:"inline-block",backgroundColor:y.mathbackground,width:d.Em(o),height:d.Em(x),verticalAlign:d.Em(k),marginLeft:d.Em(u),marginRight:d.Em(s)}});d.setBorders(n,t);if(A.width){n.style.width=A.width;n.style.marginRight="-"+A.width}if(d.msieInlineBlockAlignBug){n.style.position="relative";n.style.width=n.style.height=0;n.style.verticalAlign=n.style.marginLeft=n.style.marginRight="";n.style.border=n.style.padding="";if(t&&d.msieBorderWidthBug){x+=t.top+t.bottom;o+=t.left+t.right}n.style.width=d.Em(r+z);d.placeBox(d.addElement(n,"span",{noAdjust:true,isMathJax:true,style:{display:"inline-block",position:"absolute",overflow:"hidden",background:(y.mathbackground||"transparent"),width:d.Em(o),height:d.Em(x)}}),u,A.h+z);d.setBorders(n.firstChild,t)}w.parentNode.insertBefore(n,w);if(d.msieColorPositionBug){w.style.position="relative"}return n}return null},HTMLremoveColor:function(){var k=document.getElementById("MathJax-Color-"+this.spanID+d.idPostfix);if(k){k.parentNode.removeChild(k)}},HTMLhandleSpace:function(o){if(this.useMMLspacing){if(this.type!=="mo"){return}var m=this.getValues("scriptlevel","lspace","rspace");if(m.scriptlevel<=0||this.hasValue("lspace")||this.hasValue("rspace")){var l=this.HTMLgetMu(o);m.lspace=Math.max(0,d.length2em(m.lspace,l));m.rspace=Math.max(0,d.length2em(m.rspace,l));var k=this,n=this.Parent();while(n&&n.isEmbellished()&&n.Core()===k){k=n;n=n.Parent();o=k.HTMLspanElement()}if(m.lspace){o.style.paddingLeft=d.Em(m.lspace)}if(m.rspace){o.style.paddingRight=d.Em(m.rspace)}}}else{var p=this.texSpacing();if(p!==""){this.HTMLgetScale();p=d.length2em(p,this.scale)/(o.scale||1)*this.mscale;if(o.style.paddingLeft){p+=d.unEm(o.style.paddingLeft)}o.style.paddingLeft=d.Em(p)}}},HTMLgetScale:function(){if(this.scale){return this.scale*this.mscale}var m=1,k=this.getValues("scriptlevel","fontsize");k.mathsize=(this.isToken?this:this.Parent()).Get("mathsize");if(this.style){var l=this.HTMLspanElement();if(l.style.fontSize!=""){k.fontsize=l.style.fontSize}}if(k.fontsize&&!this.mathsize){k.mathsize=k.fontsize}if(k.scriptlevel!==0){if(k.scriptlevel>2){k.scriptlevel=2}m=Math.pow(this.Get("scriptsizemultiplier"),k.scriptlevel);k.scriptminsize=d.length2em(this.Get("scriptminsize"));if(m<k.scriptminsize){m=k.scriptminsize}}this.scale=m;this.mscale=d.length2em(k.mathsize);return m*this.mscale},HTMLgetMu:function(m){var k=1,l=this.getValues("scriptlevel","scriptsizemultiplier");if(m.scale&&m.scale!==1){k=1/m.scale}if(l.scriptlevel!==0){if(l.scriptlevel>2){l.scriptlevel=2}k=Math.sqrt(Math.pow(l.scriptsizemultiplier,l.scriptlevel))}return k},HTMLgetVariant:function(){var k=this.getValues("mathvariant","fontfamily","fontweight","fontstyle");k.hasVariant=this.Get("mathvariant",true);if(!k.hasVariant){k.family=k.fontfamily;k.weight=k.fontweight;k.style=k.fontstyle}if(this.style){var m=this.HTMLspanElement();if(!k.family&&m.style.fontFamily){k.family=m.style.fontFamily}if(!k.weight&&m.style.fontWeight){k.weight=m.style.fontWeight}if(!k.style&&m.style.fontStyle){k.style=m.style.fontStyle}}if(k.weight&&k.weight.match(/^\d+$/)){k.weight=(parseInt(k.weight)>600?"bold":"normal")}var l=k.mathvariant;if(this.variantForm){l="-"+d.fontInUse+"-variant"}if(k.family&&!k.hasVariant){if(!k.weight&&k.mathvariant.match(/bold/)){k.weight="bold"}if(!k.style&&k.mathvariant.match(/italic/)){k.style="italic"}return{FONTS:[],fonts:[],noRemap:true,defaultFont:{family:k.family,style:k.style,weight:k.weight}}}if(k.weight==="bold"){l={normal:g.VARIANT.BOLD,italic:g.VARIANT.BOLDITALIC,fraktur:g.VARIANT.BOLDFRAKTUR,script:g.VARIANT.BOLDSCRIPT,"sans-serif":g.VARIANT.BOLDSANSSERIF,"sans-serif-italic":g.VARIANT.SANSSERIFBOLDITALIC}[l]||l}else{if(k.weight==="normal"){l={bold:g.VARIANT.normal,"bold-italic":g.VARIANT.ITALIC,"bold-fraktur":g.VARIANT.FRAKTUR,"bold-script":g.VARIANT.SCRIPT,"bold-sans-serif":g.VARIANT.SANSSERIF,"sans-serif-bold-italic":g.VARIANT.SANSSERIFITALIC}[l]||l}}if(k.style==="italic"){l={normal:g.VARIANT.ITALIC,bold:g.VARIANT.BOLDITALIC,"sans-serif":g.VARIANT.SANSSERIFITALIC,"bold-sans-serif":g.VARIANT.SANSSERIFBOLDITALIC}[l]||l}else{if(k.style==="normal"){l={italic:g.VARIANT.NORMAL,"bold-italic":g.VARIANT.BOLD,"sans-serif-italic":g.VARIANT.SANSSERIF,"sans-serif-bold-italic":g.VARIANT.BOLDSANSSERIF}[l]||l}}if(!(l in d.FONTDATA.VARIANT)){l="normal"}return d.FONTDATA.VARIANT[l]},HTMLdrawBBox:function(k){var m=k.bbox;var l=d.Element("span",{style:{"font-size":k.style.fontSize,display:"inline-block",opacity:0.25,"margin-left":d.Em(-m.w)}},[["span",{style:{height:d.Em(m.h),width:d.Em(m.w),"background-color":"red",display:"inline-block"}}],["span",{style:{height:d.Em(m.d),width:d.Em(m.w),"margin-left":d.Em(-m.w),"vertical-align":d.Em(-m.d),"background-color":"green",display:"inline-block"}}]]);if(k.nextSibling){k.parentNode.insertBefore(l,k.nextSibling)}else{k.parentNode.appendChild(l)}}},{HTMLautoload:function(){var k=d.autoloadDir+"/"+this.type+".js";b.RestartAfter(h.Require(k))},HTMLautoloadFile:function(k){var l=d.autoloadDir+"/"+k+".js";b.RestartAfter(h.Require(l))},HTMLstretchH:function(l,k){this.HTMLremoveColor();return this.toHTML(l,k)},HTMLstretchV:function(l,k,m){this.HTMLremoveColor();return this.toHTML(l,k,m)}});g.chars.Augment({toHTML:function(n,m,l,o){var r=this.data.join("").replace(/[\u2061-\u2064]/g,"");if(l){r=l(r,o)}if(m.fontInherit){var q=Math.floor(d.config.scale/d.scale+0.5)+"%";d.addElement(n,"span",{style:{"font-size":q}},[r]);if(m.bold){n.lastChild.style.fontWeight="bold"}if(m.italic){n.lastChild.style.fontStyle="italic"}n.bbox=null;var p=d.getHD(n),k=d.getW(n);n.bbox={h:p.h,d:p.d,w:k,lw:0,rw:k,exactW:true}}else{this.HTMLhandleVariant(n,m,r)}}});g.entity.Augment({toHTML:function(n,m,l,o){var r=this.toString().replace(/[\u2061-\u2064]/g,"");if(l){r=l(r,o)}if(m.fontInherit){var q=Math.floor(d.config.scale/d.scale+0.5)+"%";d.addElement(n,"span",{style:{"font-size":q}},[r]);if(m.bold){n.lastChild.style.fontWeight="bold"}if(m.italic){n.lastChild.style.fontStyle="italic"}delete n.bbox;var p=d.getHD(n),k=d.getW(n);n.bbox={h:p.h,d:p.d,w:k,lw:0,rw:k,exactW:true}}else{this.HTMLhandleVariant(n,m,r)}}});g.mi.Augment({toHTML:function(o){o=this.HTMLhandleSize(this.HTMLcreateSpan(o));o.bbox=null;var n=this.HTMLgetVariant();for(var l=0,k=this.data.length;l<k;l++){if(this.data[l]){this.data[l].toHTML(o,n)}}if(!o.bbox){o.bbox=this.HTMLzeroBBox()}var q=this.data.join(""),p=o.bbox;if(p.skew&&q.length!==1){delete p.skew}if(p.rw>p.w&&q.length===1&&!n.noIC){p.ic=p.rw-p.w;d.createBlank(o,p.ic/this.mscale);p.w=p.rw}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);this.HTMLhandleDir(o);return o}});g.mn.Augment({toHTML:function(o){o=this.HTMLhandleSize(this.HTMLcreateSpan(o));o.bbox=null;var n=this.HTMLgetVariant();for(var l=0,k=this.data.length;l<k;l++){if(this.data[l]){this.data[l].toHTML(o,n)}}if(!o.bbox){o.bbox=this.HTMLzeroBBox()}if(this.data.join("").length!==1){delete o.bbox.skew}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);this.HTMLhandleDir(o);return o}});g.mo.Augment({toHTML:function(v){v=this.HTMLhandleSize(this.HTMLcreateSpan(v));if(this.data.length==0){return v}else{v.bbox=null}var y=this.data.join("");var q=this.HTMLgetVariant();var x=this.getValues("largeop","displaystyle");if(x.largeop){q=d.FONTDATA.VARIANT[x.displaystyle?"-largeOp":"-smallOp"]}var w=this.CoreParent(),o=(w&&w.isa(g.msubsup)&&this!==w.data[w.base]),l=(o?this.remapChars:null);if(y.length===1&&w&&w.isa(g.munderover)&&this.CoreText(w.data[w.base]).length===1){var s=w.data[w.over],u=w.data[w.under];if(s&&this===s.CoreMO()&&w.Get("accent")){l=d.FONTDATA.REMAPACCENT}else{if(u&&this===u.CoreMO()&&w.Get("accentunder")){l=d.FONTDATA.REMAPACCENTUNDER}}}if(o&&y.match(/['`"\u00B4\u2032-\u2037\u2057]/)){q=d.FONTDATA.VARIANT["-"+d.fontInUse+"-variant"]}for(var r=0,n=this.data.length;r<n;r++){if(this.data[r]){this.data[r].toHTML(v,q,this.remap,l)}}if(!v.bbox){v.bbox=this.HTMLzeroBBox()}if(y.length!==1){delete v.bbox.skew}if(d.AccentBug&&v.bbox.w===0&&y.length===1&&v.firstChild){v.firstChild.nodeValue+=d.NBSP;d.createSpace(v,0,0,-v.offsetWidth/d.em)}if(x.largeop){var t=d.TeX.axis_height*this.scale*this.mscale;var k=(v.bbox.h-v.bbox.d)/2-t;if(d.safariVerticalAlignBug&&v.lastChild.nodeName==="IMG"){v.lastChild.style.verticalAlign=d.Em(d.unEm(v.lastChild.style.verticalAlign||0)/d.em-k/v.scale)}else{if(d.konquerorVerticalAlignBug&&v.lastChild.nodeName==="IMG"){v.style.position="relative";v.lastChild.style.position="relative";v.lastChild.style.top=d.Em(k/v.scale)}else{v.style.verticalAlign=d.Em(-k/v.scale)}}v.bbox.h-=k;v.bbox.d+=k;if(v.bbox.rw>v.bbox.w){v.bbox.ic=v.bbox.rw-v.bbox.w;d.createBlank(v,v.bbox.ic/this.mscale);v.bbox.w=v.bbox.rw}}this.HTMLhandleSpace(v);this.HTMLhandleColor(v);this.HTMLhandleDir(v);return v},HTMLcanStretch:function(o){if(!this.Get("stretchy")){return false}var p=this.data.join("");if(p.length>1){return false}var m=this.CoreParent();if(m&&m.isa(g.munderover)&&this.CoreText(m.data[m.base]).length===1){var n=m.data[m.over],l=m.data[m.under];if(n&&this===n.CoreMO()&&m.Get("accent")){p=d.FONTDATA.REMAPACCENT[p]||p}else{if(l&&this===l.CoreMO()&&m.Get("accentunder")){p=d.FONTDATA.REMAPACCENTUNDER[p]||p}}}p=d.FONTDATA.DELIMITERS[p.charCodeAt(0)];var k=(p&&p.dir===o.substr(0,1));this.forceStretch=(k&&(this.Get("minsize",true)||this.Get("maxsize",true)));return k},HTMLstretchV:function(m,n,o){this.HTMLremoveColor();var r=this.getValues("symmetric","maxsize","minsize");var p=this.HTMLspanElement(),s=this.HTMLgetMu(p),q;var l=this.HTMLgetScale(),k=d.TeX.axis_height*l;if(r.symmetric){q=2*Math.max(n-k,o+k)}else{q=n+o}r.maxsize=d.length2em(r.maxsize,s,p.bbox.h+p.bbox.d);r.minsize=d.length2em(r.minsize,s,p.bbox.h+p.bbox.d);q=Math.max(r.minsize,Math.min(r.maxsize,q));if(q!=r.minsize){q=[Math.max(q*d.TeX.delimiterfactor/1000,q-d.TeX.delimitershortfall),q]}p=this.HTMLcreateSpan(m);d.createDelimiter(p,this.data.join("").charCodeAt(0),q,l);if(r.symmetric){q=(p.bbox.h+p.bbox.d)/2+k}else{q=(p.bbox.h+p.bbox.d)*n/(n+o)}d.positionDelimiter(p,q);this.HTMLhandleSpace(p);this.HTMLhandleColor(p);return p},HTMLstretchH:function(o,k){this.HTMLremoveColor();var m=this.getValues("maxsize","minsize","mathvariant","fontweight");if((m.fontweight==="bold"||parseInt(m.fontweight)>=600)&&!this.Get("mathvariant",true)){m.mathvariant=g.VARIANT.BOLD}var n=this.HTMLspanElement(),l=this.HTMLgetMu(n),p=n.scale;m.maxsize=d.length2em(m.maxsize,l,n.bbox.w);m.minsize=d.length2em(m.minsize,l,n.bbox.w);k=Math.max(m.minsize,Math.min(m.maxsize,k));n=this.HTMLcreateSpan(o);d.createDelimiter(n,this.data.join("").charCodeAt(0),k,p,m.mathvariant);this.HTMLhandleSpace(n);this.HTMLhandleColor(n);return n}});g.mtext.Augment({toHTML:function(o){o=this.HTMLhandleSize(this.HTMLcreateSpan(o));var n=this.HTMLgetVariant();if(d.config.mtextFontInherit||this.Parent().type==="merror"){var p=this.Get("mathvariant");if(p==="monospace"){o.className+=" MJX-monospace"}else{if(p.match(/sans-serif/)){o.className+=" MJX-sans-serif"}}n={bold:n.bold,italic:n.italic,fontInherit:true}}for(var l=0,k=this.data.length;l<k;l++){if(this.data[l]){this.data[l].toHTML(o,n)}}if(!o.bbox){o.bbox=this.HTMLzeroBBox()}if(this.data.join("").length!==1){delete o.bbox.skew}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);this.HTMLhandleDir(o);return o}});g.merror.Augment({toHTML:function(l){var n=MathJax.HTML.addElement(l,"span",{style:{display:"inline-block"}});l=this.SUPER(arguments).toHTML.call(this,n);var m=d.getHD(n),k=d.getW(n);n.bbox={h:m.h,d:m.d,w:k,lw:0,rw:k,exactW:true};n.id=l.id;l.id=null;return n}});g.ms.Augment({toHTML:g.mbase.HTMLautoload});g.mglyph.Augment({toHTML:g.mbase.HTMLautoload});g.mspace.Augment({toHTML:function(o){o=this.HTMLcreateSpan(o);var m=this.getValues("height","depth","width");var l=this.HTMLgetMu(o);this.HTMLgetScale();m.mathbackground=this.mathbackground;if(this.background&&!this.mathbackground){m.mathbackground=this.background}var n=d.length2em(m.height,l)*this.mscale,p=d.length2em(m.depth,l)*this.mscale,k=d.length2em(m.width,l)*this.mscale;d.createSpace(o,n,p,k,m.mathbackground,true);return o}});g.mphantom.Augment({toHTML:function(o,l,q){o=this.HTMLcreateSpan(o);if(this.data[0]!=null){var p=this.data[0].toHTML(o);if(q!=null){d.Remeasured(this.data[0].HTMLstretchV(o,l,q),o)}else{if(l!=null){d.Remeasured(this.data[0].HTMLstretchH(o,l),o)}else{p=d.Measured(p,o)}}o.bbox={w:p.bbox.w,h:p.bbox.h,d:p.bbox.d,lw:0,rw:0,exactW:true};for(var n=0,k=o.childNodes.length;n<k;n++){o.childNodes[n].style.visibility="hidden"}}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);return o},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.mpadded.Augment({toHTML:function(s,m,k){s=this.HTMLcreateSpan(s);if(this.data[0]!=null){var q=d.createStack(s,true);var n=d.createBox(q);var l=this.data[0].toHTML(n);if(k!=null){d.Remeasured(this.data[0].HTMLstretchV(n,m,k),n)}else{if(m!=null){d.Remeasured(this.data[0].HTMLstretchH(n,m),n)}else{d.Measured(l,n)}}var t=this.getValues("height","depth","width","lspace","voffset"),r=0,p=0,u=this.HTMLgetMu(s);this.HTMLgetScale();if(t.lspace){r=this.HTMLlength2em(n,t.lspace,u)}if(t.voffset){p=this.HTMLlength2em(n,t.voffset,u)}d.placeBox(n,r,p);r/=this.mscale;p/=this.mscale;s.bbox={h:n.bbox.h,d:n.bbox.d,w:n.bbox.w,exactW:true,lw:n.bbox.lw+r,rw:n.bbox.rw+r,H:Math.max((n.bbox.H==null?-d.BIGDIMEN:n.bbox.H+p),n.bbox.h+p),D:Math.max((n.bbox.D==null?-d.BIGDIMEN:n.bbox.D-p),n.bbox.d-p)};if(t.height!==""){s.bbox.h=this.HTMLlength2em(n,t.height,u,"h",0)}if(t.depth!==""){s.bbox.d=this.HTMLlength2em(n,t.depth,u,"d",0)}if(t.width!==""){s.bbox.w=this.HTMLlength2em(n,t.width,u,"w",0)}if(s.bbox.H<=s.bbox.h){delete s.bbox.H}if(s.bbox.D<=s.bbox.d){delete s.bbox.D}var o=/^\s*(\d+(\.\d*)?|\.\d+)\s*(pt|em|ex|mu|px|pc|in|mm|cm)\s*$/;s.bbox.exact=!!((this.data[0]&&this.data[0].data.length==0)||o.exec(t.height)||o.exec(t.width)||o.exec(t.depth));d.setStackWidth(q,s.bbox.w)}this.HTMLhandleSpace(s);this.HTMLhandleColor(s);return s},HTMLlength2em:function(q,r,l,s,k){if(k==null){k=-d.BIGDIMEN}var o=String(r).match(/width|height|depth/);var p=(o?q.bbox[o[0].charAt(0)]:(s?q.bbox[s]:0));var n=d.length2em(r,l,p/this.mscale)*this.mscale;if(s&&String(r).match(/^\s*[-+]/)){return Math.max(k,q.bbox[s]+n)}else{return n}},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.mrow.Augment({HTMLlineBreaks:function(k){if(!this.parent.linebreakContainer){return false}return(d.config.linebreaks.automatic&&k.bbox.w>d.linebreakWidth)||this.hasNewline()},HTMLstretchH:function(m,k){this.HTMLremoveColor();var l=this.HTMLspanElement();this.data[this.core].HTMLstretchH(l,k);this.HTMLcomputeBBox(l,true);this.HTMLhandleColor(l);return l},HTMLstretchV:function(m,l,n){this.HTMLremoveColor();var k=this.HTMLspanElement();this.data[this.core].HTMLstretchV(k,l,n);this.HTMLcomputeBBox(k,true);this.HTMLhandleColor(k);return k}});g.mstyle.Augment({toHTML:function(l,k,m){l=this.HTMLcreateSpan(l);if(this.data[0]!=null){var n=this.data[0].toHTML(l);if(m!=null){this.data[0].HTMLstretchV(l,k,m)}else{if(k!=null){this.data[0].HTMLstretchH(l,k)}}l.bbox=n.bbox}this.HTMLhandleSpace(l);this.HTMLhandleColor(l);return l},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.mfrac.Augment({toHTML:function(D){D=this.HTMLcreateSpan(D);var m=d.createStack(D);var r=d.createBox(m),o=d.createBox(m);d.MeasureSpans([this.HTMLboxChild(0,r),this.HTMLboxChild(1,o)]);var k=this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");var I=this.HTMLgetScale(),C=k.displaystyle;var G=d.TeX.axis_height*I;if(k.bevelled){var F=(C?0.4:0.15);var s=Math.max(r.bbox.h+r.bbox.d,o.bbox.h+o.bbox.d)+2*F;var E=d.createBox(m);d.createDelimiter(E,47,s);d.placeBox(r,0,(r.bbox.d-r.bbox.h)/2+G+F);d.placeBox(E,r.bbox.w-F/2,(E.bbox.d-E.bbox.h)/2+G);d.placeBox(o,r.bbox.w+E.bbox.w-F,(o.bbox.d-o.bbox.h)/2+G-F)}else{var l=Math.max(r.bbox.w,o.bbox.w);var y=d.thickness2em(k.linethickness,this.scale)*this.mscale,A,z,x,w;var B=d.TeX.min_rule_thickness/this.em;if(C){x=d.TeX.num1;w=d.TeX.denom1}else{x=(y===0?d.TeX.num3:d.TeX.num2);w=d.TeX.denom2}x*=I;w*=I;if(y===0){A=Math.max((C?7:3)*d.TeX.rule_thickness,2*B);z=(x-r.bbox.d)-(o.bbox.h-w);if(z<A){x+=(A-z)/2;w+=(A-z)/2}}else{A=Math.max((C?2:0)*B+y,y/2+1.5*B);z=(x-r.bbox.d)-(G+y/2);if(z<A){x+=A-z}z=(G-y/2)-(o.bbox.h-w);if(z<A){w+=A-z}var n=d.createBox(m);d.createRule(n,y,0,l+2*y);d.placeBox(n,0,G-y/2)}d.alignBox(r,k.numalign,x);d.alignBox(o,k.denomalign,-w)}this.HTMLhandleSpace(D);this.HTMLhandleColor(D);return D},HTMLcanStretch:function(k){return false},HTMLhandleSpace:function(l){if(!this.texWithDelims&&!this.useMMLspacing){var m=d.TeX.nulldelimiterspace*this.mscale;var k=l.childNodes[d.msiePaddingWidthBug?1:0].style;k.marginLeft=k.marginRight=d.Em(m);l.bbox.w+=2*m;l.bbox.rw+=2*m}this.SUPER(arguments).HTMLhandleSpace.call(this,l)}});g.msqrt.Augment({toHTML:function(w){w=this.HTMLcreateSpan(w);var z=d.createStack(w);var n=d.createBox(z),u=d.createBox(z),s=d.createBox(z);var r=this.HTMLgetScale();var A=d.TeX.rule_thickness*r,m,l,y,o;if(this.Get("displaystyle")){m=d.TeX.x_height*r}else{m=A}l=Math.max(A+m/4,1.5*d.TeX.min_rule_thickness/this.em);var k=this.HTMLboxChild(0,n);y=k.bbox.h+k.bbox.d+l+A;d.createDelimiter(s,8730,y,r);d.MeasureSpans([k,s]);o=k.bbox.w;var v=0;if(s.isMultiChar||(d.AdjustSurd&&d.imgFonts)){s.bbox.w*=0.95}if(s.bbox.h+s.bbox.d>y){l=((s.bbox.h+s.bbox.d)-(y-A))/2}var B=d.FONTDATA.DELIMITERS[d.FONTDATA.RULECHAR];if(!B||o<B.HW[0][0]*r||r<0.75){d.createRule(u,0,A,o)}else{d.createDelimiter(u,d.FONTDATA.RULECHAR,o,r)}y=k.bbox.h+l+A;l=y*d.rfuzz;if(s.isMultiChar){l=d.rfuzz}v=this.HTMLaddRoot(z,s,v,s.bbox.h+s.bbox.d-y,r);d.placeBox(s,v,y-s.bbox.h);d.placeBox(u,v+s.bbox.w,y-u.bbox.h+l);d.placeBox(n,v+s.bbox.w,0);this.HTMLhandleSpace(w);this.HTMLhandleColor(w);return w},HTMLaddRoot:function(m,l,k,o,n){return k}});g.mroot.Augment({toHTML:g.msqrt.prototype.toHTML,HTMLaddRoot:function(s,l,q,o,k){var m=d.createBox(s);if(this.data[1]){var p=this.data[1].toHTML(m);p.style.paddingRight=p.style.paddingLeft="";d.Measured(p,m)}else{m.bbox=this.HTMLzeroBBox()}var n=this.HTMLrootHeight(l.bbox.h+l.bbox.d,k,m)-o;var r=Math.min(m.bbox.w,m.bbox.rw);q=Math.max(r,l.offset);d.placeBox(m,q-r,n);return q-l.offset},HTMLrootHeight:function(m,l,k){return 0.45*(m-0.9*l)+0.6*l+Math.max(0,k.bbox.d-0.075)}});g.mfenced.Augment({toHTML:function(o){o=this.HTMLcreateSpan(o);if(this.data.open){this.data.open.toHTML(o)}if(this.data[0]!=null){this.data[0].toHTML(o)}for(var l=1,k=this.data.length;l<k;l++){if(this.data[l]){if(this.data["sep"+l]){this.data["sep"+l].toHTML(o)}this.data[l].toHTML(o)}}if(this.data.close){this.data.close.toHTML(o)}var q=this.HTMLcomputeBBox(o);var n=o.bbox.h,p=o.bbox.d;for(l=0,k=q.length;l<k;l++){q[l].HTMLstretchV(o,n,p)}if(q.length){this.HTMLcomputeBBox(o,true)}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);return o},HTMLcomputeBBox:function(p,o){var l=p.bbox={},q=[];this.HTMLcheckStretchy(this.data.open,l,q,o);this.HTMLcheckStretchy(this.data[0],l,q,o);for(var n=1,k=this.data.length;n<k;n++){if(this.data[n]){this.HTMLcheckStretchy(this.data["sep"+n],l,q,o);this.HTMLcheckStretchy(this.data[n],l,q,o)}}this.HTMLcheckStretchy(this.data.close,l,q,o);this.HTMLcleanBBox(l);return q},HTMLcheckStretchy:function(k,l,n,m){if(k){if(!m&&k.HTMLcanStretch("Vertical")){n.push(k);k=(k.CoreMO()||k)}this.HTMLcombineBBoxes(k,l)}}});g.menclose.Augment({toHTML:g.mbase.HTMLautoload});g.maction.Augment({toHTML:g.mbase.HTMLautoload});g.semantics.Augment({toHTML:function(l,k,m){l=this.HTMLcreateSpan(l);if(this.data[0]!=null){var n=this.data[0].toHTML(l);if(m!=null){this.data[0].HTMLstretchV(l,k,m)}else{if(k!=null){this.data[0].HTMLstretchH(l,k)}}l.bbox=n.bbox}this.HTMLhandleSpace(l);return l},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.munderover.Augment({toHTML:function(L,H,F){var l=this.getValues("displaystyle","accent","accentunder","align");var p=this.data[this.base];if(!l.displaystyle&&p!=null&&(p.movablelimits||p.CoreMO().Get("movablelimits"))){return g.msubsup.prototype.toHTML.call(this,L)}L=this.HTMLcreateSpan(L);var P=this.HTMLgetScale();var q=d.createStack(L);var r=[],o=[],N=[],w,M,I;for(M=0,I=this.data.length;M<I;M++){if(this.data[M]!=null){w=r[M]=d.createBox(q);o[M]=this.data[M].toHTML(w);if(M==this.base){if(F!=null){this.data[this.base].HTMLstretchV(w,H,F)}else{if(H!=null){this.data[this.base].HTMLstretchH(w,H)}}N[M]=(F==null&&H!=null?false:this.data[M].HTMLcanStretch("Horizontal"))}else{N[M]=this.data[M].HTMLcanStretch("Horizontal");o[M].style.paddingLeft=o[M].style.paddingRight=""}}}d.MeasureSpans(o);var n=-d.BIGDIMEN,K=n;for(M=0,I=this.data.length;M<I;M++){if(this.data[M]){if(r[M].bbox.w>K){K=r[M].bbox.w}if(!N[M]&&K>n){n=K}}}if(F==null&&H!=null){n=H}else{if(n==-d.BIGDIMEN){n=K}}for(M=K=0,I=this.data.length;M<I;M++){if(this.data[M]){w=r[M];if(N[M]){w.bbox=this.data[M].HTMLstretchH(w,n).bbox;if(M!==this.base){o[M].style.paddingLeft=o[M].style.paddingRight=""}}if(w.bbox.w>K){K=w.bbox.w}}}var E=d.TeX.rule_thickness*this.mscale,G=d.FONTDATA.TeX_factor;var v,s,A,z,u,C,J,O=0;p=r[this.base]||{bbox:this.HTMLzeroBBox()};if(p.bbox.ic){O=1.3*p.bbox.ic+0.05}for(M=0,I=this.data.length;M<I;M++){if(this.data[M]!=null){w=r[M];u=d.TeX.big_op_spacing5*P;var B=(M!=this.base&&l[this.ACCENTS[M]]);if(B&&w.bbox.w<=1/d.em+0.0001){w.bbox.w=w.bbox.rw-w.bbox.lw;w.bbox.noclip=true;if(w.bbox.lw){w.insertBefore(d.createSpace(w.parentNode,0,0,-w.bbox.lw),w.firstChild)}d.createBlank(w,0,0,w.bbox.rw+0.1)}C={left:0,center:(K-w.bbox.w)/2,right:K-w.bbox.w}[l.align];v=C;s=0;if(M==this.over){if(B){J=Math.max(E*P*G,2.5/this.em);u=0;if(p.bbox.skew){v+=p.bbox.skew;L.bbox.skew=p.bbox.skew;if(v+w.bbox.w>K){L.bbox.skew+=(K-w.bbox.w-v)/2}}}else{A=d.TeX.big_op_spacing1*P*G;z=d.TeX.big_op_spacing3*P*G;J=Math.max(A,z-Math.max(0,w.bbox.d))}J=Math.max(J,1.5/this.em);v+=O/2;s=p.bbox.h+w.bbox.d+J;w.bbox.h+=u}else{if(M==this.under){if(B){J=3*E*P*G;u=0}else{A=d.TeX.big_op_spacing2*P*G;z=d.TeX.big_op_spacing4*P*G;J=Math.max(A,z-w.bbox.h)}J=Math.max(J,1.5/this.em);v-=O/2;s=-(p.bbox.d+w.bbox.h+J);w.bbox.d+=u}}d.placeBox(w,v,s)}}this.HTMLhandleSpace(L);this.HTMLhandleColor(L);return L},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.msubsup.Augment({toHTML:function(K,I,C){K=this.HTMLcreateSpan(K);var N=this.HTMLgetScale(),H=this.HTMLgetMu(K);var w=d.createStack(K),l,n=[];var o=d.createBox(w);if(this.data[this.base]){n.push(this.data[this.base].toHTML(o));if(C!=null){this.data[this.base].HTMLstretchV(o,I,C)}else{if(I!=null){this.data[this.base].HTMLstretchH(o,I)}}}else{o.bbox=this.HTMLzeroBBox()}var L=d.TeX.x_height*N,B=d.TeX.scriptspace*N*0.75;var k,x;if(this.HTMLnotEmpty(this.data[this.sup])){k=d.createBox(w);n.push(this.data[this.sup].toHTML(k))}if(this.HTMLnotEmpty(this.data[this.sub])){x=d.createBox(w);n.push(this.data[this.sub].toHTML(x))}d.MeasureSpans(n);if(k){k.bbox.w+=B;k.bbox.rw=Math.max(k.bbox.w,k.bbox.rw)}if(x){x.bbox.w+=B;x.bbox.rw=Math.max(x.bbox.w,x.bbox.rw)}d.placeBox(o,0,0);var m=N;if(k){m=this.data[this.sup].HTMLgetScale()}else{if(x){m=this.data[this.sub].HTMLgetScale()}}var F=d.TeX.sup_drop*m,E=d.TeX.sub_drop*m;var z=o.bbox.h-F,y=o.bbox.d+E,M=0,G;if(o.bbox.ic){o.bbox.w-=o.bbox.ic;M=1.3*o.bbox.ic+0.05}if(this.data[this.base]&&I==null&&C==null&&(this.data[this.base].type==="mi"||this.data[this.base].type==="mo")){if(this.data[this.base].data.join("").length===1&&n[0].scale===1&&!this.data[this.base].Get("largeop")){z=y=0}}var J=this.getValues("subscriptshift","superscriptshift");J.subscriptshift=(J.subscriptshift===""?0:d.length2em(J.subscriptshift,H));J.superscriptshift=(J.superscriptshift===""?0:d.length2em(J.superscriptshift,H));if(!k){if(x){y=Math.max(y,d.TeX.sub1*N,x.bbox.h-(4/5)*L,J.subscriptshift);d.placeBox(x,o.bbox.w,-y,x.bbox)}}else{if(!x){l=this.getValues("displaystyle","texprimestyle");G=d.TeX[(l.displaystyle?"sup1":(l.texprimestyle?"sup3":"sup2"))];z=Math.max(z,G*N,k.bbox.d+(1/4)*L,J.superscriptshift);d.placeBox(k,o.bbox.w+M,z,k.bbox)}else{y=Math.max(y,d.TeX.sub2*N);var A=d.TeX.rule_thickness*N;if((z-k.bbox.d)-(x.bbox.h-y)<3*A){y=3*A-z+k.bbox.d+x.bbox.h;F=(4/5)*L-(z-k.bbox.d);if(F>0){z+=F;y-=F}}d.placeBox(k,o.bbox.w+M,Math.max(z,J.superscriptshift));d.placeBox(x,o.bbox.w,-Math.max(y,J.subscriptshift))}}this.HTMLhandleSpace(K);this.HTMLhandleColor(K);return K},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});g.mmultiscripts.Augment({toHTML:g.mbase.HTMLautoload});g.mtable.Augment({toHTML:g.mbase.HTMLautoload});g["annotation-xml"].Augment({toHTML:g.mbase.HTMLautoload});g.annotation.Augment({toHTML:function(k){return this.HTMLcreateSpan(k)}});g.math.Augment({toHTML:function(B,y,q){var r,t,u,n,k=B;if(!q||q===d.PHASE.I){var z=d.addElement(B,"nobr",{isMathJax:true});B=this.HTMLcreateSpan(z);var l=this.Get("alttext");if(l&&!B.getAttribute("aria-label")){B.setAttribute("aria-label",l)}if(!B.getAttribute("role")){B.setAttribute("role","math")}r=d.createStack(B);t=d.createBox(r);r.style.fontSize=z.parentNode.style.fontSize;z.parentNode.style.fontSize="";if(this.data[0]!=null){g.mbase.prototype.displayAlign=b.config.displayAlign;g.mbase.prototype.displayIndent=b.config.displayIndent;if(String(b.config.displayIndent).match(/^0($|[a-z%])/i)){g.mbase.prototype.displayIndent="0"}u=this.data[0].toHTML(t);u.bbox.exactW=false}}else{B=B.firstChild.firstChild;if(this.href){B=B.firstChild}r=B.firstChild;if(r.style.position!=="relative"){r=r.nextSibling}t=r.firstChild;u=t.firstChild}n=((!q||q===d.PHASE.II)?d.Measured(u,t):u);if(!q||q===d.PHASE.III){d.placeBox(t,0,0);B.style.width=d.Em(Math.max(0,Math.round(n.bbox.w*this.em)+0.25)/d.outerEm);B.style.display="inline-block";var x=1/d.em,D=d.em/d.outerEm;d.em/=D;B.bbox.h*=D;B.bbox.d*=D;B.bbox.w*=D;B.bbox.lw*=D;B.bbox.rw*=D;if(B.bbox.H){B.bbox.H*=D}if(B.bbox.D){B.bbox.D*=D}if(n&&n.bbox.width!=null){B.style.minWidth=(n.bbox.minWidth||B.style.width);B.style.width=n.bbox.width;t.style.width=r.style.width=k.style.width="100%"}var A=this.HTMLhandleColor(B);if(n){d.createRule(B,(n.bbox.h+x)*D,(n.bbox.d+x)*D,0)}if(!this.isMultiline&&this.Get("display")==="block"&&B.bbox.width==null){var m=this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");if(m.indentalignfirst!==g.INDENTALIGN.INDENTALIGN){m.indentalign=m.indentalignfirst}if(m.indentalign===g.INDENTALIGN.AUTO){m.indentalign=this.displayAlign}if(m.indentshiftfirst!==g.INDENTSHIFT.INDENTSHIFT){m.indentshift=m.indentshiftfirst}if(m.indentshift==="auto"){m.indentshift="0"}var C=d.length2em(m.indentshift,1,d.scale*d.cwidth);if(this.displayIndent!=="0"){var v=d.length2em(this.displayIndent,1,d.scale*d.cwidth);C+=(m.indentalign===g.INDENTALIGN.RIGHT?-v:v)}y.style.textAlign=m.indentalign;if(C){b.Insert(B.style,({left:{marginLeft:d.Em(C)},right:{marginRight:d.Em(-C)},center:{marginLeft:d.Em(C),marginRight:d.Em(-C)}})[m.indentalign]);if(A){var s=parseFloat(A.style.marginLeft||"0")+C,o=parseFloat(A.style.marginRight||"0")-C;A.style.marginLeft=d.Em(s);A.style.marginRight=d.Em(o+(m.indentalign==="right"?B.bbox.w+C-B.bbox.w:0));if(d.msieColorBug&&m.indentalign==="right"){if(parseFloat(A.style.marginLeft)>0){var w=MathJax.HTML.addElement(A.parentNode,"span");w.style.marginLeft=d.Em(o+Math.min(0,B.bbox.w+C));A.nextSibling.style.marginRight="0em"}A.nextSibling.style.marginLeft="0em";A.style.marginRight=A.style.marginLeft="0em"}}}}}return B},HTMLspanElement:g.mbase.prototype.HTMLspanElement});g.TeXAtom.Augment({toHTML:function(o,m,q){o=this.HTMLcreateSpan(o);if(this.data[0]!=null){if(this.texClass===g.TEXCLASS.VCENTER){var k=d.createStack(o);var p=d.createBox(k);var r=this.data[0].toHTML(p);if(q!=null){d.Remeasured(this.data[0].HTMLstretchV(p,m,q),p)}else{if(m!=null){d.Remeasured(this.data[0].HTMLstretchH(p,m),p)}else{d.Measured(r,p)}}var l=d.TeX.axis_height*this.HTMLgetScale();d.placeBox(p,0,l-(p.bbox.h+p.bbox.d)/2+p.bbox.d)}else{var n=this.data[0].toHTML(o,m,q);if(q!=null){n=this.data[0].HTMLstretchV(p,m,q)}else{if(m!=null){n=this.data[0].HTMLstretchH(p,m)}}o.bbox=n.bbox}}this.HTMLhandleSpace(o);this.HTMLhandleColor(o);return o},HTMLstretchH:g.mbase.HTMLstretchH,HTMLstretchV:g.mbase.HTMLstretchV});b.Register.StartupHook("onLoad",function(){setTimeout(MathJax.Callback(["loadComplete",d,"jax.js"]),0)})});b.Register.StartupHook("End Config",function(){b.Browser.Select({MSIE:function(k){var o=(document.documentMode||0);var n=k.versionAtLeast("7.0");var m=k.versionAtLeast("8.0")&&o>7;var l=(document.compatMode==="BackCompat");if(o<9){d.config.styles[".MathJax .MathJax_HitBox"]["background-color"]="white";d.config.styles[".MathJax .MathJax_HitBox"].opacity=0;d.config.styles[".MathJax .MathJax_HitBox"].filter="alpha(opacity=0)"}d.Augment({PaddingWidthBug:true,msieAccentBug:true,msieColorBug:(o<8),msieColorPositionBug:true,msieRelativeWidthBug:l,msieDisappearingBug:(o>=8),msieMarginScaleBug:(o<8),msiePaddingWidthBug:true,msieBorderWidthBug:l,msieFrameSizeBug:(o<=8),msieInlineBlockAlignBug:(!m||l),msiePlaceBoxBug:(m&&!l),msieClipRectBug:!m,msieNegativeSpaceBug:l,msieRuleBug:(o<7),cloneNodeBug:(m&&k.version==="8.0"),msieItalicWidthBug:true,initialSkipBug:(o<8),msieNegativeBBoxBug:(o>=8),msieIE6:!n,msieItalicWidthBug:true,FontFaceBug:(o<9),msieFontCSSBug:k.isIE9,allowWebFonts:(o>=9?"woff":"eot")})},Firefox:function(l){var m=false;if(l.versionAtLeast("3.5")){var k=String(document.location).replace(/[^\/]*$/,"");if(document.location.protocol!=="file:"||b.config.root.match(/^https?:\/\//)||(b.config.root+"/").substr(0,k.length)===k){m="otf"}}d.Augment({ffVerticalAlignBug:!l.versionAtLeast("20.0"),AccentBug:true,allowWebFonts:m,ffFontOptimizationBug:true})},Safari:function(p){var n=p.versionAtLeast("3.0");var m=p.versionAtLeast("3.1");var k=navigator.appVersion.match(/ Safari\/\d/)&&navigator.appVersion.match(/ Version\/\d/)&&navigator.vendor.match(/Apple/);var l=(navigator.appVersion.match(/ Android (\d+)\.(\d+)/));var q=(m&&p.isMobile&&((navigator.platform.match(/iPad|iPod|iPhone/)&&!p.versionAtLeast("5.0"))||(l!=null&&(l[1]<2||(l[1]==2&&l[2]<2)))));d.Augment({config:{styles:{".MathJax img, .MathJax nobr, .MathJax a":{"max-width":"5000em","max-height":"5000em"}}},Em:((p.webkit||0)>=538?d.EmRounded:d.Em),rfuzz:0.011,AccentBug:true,AdjustSurd:true,negativeBBoxes:true,safariNegativeSpaceBug:true,safariVerticalAlignBug:!m,safariTextNodeBug:!n,forceReflow:true,FontFaceBug:true,allowWebFonts:(m&&!q?"otf":false)});if(k){d.Augment({webFontDefault:(p.isMobile?"sans-serif":"serif")})}if(p.isPC){d.Augment({adjustAvailableFonts:d.removeSTIXfonts,checkWebFontsTwice:true})}if(q){var o=b.config["HTML-CSS"];if(o){o.availableFonts=[];o.preferredFont=null}else{b.config["HTML-CSS"]={availableFonts:[],preferredFont:null}}}},Chrome:function(k){d.Augment({Em:d.EmRounded,cloneNodeBug:true,rfuzz:-0.02,AccentBug:true,AdjustSurd:true,FontFaceBug:k.versionAtLeast("32.0"),negativeBBoxes:true,safariNegativeSpaceBug:true,safariWebFontSerif:[""],forceReflow:true,allowWebFonts:(k.versionAtLeast("4.0")?"otf":"svg")})},Opera:function(k){k.isMini=(navigator.appVersion.match("Opera Mini")!=null);d.config.styles[".MathJax .merror"]["vertical-align"]=null;d.config.styles[".MathJax span"]["z-index"]=0;d.Augment({operaHeightBug:true,operaVerticalAlignBug:true,operaFontSizeBug:k.versionAtLeast("10.61"),initialSkipBug:true,FontFaceBug:true,PaddingWidthBug:true,allowWebFonts:(k.versionAtLeast("10.0")&&!k.isMini?"otf":false),adjustAvailableFonts:d.removeSTIXfonts})},Konqueror:function(k){d.Augment({konquerorVerticalAlignBug:true})}})});MathJax.Hub.Register.StartupHook("End Cookie",function(){if(b.config.menuSettings.zoom!=="None"){h.Require("[MathJax]/extensions/MathZoom.js")}})})(MathJax.Ajax,MathJax.Hub,MathJax.OutputJax["HTML-CSS"]);
+(function (AJAX,HUB,HTMLCSS) {
+  var MML, isMobile = HUB.Browser.isMobile;
+
+  var MESSAGE = function () {
+    var data = [].slice.call(arguments,0);
+    data[0][0] = ["HTML-CSS",data[0][0]];
+    return MathJax.Message.Set.apply(MathJax.Message,data);
+  };
+   
+  var FONTTEST = MathJax.Object.Subclass({
+    timeout:  (isMobile? 15:8)*1000,   // timeout for loading web fonts
+    comparisonFont: ["sans-serif","monospace","script","Times","Courier","Arial","Helvetica"],
+    testSize: ["40px","50px","60px","30px","20px"],
+    //
+    //  Fedora aliases STIXSizeOneSym to STIX Word, so MathJax thinks STIX is
+    //  available, but the fonts aren't actually correct.  This is to test if
+    //  STIXSizeOneSym has letters in it (so is actually STIX Word).
+    //  
+    FedoraSTIXcheck: {family:"STIXSizeOneSym", testString:"abcABC", noStyleChar:true},
+
+    Init: function () {
+      //
+      //  Wrap the Font_Test DIV in a 0x0 DIV so that it takes no room
+      //
+      this.div = MathJax.HTML.addElement(document.body,"div",{style: {
+          position:"absolute", width:0, height:0, overflow:"hidden",
+          padding:0, border:0, margin:0
+        }},[["div",{
+          id: "MathJax_Font_Test",
+          style: {position:"absolute", visibility:"hidden", top:0, left:0, width: "auto",
+                  padding:0, border:0, margin:0, whiteSpace:"nowrap",
+                  textAlign:"left", textIndent:0, textTransform:"none",
+                  lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal",
+                  fontSize:this.testSize[0], fontWeight:"normal", fontStyle:"normal",
+                  fontSizeAdjust:"none"}
+          },[""]]]
+      ).firstChild;
+      this.text = this.div.firstChild;
+    },
+
+    findFont: function (fonts,pref) {
+      var found = null;
+      if (pref && this.testCollection(pref)) {
+        found = pref;
+      } else {
+        for (var i = 0, m = fonts.length; i < m; i++) {
+          if (fonts[i] === pref) continue;
+          if (this.testCollection(fonts[i])) {found = fonts[i]; break}
+        }
+      }
+      if (found === "STIX" && this.testFont(this.FedoraSTIXcheck)) {found = null}
+      return found;
+    },
+
+    testCollection: function (name) {
+      var font = {testString: "() {} []"};
+      font.family = {TeX:"MathJax_Size1", STIX:"STIXSizeOneSym"}[name] ||
+                     name.replace(/-(Math)?/,"")+"MathJax_Size1";
+      if (name === "STIX") {font.noStyleChar = true}
+      return this.testFont(font);
+    },
+
+    testFont: function (font) {
+      if (font.isWebFont && HTMLCSS.FontFaceBug) {
+        this.div.style.fontWeight = this.div.style.fontStyle = "normal";
+      } else {
+        this.div.style.fontWeight = (font.weight||"normal");
+        this.div.style.fontStyle  = (font.style||"normal");
+      }
+      //
+      //  Hack:  Fix up web font names for local access.
+      //  (The names for Windows and Mac are different, unlike in the STIX and
+      //  TeX fonts, so we have to work out a list of names here.)
+      //
+      //  This should be removed when the web fonts are fixed.  FIXME
+      //
+      var family = font.familyFixed || font.family;
+      if (!font.isWebFont && !family.match(/^(STIX|MathJax)|'/)) {
+        family = family.replace(/_/g," ").replace(/([a-z])([A-Z])/g,"$1 $2").replace(/ Jax/,"Jax")
+               + "','" + family + "','" + family + "-";
+        if (font.weight) {family += "Bold"}; if (font.style) {family += "Italic"}
+        if (!font.weight && !font.style) {family += "Regular"}
+        font.familyFixed = family = "'"+family+"'"
+      }
+
+      var W = this.getComparisonWidths(font.testString,font.noStyleChar);
+      var found = null;
+      if (W) {
+        this.div.style.fontFamily = family+","+this.comparisonFont[0];
+        if (this.div.offsetWidth == W[0]) {
+          this.div.style.fontFamily = family+","+this.comparisonFont[W[2]];
+          if (this.div.offsetWidth == W[1]) {found = false}
+        }
+        if (found === null && (this.div.offsetWidth != W[3] || this.div.offsetHeight != W[4])) {
+          if (!font.noStyleChar && HTMLCSS.FONTDATA && HTMLCSS.FONTDATA.hasStyleChar) {
+            for (var i = 0, m = this.testSize.length; i < m; i++)
+              {if (this.testStyleChar(font,this.testSize[i])) {found = true; m = 0}}
+          } else {found = true}
+        }
+      }
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = ""} else {this.text.nodeValue = ""}
+      return found;
+    },
+
+    styleChar:   "\uEFFD", // width encodes style
+    versionChar: "\uEFFE", // width encodes version
+    compChar:    "\uEFFF", // "standard" width to compare to
+
+    testStyleChar: function (font,size) {
+      var n = 3 + (font.weight ? 2 : 0) + (font.style ? 4 : 0);
+      var extra = "", dw = 0;
+      var SIZE = this.div.style.fontSize; this.div.style.fontSize = size;
+      if (HTMLCSS.msieItalicWidthBug && font.style === "italic") {
+        this.text.nodeValue = extra = this.compChar;
+        dw = this.div.offsetWidth;
+      }
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = this.compChar+extra}
+        else {this.text.nodeValue = this.compChar+extra}
+      var W = this.div.offsetWidth-dw;
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = this.styleChar+extra}
+        else {this.text.nodeValue = this.styleChar+extra}
+      var N = Math.floor((this.div.offsetWidth-dw)/W+.5);
+      if (N === n) {
+        if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = this.versionChar+extra}
+          else {this.text.nodeValue = this.versionChar+extra}
+        font.version = Math.floor((this.div.offsetWidth-dw)/W+1.5)/2;
+      }
+      this.div.style.fontSize = SIZE;
+      return (N === n);
+    },
+
+    getComparisonWidths: function (string,noStyleChar) {
+      if (HTMLCSS.FONTDATA && HTMLCSS.FONTDATA.hasStyleChar && !noStyleChar)
+        {string += this.styleChar + " " + this.compChar}
+      if (HTMLCSS.safariTextNodeBug) {this.div.innerHTML = string}
+        else {this.text.nodeValue = string}
+      this.div.style.fontFamily = this.comparisonFont[0];
+      var W = this.div.offsetWidth;
+      this.div.style.fontFamily = HTMLCSS.webFontDefault;
+      var sW = this.div.offsetWidth, sH = this.div.offsetHeight;
+      for (var i = 1, m = this.comparisonFont.length; i < m; i++) {
+        this.div.style.fontFamily = this.comparisonFont[i];
+        if (this.div.offsetWidth != W) {return [W,this.div.offsetWidth,i,sW,sH]}
+      }
+      return null;
+    },
+
+    loadWebFont: function (font) {
+      HUB.Startup.signal.Post("HTML-CSS Jax - Web-Font "+HTMLCSS.fontInUse+"/"+font.directory);
+      var n = MESSAGE(["LoadWebFont","Loading web-font %1",HTMLCSS.fontInUse+"/"+font.directory]);
+      var done = MathJax.Callback({}); // called when font is loaded
+      var callback = MathJax.Callback(["loadComplete",this,font,n,done]);
+      AJAX.timer.start(AJAX,[this.checkWebFont,font,callback],0,this.timeout);
+      return done;
+    },
+    loadComplete: function (font,n,done,status) {
+      MathJax.Message.Clear(n);
+      if (status === AJAX.STATUS.OK) {this.webFontLoaded = true; done(); return}
+      this.loadError(font);
+      if (HUB.Browser.isFirefox && HTMLCSS.allowWebFonts) {
+        var host = document.location.protocol + "//" + document.location.hostname;
+        if (document.location.port != "") {host += ":" + document.location.port}
+        host += "/";
+        if (AJAX.fileURL(HTMLCSS.webfontDir).substr(0,host.length) !== host)
+          {this.firefoxFontError(font)}
+      }
+      if (!this.webFontLoaded) {HTMLCSS.loadWebFontError(font,done)} else {done()}
+    },
+    loadError: function (font) {
+      MESSAGE(["CantLoadWebFont","Can't load web font %1",HTMLCSS.fontInUse+"/"+font.directory],null,2000);
+      HUB.Startup.signal.Post(["HTML-CSS Jax - web font error",HTMLCSS.fontInUse+"/"+font.directory,font]);
+    },
+    firefoxFontError: function (font) {
+      MESSAGE(["FirefoxCantLoadWebFont","Firefox can't load web fonts from a remote host"],null,3000);
+      HUB.Startup.signal.Post("HTML-CSS Jax - Firefox web fonts on remote host error");
+    },
+
+    checkWebFont: function (check,font,callback) {
+      if (check.time(callback)) return;
+      if (HTMLCSS.Font.testFont(font)) {callback(check.STATUS.OK)}
+        else {setTimeout(check,check.delay)}
+    },
+
+    fontFace: function (name) {
+      var type = HTMLCSS.allowWebFonts;
+      var FONT = HTMLCSS.FONTDATA.FONTS[name];
+      if (HTMLCSS.msieFontCSSBug && !FONT.family.match(/-Web$/)) {FONT.family += "-Web"}
+      if (FONT.isWebFont) delete FONT.familyFixed;
+      var webfonts = HTMLCSS.webfontDir+"/"+type;
+      var dir = AJAX.fileURL(webfonts);
+      var fullname = name.replace(/-b/,"-B").replace(/-i/,"-I").replace(/-Bold-/,"-Bold");
+      if (!fullname.match(/-/)) {fullname += "-Regular"}
+      if (type === "svg") {fullname += ".svg#"+fullname} else {fullname += "."+type}
+      var rev = AJAX.fileRev(webfonts+"/"+fullname.replace(/#.*/,""));
+      var def = {
+        "font-family": FONT.family,
+        src: "url('"+dir+"/"+fullname+rev+"')"
+      };
+      if (type === "otf") {
+        fullname = fullname.replace(/otf$/,"woff");
+        rev = AJAX.fileRev(webfonts+"/"+fullname);
+        def.src += " format('opentype')";
+        dir = AJAX.fileURL(HTMLCSS.webfontDir+"/woff");  // add woff fonts as well
+        def.src = "url('"+dir+"/"+fullname+rev+"') format('woff'), "+def.src;
+      } else if (type !== "eot") {def.src += " format('"+type+"')"}
+      if (!(HTMLCSS.FontFaceBug && FONT.isWebFont)) {
+        if (name.match(/-bold/)) {def["font-weight"] = "bold"}
+        if (name.match(/-italic/)) {def["font-style"] = "italic"}
+      }
+      return def;
+    }
+  });
+  
+  var EVENT, TOUCH, HOVER; // filled in later
+
+  HTMLCSS.Augment({
+    config: {
+      styles: {
+        ".MathJax": {
+          "display":         "inline",
+          "font-style":      "normal",
+          "font-weight":     "normal",
+          "line-height":     "normal",
+          "font-size":       "100%",
+          "font-size-adjust":"none",
+          "text-indent":     0,
+          "text-align":      "left",
+          "text-transform":  "none",
+          "letter-spacing":  "normal",
+          "word-spacing":    "normal",
+          "word-wrap":       "normal",
+          "white-space":     "nowrap",
+          "float":           "none",
+          "direction":       "ltr",
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
+          border: 0, padding: 0, margin: 0
+        },
+
+        // Focus elements for keyboard tabbing.
+        ".MathJax:focus, body :focus .MathJax": {
+          display:"inline-table" // see issues #1282 and #1338
+        },
+
+        ".MathJax_Display": {
+          position: "relative",
+          display: "block!important",
+          "text-indent": 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
+          width: "100%"
+        },
+
+        ".MathJax img, .MathJax nobr, .MathJax a": {
+          border: 0, padding: 0, margin: 0,
+          "max-width": "none", "max-height": "none",
+          "min-width": 0, "min-height": 0,
+          "vertical-align": 0, "line-height": "normal",
+          "text-decoration": "none"
+        },
+        "img.MathJax_strut": {
+          border:"0!important", padding:"0!important", margin:"0!important",
+          "vertical-align": "0!important"
+        },
+        
+	".MathJax span": {
+	  display: "inline", position: "static",
+	  border: 0, padding: 0, margin: 0,
+	  "vertical-align": 0, "line-height": "normal",
+	  "text-decoration": "none"
+	},
+
+        ".MathJax nobr": {
+          "white-space": "nowrap!important"
+        },
+        
+        ".MathJax img": {
+          display: "inline!important",
+          "float": "none!important"
+        },
+        
+        ".MathJax *": {
+          transition: "none",
+          "-webkit-transition": "none",
+          "-moz-transition": "none",
+          "-ms-transition": "none",
+          "-o-transition": "none"
+        },
+
+        ".MathJax_Processing": {
+          visibility: "hidden", position:"fixed",
+          width: 0, height: 0, overflow:"hidden"
+        },
+        ".MathJax_Processed": {display:"none!important"},
+        
+        ".MathJax_ExBox": {
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60ex",
+          "min-height": 0, "max-height":"none"
+        },
+        ".MathJax .MathJax_EmBox": {
+          display:"block!important", overflow:"hidden",
+          width:"1px", height:"60em",
+          "min-height": 0, "max-height":"none"
+        },
+        
+        ".MathJax .MathJax_HitBox": {
+          cursor: "text",
+          background: "white",
+          opacity:0, filter:"alpha(opacity=0)"
+        },
+        ".MathJax .MathJax_HitBox *": {
+          filter: "none", opacity:1, background:"transparent" // for IE
+        },
+        
+        "#MathJax_Tooltip": {
+          position: "absolute", left: 0, top: 0,
+          width: "auto", height: "auto",
+          display: "none"
+        },
+        "#MathJax_Tooltip *": {
+          filter: "none", opacity:1, background:"transparent" // for IE
+        },
+
+        //
+        //  Used for testing web fonts against the default font used while
+        //  web fonts are loading
+        //
+        "@font-face": {
+          "font-family": "MathJax_Blank",
+          "src": "url('about:blank')"
+        }
+
+      }
+    },
+    settings: HUB.config.menuSettings,
+
+    Font: null,                        // created by Config() below
+    webFontDefault: "MathJax_Blank",
+    allowWebFonts: "otf",              // assume browser can use OTF web fonts
+
+    maxStretchyParts: 1000,            // limit the number of parts allowed for
+                                       // stretchy operators. See issue 366.
+
+    fontName: {
+      TeXLocal:       "TeX",
+      TeXWeb:         ["","TeX"],
+      TeXImage:       ["",""],
+      STIXLocal:      ["STIX","STIX-Web"],
+      STIXWeb:        "STIX-Web",
+      AsanaMathWeb:   "Asana-Math",
+      GyrePagellaWeb: "Gyre-Pagella",
+      GyreTermesWeb:  "Gyre-Termes",
+      LatinModernWeb: "Latin-Modern",
+      NeoEulerWeb:    "Neo-Euler"
+    },
+    
+    fontInUse: "generic",
+    FONTDATA: {
+      TeX_factor: 1, baselineskip: 1.2, lineH: .8, lineD: .2, ffLineH: .8,
+      FONTS: {},
+      VARIANT: {"normal": {fonts:[]}, "-generic-variant": {}, "-largeOp": {}, "-smallOp": {}},
+      RANGES: [], DELIMITERS: {}, RULECHAR: 0x2D, REMAP: {}
+    },
+
+    Config: function () {
+      if (!this.require) {this.require = []}
+      this.Font = FONTTEST(); this.SUPER(arguments).Config.call(this);
+      var settings = this.settings, config = this.config, font = settings.font;
+      if (this.adjustAvailableFonts) {this.adjustAvailableFonts(config.availableFonts)}
+      if (settings.scale) {config.scale = settings.scale}
+      if (font && font !== "Auto" && this.fontName[font]) {
+        config.availableFonts = []; delete config.fonts;
+        if (this.fontName[font] instanceof Array) {
+          config.preferredFont = this.fontName[font][0];
+          config.webFont = this.fontName[font][1];
+        } else {
+          config.preferredFont = config.webFont = this.fontName[font];
+        }
+        if (config.preferredFont) {config.availableFonts[0] = config.preferredFont}
+      }
+      if (config.fonts) {
+        config.availableFonts = config.fonts;
+        config.preferredFont = config.webFont = config.fonts[0];
+        if (config.webFont === "STIX") {config.webFont += "-Web"}
+      }
+      font = this.Font.findFont(config.availableFonts,config.preferredFont);
+      if (!font && this.allowWebFonts) {font = config.webFont; if (font) {this.webFonts = true}}
+      if (!font && this.config.imageFont) {font = config.imageFont; this.imgFonts = true}
+      if (font) {
+        this.fontInUse = font; this.fontDir += "/" + font; this.webfontDir += "/" + font;
+        this.require.push(this.fontDir+"/fontdata.js");
+        if (this.imgFonts) {
+          this.require.push(this.directory+"/imageFonts.js");
+          HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
+        }
+      } else {
+        MESSAGE(["CantFindFontUsing","Can't find a valid font using %1",
+                "["+this.config.availableFonts.join(", ")+"]"],null,3000);
+        HUB.Startup.signal.Post("HTML-CSS Jax - no valid font");
+      }
+      this.require.push(MathJax.OutputJax.extensionDir+"/MathEvents.js");
+    },
+
+    Startup: function () {
+      //  Set up event handling
+      EVENT = MathJax.Extension.MathEvents.Event;
+      TOUCH = MathJax.Extension.MathEvents.Touch;
+      HOVER = MathJax.Extension.MathEvents.Hover;
+      this.ContextMenu = EVENT.ContextMenu;
+      this.Mousedown   = EVENT.AltContextMenu;
+      this.Mouseover   = HOVER.Mouseover;
+      this.Mouseout    = HOVER.Mouseout;
+      this.Mousemove   = HOVER.Mousemove;
+
+      // Make hidden div for when math is in a display:none block
+      this.hiddenDiv = this.Element("div",{
+        style:{visibility:"hidden", overflow:"hidden", position:"absolute", top:0,
+               height:"1px", width: "auto", padding:0, border:0, margin:0,
+               textAlign:"left", textIndent:0, textTransform:"none",
+               lineHeight:"normal", letterSpacing:"normal", wordSpacing:"normal"}
+      });
+      if (!document.body.firstChild) {document.body.appendChild(this.hiddenDiv)}
+        else {document.body.insertBefore(this.hiddenDiv,document.body.firstChild)}
+      this.hiddenDiv = this.addElement(this.hiddenDiv,"div",{id:"MathJax_Hidden"});
+
+      // Determine pixels per inch
+      var div = this.addElement(this.hiddenDiv,"div",{style:{width:"5in"}});
+      this.pxPerInch = div.offsetWidth/5; this.hiddenDiv.removeChild(div);
+
+      // Markers used by getW
+      this.startMarker = this.createStrut(this.Element("span"),10,true);
+      this.endMarker = this.addText(this.Element("span"),"x").parentNode;
+
+      // Used in getHD
+      this.HDspan = this.Element("span");
+      if (this.operaHeightBug) {this.createStrut(this.HDspan,0)}
+      if (this.msieInlineBlockAlignBug) {
+        this.HDimg = this.addElement(this.HDspan,"img",{style:{height:"0px", width:"1px"}});
+        try {this.HDimg.src = "about:blank"} catch(err) {}
+      } else {
+        this.HDimg = this.createStrut(this.HDspan,0);
+      }
+
+      // Used in preTranslate to get scaling factors
+      this.EmExSpan = this.Element("span",
+        {style:{position:"absolute","font-size-adjust":"none"}},
+        [
+          ["span",{className:"MathJax_ExBox"}],
+          ["span",{className:"MathJax"},
+            [["span",{className:"MathJax_EmBox"}]]
+          ]
+        ]
+      );
+
+      // Used in preTranslate to get linebreak width
+      this.linebreakSpan = this.Element("span",null,
+        [["hr",{style: {width:"100%", size:1, padding:0, border:0, margin:0}}]]);
+
+      // Set up styles and preload web fonts
+      return AJAX.Styles(this.config.styles,["InitializeHTML",this]);
+    },
+    
+    removeSTIXfonts: function (fonts) {
+      //
+      //  Opera doesn't display large chunks of the STIX fonts, and
+      //  Safari/Windows doesn't display Plane1,
+      //  so disable STIX for these browsers.
+      //
+      //  ### FIXME ### Do we need to disable the other web fonts for these?
+      //
+      for (var i = 0, m = fonts.length; i < m; i++)
+        {if (fonts[i] === "STIX") {fonts.splice(i,1); m--; i--;}}
+      if (this.config.preferredFont === "STIX") {this.config.preferredFont = fonts[0]}
+    },
+
+    PreloadWebFonts: function () {
+      if (!HTMLCSS.allowWebFonts || !HTMLCSS.config.preloadWebFonts) return;
+      for (var i = 0, m = HTMLCSS.config.preloadWebFonts.length; i < m; i++) {
+        var FONT = HTMLCSS.FONTDATA.FONTS[HTMLCSS.config.preloadWebFonts[i]];
+        if (!FONT.available) {HTMLCSS.Font.testFont(FONT)}
+      }
+    },
+    
+    //
+    //  Handle initialization that requires styles to be set up
+    //
+    InitializeHTML: function () {
+      this.PreloadWebFonts();
+      this.getDefaultExEm();
+      //
+      //  If the defaultEm size is zero, it might be that a web font hasn't
+      //  arrived yet, so try to wait for it, but don't wait too long.
+      //
+      if (this.defaultEm) return;
+      var ready = MathJax.Callback();
+      AJAX.timer.start(AJAX,function (check) {
+        if (check.time(ready)) {HUB.signal.Post(["HTML-CSS Jax - no default em size"]); return}
+        HTMLCSS.getDefaultExEm();
+        if (HTMLCSS.defaultEm) {ready()} else {setTimeout(check,check.delay)}
+      },this.defaultEmDelay,this.defaultEmTimeout);
+      return ready;
+    },
+    defaultEmDelay: 100,      // initial delay when checking for defaultEm
+    defaultEmTimeout: 1000,   // when to stop looking for defaultEm
+    getDefaultExEm: function () {
+      //
+      //  Get the default sizes (need styles in place to do this)
+      //
+      document.body.appendChild(this.EmExSpan);
+      document.body.appendChild(this.linebreakSpan);
+      this.defaultEx    = this.EmExSpan.firstChild.offsetHeight/60;
+      this.defaultEm    = this.EmExSpan.lastChild.firstChild.offsetHeight/60;
+      this.defaultWidth = this.linebreakSpan.firstChild.offsetWidth;
+      document.body.removeChild(this.linebreakSpan);
+      document.body.removeChild(this.EmExSpan);
+    },
+    
+    preTranslate: function (state) {
+      var scripts = state.jax[this.id], i, m = scripts.length, n,
+          script, prev, span, div, test, jax, ex, em, scale, maxwidth, relwidth = false, cwidth,
+          linebreak = this.config.linebreaks.automatic, width = this.config.linebreaks.width;
+      if (linebreak) {
+        relwidth = (width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/) != null);
+        if (relwidth) {width = width.replace(/\s*container\s*/,"")}
+          else {maxwidth = this.defaultWidth}
+        if (width === "") {width = "100%"}
+      } else {maxwidth = 100000} // a big width, so no implicit line breaks
+      //
+      //  Loop through the scripts
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        //
+        //  Remove any existing output
+        //
+        prev = script.previousSibling;
+        if (prev && String(prev.className).match(/^MathJax(_Display)?( MathJax_Processing)?$/))
+          {prev.parentNode.removeChild(prev)}
+        //
+        //  Add the span, and a div if in display mode,
+        //  then set the role and mark it as being processed
+        //
+        jax = script.MathJax.elementJax; if (!jax) continue;
+        jax.HTMLCSS = {display: (jax.root.Get("display") === "block")}
+        span = div = this.Element("span",{
+	  className:"MathJax", id:jax.inputID+"-Frame", isMathJax:true, jaxID:this.id,
+          oncontextmenu:EVENT.Menu, onmousedown: EVENT.Mousedown,
+          onmouseover:EVENT.Mouseover, onmouseout:EVENT.Mouseout,
+          onmousemove:EVENT.Mousemove, onclick:EVENT.Click,
+          ondblclick:EVENT.DblClick,
+          // Added for keyboard accessible menu.
+          onkeydown: EVENT.Keydown, tabIndex: HUB.getTabOrder(jax)
+        });
+	if (HUB.Browser.noContextMenu) {
+	  span.ontouchstart = TOUCH.start;
+	  span.ontouchend = TOUCH.end;
+	}
+        if (jax.HTMLCSS.display) {
+          div = this.Element("div",{className:"MathJax_Display"});
+          div.appendChild(span);
+        } else if (this.msieDisappearingBug) {span.style.display = "inline-block"}
+        div.className += " MathJax_Processing";
+        script.parentNode.insertBefore(div,script);
+        //
+        //  Add the test span for determining scales and linebreak widths
+        //
+        script.parentNode.insertBefore(this.EmExSpan.cloneNode(true),script);
+        div.parentNode.insertBefore(this.linebreakSpan.cloneNode(true),div)
+      }
+      //
+      //  Determine the scaling factors for each script
+      //  (this only requires one reflow rather than a reflow for each equation)
+      //  Record any that need to be hidden (don't move them now, since that
+      //  would cause reflows).
+      //
+      var hidden = [];
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        test = script.previousSibling; div = test.previousSibling;
+        jax = script.MathJax.elementJax; if (!jax) continue;
+        ex = test.firstChild.offsetHeight/60;
+        em = test.lastChild.firstChild.offsetHeight/60;
+        cwidth = div.previousSibling.firstChild.offsetWidth;
+        if (relwidth) {maxwidth = cwidth}
+        if (ex === 0 || ex === "NaN") {
+          // can't read width, so move to hidden div for processing
+          hidden.push(div);
+          jax.HTMLCSS.isHidden = true;
+          ex = this.defaultEx; em = this.defaultEm; cwidth = this.defaultWidth;
+          if (relwidth) {maxwidth = cwidth}
+        }
+        scale = (this.config.matchFontHeight ? ex/this.TeX.x_height/em : 1);
+        scale = Math.floor(Math.max(this.config.minScaleAdjust/100,scale)*this.config.scale);
+        jax.HTMLCSS.scale = scale/100; jax.HTMLCSS.fontSize = scale+"%";
+        jax.HTMLCSS.em = jax.HTMLCSS.outerEm = em; this.em = em * scale/100; jax.HTMLCSS.ex = ex;
+        jax.HTMLCSS.cwidth = cwidth/this.em;
+        jax.HTMLCSS.lineWidth = (linebreak ? this.length2em(width,1,maxwidth/this.em) : 1000000);
+      }
+      for (i = 0, n = hidden.length; i < n; i++) {
+        this.hiddenDiv.appendChild(hidden[i]);
+        this.addElement(this.hiddenDiv,"br");
+      }
+      //
+      //  Remove the test spans used for determining scales and linebreak widths
+      //
+      for (i = 0; i < m; i++) {
+        script = scripts[i]; if (!script.parentNode) continue;
+        test = scripts[i].previousSibling;
+        jax = scripts[i].MathJax.elementJax; if (!jax) continue;
+        span = test.previousSibling;
+        if (!jax.HTMLCSS.isHidden) {span = span.previousSibling}
+        span.parentNode.removeChild(span);
+        test.parentNode.removeChild(test);
+      }
+      //
+      //  Set state variables used for displaying equations in chunks
+      //
+      state.HTMLCSSeqn = state.HTMLCSSlast = 0; state.HTMLCSSi = -1;
+      state.HTMLCSSchunk = this.config.EqnChunk;
+      state.HTMLCSSdelay = false;
+    },
+
+    PHASE: {I: 1, II: 2, III: 3},  // processing phases
+  
+    Translate: function (script,state) {
+      if (!script.parentNode) return;
+
+      //
+      //  If we are supposed to do a chunk delay, do it
+      //  
+      if (state.HTMLCSSdelay) {
+        state.HTMLCSSdelay = false;
+        HUB.RestartAfter(MathJax.Callback.Delay(this.config.EqnChunkDelay));
+      }
+
+      //
+      //  Get the data about the math
+      //
+      var jax = script.MathJax.elementJax, math = jax.root,
+          span = document.getElementById(jax.inputID+"-Frame"),
+          div = (jax.HTMLCSS.display ? (span||{}).parentNode : span);
+      if (!div) return;
+      //
+      //  Set the font metrics
+      //
+      this.getMetrics(jax);
+      if (this.scale !== 1) {span.style.fontSize = jax.HTMLCSS.fontSize}
+      //
+      //  Typeset the math
+      //
+      this.initImg(span);
+      this.initHTML(math,span);
+      this.savePreview(script);
+      try {
+        math.setTeXclass();
+        jax.HTMLCSS.span = span; jax.HTMLCSS.div = div;  // save for phase II and III
+        math.toHTML(span,div,this.PHASE.I);
+      } catch (err) {
+        if (err.restart) {while (span.firstChild) {span.removeChild(span.firstChild)}}
+        this.restorePreview(script);
+        throw err;
+      }
+      this.restorePreview(script);
+      //
+      //  Remove the processing marker, and signal the new math pending
+      //
+      div.className = div.className.split(/ /)[0] + " MathJax_Processed";
+      HUB.signal.Post(["New Math Pending",jax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+      //
+      //  Check if we should show this chunk of equations
+      //
+      state.HTMLCSSeqn += (state.i - state.HTMLCSSi); state.HTMLCSSi = state.i;
+      if (state.HTMLCSSeqn >= state.HTMLCSSlast + state.HTMLCSSchunk) {
+        this.postTranslate(state,true);
+        state.HTMLCSSchunk = Math.floor(state.HTMLCSSchunk*this.config.EqnChunkFactor);
+        state.HTMLCSSdelay = true;  // delay if there are more scripts
+      }
+      return false;
+    },
+    //
+    //  MathML previews can contain the same ID's as the HTML output,
+    //  which confuses HTMLspanElement(), so remove the preview temporarily
+    //  and restore it after typesetting the math.
+    //
+    savePreview: function (script) {
+      var preview = script.MathJax.preview;
+      if (preview) {
+        script.MathJax.tmpPreview = document.createElement("span");
+        preview.parentNode.replaceChild(script.MathJax.tmpPreview,preview);
+      }
+    },
+    restorePreview: function (script) {
+      var tmpPreview = script.MathJax.tmpPreview;
+      if (tmpPreview) {
+        tmpPreview.parentNode.replaceChild(script.MathJax.preview,tmpPreview);
+        delete script.MathJax.tmpPreview;
+      }
+    },
+    //
+    //  Get the jax metric information
+    //
+    getMetrics: function(jax) {
+      var data = jax.HTMLCSS;
+      this.em = MML.mbase.prototype.em = data.em * data.scale; 
+      this.outerEm = data.em;
+      this.scale = data.scale;
+      this.cwidth = data.cwidth;
+      this.linebreakWidth = data.lineWidth;
+    },
+
+    postTranslate: function (state,partial) {
+      var scripts = state.jax[this.id], script, jax, i, m;
+      //
+      //  Remove the processed markers so that measuring can occur,
+      //  and remove the preview, if any, since the math will now be visible.
+      //
+      for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
+        script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          var div = script.MathJax.elementJax.HTMLCSS.div;
+          div.className = div.className.split(/ /)[0];
+          if (script.MathJax.preview) {script.MathJax.preview.innerHTML = ""}
+        }
+      }
+      //
+      //  Measure the math in this chunk (toHTML phase II)
+      //
+      for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
+        script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          jax = script.MathJax.elementJax; this.getMetrics(jax);
+          jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.II);
+        }
+      }
+      //
+      //  Reveal this chunk of math
+      //
+      for (i = state.HTMLCSSlast, m = state.HTMLCSSeqn; i < m; i++) {
+        script = scripts[i];
+        if (script && script.MathJax.elementJax) {
+          //
+          //  Finish the math with its measured size (toHTML phase III)
+          //
+          jax = script.MathJax.elementJax; this.getMetrics(jax);
+          jax.root.toHTML(jax.HTMLCSS.span,jax.HTMLCSS.div,this.PHASE.III);
+          if (jax.HTMLCSS.isHidden) script.parentNode.insertBefore(jax.HTMLCSS.div,script);
+          delete jax.HTMLCSS.span; delete jax.HTMLCSS.div;
+          //
+          //  The math is now fully processed
+          //
+          script.MathJax.state = jax.STATE.PROCESSED;
+          HUB.signal.Post(["New Math",script.MathJax.elementJax.inputID]); // FIXME: wait for this?  (i.e., restart if returns uncalled callback)
+        }
+      }
+      if (this.forceReflow) {
+        //  WebKit can misplace some elements that should wrap to the next line
+        //  but gets them right on a reflow, so force reflow by toggling a stylesheet
+        var sheet = (document.styleSheets||[])[0]||{};
+        sheet.disabled = true; sheet.disabled = false;
+      }
+      //
+      //  Save our place so we know what is revealed
+      //
+      state.HTMLCSSlast = state.HTMLCSSeqn;
+    },
+    
+    getJaxFromMath: function (math) {
+      if (math.parentNode.className === "MathJax_Display") {math = math.parentNode}
+      do {math = math.nextSibling} while (math && math.nodeName.toLowerCase() !== "script");
+      return HUB.getJaxFor(math);
+    },
+    getHoverSpan: function (jax,math) {return jax.root.HTMLspanElement()},
+    getHoverBBox: function (jax,span,math) {
+      var bbox = span.bbox, em = jax.HTMLCSS.outerEm;
+      var BBOX = {w:bbox.w*em, h:bbox.h*em, d:bbox.d*em};
+      if (bbox.width) {BBOX.width = bbox.width}
+      return BBOX;
+    },
+    
+    Zoom: function (jax,span,math,Mw,Mh) {
+      //
+      //  Re-render at larger size
+      //
+      span.className = "MathJax";
+      span.style.fontSize = jax.HTMLCSS.fontSize;
+
+      //
+      //  get em sizes (taken from HTMLCSS.preTranslate)
+      //
+      var emex = span.appendChild(this.EmExSpan.cloneNode(true));
+      var em = emex.lastChild.firstChild.offsetHeight/60;
+      this.em = MML.mbase.prototype.em = em;
+      this.outerEm = em / jax.HTMLCSS.scale;
+      emex.parentNode.removeChild(emex);
+      this.scale = jax.HTMLCSS.scale;
+      this.linebreakWidth = jax.HTMLCSS.lineWidth;
+      this.cwidth = jax.HTMLCSS.cwidth;
+
+      this.zoomScale = parseInt(HUB.config.menuSettings.zscale) / 100;
+      this.idPostfix = "-zoom"; jax.root.toHTML(span,span); this.idPostfix = "";
+      this.zoomScale = 1;
+      
+      var bbox = jax.root.HTMLspanElement().bbox, width = bbox.width;
+      if (width) {
+        //  Handle full-width displayed equations
+        if (bbox.tw) {Mw = bbox.tw*em}
+        if (bbox.w*em < Mw) {Mw = bbox.w*em}
+        span.style.width = Math.floor(Mw-1.5*HTMLCSS.em)+"px"; span.style.display="inline-block";
+        var id = (jax.root.id||"MathJax-Span-"+jax.root.spanID)+"-zoom";
+        var child = document.getElementById(id).firstChild;
+        while (child && child.style.width !== width) {child = child.nextSibling}
+        if (child) {
+          var cwidth = child.offsetWidth; child.style.width = "100%";
+          if (cwidth > Mw) {span.style.width = (cwidth+100)+"px"}
+        }
+      }
+      //
+      //  Adjust margins to prevent overlaps at the edges
+      //
+      child = span.firstChild.firstChild.style;
+      if (bbox.H != null && bbox.H > bbox.h)
+        {child.marginTop = HTMLCSS.Em(bbox.H-Math.max(bbox.h,HTMLCSS.FONTDATA.lineH))}
+      if (bbox.D != null && bbox.D > bbox.d)
+        {child.marginBottom = HTMLCSS.Em(bbox.D-Math.max(bbox.d,HTMLCSS.FONTDATA.lineD))}
+      if (bbox.lw < 0) {child.paddingLeft = HTMLCSS.Em(-bbox.lw)}
+      if (bbox.rw > bbox.w) {child.marginRight = HTMLCSS.Em(bbox.rw-bbox.w)}
+      //
+      //  Get height and width of zoomed math and original math
+      //
+      span.style.position = "absolute";
+      if (!width) {math.style.position = "absolute"}
+      var zW = span.offsetWidth, zH = span.offsetHeight,
+          mH = math.offsetHeight, mW = math.offsetWidth;
+      span.style.position = math.style.position = "";
+      //
+      return {Y:-EVENT.getBBox(span).h, mW:mW, mH:mH, zW:zW, zH:zH};
+    },
+
+    initImg: function (span) {},
+    initHTML: function (math,span) {},
+    initFont: function (name) {
+      var FONTS = HTMLCSS.FONTDATA.FONTS, AVAIL = HTMLCSS.config.availableFonts;
+      if (AVAIL && AVAIL.length && HTMLCSS.Font.testFont(FONTS[name])) {
+        FONTS[name].available = true;
+        if (FONTS[name].familyFixed) {
+          FONTS[name].family = FONTS[name].familyFixed;
+          delete FONTS[name].familyFixed;
+        }
+        return null;
+      }
+      if (!this.allowWebFonts) {return null}
+      FONTS[name].isWebFont = true;
+      if (HTMLCSS.FontFaceBug) {
+        FONTS[name].family = name;
+        if (HTMLCSS.msieFontCSSBug) {FONTS[name].family += "-Web"}
+      }
+      return AJAX.Styles({"@font-face":this.Font.fontFace(name)});
+    },
+
+    Remove: function (jax) {
+      var span = document.getElementById(jax.inputID+"-Frame");
+      if (span) {
+        if (jax.HTMLCSS.display) {span = span.parentNode}
+        span.parentNode.removeChild(span);
+      }
+      delete jax.HTMLCSS;
+    },
+    
+    getHD: function (span,force) {
+      if (span.bbox && this.config.noReflows && !force) {return {h:span.bbox.h, d:span.bbox.d}}
+      var position = span.style.position;
+      span.style.position = "absolute";
+      this.HDimg.style.height = "0px";
+      span.appendChild(this.HDspan);
+      var HD = {h:span.offsetHeight};
+      this.HDimg.style.height = HD.h+"px";
+      HD.d = span.offsetHeight - HD.h; HD.h -= HD.d;
+      HD.h /= this.em; HD.d /= this.em;
+      span.removeChild(this.HDspan);
+      span.style.position = position;
+      return HD;
+    },
+    getW: function (span) {
+      var W, H, w = (span.bbox||{}).w, start = span;
+      if (span.bbox && this.config.noReflows && span.bbox.exactW !== false) {
+        if (!span.bbox.exactW) {
+          if (span.style.paddingLeft) w += this.unEm(span.style.paddingLeft)*(span.scale||1);
+          if (span.style.paddingRight) w += this.unEm(span.style.paddingRight)*(span.scale||1);
+        }
+        return w;
+      }
+      if (span.bbox && span.bbox.exactW) {return w}
+      if ((span.bbox && w >= 0 && !this.initialSkipBug && !this.msieItalicWidthBug) ||
+           this.negativeBBoxes || !span.firstChild) {
+        W = span.offsetWidth; H = span.parentNode.offsetHeight;
+      } else if (span.bbox && w < 0 && this.msieNegativeBBoxBug) {
+        W = -span.offsetWidth, H = span.parentNode.offsetHeight;
+      } else {
+        // IE can't deal with a space at the beginning, so put something else first
+        var position = span.style.position; span.style.position = "absolute";
+        start = this.startMarker; span.insertBefore(start,span.firstChild)
+        span.appendChild(this.endMarker);
+        W = this.endMarker.offsetLeft - start.offsetLeft;
+        span.removeChild(this.endMarker);
+        span.removeChild(start); span.style.position = position
+      }
+      if (H != null) {span.parentNode.HH = H/this.em}
+      return W/this.em;
+    },
+    Measured: function (span,parent) {
+      var bbox = span.bbox;
+      if (bbox.width == null && bbox.w && !bbox.isMultiline) {
+        var w = this.getW(span);
+        bbox.rw += w - bbox.w;
+        bbox.w = w; bbox.exactW = true;
+      }
+      if (!parent) {parent = span.parentNode}
+      if (!parent.bbox) {parent.bbox = bbox}
+      return span;
+    },
+    Remeasured: function (span,parent) {
+      parent.bbox = this.Measured(span,parent).bbox;
+    },
+    MeasureSpans: function (SPANS) {
+      var spans = [], span, i, m, bbox, start, end, W, parent;
+      //
+      //  Insert the needed markers
+      // 
+      for (i = 0, m = SPANS.length; i < m; i++) {
+        span = SPANS[i]; if (!span) continue;
+        bbox = span.bbox; parent = this.parentNode(span);
+        if (bbox.exactW || bbox.width || bbox.w === 0 || bbox.isMultiline ||
+            (this.config.noReflows && bbox.exactW !== false)) {
+          if (!parent.bbox) {parent.bbox = bbox}
+          continue;
+        }
+        if (this.negativeBBoxes || !span.firstChild || (bbox.w >= 0 && !this.initialSkipBug) ||
+            (bbox.w < 0 && this.msieNegativeBBoxBug)) {
+          spans.push([span]);
+        } else if (this.initialSkipBug) {
+          start = this.startMarker.cloneNode(true); end = this.endMarker.cloneNode(true);
+          span.insertBefore(start,span.firstChild); span.appendChild(end);
+          spans.push([span,start,end,span.style.position]); span.style.position = "absolute";
+        } else {
+          end = this.endMarker.cloneNode(true);
+          span.appendChild(end); spans.push([span,null,end]);
+        }
+      }
+      //
+      //  Read the widths and heights
+      //
+      for (i = 0, m = spans.length; i < m; i++) {
+        span = spans[i][0]; bbox = span.bbox; parent = this.parentNode(span);
+        if ((bbox.w >= 0 && !this.initialSkipBug) || this.negativeBBoxes || !span.firstChild) {
+          W = span.offsetWidth; parent.HH = parent.offsetHeight/this.em;
+        } else if (bbox.w < 0 && this.msieNegativeBBoxBug) {
+          W = -span.offsetWidth, parent.HH = parent.offsetHeight/this.em;
+        } else {
+          W = spans[i][2].offsetLeft - ((spans[i][1]||{}).offsetLeft||0);
+        }
+        W /= this.em;
+        bbox.rw += W - bbox.w;
+        bbox.w = W; bbox.exactW = true;
+        if (!parent.bbox) {parent.bbox = bbox}
+      }
+      //
+      //  Remove markers
+      //
+      for (i = 0, m = spans.length; i < m; i++) {
+        span = spans[i];
+        if (span[1]) {span[1].parentNode.removeChild(span[1]), span[0].style.position = span[3]}
+        if (span[2]) {span[2].parentNode.removeChild(span[2])}
+      }
+    },
+
+    Em: function (m) {
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+    },
+    EmRounded: function (m) {
+      m = (Math.round(m*HTMLCSS.em)+.05)/HTMLCSS.em;
+      if (Math.abs(m) < .0006) {return "0em"}
+      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+    },
+    unEm: function (m) {
+      return parseFloat(m);
+    },
+    Px: function (m) {
+      m *= this.em; var s = (m < 0? "-" : "");
+      return s+Math.abs(m).toFixed(1).replace(/\.?0+$/,"") + "px";
+    },
+    unPx: function (m) {
+      return parseFloat(m)/this.em;
+    },
+    Percent: function (m) {
+      return (100*m).toFixed(1).replace(/\.?0+$/,"") + "%";
+    },
+    length2em: function (length,mu,size) {
+      if (typeof(length) !== "string") {length = length.toString()}
+      if (length === "") {return ""}
+      if (length === MML.SIZE.NORMAL) {return 1}
+      if (length === MML.SIZE.BIG)    {return 2}
+      if (length === MML.SIZE.SMALL)  {return .71}
+      if (length === "infinity")      {return HTMLCSS.BIGDIMEN}
+      var factor = this.FONTDATA.TeX_factor, emFactor = (HTMLCSS.zoomScale||1) / HTMLCSS.em;
+      if (length.match(/mathspace$/)) {return HTMLCSS.MATHSPACE[length]*factor}
+      var match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
+      var m = parseFloat(match[1]||"1"), unit = match[2];
+      if (size == null) {size = 1}; if (mu == null) {mu = 1}
+      if (unit === "em") {return m * factor}
+      if (unit === "ex") {return m * HTMLCSS.TeX.x_height * factor}
+      if (unit === "%")  {return m / 100 * size}
+      if (unit === "px") {return m * emFactor}
+      if (unit === "pt") {return m / 10 * factor}                      // 10 pt to an em
+      if (unit === "pc") {return m * 1.2 * factor}                     // 12 pt to a pc
+      if (unit === "in") {return m * this.pxPerInch * emFactor}
+      if (unit === "cm") {return m * this.pxPerInch * emFactor / 2.54} // 2.54 cm to an inch
+      if (unit === "mm") {return m * this.pxPerInch * emFactor / 25.4} // 10 mm to a cm
+      if (unit === "mu") {return m / 18 * factor * mu} // 18mu to an em for the scriptlevel
+      return m*size;  // relative to given size (or 1em as default)
+    },
+    thickness2em: function (length,mu) {
+      var thick = HTMLCSS.TeX.rule_thickness;
+      if (length === MML.LINETHICKNESS.MEDIUM) {return thick}
+      if (length === MML.LINETHICKNESS.THIN) {return .67*thick}
+      if (length === MML.LINETHICKNESS.THICK) {return 1.67*thick}
+      return this.length2em(length,mu,thick);
+    },
+    
+    getPadding: function (span) {
+      var padding = {top:0, right:0, bottom:0, left:0}, has = false;
+      for (var id in padding) {if (padding.hasOwnProperty(id)) {
+        var pad = span.style["padding"+id.charAt(0).toUpperCase()+id.substr(1)];
+        if (pad) {padding[id] = this.length2em(pad); has = true;}
+      }}
+      return (has ? padding : false);
+    },
+    getBorders: function (span) {
+      var border = {top:0, right:0, bottom:0, left:0}, css = {}, has = false;
+      for (var id in border) {if (border.hasOwnProperty(id)) {
+        var ID = "border"+id.charAt(0).toUpperCase()+id.substr(1);
+        var style = span.style[ID+"Style"];
+        if (style) {
+          has = true;
+          border[id] = this.length2em(span.style[ID+"Width"]);
+          css[ID] = [span.style[ID+"Width"],span.style[ID+"Style"],span.style[ID+"Color"]].join(" ");
+        }
+      }}
+      border.css = css;
+      return (has ? border : false);
+    },
+    setBorders: function (span,borders) {
+      if (borders) {
+        for (var id in borders.css) {if (borders.css.hasOwnProperty(id)) {
+          span.style[id] = borders.css[id];
+        }}
+      }
+    },
+
+    createStrut: function (span,h,before) {
+      var strut = this.Element("span",{
+        isMathJax: true,
+        style:{display:"inline-block", overflow:"hidden", height:h+"px",
+               width:"1px", marginRight:"-1px"}
+      });
+      if (before) {span.insertBefore(strut,span.firstChild)} else {span.appendChild(strut)}
+      return strut;
+    },
+    createBlank: function (span,w,before) {
+      var blank = this.Element("span",{
+        isMathJax: true,
+        style: {display:"inline-block", overflow:"hidden", height:"1px", width:this.Em(w)}
+      });
+      if (w < 0) {blank.style.marginRight = blank.style.width; blank.style.width = 0}
+      if (before) {span.insertBefore(blank,span.firstChild)} else {span.appendChild(blank)}
+      return blank;
+    },
+    createShift: function (span,w,before) {
+      var space = this.Element("span",{style:{marginLeft:this.Em(w)}, isMathJax:true});
+      if (before) {span.insertBefore(space,span.firstChild)} else {span.appendChild(space)}
+      return space;
+    },
+    createSpace: function (span,h,d,w,color,isSpace) {
+      if (h < -d) {d = -h} // make sure h is above d
+      var H = this.Em(h+d), D = this.Em(-d);
+      if (this.msieInlineBlockAlignBug) {D = this.Em(HTMLCSS.getHD(span.parentNode,true).d-d)}
+      if (span.isBox || isSpace) {
+	var scale = (span.scale == null ? 1 : span.scale);
+	span.bbox = {exactW: true, h: h*scale, d: d*scale, w: w*scale, rw: w*scale, lw: 0};
+        span.style.height = H; span.style.verticalAlign = D;
+        span.HH = (h+d)*scale;
+      } else {
+        span = this.addElement(span,"span",{style: {height:H, verticalAlign:D}, isMathJax:true});
+      }
+      if (w >= 0) {
+        span.style.width = this.Em(w);
+        span.style.display = "inline-block";
+        span.style.overflow = "hidden";       // for IE in quirks mode
+      } else {
+        if (this.msieNegativeSpaceBug) {span.style.height = ""}
+        span.style.marginLeft = this.Em(w);
+        if (HTMLCSS.safariNegativeSpaceBug && span.parentNode.firstChild == span)
+          {this.createBlank(span,0,true)}
+      }
+      if (color && color !== MML.COLOR.TRANSPARENT) {
+        span.style.backgroundColor = color;
+        span.style.position = "relative"; // make sure it covers earlier items
+      }
+      return span;
+    },
+    createRule: function (span,h,d,w,color) {
+      if (h < -d) {d = -h} // make sure h is above d
+      var min = HTMLCSS.TeX.min_rule_thickness, f = 1;
+      // If rule is very thin, make it at least min_rule_thickness so it doesn't disappear
+      if (w > 0 && w*this.em < min) {w = min/this.em}
+      if (h+d > 0 && (h+d)*this.em < min) {f = 1/(h+d)*(min/this.em); h *= f; d *= f}
+      if (!color) {color = "solid"} else {color = "solid "+color}
+      var style = {display: "inline-block", overflow:"hidden", verticalAlign:this.Em(-d)};
+      if (w > h+d) {
+        style.borderTop = this.Px(h+d)+" "+color;
+        style.width = this.Em(w);
+        style.height = (this.msieRuleBug && h+d > 0 ? this.Em(h+d) : 0);
+      } else {
+        style.borderLeft = this.Px(w)+" "+color;
+        style.width = (this.msieRuleBug && w > 0 ? this.Em(w) : 0);
+        style.height = this.Em(h+d);
+      }
+      var rule = this.addElement(span,"span",{
+        style: style, noAdjust:true, HH:h+d, isMathJax:true,
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}
+      });
+      if (span.isBox || span.className == "mspace") {span.bbox = rule.bbox, span.HH = h+d}
+      return rule;
+    },
+    createFrame: function (span,h,d,w,t,style) {
+      if (h < -d) {d = -h} // make sure h is above d
+      var T = 2*t;
+      if (this.msieFrameSizeBug) {if (w < T) {w = T}; if (h+d < T) {h = T-d}}
+      if (this.msieBorderWidthBug) {T = 0}
+      var H = this.Em(h+d-T), D = this.Em(-d-t), W = this.Em(w-T);
+      var B = this.Px(t)+" "+style;
+      var frame = this.addElement(span,"span",{
+        style: {border: B, display:"inline-block", overflow:"hidden", width:W, height:H},
+        bbox: {h:h, d:d, w:w, rw:w, lw:0, exactW:true}, noAdjust: true, HH:h+d, isMathJax:true
+      });
+      if (D) {frame.style.verticalAlign = D}
+      return frame;
+    },
+    
+    //
+    //  Find parent span (skipping over <a> tags)
+    //
+    parentNode: function (span) {
+      var parent = span.parentNode;
+      if (parent.nodeName.toLowerCase() === "a") {parent = parent.parentNode}
+      return parent;
+    },
+
+    createStack: function (span,nobbox,w) {
+      if (this.msiePaddingWidthBug) {this.createStrut(span,0)}
+      var relativeW = String(w).match(/%$/);
+      var W = (!relativeW && w != null ? w : 0);
+      span = this.addElement(span,"span",{
+        noAdjust: true, HH: 0, isMathJax: true,
+        style: {display:"inline-block", position:"relative",
+                width:(relativeW ? "100%" : this.Em(W)), height:0}
+      });
+      if (!nobbox) {
+        span.parentNode.bbox = span.bbox = {
+          exactW: true,
+          h: -this.BIGDIMEN, d: -this.BIGDIMEN,
+          w:W, lw: this.BIGDIMEN, rw: (!relativeW && w != null ? w : -this.BIGDIMEN)
+        };
+        if (relativeW) {span.bbox.width = w}
+      }
+      return span;
+    },
+    createBox: function (span,w) {
+      var box = this.addElement(span,"span",{style:{position:"absolute"}, isBox: true, isMathJax:true});
+      if (w != null) {box.style.width = w}
+      return box;
+    },
+    addBox: function (span,box) {
+      box.style.position = "absolute"; box.isBox = box.isMathJax = true;
+      return span.appendChild(box);
+    },
+    placeBox: function (span,x,y,noclip) {
+      span.isMathJax = true;
+      var parent = HTMLCSS.parentNode(span), bbox = span.bbox, BBOX = parent.bbox;
+      if (this.msiePlaceBoxBug) {this.addText(span,this.NBSP)}
+      if (this.imgSpaceBug) {this.addText(span,this.imgSpace)}
+      // Place the box
+      var HH, dx = 0;
+      if (span.HH != null) {HH = span.HH}
+        else if (bbox) {HH = Math.max(3,bbox.h+bbox.d)}
+        else {HH = span.offsetHeight/this.em}
+      if (!span.noAdjust) {
+        HH += 1;
+        HH = Math.round(HH*this.em)/this.em; // make this an integer number of pixels (for Chrome)
+        if (this.msieInlineBlockAlignBug) {
+          this.addElement(span,"img",{
+            className:"MathJax_strut", border:0, src:"about:blank", isMathJax:true,
+            style:{width:0,height:this.Em(HH)}
+          });
+        } else {
+          this.addElement(span,"span",{
+            isMathJax: true, style:{display:"inline-block",width:0,height:this.Em(HH)}
+          });
+          if (HTMLCSS.chromeHeightBug) 
+            {HH -= (span.lastChild.offsetHeight - Math.round(HH*this.em))/this.em}
+        }
+      }
+      // Clip so that bbox doesn't include extra height and depth
+      if (bbox) {
+        if (this.initialSkipBug) {
+          if (bbox.lw < 0) {dx = bbox.lw; HTMLCSS.createBlank(span,-dx,true)}
+          if (bbox.rw > bbox.w) {HTMLCSS.createBlank(span,bbox.rw-bbox.w+.1)}
+        }
+        if (!this.msieClipRectBug && !bbox.noclip && !noclip) {
+          var dd = 3/this.em;
+          var H = (bbox.H == null ? bbox.h : bbox.H), D = (bbox.D == null ? bbox.d : bbox.D);
+          var t = HH - H - dd, b = HH + D + dd, l = -1000, r = bbox.rw+1000;
+          span.style.clip = "rect("+this.Em(t)+" "+this.Em(r)+" "+this.Em(b)+" "+this.Em(l)+")";
+        }
+      }
+      // Place the box
+      span.style.top = this.Em(-y-HH);
+      span.style.left = this.Em(x+dx);
+      // Update the bounding box
+      if (bbox && BBOX) {
+        if (bbox.H != null && (BBOX.H == null || bbox.H + y > BBOX.H)) {BBOX.H = bbox.H + y}
+        if (bbox.D != null && (BBOX.D == null || bbox.D - y > BBOX.D)) {BBOX.D = bbox.D - y}
+        if (bbox.h + y > BBOX.h) {BBOX.h = bbox.h + y}
+        if (bbox.d - y > BBOX.d) {BBOX.d = bbox.d - y}
+        if (BBOX.H != null && BBOX.H <= BBOX.h) {delete BBOX.H}
+        if (BBOX.D != null && BBOX.D <= BBOX.d) {delete BBOX.D}
+        if (bbox.w + x > BBOX.w) {
+          BBOX.w = bbox.w + x;
+          if (BBOX.width == null) {parent.style.width = this.Em(BBOX.w)}
+        }
+        if (bbox.rw + x > BBOX.rw) {BBOX.rw = bbox.rw + x}
+        if (bbox.lw + x < BBOX.lw) {BBOX.lw = bbox.lw + x}
+        if (bbox.width != null && !bbox.isFixed) {
+          if (BBOX.width == null) {
+            parent.style.width = BBOX.width = "100%";
+            if (bbox.minWidth) {parent.style.minWidth = BBOX.minWidth = bbox.minWidth}
+          }
+          span.style.width = bbox.width;
+        }
+        if (bbox.tw) {BBOX.tw = bbox.tw}
+      }
+    },
+    alignBox: function (span,align,y,dx) {
+      if (dx == null) {dx = 0}
+      this.placeBox(span,dx,y); // set y position (and left aligned)
+      if (this.msiePlaceBoxBug) {
+        //
+        //  placeBox() adds an extra &nbsp;, so remove it here.
+        //
+        var node = span.lastChild;
+        while (node && node.nodeName !== "#text") {node = node.previousSibling}
+        if (node) {span.removeChild(node)}
+      }
+      var bbox = span.bbox; if (bbox.isMultiline) return;
+      var isRelative = bbox.width != null && !bbox.isFixed;
+      var r = 0, c = dx-bbox.w/2, l = "50%";
+      if (this.initialSkipBug) {r = bbox.w-bbox.rw-.1; c += bbox.lw}
+      if (this.msieMarginScaleBug) {c = (c*this.em) + "px"} else {c = this.Em(c)}
+      if (isRelative) {
+        c = (dx === 0 ? "" : this.Em(dx));
+        l = (50 - parseFloat(bbox.width)/2) + "%";
+      }
+      HUB.Insert(span.style,({
+        right:  {left:"", right: this.Em(r-dx)},
+        center: {left:l, marginLeft: c}
+      })[align]);
+    },
+    setStackWidth: function (span,w) {
+      if (typeof(w) === "number") {
+        span.style.width = this.Em(Math.max(0,w));
+        var bbox = span.bbox; if (bbox) {bbox.w = w; bbox.exactW = true};
+        bbox = span.parentNode.bbox; if (bbox) {bbox.w = w; bbox.exactW = true};
+      } else {
+        span.style.width = span.parentNode.style.width = "100%";
+        if (span.bbox) {span.bbox.width = w}
+        if (span.parentNode.bbox) {span.parentNode.bbox.width = w}
+      }
+    },
+
+    createDelimiter: function (span,code,HW,scale,font) {
+      if (!code) {
+        span.bbox = {h:0, d:0, w:this.TeX.nulldelimiterspace, lw: 0};
+        span.bbox.rw = span.bbox.w;
+        this.createSpace(span,span.bbox.h,span.bbox.d,span.bbox.w);
+        return;
+      }
+      if (!scale) {scale = 1};
+      if (!(HW instanceof Array)) {HW = [HW,HW]}
+      var hw = HW[1]; HW = HW[0];
+      var delim = {alias: code};
+      while (delim.alias) {
+        code = delim.alias; delim = this.FONTDATA.DELIMITERS[code];
+        if (!delim) {delim = {HW: [0,this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]]}}
+      }
+      if (delim.load) {HUB.RestartAfter(AJAX.Require(this.fontDir+"/fontdata-"+delim.load+".js"))}
+      for (var i = 0, m = delim.HW.length; i < m; i++) {
+        if (delim.HW[i][0]*scale >= HW-.01 || (i == m-1 && !delim.stretch)) {
+          if (delim.HW[i][2]) {scale *= delim.HW[i][2]}
+          if (delim.HW[i][3]) {code = delim.HW[i][3]}
+          var chr = this.addElement(span,"span");
+          this.createChar(chr,[code,delim.HW[i][1]],scale,font);
+          span.bbox = chr.bbox;
+          span.offset = .65 * span.bbox.w;
+          span.scale = scale;
+          return;
+        }
+      }
+      if (delim.stretch) {this["extendDelimiter"+delim.dir](span,hw,delim.stretch,scale,font)}
+    },
+    extendDelimiterV: function (span,H,delim,scale,font) {
+      var stack = this.createStack(span,true);
+      var top = this.createBox(stack), bot = this.createBox(stack);
+      this.createChar(top,(delim.top||delim.ext),scale,font);
+      this.createChar(bot,(delim.bot||delim.ext),scale,font);
+      var ext = {bbox:{w:0,lw:0,rw:0}}, mid = ext, EXT;
+      var h = top.bbox.h + top.bbox.d + bot.bbox.h + bot.bbox.d;
+      var y = -top.bbox.h; this.placeBox(top,0,y,true); y -= top.bbox.d;
+      if (delim.mid) {
+        mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
+        h += mid.bbox.h + mid.bbox.d;
+      }
+      if (delim.min && H < h*delim.min) {H = h*delim.min}
+      if (H > h) {
+        ext = this.Element("span"); this.createChar(ext,delim.ext,scale,font);
+        var eH = ext.bbox.h + ext.bbox.d, eh = eH - .05, n, N, k = (delim.mid ? 2 : 1);
+        N = n = Math.min(Math.ceil((H-h)/(k*eh)), this.maxStretchyParts);
+        if (!delim.fullExtenders) {eh = (H-h)/(k*n)}
+        var dy = (n/(n+1))*(eH - eh); eh = eH - dy; y += dy + eh - ext.bbox.h;
+        while (k-- > 0) {
+          while (n-- > 0) {
+            if (!this.msieCloneNodeBug) {EXT = ext.cloneNode(true)}
+              else {EXT = this.Element("span"); this.createChar(EXT,delim.ext,scale,font)}
+            EXT.bbox = ext.bbox;
+            y -= eh; this.placeBox(this.addBox(stack,EXT),0,y,true);
+          }
+          y += dy - ext.bbox.d;
+          if (delim.mid && k) {
+            this.placeBox(mid,0,y-mid.bbox.h,true); n = N;
+            y += -(mid.bbox.h + mid.bbox.d) + dy + eh - ext.bbox.h;
+          }
+        }
+      } else {
+        y += (h - H)/2;
+        if (delim.mid) {this.placeBox(mid,0,y-mid.bbox.h,true); y += -(mid.bbox.h + mid.bbox.d)}
+        y += (h - H)/2;
+      }
+      this.placeBox(bot,0,y-bot.bbox.h,true); y -= bot.bbox.h + bot.bbox.d;
+      span.bbox = {
+        w:  Math.max(top.bbox.w,ext.bbox.w,bot.bbox.w,mid.bbox.w),
+        lw: Math.min(top.bbox.lw,ext.bbox.lw,bot.bbox.lw,mid.bbox.lw),
+        rw: Math.max(top.bbox.rw,ext.bbox.rw,bot.bbox.rw,mid.bbox.rw),
+        h: 0, d: -y, exactW: true
+      }
+      span.scale = scale;
+      span.offset = .55 * span.bbox.w;
+      span.isMultiChar = true;
+      this.setStackWidth(stack,span.bbox.w);
+    },
+    extendDelimiterH: function (span,W,delim,scale,font) {
+      var stack = this.createStack(span,true);
+      var left = this.createBox(stack), right = this.createBox(stack);
+      this.createChar(left,(delim.left||delim.rep),scale,font);
+      this.createChar(right,(delim.right||delim.rep),scale,font);
+      var rep = this.Element("span"); this.createChar(rep,delim.rep,scale,font);
+      var mid = {bbox: {h:-this.BIGDIMEN, d:-this.BIGDIMEN}}, REP;
+      this.placeBox(left,-left.bbox.lw,0,true);
+      var w = (left.bbox.rw - left.bbox.lw) + (right.bbox.rw - right.bbox.lw) - .05,
+          x = left.bbox.rw - left.bbox.lw - .025, dx;
+      if (delim.mid) {
+        mid = this.createBox(stack); this.createChar(mid,delim.mid,scale,font);
+        w += mid.bbox.w;
+      }
+      if (delim.min && W < w*delim.min) {W = w*delim.min}
+      if (W > w) {
+        var rW = rep.bbox.rw-rep.bbox.lw, rw = rW - .05, n, N, k = (delim.mid ? 2 : 1);
+        N = n = Math.min(Math.ceil((W-w)/(k*rw)), this.maxStretchyParts);
+        if (!delim.fillExtenders) {rw = (W-w)/(k*n)}
+        dx = (n/(n+1))*(rW - rw); rw = rW - dx; x -= rep.bbox.lw + dx;
+        while (k-- > 0) {
+          while (n-- > 0) {
+            if (!this.cloneNodeBug) {REP = rep.cloneNode(true)}
+              else {REP = this.Element("span"); this.createChar(REP,delim.rep,scale,font)}
+            REP.bbox = rep.bbox;
+            this.placeBox(this.addBox(stack,REP),x,0,true); x += rw;
+          }
+          if (delim.mid && k) {this.placeBox(mid,x,0,true); x += mid.bbox.w - dx; n = N}
+        }
+      } else {
+        x -= (w - W)/2;
+        if (delim.mid) {this.placeBox(mid,x,0,true); x += mid.bbox.w};
+        x -= (w - W)/2;
+      }
+      this.placeBox(right,x,0,true);
+      span.bbox = {
+        w: x+right.bbox.rw, lw: 0, rw: x+right.bbox.rw,
+        h: Math.max(left.bbox.h,rep.bbox.h,right.bbox.h,mid.bbox.h),
+        d: Math.max(left.bbox.d,rep.bbox.d,right.bbox.d,mid.bbox.d),
+        exactW: true
+      }
+      span.scale = scale;
+      span.isMultiChar = true;
+      this.setStackWidth(stack,span.bbox.w);
+    },
+    createChar: function (span,data,scale,font) {
+      span.isMathJax = true;
+      var SPAN = span, text = "", variant = {fonts: [data[1]], noRemap:true};
+      if (font && font === MML.VARIANT.BOLD) {variant.fonts = [data[1]+"-bold",data[1]]}
+      if (typeof(data[1]) !== "string") {variant = data[1]}
+      if (data[0] instanceof Array) {
+        for (var i = 0, m = data[0].length; i < m; i++) {text += String.fromCharCode(data[0][i])}
+      } else {text = String.fromCharCode(data[0])}
+      if (data[4]) {scale *= data[4]}
+      if (scale !== 1 || data[3]) {
+	SPAN = this.addElement(span,"span",{style:{fontSize: this.Percent(scale)}, scale:scale, isMathJax:true});
+        this.handleVariant(SPAN,variant,text);
+        span.bbox = SPAN.bbox;
+      } else {this.handleVariant(span,variant,text)}
+      if (data[2]) {span.style.marginLeft = this.Em(data[2])}     // x offset
+      if (data[3]) {                                              // y offset
+        span.firstChild.style.verticalAlign = this.Em(data[3]);
+        span.bbox.h += data[3]; if (span.bbox.h < 0) {span.bbox.h = 0}
+      }
+      if (data[5]) {span.bbox.h += data[5]}  // extra height
+      if (data[6]) {span.bbox.d += data[6]}  // extra depth
+      //  Handle combining characters by adding a non-breaking space so it shows up
+      if (this.AccentBug && span.bbox.w === 0) {SPAN.firstChild.nodeValue += this.NBSP}
+    },
+    positionDelimiter: function (span,h) {
+      h -= span.bbox.h; span.bbox.d -= h; span.bbox.h += h;
+      if (h) {
+        if (this.safariVerticalAlignBug || this.konquerorVerticalAlignBug ||
+           (this.operaVerticalAlignBug && span.isMultiChar)) {
+          if (span.firstChild.style.display === "" && span.style.top !== "")
+            {span = span.firstChild; h -= HTMLCSS.unEm(span.style.top)}
+          span.style.position = "relative";
+          span.style.top = this.Em(-h);
+        } else {
+          span.style.verticalAlign = this.Em(h);
+	  if (HTMLCSS.ffVerticalAlignBug) {
+	    HTMLCSS.createRule(span.parentNode,span.bbox.h,0,0);
+	    delete span.parentNode.bbox;
+	  }
+        }
+      }
+    },
+
+    handleVariant: function (span,variant,text) {
+      var newtext = "", n, c, font, VARIANT, SPAN = span, force = !!span.style.fontFamily;
+      if (text.length === 0) return;
+      if (!span.bbox) {
+        span.bbox = {
+          w: 0, h: -this.BIGDIMEN, d: -this.BIGDIMEN,
+          rw: -this.BIGDIMEN, lw: this.BIGDIMEN
+        };
+      }
+      if (!variant) {variant = this.FONTDATA.VARIANT[MML.VARIANT.NORMAL]}
+      VARIANT = variant;
+      for (var i = 0, m = text.length; i < m; i++) {
+        variant = VARIANT;
+        n = text.charCodeAt(i); c = text.charAt(i);
+        if (n >= 0xD800 && n < 0xDBFF) {
+          i++; n = (((n-0xD800)<<10)+(text.charCodeAt(i)-0xDC00))+0x10000;
+          if (this.FONTDATA.RemapPlane1) {
+            var nv = this.FONTDATA.RemapPlane1(n,variant);
+            n = nv.n; variant = nv.variant;
+          }
+        } else {
+          var id, M, RANGES = this.FONTDATA.RANGES;
+          for (id = 0, M = RANGES.length; id < M; id++) {
+            if (RANGES[id].name === "alpha" && variant.noLowerCase) continue;
+            var N = variant["offset"+RANGES[id].offset];
+            if (N && n >= RANGES[id].low && n <= RANGES[id].high) {
+              if (RANGES[id].remap && RANGES[id].remap[n]) {
+                n = N + RANGES[id].remap[n];
+              } else {
+                n = n - RANGES[id].low + N;
+                if (RANGES[id].add) {n += RANGES[id].add}
+              }
+              if (variant["variant"+RANGES[id].offset])
+                {variant = this.FONTDATA.VARIANT[variant["variant"+RANGES[id].offset]]}
+              break;
+            }
+          }
+        }
+        if (variant.remap && variant.remap[n]) {
+          n = variant.remap[n];
+          if (variant.remap.variant) {variant = this.FONTDATA.VARIANT[variant.remap.variant]}
+        } else if (this.FONTDATA.REMAP[n] && !variant.noRemap) {
+          n = this.FONTDATA.REMAP[n];
+        }
+        if (n instanceof Array) {variant = this.FONTDATA.VARIANT[n[1]]; n = n[0]} 
+        if (typeof(n) === "string") {
+          text = n+text.substr(i+1);
+          m = text.length; i = -1;
+          continue;
+        }
+        font = this.lookupChar(variant,n); c = font[n];
+        if (force || (!this.checkFont(font,SPAN.style) && !c[5].img)) {
+          if (newtext.length) {this.addText(SPAN,newtext); newtext = ""};
+          var addSpan = !!SPAN.style.fontFamily || !!span.style.fontStyle ||
+                        !!span.style.fontWeight || !font.directory || force; force = false;
+          if (SPAN !== span) {addSpan = !this.checkFont(font,span.style); SPAN = span}
+          if (addSpan) {SPAN = this.addElement(span,"span",{isMathJax:true, subSpan:true})}
+          this.handleFont(SPAN,font,SPAN !== span);
+        }
+        newtext = this.handleChar(SPAN,font,c,n,newtext);
+        if (!(c[5]||{}).space) {
+          if (c[0]/1000 > span.bbox.h) {span.bbox.h = c[0]/1000}
+          if (c[1]/1000 > span.bbox.d) {span.bbox.d = c[1]/1000}
+        }
+        if (span.bbox.w + c[3]/1000 < span.bbox.lw) {span.bbox.lw = span.bbox.w + c[3]/1000}
+        if (span.bbox.w + c[4]/1000 > span.bbox.rw) {span.bbox.rw = span.bbox.w + c[4]/1000}
+        span.bbox.w += c[2]/1000;
+        if ((c[5]||{}).isUnknown) span.bbox.exactW = false;  // force measurement
+      }
+      if (newtext.length) {this.addText(SPAN,newtext)}
+      if (span.scale && span.scale !== 1) {
+        span.bbox.h *= span.scale; span.bbox.d *= span.scale;
+        span.bbox.w *= span.scale; span.bbox.lw *= span.scale; span.bbox.rw *= span.scale;
+      }
+      if (text.length == 1 && font.skew && font.skew[n]) {span.bbox.skew = font.skew[n]}
+    },
+    checkFont: function (font,style) {
+      var weight = (style.fontWeight||"normal");
+      if (weight.match(/^\d+$/)) {weight = (parseInt(weight) >= 600 ? "bold" : "normal")}
+      return (font.family.replace(/'/g,"") === style.fontFamily.replace(/'/g,"") &&
+             (font.style||"normal") === (style.fontStyle||"normal") &&
+             (font.weight||"normal") === weight);
+    },
+
+    handleFont: function (span,font,force) {
+      span.style.fontFamily = font.family;
+      if (!font.directory)
+        {span.style.fontSize = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%"}
+      if (!(HTMLCSS.FontFaceBug && font.isWebFont)) {
+        var style  = font.style  || "normal", weight = font.weight || "normal";
+        if (style !== "normal"  || force) {span.style.fontStyle  = style}
+        if (weight !== "normal" || force) {span.style.fontWeight = weight}
+      }
+    },
+
+    handleChar: function (span,font,c,n,text) {
+      var C = c[5];
+      if (C.space) {
+        if (text.length) {this.addText(span,text)}
+        HTMLCSS.createShift(span,c[2]/1000);
+        return "";
+      }
+      if (C.img) {return this.handleImg(span,font,c,n,text)}
+      if (C.isUnknown && this.FONTDATA.DELIMITERS[n]) {
+        if (text.length) {this.addText(span,text)}
+        var scale = span.scale;
+        HTMLCSS.createDelimiter(span,n,0,1,font);
+        if (this.FONTDATA.DELIMITERS[n].dir === "V") {
+          span.style.verticalAlign = this.Em(span.bbox.d);
+          span.bbox.h += span.bbox.d; span.bbox.d = 0;
+        }
+        span.scale = scale;
+        c[0] = span.bbox.h*1000; c[1] = span.bbox.d*1000;
+        c[2] = span.bbox.w*1000; c[3] = span.bbox.lw*1000; c[4] = span.bbox.rw*1000;
+        return "";
+      }
+      if (C.c == null) {
+        if (n <= 0xFFFF) {C.c = String.fromCharCode(n)} else {
+          var N = n - 0x10000;
+          C.c = String.fromCharCode((N>>10)+0xD800)
+              + String.fromCharCode((N&0x3FF)+0xDC00);
+        }
+      }
+      if (HTMLCSS.ffFontOptimizationBug && c[4] - c[2] > 125)
+        {span.style.textRendering = "optimizeLegibility"}
+      if (C.rfix) {this.addText(span,text+C.c); HTMLCSS.createShift(span,C.rfix/1000); return ""}
+      if (c[2] || !this.msieAccentBug || text.length) {return text + C.c}
+      //  Handle IE accent clipping bug
+      HTMLCSS.createShift(span,c[3]/1000);
+      HTMLCSS.createShift(span,(c[4]-c[3])/1000);
+      this.addText(span,C.c);
+      HTMLCSS.createShift(span,-c[4]/1000);
+      return "";
+    },
+    handleImg: function (span,font,c,n,text) {return text}, // replaced by imageFont extension
+
+    lookupChar: function (variant,n) {
+      var i, m;
+      if (!variant.FONTS) {
+        var FONTS = this.FONTDATA.FONTS;
+        var fonts = (variant.fonts || this.FONTDATA.VARIANT.normal.fonts);
+        if (!(fonts instanceof Array)) {fonts = [fonts]}
+        if (variant.fonts != fonts) {variant.fonts = fonts}
+        variant.FONTS = [];
+        for (i = 0, m = fonts.length; i < m; i++) {
+          if (FONTS[fonts[i]]) {
+            variant.FONTS.push(FONTS[fonts[i]]);
+            FONTS[fonts[i]].name = fonts[i]; // FIXME: should really be in the font files
+          }
+        }
+      }
+      for (i = 0, m = variant.FONTS.length; i < m; i++) {
+        var font = variant.FONTS[i];
+        if (typeof(font) === "string") {
+          delete variant.FONTS; this.loadFont(font);
+        }
+        if (font[n]) {
+          if (font[n].length === 5) {font[n][5] = {}}
+          if (HTMLCSS.allowWebFonts && !font.available)
+            {this.loadWebFont(font)} else {return font}
+        } else {this.findBlock(font,n)}
+      }
+      return this.unknownChar(variant,n);
+    },
+    
+    unknownChar: function (variant,n) {
+      var unknown = (variant.defaultFont || {family:HTMLCSS.config.undefinedFamily});
+      if (variant.bold) {unknown.weight = "bold"}; if (variant.italic) {unknown.style = "italic"}
+      if (!unknown[n]) {unknown[n] = [800,200,500,0,500,{isUnknown:true}]} // [h,d,w,lw,rw,{data}]
+      HUB.signal.Post(["HTML-CSS Jax - unknown char",n,variant]);
+      return unknown;
+    },
+
+    findBlock: function (font,c) {
+      if (font.Ranges) {
+        // FIXME:  do binary search?
+        for (var i = 0, m = font.Ranges.length; i < m; i++) {
+          if (c <  font.Ranges[i][0]) return;
+          if (c <= font.Ranges[i][1]) {
+            var file = font.Ranges[i][2];
+            for (var j = font.Ranges.length-1; j >= 0; j--)
+              {if (font.Ranges[j][2] == file) {font.Ranges.splice(j,1)}}
+            this.loadFont(font.directory+"/"+file+".js");
+          }
+        }
+      }
+    },
+
+    loadFont: function (file) {
+      var queue = MathJax.Callback.Queue();
+      queue.Push(["Require",AJAX,this.fontDir+"/"+file]);
+      if (this.imgFonts) {
+        if (!MathJax.isPacked) {file = file.replace(/\/([^\/]*)$/,HTMLCSS.imgPacked+"/$1")}
+        queue.Push(["Require",AJAX,this.webfontDir+"/png/"+file]);
+      }
+      HUB.RestartAfter(queue.Push({}));
+    },
+
+    loadWebFont: function (font) {
+      font.available = font.isWebFont = true;
+      if (HTMLCSS.FontFaceBug) {
+        font.family = font.name;
+        if (HTMLCSS.msieFontCSSBug) {font.family += "-Web"}
+      }
+      HUB.RestartAfter(this.Font.loadWebFont(font));
+    },
+    loadWebFontError: function (font,done) {
+      //
+      //  After the first web font fails to load, switch to image fonts, if possible
+      //  otherwise, give up on web fonts all together
+      // 
+      HUB.Startup.signal.Post("HTML-CSS Jax - disable web fonts");
+      font.isWebFont = false;
+      if (this.config.imageFont && this.config.imageFont === this.fontInUse) {
+        this.imgFonts = true;
+        HUB.Startup.signal.Post("HTML-CSS Jax - switch to image fonts");
+        HUB.Startup.signal.Post("HTML-CSS Jax - using image fonts");
+        MESSAGE(["WebFontNotAvailable","Web-Fonts not available -- using image fonts instead"],null,3000);
+        AJAX.Require(this.directory+"/imageFonts.js",done);
+      } else {
+        this.allowWebFonts = false;
+        done();
+      }
+    },
+
+    Element: MathJax.HTML.Element,
+    addElement: MathJax.HTML.addElement,
+    TextNode: MathJax.HTML.TextNode,
+    addText: MathJax.HTML.addText,
+    ucMatch: MathJax.HTML.ucMatch,
+
+    BIGDIMEN: 10000000,
+    ID: 0, idPostfix: "",
+    GetID: function () {this.ID++; return this.ID},
+
+    MATHSPACE: {
+      veryverythinmathspace:  1/18,
+      verythinmathspace:      2/18,
+      thinmathspace:          3/18,
+      mediummathspace:        4/18,
+      thickmathspace:         5/18,
+      verythickmathspace:     6/18,
+      veryverythickmathspace: 7/18,
+      negativeveryverythinmathspace:  -1/18,
+      negativeverythinmathspace:      -2/18,
+      negativethinmathspace:          -3/18,
+      negativemediummathspace:        -4/18,
+      negativethickmathspace:         -5/18,
+      negativeverythickmathspace:     -6/18,
+      negativeveryverythickmathspace: -7/18
+    },
+
+    TeX: {
+      x_height:         .430554,
+      quad:             1,
+      num1:             .676508,
+      num2:             .393732,
+      num3:             .44373,
+      denom1:           .685951,
+      denom2:           .344841,
+      sup1:             .412892,
+      sup2:             .362892,
+      sup3:             .288888,
+      sub1:             .15,
+      sub2:             .247217,
+      sup_drop:         .386108,
+      sub_drop:         .05,
+      delim1:          2.39,
+      delim2:          1.0,
+      axis_height:      .25,
+      rule_thickness:   .06,
+      big_op_spacing1:  .111111,
+      big_op_spacing2:  .166666,
+      big_op_spacing3:  .2,
+      big_op_spacing4:  .6,
+      big_op_spacing5:  .1,
+
+      scriptspace:         .1,
+      nulldelimiterspace:  .12,
+      delimiterfactor:     901,
+      delimitershortfall:   .3,
+
+      min_rule_thickness:  1.25     // in pixels
+    },
+
+    NBSP: "\u00A0",
+
+    rfuzz: 0         // adjustment to rule placements in roots
+  });
+
+  MathJax.Hub.Register.StartupHook("mml Jax Ready",function () {
+
+    MML = MathJax.ElementJax.mml;
+
+    MML.mbase.Augment({
+      toHTML: function (span) {
+	span = this.HTMLcreateSpan(span); if (this.type != "mrow") {span = this.HTMLhandleSize(span)}
+	for (var i = 0, m = this.data.length; i < m; i++)
+	  {if (this.data[i]) {this.data[i].toHTML(span)}}
+	var stretchy = this.HTMLcomputeBBox(span);
+	var h = span.bbox.h, d = span.bbox.d, stretched = false, bbox;
+	for (i = 0, m = stretchy.length; i < m; i++) {
+          bbox = stretchy[i].HTMLspanElement().bbox;
+          if (stretchy[i].forceStretch || bbox.h !== h || bbox.d !== d)
+            {stretchy[i].HTMLstretchV(span,h,d); stretched = true}
+          else if (stretchy[i].needsBBox) stretched = true;
+        }
+	if (stretched) {this.HTMLcomputeBBox(span,true)}
+        if (this.HTMLlineBreaks(span)) {span = this.HTMLmultiline(span)}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+        if (this.data.length === 1 && this.data[0]) {
+          // copy skew data from accented character
+          bbox = this.data[0].HTMLspanElement().bbox;
+          if (bbox.skew) span.bbox.skew = bbox.skew;
+        }
+	return span;
+      },
+      HTMLlineBreaks: function () {return false},
+      HTMLmultiline: function () {MML.mbase.HTMLautoloadFile("multiline")},
+      HTMLcomputeBBox: function (span,full,i,m) {
+	if (i == null) {i = 0}; if (m == null) {m = this.data.length}
+	var BBOX = span.bbox = {exactW: true}, stretchy = [];
+	while (i < m) {
+	  var core = this.data[i]; if (!core) continue;
+	  if (!full && core.HTMLcanStretch("Vertical")) {
+            stretchy.push(core);
+            core = (core.CoreMO()||core);
+            stretchy[stretchy.length-1].needsBBox = (core !== this.data[i]);
+          }
+	  this.HTMLcombineBBoxes(core,BBOX); i++;
+	}
+	this.HTMLcleanBBox(BBOX);
+	return stretchy;
+      },
+      HTMLcombineBBoxes: function (core,BBOX) {
+	if (BBOX.w == null) {this.HTMLemptyBBox(BBOX)}
+	var child = (core.bbox ? core : core.HTMLspanElement());
+        if (!child || !child.bbox) return;
+	var bbox = child.bbox;
+	if (bbox.d > BBOX.d) {BBOX.d = bbox.d}
+	if (bbox.h > BBOX.h) {BBOX.h = bbox.h}
+	if (bbox.D != null && bbox.D > BBOX.D) {BBOX.D = bbox.D}
+	if (bbox.H != null && bbox.H > BBOX.H) {BBOX.H = bbox.H}
+	if (child.style.paddingLeft) {BBOX.w += HTMLCSS.unEm(child.style.paddingLeft)*(child.scale||1)}
+	if (BBOX.w + bbox.lw < BBOX.lw) {BBOX.lw = BBOX.w + bbox.lw}
+	if (BBOX.w + bbox.rw > BBOX.rw) {BBOX.rw = BBOX.w + bbox.rw}
+	BBOX.w += bbox.w;
+	if (child.style.paddingRight) {BBOX.w += HTMLCSS.unEm(child.style.paddingRight)*(child.scale||1)}
+	if (bbox.width) {BBOX.width = bbox.width; BBOX.minWidth = bbox.minWidth}
+        if (bbox.tw) {BBOX.tw = bbox.tw}
+        if (bbox.ic) {BBOX.ic = bbox.ic} else {delete BBOX.ic}
+        if (BBOX.exactW && !bbox.exactW) {BBOX.exactW = bbox.exactW}
+      },
+      HTMLemptyBBox: function (BBOX) {
+	BBOX.h = BBOX.d = BBOX.H = BBOX.D = BBOX.rw = -HTMLCSS.BIGDIMEN;
+	BBOX.w = 0; BBOX.lw = HTMLCSS.BIGDIMEN;
+	return BBOX;
+      },
+      HTMLcleanBBox: function (BBOX) {
+	if (BBOX.h === this.BIGDIMEN)
+	  {BBOX.h = BBOX.d = BBOX.H = BBOX.D = BBOX.w = BBOX.rw = BBOX.lw = 0}
+	if (BBOX.D <= BBOX.d) {delete BBOX.D}; if (BBOX.H <= BBOX.h) {delete BBOX.H}
+      },
+      HTMLzeroBBox: function () {return {h:0, d:0, w:0, lw: 0, rw:0}},
+      HTMLcanStretch: function (direction) {
+	if (this.isEmbellished()) {
+          var core = this.Core();
+          if (core && core !== this) {return core.HTMLcanStretch(direction)}
+        }
+	return false;
+      },
+      HTMLstretchH: function (box,W) {return this.HTMLspanElement()},
+      HTMLstretchV: function (box,h,d) {return this.HTMLspanElement()},
+      HTMLnotEmpty: function (data) {
+	while (data) {
+	  if ((data.type !== "mrow" && data.type !== "texatom") ||
+	       data.data.length > 1) {return true}
+	  data = data.data[0];
+	}
+	return false;
+      },
+
+      HTMLmeasureChild: function (n,box) {
+	if (this.data[n]) {HTMLCSS.Measured(this.data[n].toHTML(box),box)}
+	  else {box.bbox = this.HTMLzeroBBox()}
+      },
+      HTMLboxChild: function (n,box) {
+        if (!this.data[n]) {this.SetData(n,MML.mrow())}
+	return this.data[n].toHTML(box);
+      },
+
+      HTMLcreateSpan: function (span) {
+	if (this.spanID) {
+	  var SPAN = this.HTMLspanElement();
+	  if (SPAN && (SPAN.parentNode === span || (SPAN.parentNode||{}).parentNode === span)) {
+	    while (SPAN.firstChild) {SPAN.removeChild(SPAN.firstChild)}
+	    SPAN.bbox = this.HTMLzeroBBox();
+	    SPAN.scale = 1; SPAN.isMultChar = SPAN.HH = null;
+	    SPAN.style.cssText = "";
+	    return SPAN;
+	  }
+	}
+	if (this.href) {span = HTMLCSS.addElement(span,"a",{href:this.href, isMathJax:true})}
+	span = HTMLCSS.addElement(span,"span",{className: this.type, isMathJax:true});
+	if (HTMLCSS.imgHeightBug) {span.style.display = "inline-block"}
+	if (this["class"]) {span.className += " "+this["class"]}
+	if (!this.spanID) {this.spanID = HTMLCSS.GetID()}
+	span.id = (this.id || "MathJax-Span-"+this.spanID) + HTMLCSS.idPostfix;
+	span.bbox = this.HTMLzeroBBox(); this.styles = {};
+	if (this.style) {
+	  span.style.cssText = this.style;
+	  if (span.style.fontSize) {this.mathsize = span.style.fontSize; span.style.fontSize = ""}
+          this.styles = {border:HTMLCSS.getBorders(span), padding:HTMLCSS.getPadding(span)}
+          if (this.styles.border) {span.style.border = ""} // IE needs "0px none"?
+          if (this.styles.padding) {span.style.padding = ""}
+	}
+	if (this.href) {span.parentNode.bbox = span.bbox}
+        this.HTMLaddAttributes(span);
+	return span;
+      },
+      HTMLaddAttributes: function(span) {
+        //
+        //  Copy RDFa, aria, and other tags from the MathML to the HTML-CSS
+        //  output spans.  Don't copy those in the MML.nocopyAttributes list,
+        //  the ignoreMMLattributes configuration list, or anything that
+        //  already exists as a property of the span (e.g., no "onlick", etc.)
+        //  If a name in the ignoreMMLattributes object is set to false, then
+        //  the attribute WILL be copied.
+        //
+        if (this.attrNames) {
+          var copy = this.attrNames, skip = MML.nocopyAttributes, ignore = HUB.config.ignoreMMLattributes;
+          var defaults = (this.type === "mstyle" ? MML.math.prototype.defaults : this.defaults);
+          for (var i = 0, m = copy.length; i < m; i++) {
+            var id = copy[i];
+            if (ignore[id] == false || (!skip[id] && !ignore[id] &&
+                defaults[id] == null && typeof(span[id]) === "undefined")) {
+              span.setAttribute(id,this.attr[id])
+            }
+          }
+        }
+      },
+      HTMLspanElement: function () {
+	if (!this.spanID) {return null}
+	return document.getElementById((this.id||"MathJax-Span-"+this.spanID)+HTMLCSS.idPostfix);
+      },
+
+      HTMLhandleVariant: function (span,variant,text) {HTMLCSS.handleVariant(span,variant,text)},
+
+      HTMLhandleSize: function (span) {
+	if (!span.scale) {
+	  span.scale = this.HTMLgetScale();
+	  if (span.scale !== 1) {span.style.fontSize = HTMLCSS.Percent(span.scale)}
+	}
+	return span;
+      },
+
+      HTMLhandleDir: function (span) {
+        var dir = this.Get("dir",true); // only get value if not the default
+        if (dir) {span.dir = dir}
+        return span;
+      },
+
+      HTMLhandleColor: function (span) {
+	var values = this.getValues("mathcolor","color");
+	if (this.mathbackground) {values.mathbackground = this.mathbackground}
+	if (this.background) {values.background = this.background}
+        if (this.style && span.style.backgroundColor) {
+          values.mathbackground = span.style.backgroundColor;
+          span.style.backgroundColor = "transparent";
+        }
+        var borders = (this.styles||{}).border, padding = (this.styles||{}).padding;
+	if (values.color && !this.mathcolor) {values.mathcolor = values.color}
+	if (values.background && !this.mathbackground) {values.mathbackground = values.background}
+	if (values.mathcolor) {span.style.color = values.mathcolor}
+	if ((values.mathbackground && values.mathbackground !== MML.COLOR.TRANSPARENT) || 
+             borders || padding) {
+	  var bbox = span.bbox, dd = (bbox.exact ? 0 : 1/HTMLCSS.em), lW = 0, rW = 0,
+              lpad = span.style.paddingLeft, rpad = span.style.paddingRight;
+	  if (this.isToken) {lW = bbox.lw; rW = bbox.rw - bbox.w}
+	  if (lpad !== "") {lW += HTMLCSS.unEm(lpad)*(span.scale||1)}
+	  if (rpad !== "") {rW -= HTMLCSS.unEm(rpad)*(span.scale||1)}
+          var dw = (HTMLCSS.PaddingWidthBug || bbox.keepPadding || bbox.exactW ? 0 : rW - lW);
+	  var W = Math.max(0,HTMLCSS.getW(span) + dw);
+	  var H = bbox.h + bbox.d, D = -bbox.d, lp = 0, rp = 0;
+	  if (W > 0) {W += 2*dd; lW -= dd}; if (H > 0) {H += 2*dd; D -= dd}; rW = -W-lW;
+          if (borders) {
+            rW -= borders.right; D -= borders.bottom; lp += borders.left; rp += borders.right;
+            bbox.h += borders.top; bbox.d += borders.bottom;
+            bbox.w += borders.left + borders.right;
+            bbox.lw -= borders.left; bbox.rw += borders.right;
+          }
+          if (padding) {
+            H += padding.top + padding.bottom; W += padding.left + padding.right;
+            rW -= padding.right; D -= padding.bottom; lp += padding.left; rp += padding.right;
+            bbox.h += padding.top; bbox.d += padding.bottom;
+            bbox.w += padding.left + padding.right;
+            bbox.lw -= padding.left; bbox.rw += padding.right;
+          }
+          if (rp) {span.style.paddingRight = HTMLCSS.Em(rp)}
+	  var frame = HTMLCSS.Element("span",{
+            id:"MathJax-Color-"+this.spanID+HTMLCSS.idPostfix, isMathJax: true,
+	    style:{display:"inline-block", backgroundColor:values.mathbackground,
+		   width: HTMLCSS.Em(W), height:HTMLCSS.Em(H), verticalAlign: HTMLCSS.Em(D),
+		   marginLeft: HTMLCSS.Em(lW), marginRight: HTMLCSS.Em(rW)}
+	  });
+          HTMLCSS.setBorders(frame,borders);
+          if (bbox.width) {frame.style.width = bbox.width; frame.style.marginRight = "-"+bbox.width}
+	  if (HTMLCSS.msieInlineBlockAlignBug) {
+            // FIXME:  handle variable width background
+	    frame.style.position = "relative"; frame.style.width = frame.style.height = 0;
+	    frame.style.verticalAlign = frame.style.marginLeft = frame.style.marginRight = "";
+            frame.style.border = frame.style.padding = "";
+            if (borders && HTMLCSS.msieBorderWidthBug)
+              {H += borders.top + borders.bottom; W += borders.left + borders.right}
+            frame.style.width = HTMLCSS.Em(lp+dd);
+	    HTMLCSS.placeBox(HTMLCSS.addElement(frame,"span",{
+	      noAdjust: true, isMathJax: true,
+	      style: {display:"inline-block", position:"absolute", overflow:"hidden",
+		      background:(values.mathbackground||"transparent"), 
+                      width: HTMLCSS.Em(W), height: HTMLCSS.Em(H)}
+	    }),lW,bbox.h+dd);
+            HTMLCSS.setBorders(frame.firstChild,borders);
+	  }
+	  span.parentNode.insertBefore(frame,span);
+          if (HTMLCSS.msieColorPositionBug) {span.style.position = "relative"}
+	  return frame;
+	}
+	return null;
+      },
+      HTMLremoveColor: function () {
+	var color = document.getElementById("MathJax-Color-"+this.spanID+HTMLCSS.idPostfix);
+	if (color) {color.parentNode.removeChild(color)}
+      },
+
+      HTMLhandleSpace: function (span) {
+	if (this.useMMLspacing) {
+	  if (this.type !== "mo") return;
+	  var values = this.getValues("scriptlevel","lspace","rspace");
+          if (values.scriptlevel <= 0 || this.hasValue("lspace") || this.hasValue("rspace")) {
+            var mu = this.HTMLgetMu(span);
+	    values.lspace = Math.max(0,HTMLCSS.length2em(values.lspace,mu));
+	    values.rspace = Math.max(0,HTMLCSS.length2em(values.rspace,mu));
+	    var core = this, parent = this.Parent();
+	    while (parent && parent.isEmbellished() && parent.Core() === core)
+	      {core = parent; parent = parent.Parent(); span = core.HTMLspanElement()}
+	    if (values.lspace) {span.style.paddingLeft =  HTMLCSS.Em(values.lspace)}
+	    if (values.rspace) {span.style.paddingRight = HTMLCSS.Em(values.rspace)}
+	  }
+	} else {
+	  var space = this.texSpacing();
+	  if (space !== "") {
+            this.HTMLgetScale();
+	    space = HTMLCSS.length2em(space,this.scale)/(span.scale||1)*this.mscale;
+	    if (span.style.paddingLeft) {space += HTMLCSS.unEm(span.style.paddingLeft)}
+	    span.style.paddingLeft = HTMLCSS.Em(space);
+	  }
+	}
+      },
+
+      HTMLgetScale: function () {
+        if (this.scale) {return this.scale * this.mscale}
+	var scale = 1, values = this.getValues("scriptlevel","fontsize");
+        values.mathsize = (this.isToken ? this : this.Parent()).Get("mathsize");
+	if (this.style) {
+	  var span = this.HTMLspanElement();
+	  if (span.style.fontSize != "") {values.fontsize = span.style.fontSize}
+	}
+	if (values.fontsize && !this.mathsize) {values.mathsize = values.fontsize}
+	if (values.scriptlevel !== 0) {
+	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
+	  scale = Math.pow(this.Get("scriptsizemultiplier"),values.scriptlevel);
+	  values.scriptminsize = HTMLCSS.length2em(this.Get("scriptminsize"));
+	  if (scale < values.scriptminsize) {scale = values.scriptminsize}
+	}
+        this.scale = scale; this.mscale = HTMLCSS.length2em(values.mathsize);
+	return scale * this.mscale;
+      },
+      HTMLgetMu: function (span) {
+	var mu = 1, values = this.getValues("scriptlevel","scriptsizemultiplier");
+        if (span.scale && span.scale !== 1) {mu = 1/span.scale}
+	if (values.scriptlevel !== 0) {
+	  if (values.scriptlevel > 2) {values.scriptlevel = 2}
+	  mu = Math.sqrt(Math.pow(values.scriptsizemultiplier,values.scriptlevel));
+	}
+	return mu;
+      },
+
+      HTMLgetVariant: function () {
+	var values = this.getValues("mathvariant","fontfamily","fontweight","fontstyle");
+        values.hasVariant = this.Get("mathvariant",true);  // null if not explicitly specified
+        if (!values.hasVariant) {
+          values.family = values.fontfamily;
+          values.weight = values.fontweight;
+          values.style  = values.fontstyle;
+        }
+	if (this.style) {
+          var span = this.HTMLspanElement();
+	  if (!values.family && span.style.fontFamily) {values.family = span.style.fontFamily}
+	  if (!values.weight && span.style.fontWeight) {values.weight = span.style.fontWeight}
+	  if (!values.style  && span.style.fontStyle)  {values.style  = span.style.fontStyle}
+	}
+        if (values.weight && values.weight.match(/^\d+$/))
+            {values.weight = (parseInt(values.weight) > 600 ? "bold" : "normal")}
+	var variant = values.mathvariant; if (this.variantForm) {variant = "-"+HTMLCSS.fontInUse+"-variant"}
+	if (values.family && !values.hasVariant) {
+	  if (!values.weight && values.mathvariant.match(/bold/)) {values.weight = "bold"}
+	  if (!values.style && values.mathvariant.match(/italic/)) {values.style = "italic"}
+	  return {FONTS:[], fonts:[], noRemap:true,
+		  defaultFont: {family:values.family, style:values.style, weight:values.weight}};
+	}
+        if (values.weight === "bold") {
+          variant = {
+            normal:MML.VARIANT.BOLD, italic:MML.VARIANT.BOLDITALIC,
+            fraktur:MML.VARIANT.BOLDFRAKTUR, script:MML.VARIANT.BOLDSCRIPT,
+            "sans-serif":MML.VARIANT.BOLDSANSSERIF,
+            "sans-serif-italic":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.weight === "normal") {
+          variant = {
+            bold:MML.VARIANT.normal, "bold-italic":MML.VARIANT.ITALIC,
+            "bold-fraktur":MML.VARIANT.FRAKTUR, "bold-script":MML.VARIANT.SCRIPT,
+            "bold-sans-serif":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.SANSSERIFITALIC
+          }[variant]||variant;
+        }
+        if (values.style === "italic") {
+          variant = {
+            normal:MML.VARIANT.ITALIC, bold:MML.VARIANT.BOLDITALIC,
+            "sans-serif":MML.VARIANT.SANSSERIFITALIC,
+            "bold-sans-serif":MML.VARIANT.SANSSERIFBOLDITALIC
+          }[variant]||variant;
+        } else if (values.style === "normal") {
+          variant = {
+            italic:MML.VARIANT.NORMAL, "bold-italic":MML.VARIANT.BOLD,
+            "sans-serif-italic":MML.VARIANT.SANSSERIF,
+            "sans-serif-bold-italic":MML.VARIANT.BOLDSANSSERIF
+          }[variant]||variant;
+        }
+        if (!(variant in HTMLCSS.FONTDATA.VARIANT)) {
+          // If the mathvariant value is invalid or not supported by this
+          // font, fallback to normal. See issue 363.
+          variant = "normal";
+        }
+        return HTMLCSS.FONTDATA.VARIANT[variant];
+      },
+      
+      HTMLdrawBBox: function (span) {
+        var bbox = span.bbox;
+        var box = HTMLCSS.Element("span",
+          {style:{"font-size":span.style.fontSize, display:"inline-block",
+                  opacity:.25,"margin-left":HTMLCSS.Em(-bbox.w)}},[
+          ["span",{style:{
+            height:HTMLCSS.Em(bbox.h),width:HTMLCSS.Em(bbox.w),
+            "background-color":"red", display:"inline-block"
+          }}],
+          ["span",{style:{
+            height:HTMLCSS.Em(bbox.d),width:HTMLCSS.Em(bbox.w),
+            "margin-left":HTMLCSS.Em(-bbox.w),"vertical-align":HTMLCSS.Em(-bbox.d),
+            "background-color":"green", display:"inline-block"
+          }}]
+        ]);
+        if (span.nextSibling) {span.parentNode.insertBefore(box,span.nextSibling)}
+          else {span.parentNode.appendChild(box)}
+      }
+
+    },{
+      HTMLautoload: function () {
+	var file = HTMLCSS.autoloadDir+"/"+this.type+".js";
+	HUB.RestartAfter(AJAX.Require(file));
+      },
+      HTMLautoloadFile: function (name) {
+	var file = HTMLCSS.autoloadDir+"/"+name+".js";
+	HUB.RestartAfter(AJAX.Require(file));
+      },
+
+      HTMLstretchH: function (box,w) {
+	this.HTMLremoveColor();
+	return this.toHTML(box,w);
+      },
+
+      HTMLstretchV: function (box,h,d) {
+	this.HTMLremoveColor();
+	return this.toHTML(box,h,d);
+      }
+    });
+
+    MML.chars.Augment({
+      toHTML: function (span,variant,remap,chars) {
+        var text = this.data.join("").replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
+        if (variant.fontInherit) {
+          var scale = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%";
+          HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
+          span.bbox = null;
+          var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
+          span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        } else {
+          this.HTMLhandleVariant(span,variant,text);
+        }
+      }
+    });
+    MML.entity.Augment({
+      toHTML: function (span,variant,remap,chars) {
+        var text = this.toString().replace(/[\u2061-\u2064]/g,""); // remove invisibles
+        if (remap) {text = remap(text,chars)}
+        if (variant.fontInherit) {
+          var scale = Math.floor(HTMLCSS.config.scale/HTMLCSS.scale+.5) + "%";
+          HTMLCSS.addElement(span,"span",{style:{"font-size":scale}},[text]);
+          if (variant.bold)   {span.lastChild.style.fontWeight = "bold"}
+          if (variant.italic) {span.lastChild.style.fontStyle = "italic"}
+          delete span.bbox;
+          var HD = HTMLCSS.getHD(span), W = HTMLCSS.getW(span);
+          span.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        } else {
+          this.HTMLhandleVariant(span,variant,text);
+        }
+      }
+    });
+
+    MML.mi.Augment({
+      toHTML: function (span) {
+	span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
+	var variant = this.HTMLgetVariant();
+	for (var i = 0, m = this.data.length; i < m; i++)
+	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
+        var text = this.data.join(""), bbox = span.bbox;
+	if (bbox.skew && text.length !== 1) {delete bbox.skew}
+        if (bbox.rw > bbox.w && text.length === 1 && !variant.noIC) {
+          bbox.ic = bbox.rw - bbox.w;
+          HTMLCSS.createBlank(span,bbox.ic/this.mscale);
+          bbox.w = bbox.rw;
+        }
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
+	return span;
+      }
+    });
+
+    MML.mn.Augment({
+      toHTML: function (span) {
+	span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); span.bbox = null;
+	var variant = this.HTMLgetVariant();
+	for (var i = 0, m = this.data.length; i < m; i++)
+	  {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
+	if (this.data.join("").length !== 1) {delete span.bbox.skew}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
+	return span;
+      }
+    });
+
+    MML.mo.Augment({
+      toHTML: function (span) {
+	span = this.HTMLhandleSize(this.HTMLcreateSpan(span));
+	if (this.data.length == 0) {return span} else {span.bbox = null}
+	var text = this.data.join("");
+        //
+        //  Get the variant, and check for operator size
+        //
+	var variant = this.HTMLgetVariant();
+	var values = this.getValues("largeop","displaystyle");
+	if (values.largeop)
+	  {variant = HTMLCSS.FONTDATA.VARIANT[values.displaystyle ? "-largeOp" : "-smallOp"]}
+        //
+        //  Get character translation for superscript and accents
+        //
+        var parent = this.CoreParent(),
+            isScript = (parent && parent.isa(MML.msubsup) && this !== parent.data[parent.base]),
+            mapchars = (isScript?this.remapChars:null);
+        if (text.length === 1 && parent && parent.isa(MML.munderover) &&
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENT}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {mapchars = HTMLCSS.FONTDATA.REMAPACCENTUNDER}
+        }
+        //
+        //  STIX and TeX fonts need quotes from variant font
+        //
+        if (isScript && text.match(/['`"\u00B4\u2032-\u2037\u2057]/))
+          {variant = HTMLCSS.FONTDATA.VARIANT["-"+HTMLCSS.fontInUse+"-variant"]}
+        //
+        //  Typeset contents
+        //
+	for (var i = 0, m = this.data.length; i < m; i++)
+          {if (this.data[i]) {this.data[i].toHTML(span,variant,this.remap,mapchars)}}
+	if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
+	if (text.length !== 1) {delete span.bbox.skew}
+        //
+        //  Handle combining characters by adding a non-breaking space and removing that width
+        //
+	if (HTMLCSS.AccentBug && span.bbox.w === 0 && text.length === 1 && span.firstChild) {
+	  span.firstChild.nodeValue += HTMLCSS.NBSP;
+	  HTMLCSS.createSpace(span,0,0,-span.offsetWidth/HTMLCSS.em);
+	}
+        //
+        //  Handle large operator centering
+        //
+	if (values.largeop) {
+          var a = HTMLCSS.TeX.axis_height * this.scale * this.mscale
+	  var p = (span.bbox.h - span.bbox.d)/2 - a;
+	  if (HTMLCSS.safariVerticalAlignBug && span.lastChild.nodeName === "IMG") {
+	    span.lastChild.style.verticalAlign =
+	      HTMLCSS.Em(HTMLCSS.unEm(span.lastChild.style.verticalAlign||0)/HTMLCSS.em-p/span.scale);
+	  } else if (HTMLCSS.konquerorVerticalAlignBug && span.lastChild.nodeName === "IMG") {
+	    span.style.position = "relative";
+	    span.lastChild.style.position="relative";
+	    span.lastChild.style.top = HTMLCSS.Em(p/span.scale);
+	  } else {
+	    span.style.verticalAlign = HTMLCSS.Em(-p/span.scale);
+	  }
+	  span.bbox.h -= p; span.bbox.d += p;
+	  if (span.bbox.rw > span.bbox.w) {
+	    span.bbox.ic = span.bbox.rw-span.bbox.w;
+	    HTMLCSS.createBlank(span,span.bbox.ic/this.mscale);
+	    span.bbox.w = span.bbox.rw;
+	  }
+	}
+        //
+        //  Finish up
+        //
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
+	return span;
+      },
+      HTMLcanStretch: function (direction) {
+	if (!this.Get("stretchy")) {return false}
+	var c = this.data.join("");
+	if (c.length > 1) {return false}
+        var parent = this.CoreParent();
+        if (parent && parent.isa(MML.munderover) && 
+            this.CoreText(parent.data[parent.base]).length === 1) {
+          var over = parent.data[parent.over], under = parent.data[parent.under];
+          if (over && this === over.CoreMO() && parent.Get("accent")) {c = HTMLCSS.FONTDATA.REMAPACCENT[c]||c}
+          else if (under && this === under.CoreMO() && parent.Get("accentunder")) {c = HTMLCSS.FONTDATA.REMAPACCENTUNDER[c]||c}
+        }
+	c = HTMLCSS.FONTDATA.DELIMITERS[c.charCodeAt(0)];
+        var stretch = (c && c.dir === direction.substr(0,1));
+        this.forceStretch = (stretch && (this.Get("minsize",true) || this.Get("maxsize",true)));
+	return stretch;
+      },
+      HTMLstretchV: function (box,h,d) {
+	this.HTMLremoveColor();
+	var values = this.getValues("symmetric","maxsize","minsize");
+	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), H;
+	var scale = this.HTMLgetScale(), axis = HTMLCSS.TeX.axis_height * scale;
+	if (values.symmetric) {H = 2*Math.max(h-axis,d+axis)} else {H = h + d}
+	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.h+span.bbox.d);
+	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.h+span.bbox.d);
+	H = Math.max(values.minsize,Math.min(values.maxsize,H));
+        if (H != values.minsize)
+          {H = [Math.max(H*HTMLCSS.TeX.delimiterfactor/1000,H-HTMLCSS.TeX.delimitershortfall),H]}
+	span = this.HTMLcreateSpan(box); // clear contents and attributes
+	HTMLCSS.createDelimiter(span,this.data.join("").charCodeAt(0),H,scale);
+	if (values.symmetric) {H = (span.bbox.h + span.bbox.d)/2 + axis}
+	  else {H = (span.bbox.h + span.bbox.d) * h/(h + d)}
+	HTMLCSS.positionDelimiter(span,H);
+	this.HTMLhandleSpace(span); // add in lspace/rspace, if any
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: function (box,W) {
+	this.HTMLremoveColor();
+	var values = this.getValues("maxsize","minsize","mathvariant","fontweight");
+        // FIXME:  should take style="font-weight:bold" into account as well
+	if ((values.fontweight === "bold" || parseInt(values.fontweight) >= 600) &&
+            !this.Get("mathvariant",true)) {values.mathvariant = MML.VARIANT.BOLD}
+	var span = this.HTMLspanElement(), mu = this.HTMLgetMu(span), scale = span.scale;
+	values.maxsize = HTMLCSS.length2em(values.maxsize,mu,span.bbox.w);
+	values.minsize = HTMLCSS.length2em(values.minsize,mu,span.bbox.w);
+	W = Math.max(values.minsize,Math.min(values.maxsize,W));
+	span = this.HTMLcreateSpan(box); // clear contents and attributes
+	HTMLCSS.createDelimiter(span,this.data.join("").charCodeAt(0),W,scale,values.mathvariant);
+	this.HTMLhandleSpace(span); // add in lspace/rspace, if any
+	this.HTMLhandleColor(span);
+	return span;
+      }
+    });
+
+    MML.mtext.Augment({
+      toHTML: function (span) {
+        span = this.HTMLhandleSize(this.HTMLcreateSpan(span)); 
+        var variant = this.HTMLgetVariant();
+        //  Avoid setting the font style for error text or if mtextFontInherit is set
+        if (HTMLCSS.config.mtextFontInherit || this.Parent().type === "merror") {
+          var vname = this.Get("mathvariant");
+          if (vname === "monospace") {span.className += " MJX-monospace"}
+            else if (vname.match(/sans-serif/)) {span.className += " MJX-sans-serif"}
+          variant = {bold:variant.bold, italic:variant.italic, fontInherit: true};
+        }
+        for (var i = 0, m = this.data.length; i < m; i++)
+          {if (this.data[i]) {this.data[i].toHTML(span,variant)}}
+        if (!span.bbox) {span.bbox = this.HTMLzeroBBox()}
+        if (this.data.join("").length !== 1) {delete span.bbox.skew}
+        this.HTMLhandleSpace(span);
+        this.HTMLhandleColor(span);
+        this.HTMLhandleDir(span);
+        return span;
+      }
+    });
+    MML.merror.Augment({
+      toHTML: function (span) {
+        //
+        //  Width doesn't include padding and border, so use an extra inline block
+        //  element to capture it.
+        //  
+        var SPAN = MathJax.HTML.addElement(span,"span",{style:{display:"inline-block"}});
+        span = this.SUPER(arguments).toHTML.call(this,SPAN);
+        var HD = HTMLCSS.getHD(SPAN), W = HTMLCSS.getW(SPAN);
+        SPAN.bbox = {h:HD.h, d:HD.d, w:W, lw:0, rw:W, exactW: true};
+        SPAN.id = span.id; span.id = null;
+        return SPAN;
+      }
+    });
+
+    MML.ms.Augment({toHTML: MML.mbase.HTMLautoload});
+
+    MML.mglyph.Augment({toHTML: MML.mbase.HTMLautoload});
+
+    MML.mspace.Augment({
+      toHTML: function (span) {
+	span = this.HTMLcreateSpan(span);
+	var values = this.getValues("height","depth","width");
+        var mu = this.HTMLgetMu(span); this.HTMLgetScale();
+	values.mathbackground = this.mathbackground;
+	if (this.background && !this.mathbackground) {values.mathbackground = this.background}
+	var h = HTMLCSS.length2em(values.height,mu) * this.mscale,
+            d = HTMLCSS.length2em(values.depth,mu) * this.mscale,
+	    w = HTMLCSS.length2em(values.width,mu) * this.mscale;
+       HTMLCSS.createSpace(span,h,d,w,values.mathbackground,true);
+       return span;
+      }
+    });
+
+    MML.mphantom.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data[0] != null) {
+	  var box = this.data[0].toHTML(span);
+	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(span,HW,D),span)}
+	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(span,HW),span)}
+          else {box = HTMLCSS.Measured(box,span)}
+	  span.bbox = {w: box.bbox.w, h: box.bbox.h, d: box.bbox.d, lw: 0, rw: 0, exactW: true};
+	  for (var i = 0, m = span.childNodes.length; i < m; i++)
+	    {span.childNodes[i].style.visibility = "hidden"}
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.mpadded.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data[0] != null) {
+	  var stack = HTMLCSS.createStack(span,true);
+	  var box = HTMLCSS.createBox(stack);
+          var child = this.data[0].toHTML(box);
+	  if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
+	  else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+          else {HTMLCSS.Measured(child,box)}
+	  var values = this.getValues("height","depth","width","lspace","voffset"),
+              x = 0, y = 0, mu = this.HTMLgetMu(span);
+          this.HTMLgetScale();
+	  if (values.lspace)  {x = this.HTMLlength2em(box,values.lspace,mu)}
+	  if (values.voffset) {y = this.HTMLlength2em(box,values.voffset,mu)}
+	  HTMLCSS.placeBox(box,x,y); x /= this.mscale; y /= this.mscale;
+	  span.bbox = {
+	    h: box.bbox.h, d: box.bbox.d, w: box.bbox.w, exactW: true,
+            lw: box.bbox.lw+x, rw: box.bbox.rw+x,
+            H: Math.max((box.bbox.H == null ? -HTMLCSS.BIGDIMEN : box.bbox.H+y),box.bbox.h+y),
+            D: Math.max((box.bbox.D == null ? -HTMLCSS.BIGDIMEN : box.bbox.D-y),box.bbox.d-y)
+	  };
+	  if (values.height !== "") {span.bbox.h = this.HTMLlength2em(box,values.height,mu,"h",0)}
+	  if (values.depth  !== "") {span.bbox.d = this.HTMLlength2em(box,values.depth,mu,"d",0)}
+	  if (values.width  !== "") {span.bbox.w = this.HTMLlength2em(box,values.width,mu,"w",0)}
+	  if (span.bbox.H <= span.bbox.h) {delete span.bbox.H}
+	  if (span.bbox.D <= span.bbox.d) {delete span.bbox.D}
+          var dimen = /^\s*(\d+(\.\d*)?|\.\d+)\s*(pt|em|ex|mu|px|pc|in|mm|cm)\s*$/
+          span.bbox.exact = !!((this.data[0] && this.data[0].data.length == 0) ||
+             dimen.exec(values.height) || dimen.exec(values.width) || dimen.exec(values.depth));
+	  HTMLCSS.setStackWidth(stack,span.bbox.w);
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLlength2em: function (span,length,mu,d,m) {
+	if (m == null) {m = -HTMLCSS.BIGDIMEN}
+	var match = String(length).match(/width|height|depth/);
+	var size = (match ? span.bbox[match[0].charAt(0)] : (d ? span.bbox[d] : 0));
+	var v = HTMLCSS.length2em(length,mu,size/this.mscale) * this.mscale;
+	if (d && String(length).match(/^\s*[-+]/))
+	  {return Math.max(m,span.bbox[d]+v)} else {return v}
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.mrow.Augment({
+      HTMLlineBreaks: function (span) {
+        if (!this.parent.linebreakContainer) {return false}
+        return (HTMLCSS.config.linebreaks.automatic &&
+                span.bbox.w > HTMLCSS.linebreakWidth) || this.hasNewline();
+      },
+      HTMLstretchH: function (box,w) {
+	this.HTMLremoveColor();
+	var span = this.HTMLspanElement();
+	this.data[this.core].HTMLstretchH(span,w);
+	this.HTMLcomputeBBox(span,true);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchV: function (box,h,d) {
+	this.HTMLremoveColor();
+	var span = this.HTMLspanElement();
+	this.data[this.core].HTMLstretchV(span,h,d);
+	this.HTMLcomputeBBox(span,true);
+	this.HTMLhandleColor(span);
+	return span;
+      }
+    });
+
+    MML.mstyle.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data[0] != null) {
+	  var SPAN = this.data[0].toHTML(span);
+	  if (D != null) {this.data[0].HTMLstretchV(span,HW,D)}
+	  else if (HW != null) {this.data[0].HTMLstretchH(span,HW)}
+          span.bbox = SPAN.bbox;
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.mfrac.Augment({
+      toHTML: function (span) {
+	span = this.HTMLcreateSpan(span);
+	var frac = HTMLCSS.createStack(span);
+	var num = HTMLCSS.createBox(frac), den = HTMLCSS.createBox(frac);
+        HTMLCSS.MeasureSpans([this.HTMLboxChild(0,num),this.HTMLboxChild(1,den)]);
+        var values = this.getValues("displaystyle","linethickness","numalign","denomalign","bevelled");
+	var scale = this.HTMLgetScale(), isDisplay = values.displaystyle;
+	var a = HTMLCSS.TeX.axis_height * scale;
+	if (values.bevelled) {
+	  var delta = (isDisplay ? .4 : .15);
+	  var H = Math.max(num.bbox.h+num.bbox.d,den.bbox.h+den.bbox.d)+2*delta;
+	  var bevel = HTMLCSS.createBox(frac);
+	  HTMLCSS.createDelimiter(bevel,0x2F,H);
+	  HTMLCSS.placeBox(num,0,(num.bbox.d-num.bbox.h)/2+a+delta);
+	  HTMLCSS.placeBox(bevel,num.bbox.w-delta/2,(bevel.bbox.d-bevel.bbox.h)/2+a);
+	  HTMLCSS.placeBox(den,num.bbox.w+bevel.bbox.w-delta,(den.bbox.d-den.bbox.h)/2+a-delta);
+	} else {
+	  var W = Math.max(num.bbox.w,den.bbox.w);
+	  var t = HTMLCSS.thickness2em(values.linethickness,this.scale)*this.mscale, p,q, u,v;
+	  var mt = HTMLCSS.TeX.min_rule_thickness/this.em;
+	  if (isDisplay) {u = HTMLCSS.TeX.num1; v = HTMLCSS.TeX.denom1}
+	    else {u = (t === 0 ? HTMLCSS.TeX.num3 : HTMLCSS.TeX.num2); v = HTMLCSS.TeX.denom2}
+	  u *= scale; v *= scale;
+	  if (t === 0) {// \atop
+	    p = Math.max((isDisplay ? 7 : 3) * HTMLCSS.TeX.rule_thickness, 2*mt); // force to at least 2 px
+	    q = (u - num.bbox.d) - (den.bbox.h - v);
+	    if (q < p) {u += (p - q)/2; v += (p - q)/2}
+	  } else {// \over
+	    p = Math.max((isDisplay ? 2 : 0) * mt + t, t/2 + 1.5*mt);  // force to be at least 1.5px
+	    q = (u - num.bbox.d) - (a + t/2); if (q < p) {u += p - q}
+	    q = (a - t/2) - (den.bbox.h - v); if (q < p) {v += p - q}
+	    var rule = HTMLCSS.createBox(frac);
+	    HTMLCSS.createRule(rule,t,0,W+2*t);
+	    HTMLCSS.placeBox(rule,0,a-t/2);
+	  }
+	  HTMLCSS.alignBox(num,values.numalign,u);
+	  HTMLCSS.alignBox(den,values.denomalign,-v);
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLcanStretch: function (direction) {return false},
+      HTMLhandleSpace: function (span) {
+	if (!this.texWithDelims && !this.useMMLspacing) {
+          //
+          //  Add nulldelimiterspace around the fraction
+          //  (TeXBook pg 150 and Appendix G rule 15e)
+          //
+          var space = HTMLCSS.TeX.nulldelimiterspace * this.mscale;
+          var style = span.childNodes[HTMLCSS.msiePaddingWidthBug ? 1 : 0].style;
+          style.marginLeft = style.marginRight = HTMLCSS.Em(space);
+          span.bbox.w += 2*space; span.bbox.rw += 2*space;
+	}
+        this.SUPER(arguments).HTMLhandleSpace.call(this,span);
+      }
+    });
+
+    MML.msqrt.Augment({
+      toHTML: function (span) {
+	span = this.HTMLcreateSpan(span);
+	var sqrt = HTMLCSS.createStack(span);
+	var base = HTMLCSS.createBox(sqrt),
+	    rule = HTMLCSS.createBox(sqrt),
+	    surd = HTMLCSS.createBox(sqrt);
+	var scale = this.HTMLgetScale();
+	var t = HTMLCSS.TeX.rule_thickness * scale, p,q, H, W;
+	if (this.Get("displaystyle")) {p = HTMLCSS.TeX.x_height * scale} else {p = t}
+	q = Math.max(t + p/4,1.5*HTMLCSS.TeX.min_rule_thickness/this.em); // force to be at least 1px
+	var BASE = this.HTMLboxChild(0,base);
+	H = BASE.bbox.h + BASE.bbox.d + q + t;
+        HTMLCSS.createDelimiter(surd,0x221A,H,scale);
+	HTMLCSS.MeasureSpans([BASE,surd]);
+	W = BASE.bbox.w;
+	var x = 0;
+	if (surd.isMultiChar || (HTMLCSS.AdjustSurd && HTMLCSS.imgFonts)) {surd.bbox.w *= .95}
+	if (surd.bbox.h + surd.bbox.d > H) {q = ((surd.bbox.h+surd.bbox.d) - (H-t))/2}
+	var ruleC = HTMLCSS.FONTDATA.DELIMITERS[HTMLCSS.FONTDATA.RULECHAR];
+	if (!ruleC || W < ruleC.HW[0][0]*scale || scale < .75) {
+	  HTMLCSS.createRule(rule,0,t,W);
+	} else {
+	  HTMLCSS.createDelimiter(rule,HTMLCSS.FONTDATA.RULECHAR,W,scale);
+	}
+	H = BASE.bbox.h + q + t;
+        q = H*HTMLCSS.rfuzz; if (surd.isMultiChar) {q = HTMLCSS.rfuzz}
+	x = this.HTMLaddRoot(sqrt,surd,x,surd.bbox.h+surd.bbox.d-H,scale);
+	HTMLCSS.placeBox(surd,x,H-surd.bbox.h);
+	HTMLCSS.placeBox(rule,x+surd.bbox.w,H-rule.bbox.h+q);
+	HTMLCSS.placeBox(base,x+surd.bbox.w,0);
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLaddRoot: function (sqrt,surd,x,d,scale) {return x}
+    });
+
+    MML.mroot.Augment({
+      toHTML: MML.msqrt.prototype.toHTML,
+      HTMLaddRoot: function (sqrt,surd,x,d,scale) {
+	var box = HTMLCSS.createBox(sqrt);
+	if (this.data[1]) {
+	  var root = this.data[1].toHTML(box);
+	  root.style.paddingRight = root.style.paddingLeft = ""; // remove extra padding, if any
+	  HTMLCSS.Measured(root,box);
+	} else {box.bbox = this.HTMLzeroBBox()}
+	var h = this.HTMLrootHeight(surd.bbox.h+surd.bbox.d,scale,box)-d;
+	var w = Math.min(box.bbox.w,box.bbox.rw); // remove extra right-hand padding, if any
+	x = Math.max(w,surd.offset);
+	HTMLCSS.placeBox(box,x-w,h);
+	return x - surd.offset;
+      },
+      HTMLrootHeight: function (d,scale,root) {
+	return .45*(d-.9*scale)+.6*scale + Math.max(0,root.bbox.d-.075);
+      }
+    });
+
+    MML.mfenced.Augment({
+      toHTML: function (span) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data.open) {this.data.open.toHTML(span)}
+	if (this.data[0] != null) {this.data[0].toHTML(span)}
+	for (var i = 1, m = this.data.length; i < m; i++) {
+	  if (this.data[i]) {
+	    if (this.data["sep"+i]) {this.data["sep"+i].toHTML(span)}
+	    this.data[i].toHTML(span);
+	  }
+	}
+	if (this.data.close) {this.data.close.toHTML(span)}
+	var stretchy = this.HTMLcomputeBBox(span);
+	var h = span.bbox.h, d = span.bbox.d;
+	for (i = 0, m = stretchy.length; i < m; i++) {stretchy[i].HTMLstretchV(span,h,d)}
+	if (stretchy.length) {this.HTMLcomputeBBox(span,true)}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLcomputeBBox: function (span,full) {
+	var BBOX = span.bbox = {}, stretchy = [];
+	this.HTMLcheckStretchy(this.data.open,BBOX,stretchy,full);
+	this.HTMLcheckStretchy(this.data[0],BBOX,stretchy,full);
+	for (var i = 1, m = this.data.length; i < m; i++) {
+	  if (this.data[i]) {
+	    this.HTMLcheckStretchy(this.data["sep"+i],BBOX,stretchy,full);
+	    this.HTMLcheckStretchy(this.data[i],BBOX,stretchy,full);
+	  }
+	}
+	this.HTMLcheckStretchy(this.data.close,BBOX,stretchy,full);
+	this.HTMLcleanBBox(BBOX);
+	return stretchy;
+      },
+      HTMLcheckStretchy: function (core,BBOX,stretchy,full) {
+	if (core) {
+	  if (!full && core.HTMLcanStretch("Vertical"))
+	    {stretchy.push(core); core = (core.CoreMO()||core)}
+	  this.HTMLcombineBBoxes(core,BBOX);
+	}
+      }
+    });
+
+    MML.menclose.Augment({toHTML: MML.mbase.HTMLautoload});
+    MML.maction.Augment({toHTML: MML.mbase.HTMLautoload});
+
+    MML.semantics.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data[0] != null) {
+	  var SPAN = this.data[0].toHTML(span);
+	  if (D != null) {this.data[0].HTMLstretchV(span,HW,D)}
+	  else if (HW != null) {this.data[0].HTMLstretchH(span,HW)}
+          span.bbox = SPAN.bbox;
+	}
+	this.HTMLhandleSpace(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.munderover.Augment({
+      toHTML: function (span,HW,D) {
+	var values = this.getValues("displaystyle","accent","accentunder","align");
+        var base = this.data[this.base];
+	if (!values.displaystyle && base != null &&
+	    (base.movablelimits || base.CoreMO().Get("movablelimits")))
+	      {return MML.msubsup.prototype.toHTML.call(this,span)}
+	span = this.HTMLcreateSpan(span); var scale = this.HTMLgetScale();
+	var stack = HTMLCSS.createStack(span);
+	var boxes = [], children = [], stretch = [], box, i, m;
+	for (i = 0, m = this.data.length; i < m; i++) {
+	  if (this.data[i] != null) {
+	    box = boxes[i] = HTMLCSS.createBox(stack);
+	    children[i] = this.data[i].toHTML(box);
+	    if (i == this.base) {
+	      if (D != null) {this.data[this.base].HTMLstretchV(box,HW,D)}
+	      else if (HW != null) {this.data[this.base].HTMLstretchH(box,HW)}
+	      stretch[i] = (D == null && HW != null ? false :
+			   this.data[i].HTMLcanStretch("Horizontal"));
+	    } else {
+	      stretch[i] = this.data[i].HTMLcanStretch("Horizontal");
+              children[i].style.paddingLeft = children[i].style.paddingRight = "";
+	    }
+          }
+        }
+        HTMLCSS.MeasureSpans(children);
+        var W = -HTMLCSS.BIGDIMEN, WW = W;
+	for (i = 0, m = this.data.length; i < m; i++) {
+	  if (this.data[i]) {
+	    if (boxes[i].bbox.w > WW) {WW = boxes[i].bbox.w}
+	    if (!stretch[i] && WW > W) {W = WW}
+	  }
+	}
+	if (D == null && HW != null) {W = HW} else if (W == -HTMLCSS.BIGDIMEN) {W = WW}
+        for (i = WW = 0, m = this.data.length; i < m; i++) {if (this.data[i]) {
+          box = boxes[i];
+          if (stretch[i]) {
+            box.bbox = this.data[i].HTMLstretchH(box,W).bbox;
+            if (i !== this.base)
+              {children[i].style.paddingLeft = children[i].style.paddingRight = ""}
+          }
+          if (box.bbox.w > WW) {WW = box.bbox.w}
+        }}
+	var t = HTMLCSS.TeX.rule_thickness * this.mscale, factor = HTMLCSS.FONTDATA.TeX_factor;
+	var x, y, z1, z2, z3, dw, k, delta = 0;
+	base = boxes[this.base] || {bbox: this.HTMLzeroBBox()};
+        if (base.bbox.ic) {delta = 1.3*base.bbox.ic + .05} // adjust faked IC to be more in line with expeted results
+	for (i = 0, m = this.data.length; i < m; i++) {
+	  if (this.data[i] != null) {
+	    box = boxes[i];
+	    z3 = HTMLCSS.TeX.big_op_spacing5 * scale;
+	    var accent = (i != this.base && values[this.ACCENTS[i]]);
+	    if (accent && box.bbox.w <= 1/HTMLCSS.em+.0001) { // images can get the width off by 1px
+	      box.bbox.w = box.bbox.rw - box.bbox.lw; box.bbox.noclip = true;
+	      if (box.bbox.lw)
+		{box.insertBefore(HTMLCSS.createSpace(box.parentNode,0,0,-box.bbox.lw),box.firstChild)}
+	      HTMLCSS.createBlank(box,0,0,box.bbox.rw+.1);
+	    }
+	    dw = {left:0, center:(WW-box.bbox.w)/2, right:WW-box.bbox.w}[values.align];
+	    x = dw; y = 0;
+	    if (i == this.over) {
+	      if (accent) {
+		k = Math.max(t * scale * factor,2.5/this.em); z3 = 0;
+		if (base.bbox.skew) {
+                  x += base.bbox.skew; span.bbox.skew = base.bbox.skew;
+                  if (x+box.bbox.w > WW) {span.bbox.skew += (WW-box.bbox.w-x)/2}
+                }
+	      } else {
+		z1 = HTMLCSS.TeX.big_op_spacing1 * scale * factor;
+		z2 = HTMLCSS.TeX.big_op_spacing3 * scale * factor;
+		k = Math.max(z1,z2-Math.max(0,box.bbox.d));
+	      }
+	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
+	      x += delta/2; y = base.bbox.h + box.bbox.d + k;
+	      box.bbox.h += z3;
+	    } else if (i == this.under) {
+	      if (accent) {
+		k = 3*t * scale * factor; z3 = 0;
+	      } else {
+		z1 = HTMLCSS.TeX.big_op_spacing2 * scale * factor;
+		z2 = HTMLCSS.TeX.big_op_spacing4 * scale * factor;
+		k = Math.max(z1,z2-box.bbox.h);
+	      }
+	      k = Math.max(k,1.5/this.em); // force to be at least 1.5px
+	      x -= delta/2; y = -(base.bbox.d + box.bbox.h + k);
+	      box.bbox.d += z3;
+	    }
+	    HTMLCSS.placeBox(box,x,y);
+	  }
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.msubsup.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+        var scale = this.HTMLgetScale(), mu = this.HTMLgetMu(span);
+	var stack = HTMLCSS.createStack(span), values, children = [];
+	var base = HTMLCSS.createBox(stack);
+	if (this.data[this.base]) {
+          children.push(this.data[this.base].toHTML(base));
+	  if (D != null) {this.data[this.base].HTMLstretchV(base,HW,D)}
+	  else if (HW != null) {this.data[this.base].HTMLstretchH(base,HW)}
+	} else {base.bbox = this.HTMLzeroBBox()}
+	var x_height = HTMLCSS.TeX.x_height * scale,
+	    s = HTMLCSS.TeX.scriptspace * scale * .75;  // FIXME: .75 can be removed when IC is right?
+	var sup, sub;
+	if (this.HTMLnotEmpty(this.data[this.sup]))
+          {sup = HTMLCSS.createBox(stack); children.push(this.data[this.sup].toHTML(sup))}
+	if (this.HTMLnotEmpty(this.data[this.sub]))
+          {sub = HTMLCSS.createBox(stack); children.push(this.data[this.sub].toHTML(sub))}
+        HTMLCSS.MeasureSpans(children);
+	if (sup) {sup.bbox.w += s; sup.bbox.rw = Math.max(sup.bbox.w,sup.bbox.rw)}
+	if (sub) {sub.bbox.w += s; sub.bbox.rw = Math.max(sub.bbox.w,sub.bbox.rw)}
+	HTMLCSS.placeBox(base,0,0);
+        var sscale = scale;
+        if (sup) {
+          sscale = this.data[this.sup].HTMLgetScale();
+        } else if (sub) {
+          sscale = this.data[this.sub].HTMLgetScale();
+        }
+	var q = HTMLCSS.TeX.sup_drop * sscale, r = HTMLCSS.TeX.sub_drop * sscale;
+	var u = base.bbox.h - q, v = base.bbox.d + r, delta = 0, p;
+	if (base.bbox.ic) {
+          base.bbox.w -= base.bbox.ic;    // remove IC (added by mo and mi)
+          delta = 1.3*base.bbox.ic + .05; // adjust faked IC to be more in line with expected results
+        }
+	if (this.data[this.base] && HW == null && D == null &&
+	   (this.data[this.base].type === "mi" || this.data[this.base].type === "mo")) {
+	  if (this.data[this.base].data.join("").length === 1 && children[0].scale === 1 &&
+	      !this.data[this.base].Get("largeop")) {u = v = 0}
+	}
+	var min = this.getValues("subscriptshift","superscriptshift");
+	min.subscriptshift   = (min.subscriptshift === ""   ? 0 : HTMLCSS.length2em(min.subscriptshift,mu));
+	min.superscriptshift = (min.superscriptshift === "" ? 0 : HTMLCSS.length2em(min.superscriptshift,mu));
+	if (!sup) {
+	  if (sub) {
+	    v = Math.max(v,HTMLCSS.TeX.sub1*scale,sub.bbox.h-(4/5)*x_height,min.subscriptshift);
+	    HTMLCSS.placeBox(sub,base.bbox.w,-v,sub.bbox);
+	  }
+	} else {
+	  if (!sub) {
+	    values = this.getValues("displaystyle","texprimestyle");
+	    p = HTMLCSS.TeX[(values.displaystyle ? "sup1" : (values.texprimestyle ? "sup3" : "sup2"))];
+	    u = Math.max(u,p*scale,sup.bbox.d+(1/4)*x_height,min.superscriptshift);
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,u,sup.bbox);
+	  } else {
+	    v = Math.max(v,HTMLCSS.TeX.sub2*scale);
+	    var t = HTMLCSS.TeX.rule_thickness * scale;
+	    if ((u - sup.bbox.d) - (sub.bbox.h - v) < 3*t) {
+	      v = 3*t - u + sup.bbox.d + sub.bbox.h;
+	      q = (4/5)*x_height - (u - sup.bbox.d);
+	      if (q > 0) {u += q; v -= q}
+	    }
+	    HTMLCSS.placeBox(sup,base.bbox.w+delta,Math.max(u,min.superscriptshift));
+	    HTMLCSS.placeBox(sub,base.bbox.w,-Math.max(v,min.subscriptshift));
+	  }
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+
+    MML.mmultiscripts.Augment({toHTML: MML.mbase.HTMLautoload});
+
+    MML.mtable.Augment({toHTML: MML.mbase.HTMLautoload});
+    
+    MML["annotation-xml"].Augment({toHTML: MML.mbase.HTMLautoload});
+    MML.annotation.Augment({toHTML: function (span) {return this.HTMLcreateSpan(span)}});
+    
+    MML.math.Augment({
+      toHTML: function (span,node,phase) {
+        var stack, box, html, math, SPAN = span;
+        //
+        //  Phase I lays out the math, but doesn't measure the final math yet
+        //  (that is done for a chunk at a time, to avoid reflows)
+        //
+        if (!phase || phase === HTMLCSS.PHASE.I) {
+          var nobr = HTMLCSS.addElement(span,"nobr",{isMathJax: true});
+          span = this.HTMLcreateSpan(nobr);
+          var alttext = this.Get("alttext");
+          if (alttext && !span.getAttribute("aria-label")) span.setAttribute("aria-label",alttext);
+          if (!span.getAttribute("role")) span.setAttribute("role","math");
+	  stack = HTMLCSS.createStack(span); box = HTMLCSS.createBox(stack);
+          // Move font-size from outer span to stack to avoid line separation 
+          // problem in strict HTML mode
+          stack.style.fontSize = nobr.parentNode.style.fontSize; nobr.parentNode.style.fontSize = "";
+          if (this.data[0] != null) {
+            MML.mbase.prototype.displayAlign = HUB.config.displayAlign;
+            MML.mbase.prototype.displayIndent = HUB.config.displayIndent;
+            if (String(HUB.config.displayIndent).match(/^0($|[a-z%])/i))
+              MML.mbase.prototype.displayIndent = "0";
+            html = this.data[0].toHTML(box); html.bbox.exactW = false; // force remeasure just to be sure
+	  }
+        } else {
+          span = span.firstChild.firstChild;
+          if (this.href) span = span.firstChild;
+          stack = span.firstChild;
+          if (stack.style.position !== "relative") stack = stack.nextSibling;
+          box = stack.firstChild;
+          html = box.firstChild;
+        }
+        //
+        //  Phase II measures the math (this is done for each one in the chunk at once)
+        //
+        math = ((!phase || phase === HTMLCSS.PHASE.II) ? HTMLCSS.Measured(html,box) : html);
+        //
+        //  Phase III finishes the layout using the measured math
+        //
+        if (!phase || phase === HTMLCSS.PHASE.III) {
+          HTMLCSS.placeBox(box,0,0);
+          //
+          //  Get width right if minimum font size is set:
+          //    Round to nearest pixel (plus a small amount), and convert back to outer-em's.
+          //    Add the width to the span (outside the MathJax class, so uses outer em size,
+          //    which makes it work even when minimum font size is in effect).
+          //
+          span.style.width = HTMLCSS.Em(Math.max(0,Math.round(math.bbox.w*this.em)+.25)/HTMLCSS.outerEm);
+          span.style.display = "inline-block";
+          //
+          //  Adjust bbox to match outer em-size
+          // 
+          var p = 1/HTMLCSS.em, f = HTMLCSS.em / HTMLCSS.outerEm; HTMLCSS.em /= f;
+          span.bbox.h *= f; span.bbox.d *= f; span.bbox.w *= f;
+          span.bbox.lw *= f; span.bbox.rw *= f;
+          if (span.bbox.H) {span.bbox.H *= f}
+          if (span.bbox.D) {span.bbox.D *= f}
+          if (math && math.bbox.width != null) {
+            span.style.minWidth = (math.bbox.minWidth || span.style.width);
+            span.style.width = math.bbox.width;
+            box.style.width = stack.style.width = SPAN.style.width = "100%";
+          }
+          //
+          //  Add color (if any)
+          //
+          var color = this.HTMLhandleColor(span);
+          //
+          //  Make math span be the correct height and depth
+          //
+          if (math) {HTMLCSS.createRule(span,(math.bbox.h+p)*f,(math.bbox.d+p)*f,0)}
+          //
+          //  Handle indentalign and indentshift for single-line display equations
+          //
+          if (!this.isMultiline && this.Get("display") === "block" && span.bbox.width == null) {
+            var values = this.getValues("indentalignfirst","indentshiftfirst","indentalign","indentshift");
+            if (values.indentalignfirst !== MML.INDENTALIGN.INDENTALIGN) {values.indentalign = values.indentalignfirst}
+            if (values.indentalign === MML.INDENTALIGN.AUTO) {values.indentalign = this.displayAlign}
+            if (values.indentshiftfirst !== MML.INDENTSHIFT.INDENTSHIFT) {values.indentshift = values.indentshiftfirst}
+            if (values.indentshift === "auto") {values.indentshift = "0"}
+            var shift = HTMLCSS.length2em(values.indentshift,1,HTMLCSS.scale*HTMLCSS.cwidth);
+            if (this.displayIndent !== "0") {
+              var indent = HTMLCSS.length2em(this.displayIndent,1,HTMLCSS.scale*HTMLCSS.cwidth);
+              shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
+            }
+            node.style.textAlign = values.indentalign;
+            // ### FIXME: make percentage widths respond to changes in container
+            if (shift) {
+              HUB.Insert(span.style,({
+                left: {marginLeft: HTMLCSS.Em(shift)},
+                right: {marginRight: HTMLCSS.Em(-shift)},
+                center: {marginLeft: HTMLCSS.Em(shift), marginRight: HTMLCSS.Em(-shift)}
+              })[values.indentalign]);
+              //
+              //  Move the background color, of any
+              //
+	      if (color) {
+                var L = parseFloat(color.style.marginLeft||"0")+shift,
+                    R = parseFloat(color.style.marginRight||"0")-shift;
+	        color.style.marginLeft = HTMLCSS.Em(L);
+	        color.style.marginRight =
+	          HTMLCSS.Em(R + (values.indentalign === "right" ?
+                      span.bbox.w+shift - span.bbox.w : 0));
+		if (HTMLCSS.msieColorBug && values.indentalign === "right") {
+                  if (parseFloat(color.style.marginLeft) > 0) {
+                    var padding = MathJax.HTML.addElement(color.parentNode,"span");
+                    padding.style.marginLeft = HTMLCSS.Em(R+Math.min(0,span.bbox.w+shift));
+                    color.nextSibling.style.marginRight = "0em";
+                  }
+		  color.nextSibling.style.marginLeft = "0em";
+		  color.style.marginRight = color.style.marginLeft = "0em";
+		}
+	      }
+            }
+          }
+        }
+	return span;
+      },
+      HTMLspanElement: MML.mbase.prototype.HTMLspanElement
+    });
+
+    MML.TeXAtom.Augment({
+      toHTML: function (span,HW,D) {
+	span = this.HTMLcreateSpan(span);
+	if (this.data[0] != null) {
+	  if (this.texClass === MML.TEXCLASS.VCENTER) {
+	    var stack = HTMLCSS.createStack(span);
+	    var box = HTMLCSS.createBox(stack);
+            var child = this.data[0].toHTML(box);
+            if (D != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchV(box,HW,D),box)}
+            else if (HW != null) {HTMLCSS.Remeasured(this.data[0].HTMLstretchH(box,HW),box)}
+            else {HTMLCSS.Measured(child,box)}
+            var a = HTMLCSS.TeX.axis_height * this.HTMLgetScale();
+	    HTMLCSS.placeBox(box,0,a-(box.bbox.h+box.bbox.d)/2+box.bbox.d);
+	  } else {
+	    var html = this.data[0].toHTML(span,HW,D);
+            if (D != null) {html = this.data[0].HTMLstretchV(box,HW,D)}
+            else if (HW != null) {html = this.data[0].HTMLstretchH(box,HW)}
+            span.bbox = html.bbox;
+	  }
+	}
+	this.HTMLhandleSpace(span);
+	this.HTMLhandleColor(span);
+	return span;
+      },
+      HTMLstretchH: MML.mbase.HTMLstretchH,
+      HTMLstretchV: MML.mbase.HTMLstretchV
+    });
+    
+    //
+    //  Loading isn't complete until the element jax is modified,
+    //  but can't call loadComplete within the callback for "mml Jax Ready"
+    //  (it would call HTMLCSS's Require routine, asking for the mml jax again)
+    //  so wait until after the mml jax has finished processing.
+    //  
+    //  We also need to wait for the onload handler to run, since the loadComplete
+    //  will call Config and Startup, which need to modify the body.
+    //
+    HUB.Register.StartupHook("onLoad",function () {
+      setTimeout(MathJax.Callback(["loadComplete",HTMLCSS,"jax.js"]),0);
+    });
+  });
+
+  HUB.Register.StartupHook("End Config",function () {
+    
+    //
+    //  Handle browser-specific setup
+    //
+    HUB.Browser.Select({
+      MSIE: function (browser) {
+        var mode = (document.documentMode || 0);
+        var isIE7 = browser.versionAtLeast("7.0");
+        var isIE8 = browser.versionAtLeast("8.0") && mode > 7;
+        var quirks = (document.compatMode === "BackCompat");
+        if (mode < 9) {
+          // IE doesn't do mouse events on trasparent objects,
+          //   so give a background color, but opacity makes it transparent
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"]["background-color"] = "white";
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].opacity = 0
+          HTMLCSS.config.styles[".MathJax .MathJax_HitBox"].filter = "alpha(opacity=0)";
+        }
+        // FIXME:  work out tests for these?
+        HTMLCSS.Augment({
+          PaddingWidthBug: true,
+          msieAccentBug: true,
+          msieColorBug: (mode < 8),      // negative margin-right doesn't work to position color
+          msieColorPositionBug: true,    // needs position:relative to put color behind text
+          msieRelativeWidthBug: quirks,
+          msieDisappearingBug: (mode >= 8), // inline math disappears
+          msieMarginScaleBug: (mode < 8),   // relative margins are not scaled properly by font-size
+          msiePaddingWidthBug: true,
+          msieBorderWidthBug: quirks,
+          msieFrameSizeBug: (mode <= 8),    // crashes if size of box isn't big enough for border
+          msieInlineBlockAlignBug: (!isIE8 || quirks),
+          msiePlaceBoxBug: (isIE8 && !quirks),
+          msieClipRectBug: !isIE8,
+          msieNegativeSpaceBug: quirks,
+          msieRuleBug: (mode < 7),           // rules need to be measured
+          cloneNodeBug: (isIE8 && browser.version === "8.0"),
+          msieItalicWidthBug: true,          // can't measure boxes ending in italics correctly
+          initialSkipBug: (mode < 8),        // confused by initial left-margin values
+          msieNegativeBBoxBug: (mode >= 8),  // negative bboxes have positive widths
+          msieIE6: !isIE7,
+          msieItalicWidthBug: true,
+          FontFaceBug: (mode < 9),
+          msieFontCSSBug: browser.isIE9,
+          allowWebFonts: (mode >= 9 ? "woff" : "eot")
+        });
+      },
+
+      Firefox: function (browser) {
+        var webFonts = false;
+        if (browser.versionAtLeast("3.5")) {
+          var root = String(document.location).replace(/[^\/]*$/,"");
+          if (document.location.protocol !== "file:" || HUB.config.root.match(/^https?:\/\//) ||
+              (HUB.config.root+"/").substr(0,root.length) === root) {webFonts = "otf"}
+        }
+        HTMLCSS.Augment({
+          ffVerticalAlignBug: !browser.versionAtLeast("20.0"),  // not sure when this bug was fixed
+          AccentBug: true,
+          allowWebFonts: webFonts,
+          ffFontOptimizationBug: true
+        });
+      },
+
+      Safari: function (browser) {
+        var v3p0 = browser.versionAtLeast("3.0");
+        var v3p1 = browser.versionAtLeast("3.1");
+        var trueSafari = navigator.appVersion.match(/ Safari\/\d/) &&
+                         navigator.appVersion.match(/ Version\/\d/) &&
+                         navigator.vendor.match(/Apple/);
+        var android = (navigator.appVersion.match(/ Android (\d+)\.(\d+)/));
+        var forceImages = (v3p1 && browser.isMobile && (
+          (navigator.platform.match(/iPad|iPod|iPhone/) && !browser.versionAtLeast("5.0")) ||
+          (android != null && (android[1] < 2 || (android[1] == 2 && android[2] < 2)))
+        ));
+        HTMLCSS.Augment({
+          config: {
+            styles: {
+              ".MathJax img, .MathJax nobr, .MathJax a": {
+                // "none" seems to work like "0px" when width is initially 0
+                "max-width": "5000em", "max-height": "5000em"
+              }
+            }
+          },
+          Em: ((browser.webkit||0) >= 538 ? HTMLCSS.EmRounded : HTMLCSS.Em), // issue #931
+          rfuzz: .011,
+          AccentBug: true,
+          AdjustSurd: true,
+          negativeBBoxes: true,
+          safariNegativeSpaceBug: true,
+          safariVerticalAlignBug: !v3p1,
+          safariTextNodeBug: !v3p0,
+          forceReflow: true,
+          FontFaceBug: true,
+          allowWebFonts: (v3p1 && !forceImages ? "otf" : false)
+        });
+        if (trueSafari) {
+          HTMLCSS.Augment({
+            webFontDefault: (browser.isMobile ? "sans-serif" : "serif")
+          });
+        }
+        if (browser.isPC) {
+          HTMLCSS.Augment({
+            adjustAvailableFonts: HTMLCSS.removeSTIXfonts,  // can't access plane1
+            checkWebFontsTwice: true  // bug in Safari/Win that doesn't update font test div properly
+          });
+        }
+        if (forceImages) {
+          //  Force image mode for iOS prior to 4.2 and Droid prior to 2.2
+          var config = HUB.config["HTML-CSS"];
+          if (config) {config.availableFonts = []; config.preferredFont = null}
+            else {HUB.config["HTML-CSS"] = {availableFonts: [], preferredFont: null}}
+        }
+      },
+
+      Chrome: function (browser) {
+        HTMLCSS.Augment({
+          Em: HTMLCSS.EmRounded,   // vertical alignment needs help (since around v20)
+          cloneNodeBug: true,      // Chrome gets heights wrong with the cloned ones
+          rfuzz: -.02,
+          AccentBug: true,
+          AdjustSurd: true,
+          FontFaceBug: browser.versionAtLeast("32.0"), // Chrome 32 fails on bold-italic (#735)
+          negativeBBoxes: true,
+          safariNegativeSpaceBug: true,
+          safariWebFontSerif: [""],
+          forceReflow: true,
+          allowWebFonts: (browser.versionAtLeast("4.0") ? "otf" : "svg")
+        });
+      },
+
+      Opera: function (browser) {
+        browser.isMini = (navigator.appVersion.match("Opera Mini") != null);
+        HTMLCSS.config.styles[".MathJax .merror"]["vertical-align"] = null;
+        HTMLCSS.config.styles[".MathJax span"]["z-index"] = 0;
+        HTMLCSS.Augment({
+          operaHeightBug: true,
+          operaVerticalAlignBug: true,
+          operaFontSizeBug: browser.versionAtLeast("10.61"),
+          initialSkipBug: true,
+          FontFaceBug: true,
+          PaddingWidthBug: true,
+          allowWebFonts: (browser.versionAtLeast("10.0") && !browser.isMini ? "otf" : false),
+          adjustAvailableFonts: HTMLCSS.removeSTIXfonts
+        });
+      },
+
+      Konqueror: function (browser) {
+        HTMLCSS.Augment({
+          konquerorVerticalAlignBug: true
+        });
+      }
+    });
+  
+  });
+
+  MathJax.Hub.Register.StartupHook("End Cookie", function () {  
+    if (HUB.config.menuSettings.zoom !== "None")
+      {AJAX.Require("[MathJax]/extensions/MathZoom.js")}
+  });
+    
+})(MathJax.Ajax, MathJax.Hub, MathJax.OutputJax["HTML-CSS"]);
