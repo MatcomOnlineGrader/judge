@@ -44,7 +44,7 @@ class SubmissionListView(generic.ListView):
             queryset = queryset.filter(user__username__contains=username)
         if problem:
             queryset = queryset.filter(problem__title__contains=problem)
-        return queryset.order_by('-id')
+        return queryset.order_by('-id').select_related('user', 'result')
 
     def get_context_data(self, **kwargs):
         context = super(SubmissionListView, self).get_context_data(**kwargs)
