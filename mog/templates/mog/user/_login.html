@@ -1,25 +1,27 @@
-﻿{% if user.is_authenticated %}
+﻿{% load i18n %}
+
+{% if user.is_authenticated %}
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
            aria-expanded="false">
             {{ user.username }}
             <span class="caret"></span></a>
         <ul class="dropdown-menu">
-            <li><a href="#"><i class="glyphicon glyphicon-inbox"></i> Inbox</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-share"></i> Outbox</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-inbox"></i> {% trans 'Inbox' %}</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-share"></i> {% trans 'Outbox' %}</a></li>
             <li class="divider"></li>
-            <li><a href="{% url 'mog:user' user.id %}"><i class="glyphicon glyphicon-user"></i> View profile</a></li>
-            <li><a href="{% url 'mog:user_edit' user.id %}"><i class="glyphicon glyphicon-edit"></i> Edit profile</a></li>
-            <li><a href="{% url 'mog:post_create' %}"><i class="glyphicon glyphicon-pencil"></i>Add blog entry</a></li>
+            <li><a href="{% url 'mog:user' user.id %}"><i class="glyphicon glyphicon-user"></i> {% trans 'View profile' %}</a></li>
+            <li><a href="{% url 'mog:user_edit' user.id %}"><i class="glyphicon glyphicon-edit"></i> {% trans 'Edit profile' %}</a></li>
+            <li><a href="{% url 'mog:post_create' %}"><i class="glyphicon glyphicon-pencil"></i>{% trans 'Add blog entry' %}</a></li>
             <li class="divider"></li>
-            <li><a href="{% url 'mog:logout' %}">Logout</a></li>
+            <li><a href="{% url 'mog:logout' %}">{% trans 'Logout' %}</a></li>
         </ul>
     </li>
 {% else %}
     <li>
-        <a href="{% url 'mog:login' %}">Login</a>
+        <a href="{% url 'mog:login' %}">{% trans 'Login' %}</a>
     </li>
     <li>
-        <a href="{% url 'mog:register' %}">Register</a>
+        <a href="{% url 'mog:register' %}">{% trans 'Register' %}</a>
     </li>
 {% endif %}

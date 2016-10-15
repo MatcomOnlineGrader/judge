@@ -117,13 +117,13 @@
             <div class="container">
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{% url 'mog:index' %}">Home</a></li>
+                        <li><a href="{% url 'mog:index' %}">{% trans 'Home' %}</a></li>
                         <li><a href="{% url 'mog:users' %}">{% trans 'Users' %}</a></li>
-                        <li><a href="{% url 'mog:problems' %}">Problems</a></li>
-                        <li><a href="{% url 'mog:contests' %}">Contests</a></li>
-                        <li><a href="{% url 'mog:posts' %}">Posts</a></li>
-                        <li><a href="{% url 'mog:submissions' %}">Submissions</a></li>
-                        <li><a href="{% url 'mog:faq' %}">FAQ</a></li>
+                        <li><a href="{% url 'mog:problems' %}">{% trans 'Problems' %}</a></li>
+                        <li><a href="{% url 'mog:contests' %}">{% trans 'Contests' %}</a></li>
+                        <li><a href="{% url 'mog:posts' %}">{% trans 'Posts' %}</a></li>
+                        <li><a href="{% url 'mog:submissions' %}">{% trans 'Submissions' %}</a></li>
+                        <li><a href="{% url 'mog:faq' %}">{% trans 'FAQ' %}</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
                         {% block user_login %}
@@ -163,7 +163,7 @@
                             </div>
                             <h1>
                                 Matcom Online Grader<br/>
-                                <small>Faculty of Mathematics and Computer Science of University of Havana</small>
+                                <small>{% trans 'Faculty of Mathematics and Computer Science of University of Havana' %}</small>
                             </h1>
                         </div>
                     </div>

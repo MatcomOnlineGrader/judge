@@ -1,35 +1,16 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-15 02:56-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: judge/settings.py:156
+#: judge/settings.py:160
 msgid "Spanish"
 msgstr ""
 
-#: judge/settings.py:157
+#: judge/settings.py:161
 msgid "English"
 msgstr ""
 
 #: mog/templates/mog/account/password_reset_complete.html:6
 #: mog/templates/mog/account/password_reset_confirm.html:6
+#: mog/templates/mog/base.html:120
 msgid "Home"
-msgstr ""
+msgstr "Inicio"
 
 #: mog/templates/mog/account/password_reset_complete.html:7
 msgid "Password reset"
@@ -74,6 +55,62 @@ msgstr ""
 #: mog/templates/mog/base.html:121
 msgid "Users"
 msgstr "Usuarios"
+
+#: mog/templates/mog/base.html:122
+msgid "Problems"
+msgstr "Problemas"
+
+#: mog/templates/mog/base.html:123
+msgid "Contests"
+msgstr "Concursos"
+
+#: mog/templates/mog/base.html:124
+msgid "Posts"
+msgstr "Publicaciones"
+
+#: mog/templates/mog/base.html:125
+msgid "Submissions"
+msgstr "Envios"
+
+#: mog/templates/mog/base.html:126
+msgid "FAQ"
+msgstr "Ayuda"
+
+#: mog/templates/mog/base.html:166
+msgid "Faculty of Mathematics and Computer Science of University of Havana"
+msgstr "Facultad de Matematica Computacion de La Universidad de La Habana"
+
+#: mog/templates/mog/user/_login.html:10
+msgid "Inbox"
+msgstr "Bandeja de entrada"
+
+#: mog/templates/mog/user/_login.html:11
+msgid "Outbox"
+msgstr "Bandeja de salida"
+
+#: mog/templates/mog/user/_login.html:13
+msgid "View profile"
+msgstr "Ver perfil"
+
+#: mog/templates/mog/user/_login.html:14
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: mog/templates/mog/user/_login.html:15
+msgid "Add blog entry"
+msgstr "Escribir publicacion"
+
+#: mog/templates/mog/user/_login.html:17
+msgid "Logout"
+msgstr "Salir"
+
+#: mog/templates/mog/user/_login.html:22
+msgid "Login"
+msgstr "Entrar"
+
+#: mog/templates/mog/user/_login.html:25
+msgid "Register"
+msgstr "Crear cuenta"
 
 #: venv/lib/python2.7/site-packages/django/contrib/messages/apps.py:7
 msgid "Messages"
