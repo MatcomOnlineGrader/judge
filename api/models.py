@@ -446,7 +446,11 @@ class UserProfile(models.Model):
 
     @property
     def points(self):
-        pass
+        submissions = Submission.objects.filter(
+            Q(user=self.user) & Q(result__name__iexact='accepted') &
+            Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True))
+        ).distinct('problem_id').select_related('problem')
+        return sum([submission.problem.points for submission in submissions])
 
     @property
     def solved_problems(self):
