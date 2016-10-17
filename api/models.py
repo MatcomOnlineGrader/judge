@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
-from django.db.models import F
+from django.db.models import F, Count
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
 
@@ -446,11 +446,8 @@ class UserProfile(models.Model):
 
     @property
     def points(self):
-        submissions = Submission.objects.filter(
-            Q(user=self.user) & Q(result__name__iexact='accepted') &
-            Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True))
-        ).distinct('problem_id').select_related('problem')
-        return sum([submission.problem.points for submission in submissions])
+        pass
+
 
     @property
     def solved_problems(self):
