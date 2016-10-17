@@ -218,10 +218,12 @@ class Problem(models.Model):
         self.slug = slugify(self.title)
         super(Problem, self).save(*args, **kwargs)
 
-    def _accepted_submissions(self):
+    def _visible_submissions(self):
         return self.submissions. \
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)) &
-                   Q(result__name__iexact='accepted'))
+            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+
+    def _accepted_submissions(self):
+        return self._visible_submissions().filter(result__name__iexact='accepted')
 
     @staticmethod
     def get_visible_problems(admin=False):
@@ -242,27 +244,33 @@ class Problem(models.Model):
         return self.letter + ' - ' + self.title
 
     @property
-    def points(self):
-        pass
-
-    @property
     def user_submitted(self):
-        return len(set([s.user_id for s in self.submissions. \
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)) & Q(result__name__iexact='accepted'))]))
+        """Number of users that have at least one submission to this problem"""
+        return self._visible_submissions().distinct('user_id').count()
 
     @property
     def accepted_submissions(self):
+        """Number of accepted submissions"""
         return self._accepted_submissions().count()
 
     @property
     def total_submissions(self):
-        return self.submissions. \
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True))).count()
+        """Total number of submissions"""
+        return self._visible_submissions().count()
+
+    @property
+    def solved(self):
+        """Return number of contestant whom solved this problem"""
+        return self._accepted_submissions().distinct('user_id').count()
 
     @property
     def solved_in_real(self):
         """Return number of contestants whom solved this problem in a real contest"""
-        return self._accepted_submissions().filter(instance__real=True).count()
+        return self._accepted_submissions().filter(instance__real=True).distinct('user_id').count()
+
+    @property
+    def points(self):
+        return 108 / (12 + self.solved) + 1
 
 
 class Post(models.Model):
