@@ -61,7 +61,14 @@
             var data = [
                 {% for r in user_in_profile.profile.get_ratings %}
                     {% if forloop.counter > 1 %},{% endif %}
-                    { date: '{{ r.date }}', name: '{{ r.name }}', url: '{{ r.url }}', rating: {{ r.rating }}, change: {{ r.change }} }
+                    {
+                        date: '{{ r.date }}',
+                        name: '{{ r.name }}',
+                        url: '{{ r.url }}',
+                        rating: {{ r.rating }},
+                        change: {{ r.change }},
+                        rank: {{ r.rank }}
+                    }
                 {% endfor %}
             ];
 
