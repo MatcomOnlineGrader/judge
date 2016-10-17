@@ -2,6 +2,7 @@
 
 {% load security %}
 {% load filters %}
+{% load i18n %}
 
 {% block title %}{{ problem.title }}{% endblock %}
 
@@ -20,43 +21,47 @@
                 <div class="col-md-8 col-md-offset-2">
                     <div class="col-md-4">
                         <a href="#" data-toggle="modal" data-target="#remove-problem-{{ problem.id }}" class="no-underline">
-                            <i class="glyphicon glyphicon-remove"></i> Remove problem
+                            <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove problem' %}
                         </a>
                     </div>
                     <div class="col-md-4">
                         <a href="{% url 'mog:problem_tests' problem.id %}" class="no-underline">
-                            <i class="glyphicon glyphicon-list"></i> Edit tests
+                            <i class="glyphicon glyphicon-list"></i> {% trans 'Edit tests' %}
                         </a>
                     </div>
                     <div class="col-md-4">
                         <a href="{% url 'mog:problem_edit' problem.id %}" class="no-underline">
-                            <i class="glyphicon glyphicon-pencil"></i> Edit problem
+                            <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit problem' %}
                         </a>
                     </div>
                 </div>
             {% endif %}
 
             <div class="col-md-12">
-                <h5>Time limit: {{ problem.time_limit }} second{{ problem.time_limit|pluralize }}</h5>
-                <h5>Memory limit: {{ problem.memory_limit }} megabyte{{ problem.memory_limit|pluralize }}</h5>
+                <h5>{% trans 'Time limit' %}: {{ problem.time_limit }} {% trans 'second' %}{{ problem.time_limit|pluralize }}</h5>
+                <h5>{% trans 'Memory limit' %}: {{ problem.memory_limit }} {% trans 'megabyte' %}{{ problem.memory_limit|pluralize }}</h5>
             </div>
 
             <div class="col-md-12 margin-bottom-10">
                 <ul class="nav nav-pills nav-justified">
                     <li role="presentation">
-                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}">All submissions</a>
+                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}">{% trans 'All submissions' %}</a>
                     </li>
                     <li role="presentation">
-                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&result={{ 'accepted'|result_by_name }}">Accepted submissions</a>
+                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&result={{ 'accepted'|result_by_name }}">
+                            {% trans 'Accepted submissions' %}
+                        </a>
                     </li>
                     {% if user.is_authenticated %}
                         <li role="presentation">
-                            <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&username={{ user.username }}">My submissions</a>
+                            <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&username={{ user.username }}">
+                                {% trans 'My submissions' %}
+                            </a>
                         </li>
                         {# TODO: require authentication to download PDF #}
                         <li role="presentation"><a href="#">PDF</a></li>
                     {% endif %}
-                    <li role="presentation"><a href="{% url 'mog:submit' problem.id %}">Submit</a></li>
+                    <li role="presentation"><a href="{% url 'mog:submit' problem.id %}">{% trans 'Submit' %}</a></li>
                 </ul>
             </div>
         </div>
@@ -66,27 +71,27 @@
         </div>
 
         <div id="input" class="col-md-12">
-            <h4 class="text-center">Input</h4>
+            <h4 class="text-center">{% trans 'Input' %}</h4>
             <p>{{ problem.input|safe }}</p>
         </div>
 
         <div id="output" class="col-md-12">
-            <h4 class="text-center">Output</h4>
+            <h4 class="text-center">{% trans 'Output' %}</h4>
             <p>{{ problem.output|safe }}</p>
         </div>
 
         <div id="tests" class="col-md-12">
-            <h4 class="text-center">Sample test(s)</h4>
+            <h4 class="text-center">{% trans 'Sample test(s)' %}</h4>
 
             <div class="sample-tests">
                 {% for si, so in samples %}
                     <div class="sample-test">
                         <div class="input">
-                            <div class="title">Input</div>
+                            <div class="title">{% trans 'Input' %}</div>
                             <div class="pre"><span class="text">{{ si }}</span></div>
                         </div>
                         <div class="output">
-                            <div class="title">Output</div>
+                            <div class="title">{% trans 'Output' %}</div>
                             <div class="pre"><span class="text">{{ so }}</span></div>
                         </div>
                     </div>
@@ -96,7 +101,7 @@
 
         {% if problem.hints %}
             <div id="hints" class="col-md-12">
-                <h4 class="text-center">Hints</h4>
+                <h4 class="text-center">{% trans 'Hints' %}</h4>
                 {{ problem.hints|safe }}
             </div>
         {% endif %}
@@ -111,13 +116,12 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">
-                            Delete Problem
+                            {% trans 'Delete Problem' %}
                         </h4>
                     </div>
                     <div class="modal-body">
                         <p class="text-justify">
-                            If you remove <i><b>{{ problem.title }}</b></i> all submissions related with it
-                            will be removed too.
+                            {% trans 'If you remove this problem all submissions related with it will be removed too.' %}
                         </p>
                         <p class="text-center">
                             <span class="glyphicon glyphicon-warning-sign"
@@ -127,8 +131,8 @@
                     <div class="modal-footer">
                         <form action="{% url 'mog:problem_remove' problem.id %}" method="post">
                             {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'No' %}</button>
+                            <button type="submit" class="btn btn-primary">{% trans 'Yes' %}</button>
                         </form>
                     </div>
                 </div>

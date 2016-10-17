@@ -2,21 +2,22 @@
 
 {% block title %}Users{% endblock %}
 
+{% load i18n %}
 {% load filters %}
 {% load paginator %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h3 class="center title">Users</h3>
+            <h3 class="center title">{% trans 'Users' %}</h3>
         </div>
 
         <div class="col-md-12">
             <form action="{% url 'mog:users' %}" method="get" class="form-inline form-search pull-right">
                 <p>
                     <input class="form-control" name="q" type="text"
-                           placeholder="Search by name ..." {% if query %}value="{{ query.q }}"{% endif %}/>
-                    <button type="submit" class="btn btn-default">Find</button>
+                           placeholder="{% trans 'Search by name ...' %}" {% if query %}value="{{ query.q }}"{% endif %}/>
+                    <button type="submit" class="btn btn-default">{% trans 'Search' %}</button>
                 </p>
             </form>
         </div>
@@ -28,24 +29,24 @@
                     <th class="cell-small">
                         <div class="center">#</div>
                     </th>
-                    <th>User</th>
+                    <th>{% trans 'User' %}</th>
                     <th class="cell-small">
-                        <div class="center">Rating</div>
+                        <div class="center">{% trans 'Rating' %}</div>
                     </th>
                     <th class="cell-small">
-                        <div class="center">Points</div>
+                        <div class="center">{% trans 'Points' %}</div>
                     </th>
                     <th class="cell-small">
-                        <div class="center">Solved</div>
+                        <div class="center">{% trans 'Solved' %}</div>
                     </th>
                     <th class="cell-small">
-                        <div class="center">AC</div>
+                        <div class="center">{% trans 'ACC' %}</div>
                     </th>
                     <th class="cell-small">
-                        <div class="center">Sub</div>
+                        <div class="center">{% trans 'SUB' %}</div>
                     </th>
                     <th class="cell-medium">
-                        <div class="center">% AC</div>
+                        <div class="center">{% trans '% ACC' %}</div>
                     </th>
                 </tr>
                 </thead>

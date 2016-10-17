@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="modal fade" id="unregister-{{ contest.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -5,18 +7,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">
-                    Unregister
+                    {% trans 'Unregister' %}
                 </h4>
             </div>
             <div class="modal-body">
                 <p class="text-justify">
-                    Are you sure you want to un-register participation in this contest ?
+                    {% trans 'Are you sure you want to un-register participation in this contest ?' %}
                 </p>
                 <form action="{% url 'mog:contest_unregister' contest.id %}" method="post">
                     {% csrf_token %}
                     <div class="text-center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'No' %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans 'Yes' %}</button>
                     </div>
                 </form>
             </div>

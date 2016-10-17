@@ -3,6 +3,7 @@
 {% load paginator %}
 {% load filters %}
 {% load security %}
+{% load i18n %}
 
 {% block title %}Problems{% endblock %}
 
@@ -16,15 +17,15 @@
         <div class="col-md-12">
             {% if user|can_create_problem %}
                 <a href="{% url 'mog:problem_create' %}" class="btn btn-link pull-left no-underline">
-                    <i class="glyphicon glyphicon-pencil"></i> Create problem
+                    <i class="glyphicon glyphicon-pencil"></i> {% trans 'Create problem' %}
                 </a>
             {% endif %}
 
             <form action="{% url 'mog:problems' %}" method="get" class="form-inline form-search pull-right">
                 <p>
                     <input class="form-control" name="q" type="text"
-                           placeholder="Search by name ..." {% if query %}value="{{ query.q }}"{% endif %}/>
-                    <button type="submit" class="btn btn-default">Find</button>
+                           placeholder="{% trans 'Search by name ...' %}" {% if query %}value="{{ query.q }}"{% endif %}/>
+                    <button type="submit" class="btn btn-default">{% trans 'Search' %}</button>
                 </p>
             </form>
         </div>
@@ -33,13 +34,13 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="cell-small center">Code</th>
-                        <th>Title</th>
-                        <th class="cell-small center">Pts</th>
+                        <th class="cell-small center">{% trans 'Code' %}</th>
+                        <th>{% trans 'Title' %}</th>
+                        <th class="cell-small center">{% trans 'Points' %}</th>
                         <th class="cell-small center"><i class="glyphicon glyphicon-user"></i></th>
-                        <th class="cell-small center">AC</th>
-                        <th class="cell-small center">Sub</th>
-                        <th class="cell-medium center">% AC</th>
+                        <th class="cell-small center">{% trans 'ACC' %}</th>
+                        <th class="cell-small center">{% trans 'SUB' %}</th>
+                        <th class="cell-medium center">{% trans '% ACC' %}</th>
                     </tr>
                 </thead>
 

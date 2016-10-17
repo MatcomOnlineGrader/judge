@@ -1,6 +1,7 @@
 {% extends 'mog/base.html' %}
 
 {% load security %}
+{% load i18n %}
 
 {% block title %}{{ user_in_profile.username }}{% endblock %}
 
@@ -29,14 +30,26 @@
                         {% if user|can_edit_profile:user_in_profile %}
                             <div class="col-md-12 margin-bottom-10">
                                 <ul class="nav nav-pills nav-justified">
-                                    <li class="{% block _detail %}{% endblock %}"><a
-                                            href="{% url 'mog:user' user_in_profile.id %}">Profile</a></li>
-                                    <li class="{% block _edition %}{% endblock %}"><a
-                                            href="{% url 'mog:user_edit' user_in_profile.id %}">Edit Profile</a></li>
-                                    <li class="{% block _messages %}{% endblock %}"><a
-                                            href="{% url 'mog:user_messages' user_in_profile.id %}">Messages</a></li>
-                                    <li class="{% block _teams %}{% endblock %}"><a
-                                            href="{% url 'mog:user_teams' user_in_profile.id %}">Teams</a></li>
+                                    <li class="{% block _detail %}{% endblock %}">
+                                        <a href="{% url 'mog:user' user_in_profile.id %}">
+                                            {% trans 'Profile' %}
+                                        </a>
+                                    </li>
+                                    <li class="{% block _edition %}{% endblock %}">
+                                        <a href="{% url 'mog:user_edit' user_in_profile.id %}">
+                                            {% trans 'Edit Profile' %}
+                                        </a>
+                                    </li>
+                                    <li class="{% block _messages %}{% endblock %}">
+                                        <a href="{% url 'mog:user_messages' user_in_profile.id %}">
+                                            {% trans 'Messages' %}
+                                        </a>
+                                    </li>
+                                    <li class="{% block _teams %}{% endblock %}">
+                                        <a href="{% url 'mog:user_teams' user_in_profile.id %}">
+                                            {% trans 'Teams' %}
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         {% endif %}
@@ -46,8 +59,9 @@
                 <div class="col-md-3">
                     {% include 'mog/user/_image.html' with user=user_in_profile %}
                     {% if user.is_authenticated and user != user_in_profile %}
-                        <a class="btn btn-primary btn-block" data-toggle="modal"
-                           data-target="#send-message"><i class="glyphicon glyphicon-envelope"></i> Send a message</a>
+                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#send-message">
+                            <i class="glyphicon glyphicon-envelope"></i> {% trans 'Send a message' %}
+                        </a>
                         {% include 'mog/message/_send_message.html' with target=user_in_profile %}
                     {% endif %}
                 </div>

@@ -1,5 +1,6 @@
 {% extends 'mog/user/profile.html' %}
 
+{% load i18n %}
 {% load humanize %}
 
 {% block _messages %}active{% endblock %}
@@ -8,8 +9,8 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#inbox">Inbox</a></li>
-                <li><a data-toggle="tab" href="#outbox">Outbox</a></li>
+                <li class="active"><a data-toggle="tab" href="#inbox">{% trans 'Inbox' %} </a></li>
+                <li><a data-toggle="tab" href="#outbox">{% trans 'Outbox' %}</a></li>
             </ul>
 
             <div class="tab-content">
@@ -17,9 +18,9 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>From</th>
-                                <th>Subject</th>
-                                <th>Date</th>
+                                <th>{% trans 'From' %}</th>
+                                <th>{% trans 'Subject' %}</th>
+                                <th>{% trans 'Date' %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,7 +35,7 @@
                                     <td>{{ message.date|naturaltime }}</td>
                                 </tr>
                             {% empty %}
-                                <tr><td colspan="3">No message received!</td></tr>
+                                <tr><td colspan="3">{% trans 'No message received!' %}</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -44,9 +45,9 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>To</th>
-                                <th>Subject</th>
-                                <th>Date</th>
+                                <th>{% trans 'To' %}</th>
+                                <th>{% trans 'Subject' %}</th>
+                                <th>{% trans 'Date' %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,7 +62,7 @@
                                     <td>{{ message.date|naturaltime }}</td>
                                 </tr>
                             {% empty %}
-                                <tr><td colspan="3">No message sent!</td></tr>
+                                <tr><td colspan="3">{% trans 'No message sent!' %}</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>

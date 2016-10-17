@@ -2,13 +2,17 @@
 
 {% load security %}
 
+{% load i18n %}
+
 {% block title %}Contests{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-12">
             {% if user|can_create_contest %}
-                <a href="{% url 'mog:contest_create' %}" class="btn btn-link pull-right"><i class="glyphicon glyphicon-pencil"></i> Create contest</a>
+                <a href="{% url 'mog:contest_create' %}" class="btn btn-link pull-right">
+                    <i class="glyphicon glyphicon-pencil"></i> {% trans 'Create contest' %}
+                </a>
             {% endif %}
             {% include 'mog/contest/_running_contests.html' %}
         </div>

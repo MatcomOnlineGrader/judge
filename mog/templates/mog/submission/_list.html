@@ -1,16 +1,17 @@
+{% load i18n %}
 {% load security %}
 
 <table class="table table-bordered">
     <thead>
         <tr>
             <th class="text-center cell-small">Id</th>
-            <th class="text-center">Date</th>
-            <th class="text-center">User</th>
-            <th class="text-center">Problem</th>
-            <th class="text-center">Result</th>
-            <th class="text-center">Time</th>
-            <th class="text-center">Mem</th>
-            <th class="text-center">Lang</th>
+            <th class="text-center">{% trans 'Date'%}</th>
+            <th class="text-center">{% trans 'User' %}</th>
+            <th class="text-center">{% trans 'Problem' %}</th>
+            <th class="text-center">{% trans 'Result' %}</th>
+            <th class="text-center">{% trans 'Time' %}</th>
+            <th class="text-center">{% trans 'Mem' %}</th>
+            <th class="text-center">{% trans 'Lang' %}</th>
         </tr>
     </thead>
     <tbody>
@@ -19,14 +20,16 @@
             {% with show_source=user|can_see_code_of:submission %}
                 {% with show_details=user|can_see_details_of:submission %}
                     <td class="text-center">
-                        {% if show_source %}
-                            <a href="{% url 'mog:submission' submission.id %}" class="no-underline">{{ submission.id }}</a>
-                        {% else %}
-                            {{ submission.id }}
-                        {% endif %}
+                        <small>
+                            {% if show_source %}
+                                <a href="{% url 'mog:submission' submission.id %}" class="no-underline">{{ submission.id }}</a>
+                            {% else %}
+                                {{ submission.id }}
+                            {% endif %}
+                        </small>
                     </td>
                     <td class="text-center">
-                        {{ submission.date|date:"d/m/Y G:i:s"}}
+                        <small>{{ submission.date|date:"d/m/Y G:i:s"}}</small>
                     </td>
                     <td class="text-center">
                         {% include 'mog/user/_link.html' with user=submission.user %}
@@ -46,21 +49,27 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        {% if show_details %}
-                            {{ submission.execution_time }}
-                        {% else %}
-                            -----
-                        {% endif %}
+                        <small>
+                            {% if show_details %}
+                                {{ submission.execution_time }}
+                            {% else %}
+                                -----
+                            {% endif %}
+                        </small>
                     </td>
                     <td class="text-center">
-                        {% if show_details %}
-                            {{ submission.memory_used }}
-                        {% else %}
-                            -----
-                        {% endif %}
+                        <small>
+                            {% if show_details %}
+                                {{ submission.memory_used }}
+                            {% else %}
+                                -----
+                            {% endif %}
+                        </small>
                     </td>
                     <td class="text-center">
-                        {{ submission.compiler.name }}
+                        <small>
+                            {{ submission.compiler.name }}
+                        </small>
                     </td>
                 {% endwith %}
             {% endwith %}

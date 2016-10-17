@@ -200,13 +200,13 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div class="center">Rating</div>
+                                                    <div class="center">{% trans 'Rating' %}</div>
                                                 </td>
                                                 <td>
-                                                    <div class="center">Points</div>
+                                                    <div class="center">{% trans 'Points' %}</div>
                                                 </td>
                                                 <td>
-                                                    <div class="center">Solved</div>
+                                                    <div class="center">{% trans 'Solved' %}</div>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -227,11 +227,11 @@
                                     </div>
                                 {% endif %}
                                 <div class="col-md-12">
-                                    <small class="uniform-text uniform-medium">Top rated users</small>
+                                    <small class="uniform-text uniform-medium">{% trans 'Top rated users' %}</small>
                                     {% include 'mog/user/_top_rated_users.html' %}
                                 </div>
                                 <div class="col-md-12">
-                                    <small class="uniform-text uniform-medium">Recent posts</small>
+                                    <small class="uniform-text uniform-medium">{% trans 'Recent posts' %}</small>
                                     {% include 'mog/post/_recent_modified_posts.html' with posts=recent_modified_posts %}
                                 </div>
                             </div>

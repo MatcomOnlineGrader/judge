@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load filters %}
+{% load i18n %}
 
 {% block _teams %}active{% endblock %}
 
@@ -11,10 +12,10 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th class="text-center">Team</th>
-                        <th class="text-center">Description</th>
-                        <th class="text-center">Contestants</th>
-                        <th class="text-center">Actions</th>
+                        <th class="text-center">{% trans 'Team' %}</th>
+                        <th class="text-center">{% trans 'Description' %}</th>
+                        <th class="text-center">{% trans 'Contestants' %}</th>
+                        <th class="text-center">{% trans 'Actions' %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +26,7 @@
                                 {% if team.description %}
                                     {{ team.description }}
                                 {% else %}
-                                    <i>No description provided</i>
+                                    <i>{% trans 'No description provided' %}</i>
                                 {% endif %}
                             </td>
                             <td>
@@ -37,12 +38,12 @@
                             </td>
                             <td>
                                 <a href="#" class="btn btn-link" data-toggle="modal"
-                                   data-target="#remove-team-{{ team.id }}">Remove</a>
+                                   data-target="#remove-team-{{ team.id }}">{% trans 'Remove' %}</a>
                                 {% include 'mog/user/_remove_team.html' with team=team %}
                             </td>
                         </tr>
                     {% empty %}
-                        <tr><td colspan="4">No teams created!</td></tr>
+                        <tr><td colspan="4">{% trans 'No teams created!' %}</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -50,7 +51,7 @@
 
         <div class="col-md-12">
             <a href="#" class="btn btn-link" data-toggle="modal"
-               data-target="#create-new-team"><i class="glyphicon glyphicon-pencil"></i> Create team</a>
+               data-target="#create-new-team"><i class="glyphicon glyphicon-pencil"></i> {% trans 'Create team' %}</a>
             {% include 'mog/user/_create_team.html' with user_in_profile=user_in_profile %}
         </div>
     </div>

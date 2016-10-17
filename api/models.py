@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from bs4 import BeautifulSoup
 
@@ -383,13 +384,13 @@ THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True)
     role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
-    theme = models.CharField(max_length=20, null=True, choices=THEME_CHOICES)
-    avatar = models.ImageField(upload_to='user/avatar', null=True, blank=True)
-    show_tags = models.BooleanField(default=True)
-    institution = models.ForeignKey(Institution, null=True)
+    theme = models.CharField(max_length=20, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
+    avatar = models.ImageField(upload_to='user/avatar', null=True, blank=True, verbose_name=_('Avatar'))
+    show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
+    institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'))
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
     rating_changes = models.ManyToManyField(Contest, through='RatingChange')
-    compiler = models.ForeignKey(Compiler, null=True)
+    compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'))
 
     def __init__(self, *args, **kwargs):
         super(UserProfile, self).__init__(*args, **kwargs)

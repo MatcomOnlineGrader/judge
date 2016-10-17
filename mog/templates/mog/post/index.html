@@ -1,23 +1,24 @@
 {% extends 'mog/base.html' %}
 
+{% load i18n %}
 {% load filters %}
 {% load humanize %}
 {% load paginator %}
 
-{% block title %}Posts{% endblock %}
+{% block title %}{% trans 'Posts' %}{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h3 class="center title">Posts</h3>
+            <h3 class="center title">{% trans 'Posts' %}</h3>
         </div>
         <div class="col-md-12">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Author</th>
-                        <th>Title</th>
-                        <th>Created</th>
+                        <th>{% trans 'Author' %}</th>
+                        <th>{% trans 'Title' %}</th>
+                        <th>{% trans 'Created' %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,7 +34,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="3">No posts written yet!</td>
+                            <td colspan="3"><th>{% trans 'No posts written yet!' %}</th></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -1,5 +1,6 @@
 {% extends 'mog/user/profile.html' %}
 
+{% load i18n %}
 {% load filters %}
 {% load static %}
 
@@ -11,12 +12,12 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th class="text-center">Rating</th>
-                        <th class="text-center">Points</th>
-                        <th class="text-center">Solved</th>
-                        <th class="text-center">Accepted</th>
-                        <th class="text-center">Submissions</th>
-                        <th class="text-center">Teams</th>
+                        <th class="text-center">{% trans 'Rating' %}</th>
+                        <th class="text-center">{% trans 'Points' %}</th>
+                        <th class="text-center">{% trans 'Solved' %}</th>
+                        <th class="text-center">{% trans 'Accepted' %}</th>
+                        <th class="text-center">{% trans 'Submissions' %}</th>
+                        <th class="text-center">{% trans 'Teams' %}</th>
                     </tr>
                 </thead>
                 <tbody>
