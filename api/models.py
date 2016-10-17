@@ -401,6 +401,10 @@ class UserProfile(models.Model):
         if self.old_avatar_path != self.avatar.name:
             try:
                 os.remove(os.path.join(settings.MEDIA_ROOT, self.old_avatar_path))
+                from PIL import Image
+                img = Image.open(self.avatar.path)
+                img.thumbnail((300, 300))
+                img.save(self.avatar.path)
             except Exception, e:
                 pass
 
