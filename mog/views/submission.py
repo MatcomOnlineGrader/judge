@@ -107,6 +107,8 @@ class Submit(View):
                                 user=request.user, compiler=compiler,
                                 result=Result.objects.get(name__iexact='pending'),
                                 instance=instance)
+        if user_is_admin(request.user):
+            submission.hidden = True
         submission.save()
         return redirect(
             reverse('mog:contest_submissions') + '?contest={0}'.format(problem.contest_id)
