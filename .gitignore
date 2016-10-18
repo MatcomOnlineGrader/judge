@@ -3,4 +3,5 @@ media/
 api/fixtures/*.json
 .idea/
 *.pyc
+*.mo
 
