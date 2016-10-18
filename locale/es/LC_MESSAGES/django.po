@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-17 10:32+0000\n"
+"POT-Creation-Date: 2016-10-18 04:21+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,23 +10,23 @@ msgstr ""
 "es/)\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:387
+#: api/models.py:395
 msgid "Code Editor Theme"
 msgstr "Tema del editor de código"
 
-#: api/models.py:388
+#: api/models.py:396
 msgid "Avatar"
 msgstr "Imagen"
 
-#: api/models.py:389
+#: api/models.py:397
 msgid "Show tags"
 msgstr "Mostrar etiquetas"
 
-#: api/models.py:390
+#: api/models.py:398
 msgid "Institution"
 msgstr "Institución"
 
-#: api/models.py:393 mog/templates/mog/submission/index.html:38
+#: api/models.py:401 mog/templates/mog/submission/index.html:38
 msgid "Compiler"
 msgstr "Compilador"
 
@@ -339,6 +339,8 @@ msgid "Edit tests"
 msgstr "Editar tests"
 
 #: mog/templates/mog/problem/detail.html:34
+#: mog/templates/mog/problem/edit.html:6
+#: mog/templates/mog/problem/edit.html:16
 msgid "Edit problem"
 msgstr "Editar problema"
 
@@ -403,6 +405,14 @@ msgid ""
 msgstr ""
 "Si elimina este problema todos los envíos relacionados con él serán "
 "eliminados también."
+
+#: mog/templates/mog/problem/edit.html:28
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: mog/templates/mog/problem/edit.html:33
+msgid "Save"
+msgstr "Salvar"
 
 #: mog/templates/mog/problem/index.html:20
 msgid "Create problem"
