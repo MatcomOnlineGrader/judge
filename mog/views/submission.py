@@ -44,6 +44,8 @@ class SubmissionListView(generic.ListView):
             queryset = queryset.filter(user__username__contains=username)
         if problem:
             queryset = queryset.filter(problem__title__contains=problem)
+        if not user_is_admin(self.request.user):
+            queryset = queryset.filter(hidden=False, problem__contest__visible=True)
         return queryset.order_by('-id').select_related('user', 'result')
 
     def get_context_data(self, **kwargs):
@@ -59,6 +61,7 @@ class SubmissionListView(generic.ListView):
 
         if contest_id:
             contest = get_object_or_404(Contest, pk=contest_id)
+            #if contest.can_be_seen_by(self.request.user):
             context['contest'] = contest
 
         context['results'] = Result.objects.all()
