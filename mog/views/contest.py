@@ -8,7 +8,7 @@ from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 
-from api.models import Contest, ContestInstance, Team
+from api.models import Contest, ContestInstance, Team, Result, Compiler
 from mog.forms import ContestForm
 from mog.utils import user_is_admin
 from mog.helpers import filter_submissions, get_paginator
@@ -151,7 +151,11 @@ def contest_submissions(request, contest_id):
     )
     submissions = get_paginator(submission_list, 30, request.GET.get('page'))
     return render(request, 'mog/contest/submissions.html', {
-        'contest': contest, 'submissions': submissions, 'query': query
+        'contest': contest,
+        'submissions': submissions,
+        'results': Result.get_all_results(),
+        'compiler': Compiler.get_all_compilers(),
+        'query': query
     })
 
 
