@@ -1,0 +1,7 @@
+{% autoescape on %}
+\documentclass{article}
+\begin{document}
+  {{ problem.title }}
+  {{ problem.body|safe }}
+\end{document}
+{% endautoescape %}

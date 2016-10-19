@@ -4,6 +4,7 @@
 {% load humanize %}
 {% load filters %}
 {% load security %}
+{% load i18n %}
 
 {% block title %}{{ post.name }}{% endblock %}
 
@@ -13,7 +14,7 @@
             {% include 'mog/post/_post.html' with post=post %}
             {% if user|can_edit_post:post %}
                 <a href="{% url 'mog:post_edit' post.id %}" class="btn btn-link pull-right no-underline">
-                    <i class="glyphicon glyphicon-pencil"></i> Edit post
+                    <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit post' %}
                 </a>
             {% endif %}
         </div>
@@ -29,7 +30,15 @@
                     <div class="media-body">
                         {% include 'mog/user/_link.html' with user=comment.user %}
                         <small class="uniform-text uniform-small pull-right">{{ comment.date|naturaltime }}</small>
-                        <p>{{ comment.body|safe }}</p>
+
+                        <p>{{ comment.body }}</p>
+
+                        <a href="#" class="btn btn-link pull-right no-underline"
+                           data-toggle="modal" data-target="#edit-comment-{{ comment.id }}">
+                            <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit comment' %}
+                        </a>
+
+                        {% include 'mog/comment/_edit_comment.html' with comment=comment %}
                     </div>
                 </div>
 
@@ -45,11 +54,13 @@
                     <input type="hidden" name="post" value="{{ post.id }}">
                     <div class="form-group">
                         <label for="comment">
-                            <small class="uniform-text uniform-small">Add your comment here</small>
+                            <small class="uniform-text uniform-small">
+                                {% trans 'Add your comment here' %}
+                            </small>
                         </label>
                         <textarea id="comment" name="body" class="form-control" rows="10"></textarea>
                     </div>
-                    <input type="submit" value="Send" class="btn btn-primary pull-right">
+                    <input type="submit" value="{% trans 'Send' %}" class="btn btn-primary pull-right">
                 </form>
             </div>
         {% endif %}

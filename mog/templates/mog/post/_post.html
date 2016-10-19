@@ -1,11 +1,12 @@
 {% load humanize %}
 {% load filters %}
+{% load i18n %}
 
 <div class="row">
     <div class="col-md-12">
         <h3 class="margin-top-0">
             <a href="{% url 'mog:post' post.id post.slug %}" class="no-underline">{{ post.name }}</a>
-            <small>by {% include 'mog/user/_link.html' with user=post.user %} </small>
+            <small>{% trans 'by' %} {% include 'mog/user/_link.html' with user=post.user %} </small>
             <small class="uniform-text uniform-small pull-right">{{ post.creation_date | naturaltime }}</small>
         </h3>
     </div>

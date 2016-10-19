@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^team/create$', views.create_team, name='create_team'),
     url(r'^team/remove/(?P<team_id>[0-9]+)$', views.remove_team, name='remove_team'),
 
+    url(r'^comment/edit/(?P<comment_id>[0-9]+)$', views.edit_comment, name='comment_edit'),
+
     url(r'^posts/$', views.PostListView.as_view(), name='posts'),
     url(r'^post/edit/(?P<post_id>[0-9]+)$', views.EditPostView.as_view(), name='post_edit'),
     url(r'^post/create$', views.PostCreateView.as_view(), name='post_create'),

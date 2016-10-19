@@ -529,6 +529,9 @@ class Comment(models.Model):
     body = models.TextField()
     seen = models.ManyToManyField(User, related_name='seen_comments')
 
+    def can_be_edited_by(self, user):
+        return user_is_admin(user)
+
 
 class ContestInstance(models.Model):
     user = models.ForeignKey(User, null=True, related_name='instances')

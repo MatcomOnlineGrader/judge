@@ -9,3 +9,4 @@ from .team import create_team, remove_team
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams
 from .views import index, faq
 from .message import send_message
+from .comment import edit_comment
