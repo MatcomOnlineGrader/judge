@@ -366,6 +366,10 @@ class Compiler(models.Model):
     def __unicode__(self):
         return '[{0}] {1}'.format(self.language, self.name)
 
+    @staticmethod
+    def get_all_compilers():
+        return Compiler.objects.all()
+
 
 ROLE_CHOICES = [
     ('admin', 'Administrator'),
@@ -480,6 +484,10 @@ class Result(models.Model):
     description = models.CharField(max_length=250, null=True)
     color = models.CharField(max_length=50)
     penalty = models.BooleanField()
+
+    @staticmethod
+    def get_all_results():
+        return Result.objects.all()
 
 
 class Submission(models.Model):

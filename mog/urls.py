@@ -39,9 +39,7 @@ urlpatterns = [
     url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
 
     url(r'^submission/(?P<submission_id>[0-9]+)/$', views.submission, name='submission'),
-    url(r'^submissions/$', views.SubmissionListView.as_view(
-        template_name = 'mog/submission/index.html'
-    ), name='submissions'),
+    url(r'^submissions/$', views.submissions,name='submissions'),
 
     url(r'^users/json$', views.users_json, name='users_json'),
     url(r'^users/$', views.UserListView.as_view(), name='users'),
