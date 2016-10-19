@@ -36,6 +36,9 @@ def contest_problems(request, contest_id):
 def contest_standing(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
 
+    if not contest.can_be_seen_by(request.user):
+        raise Http404()
+
     user_instance = None
     if request.user.is_authenticated():
         user_instance = contest.virtual_registration(request.user)
