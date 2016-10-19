@@ -144,9 +144,6 @@ def contest_submissions(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     if not contest.can_be_seen_by(request.user):
         raise Http404()
-    print '\n' * 10
-    print request.GET
-    print '\n' * 10
     submission_list, query = filter_submissions(
         request.user,
         problem=request.GET.get('problem'), contest=contest.id, user=request.GET.get('user'),
