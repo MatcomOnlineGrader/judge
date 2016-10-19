@@ -1,8 +1,9 @@
 {% extends 'mog/base.html' %}
 
 {% load filters %}
+{% load i18n %}
 
-{% block title %}{{ contest.name }} | Problems{% endblock %}
+{% block title %}{{ contest.name }} | {% trans 'Problems' %}{% endblock %}
 
 {% block left %}
     {% include 'mog/contest/_left.html' with contest=contest problems_active='active' %}
@@ -11,7 +12,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h3 class="title">Problems</h3>
+            <h3 class="title">{% trans 'Problems' %}</h3>
         </div>
     </div>
 
@@ -23,10 +24,10 @@
                         <thead>
                         <tr>
                             <th class="cell-problem-letter"></th>
-                            <th>Problem</th>
-                            <th class="cell-small">Solved</th>
-                            <th class="cell-small">PDF</th>
-                            <th class="cell-small">Submit</th>
+                            <th>{% trans 'Problem' %}</th>
+                            <th class="cell-small">{% trans 'Solved' %}</th>
+                            <th class="cell-small">{% trans 'PDF' %}</th>
+                            <th class="cell-small">{% trans 'Submit' %}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -52,7 +53,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="5">No problems included yet!</td>
+                                <td colspan="5">{% trans 'No problems included yet!' %}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -60,7 +61,7 @@
                 </div>
                 {% if contest.description %}
                     <div class="col-md-12">
-                        <h3 class="uniform-text uniform-big">Description</h3>
+                        <h3 class="uniform-text uniform-big">{% trans 'Description' %}</h3>
                         <div class="well bckg-white">
                             <p>{{ contest.description|safe }}</p>
                         </div>

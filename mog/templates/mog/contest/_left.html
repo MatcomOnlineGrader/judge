@@ -2,6 +2,7 @@
 
 {% load filters %}
 {% load security %}
+{% load i18n %}
 
 <div class="row">
     <div class="col-md-12">
@@ -25,17 +26,17 @@
                                         </div>
                                         {% if instance.real %}
                                             {% if instance.is_death_time %}
-                                                <h5>(Death)</h5>
+                                                <h5>{% trans '(Death time)' %}</h5>
                                             {% elif instance.is_frozen_time %}
-                                                <h5>(Frozen)</h5>
+                                                <h5>{% trans '(Frozen time)' %}</h5>
                                             {% endif %}
                                         {% else %}
-                                            <h5>(Virtual)</h5>
+                                            <h5>{% trans '(Virtual)' %}</h5>
                                         {% endif %}
                                     {% elif instance.is_past %}
-                                        <h5>Ended</h5>
+                                        <h5>{% trans 'Ended' %}</h5>
                                     {% elif instance.is_comming %}
-                                        <h5>Coming</h5>
+                                        <h5>{% trans 'Coming' %}</h5>
                                     {% endif %}
                                 {% else %}
                                     {% if contest.is_running %}
@@ -44,14 +45,14 @@
                                                  aria-valuemax="100" style="width: {{ contest.percent }}%;"></div>
                                         </div>
                                         {% if contest.is_death_time %}
-                                            <h5>(Death)</h5>
+                                            <h5>{% trans '(Death time)' %}</h5>
                                         {% elif contest.is_frozen_time %}
-                                            <h5>(Frozen)</h5>
+                                            <h5>{% trans '(Frozen time)' %}</h5>
                                         {% endif %}
                                     {% elif contest.is_past %}
-                                        <h5>Ended</h5>
+                                        <h5>{% trans 'Ended' %}</h5>
                                     {% elif contest.is_comming %}
-                                        <h5>Coming</h5>
+                                        <h5>{% trans 'Coming' %}</h5>
                                     {% endif %}
                                 {% endif %}
                             {% endwith %}
@@ -62,26 +63,29 @@
                     <td>
                         <ul class="nav nav-pills nav-stacked">
                             <li class="{{ problems_active }}">
-                                <a href="{% url 'mog:contest_problems' contest.id %}"><i
-                                        class="glyphicon glyphicon-list-alt"></i> Problems</a>
+                                <a href="{% url 'mog:contest_problems' contest.id %}">
+                                    <i class="glyphicon glyphicon-list-alt"></i> {% trans 'Problems' %}
+                                </a>
                             </li>
                             <li class="{{ standings_active }}">
-                                <a href="{% url 'mog:contest_standing' contest.id %}"><i class="glyphicon glyphicon-signal"></i> Standing</a>
+                                <a href="{% url 'mog:contest_standing' contest.id %}">
+                                    <i class="glyphicon glyphicon-signal"></i> {% trans 'Standing' %}
+                                </a>
                             </li>
                             <li class="{{ submissions_active }}">
                                 <a href="{% url 'mog:contest_submissions' contest.id %}">
-                                    <i class="glyphicon glyphicon-road"></i> Submissions
+                                    <i class="glyphicon glyphicon-road"></i> {% trans 'Submissions' %}
                                 </a>
                             </li>
                             <li class="{{ submit_active }}">
                                 {% if problem %}
                                     <a href="{% url 'mog:submit' problem.id %}">
-                                        <i class="glyphicon glyphicon-envelope"></i> Submit
+                                        <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
                                     </a>
                                 {% else %}
                                     {% with problem=contest|first_problem %}
                                         <a href="{% url 'mog:submit' problem.id %}">
-                                            <i class="glyphicon glyphicon-envelope"></i> Submit
+                                            <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
                                         </a>
                                     {% endwith %}
                                 {% endif %}
@@ -95,12 +99,12 @@
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="{{ edit_active }}">
                                     <a href="{% url 'mog:contest_edit' contest.id %}">
-                                        <i class="glyphicon glyphicon-pencil"></i> Edit contest
+                                        <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit contest' %}
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" data-toggle="modal" data-target="#remove-contest-{{ contest.id }}">
-                                        <i class="glyphicon glyphicon-remove"></i> Remove contest
+                                        <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove Contest' %}
                                     </a>
                                 </li>
                             </ul>
@@ -119,13 +123,12 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">
-                            Delete Contest
+                            {% trans 'Remove Contest' %}
                         </h4>
                     </div>
                     <div class="modal-body">
                         <p class="text-justify">
-                            If you remove <i><b>{{ contest.name }}</b></i> all submissions related with it
-                            will be removed too.
+                            {% trans 'If you remove this contest all submissions related with it will be removed too.' %}
                         </p>
                         <p class="text-center">
                             <span class="glyphicon glyphicon-warning-sign"
@@ -135,8 +138,8 @@
                     <div class="modal-footer">
                         <form action="{% url 'mog:contest_remove' contest.id %}" method="post">
                             {% csrf_token %}
-                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                            <button type="submit" class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'No' %}</button>
+                            <button type="submit" class="btn btn-primary">{% trans 'Yes' %}</button>
                         </form>
                     </div>
                 </div>

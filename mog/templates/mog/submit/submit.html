@@ -2,8 +2,9 @@
 
 {% load static %}
 {% load filters %}
+{% load i18n %}
 
-{% block title %}Submit{% endblock %}
+{% block title %}{% trans 'Submit' %}{% endblock %}
 
 {% block styles %}
     <link href="{% static 'mog/plugins/codemirror/lib/codemirror.css' %}" rel="stylesheet"/>
@@ -28,7 +29,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12 text-center">
-            <h3 class="title">Submit</h3>
+            <h3 class="title">{% trans 'Submit' %}</h3>
         </div>
 
         <div class="col-md-10 col-md-offset-1">
@@ -38,7 +39,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="problem" class="center">Problem</label>
+                            <label for="problem" class="center">{% trans 'Problem' %}</label>
                             <select id="problem" name="problem" class="form-control">
                                 {% for p in problem.contest.get_problems %}
                                     <option value="{{ p.id }}"
@@ -49,7 +50,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="compiler" class="center">Compiler</label>
+                            <label for="compiler" class="center">{% trans 'Compiler' %}</label>
                             <select id="compiler" name="compiler" class="form-control"
                                     onchange="compilerChanged(this);">
                                 {% for compiler in compilers %}
