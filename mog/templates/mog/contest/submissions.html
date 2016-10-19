@@ -25,7 +25,13 @@
                 </div>
                 <div class="form-group">
                     <label for="problem" class="sr-only">Problem</label>
-                    <input id="problem" name="problem" type="text" class="form-control" value="{{ query.problem }}" placeholder="Problem">
+                    <select id="problem" name="problem" class="form-control">
+                        <option value="" selected>-- Select problem --</option>
+                        {% for problem in contest.problems.all %}
+                            <option value="{{ problem.title }}"
+                                    {% if query.problem == problem.title %}selected{% endif %}>{{ problem.title }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="result" class="sr-only">Result</label>
