@@ -35,10 +35,8 @@ urlpatterns = [
     url(r'^contest/edit/(?P<contest_id>[0-9]+)$', views.ContestEditView.as_view(), name='contest_edit'),
     url(r'^contest/create$', views.ContestCreateView.as_view(), name='contest_create'),
     url(r'^contests/$', views.contests, name='contests'),
-    url(r'^contest/problems/(?P<contest_id>[0-9]+)/$', views.contest_problems, name='contest_problems'),
-    url(r'^contest/submissions/$', views.SubmissionListView.as_view(
-        template_name='mog/contest/submissions.html'
-    ), name='contest_submissions'),
+    url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
+    url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
 
     url(r'^submission/(?P<submission_id>[0-9]+)/$', views.submission, name='submission'),
     url(r'^submissions/$', views.SubmissionListView.as_view(

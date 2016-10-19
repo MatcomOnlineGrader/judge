@@ -17,8 +17,7 @@
         </div>
 
         <div class="col-md-12 text-center">
-            <form action="{% url 'mog:contest_submissions' %}" method="get" class="form-inline">
-                <input type="hidden" name="contest" value="{{ contest.id }}">
+            <form action="{% url 'mog:contest_submissions' contest.id %}" method="get" class="form-inline">
                 <div class="form-group">
                     <label for="username" class="sr-only">Username</label>
                     <input id="username" name="username" type="text" class="form-control" value="{{ query.username }}"
@@ -54,15 +53,15 @@
         </div>
 
         <div class="col-md-12">
-            {% include 'mog/submission/_list.html' with submissions=submission_list %}
+            {% include 'mog/submission/_list.html' with submissions=submissions %}
         </div>
 
         <div class="col-md-6 col-md-offset-3">
             <div class="text-center">
                 {% if query %}
-                    {{ page_obj|paginate:query }}
+                    {{ submissions|paginate:query }}
                 {% else %}
-                    {{ page_obj|paginate }}
+                    {{ submissions|paginate }}
                 {% endif %}
             </div>
         </div>

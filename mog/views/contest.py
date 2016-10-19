@@ -11,6 +11,7 @@ from django.utils import timezone
 from api.models import Contest, ContestInstance, Team
 from mog.forms import ContestForm
 from mog.utils import user_is_admin
+from mog.helpers import filter_submissions, get_paginator
 
 
 def contests(request):
@@ -136,6 +137,25 @@ def contest_standing(request, contest_id):
         previous = instance
 
     return render(request, 'mog/contest/standing.html', context)
+
+
+@require_http_methods(["GET"])
+def contest_submissions(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+    if not contest.can_be_seen_by(request.user):
+        raise Http404()
+    print '\n' * 10
+    print request.GET
+    print '\n' * 10
+    submission_list, query = filter_submissions(
+        request.user,
+        problem=request.GET.get('problem'), contest=contest.id, user=request.GET.get('user'),
+        result=request.GET.get('result'), compiler=request.GET.get('compiler')
+    )
+    submissions = get_paginator(submission_list, 30, request.GET.get('page'))
+    return render(request, 'mog/contest/submissions.html', {
+        'contest': contest, 'submissions': submissions, 'query': query
+    })
 
 
 @login_required

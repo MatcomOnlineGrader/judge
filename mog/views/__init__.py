@@ -1,5 +1,5 @@
 from .account import Register, Login, Logout
-from .contest import contests, contest_problems, contest_standing,\
+from .contest import contests, contest_problems, contest_standing, contest_submissions,\
     remove_contest, contest_register, contest_unregister, ContestCreateView, ContestEditView
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemCreateView, ProblemEditView,\

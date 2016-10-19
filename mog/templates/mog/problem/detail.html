@@ -45,16 +45,16 @@
             <div class="col-md-12 margin-bottom-10">
                 <ul class="nav nav-pills nav-justified">
                     <li role="presentation">
-                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}">{% trans 'All submissions' %}</a>
+                        <a href="{% url 'mog:contest_submissions' problem.contest_id %}?problem={{ problem.title }}">{% trans 'All submissions' %}</a>
                     </li>
                     <li role="presentation">
-                        <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&result={{ 'accepted'|result_by_name }}">
+                        <a href="{% url 'mog:contest_submissions' problem.contest_id %}?problem={{ problem.title }}&result={{ 'accepted'|result_by_name }}">
                             {% trans 'Accepted submissions' %}
                         </a>
                     </li>
                     {% if user.is_authenticated %}
                         <li role="presentation">
-                            <a href="{% url 'mog:contest_submissions' %}?contest={{ problem.contest.id }}&problem={{ problem.title }}&username={{ user.username }}">
+                            <a href="{% url 'mog:contest_submissions' problem.contest_id %}?problem={{ problem.title }}&username={{ user.username }}">
                                 {% trans 'My submissions' %}
                             </a>
                         </li>

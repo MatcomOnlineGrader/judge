@@ -69,7 +69,7 @@
                                 <a href="{% url 'mog:contest_standing' contest.id %}"><i class="glyphicon glyphicon-signal"></i> Standing</a>
                             </li>
                             <li class="{{ submissions_active }}">
-                                <a href="{% url 'mog:contest_submissions' %}?contest={{ contest.id }}">
+                                <a href="{% url 'mog:contest_submissions' contest.id %}">
                                     <i class="glyphicon glyphicon-road"></i> Submissions
                                 </a>
                             </li>
