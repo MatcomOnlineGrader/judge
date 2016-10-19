@@ -497,7 +497,17 @@ class Submission(models.Model):
     judgement_details = models.TextField(null=True)
 
     def can_show_details_to(self, user):
-        # TODO: Handle logic here!
+        if user_is_admin(user) or not self.instance \
+                or not self.instance.real or self.instance.is_past:
+            return True
+        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.death_time),\
+               self.instance.end_date
+        if self.instance.is_death_time and s < self.date < e:
+            return False
+        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.frozen_time), \
+               self.instance.end_date
+        if self.instance.is_frozen_time and s < self.date < e:
+            return self.user == user
         return True
 
     @property
@@ -586,12 +596,24 @@ class ContestInstance(models.Model):
     @property
     def is_frozen_time(self):
         end_date = self.end_date
-        return end_date - timezone.timedelta(minutes=self.contest.frozen_time) <= timezone.now() <= end_date
+        return end_date - timezone.timedelta(minutes=self.frozen_time) < timezone.now() < end_date
 
     @property
     def is_death_time(self):
         end_date = self.end_date
-        return end_date - timezone.timedelta(minutes=self.contest.death_time) <= timezone.now() <= end_date
+        return end_date - timezone.timedelta(minutes=self.death_time) < timezone.now() < end_date
+
+    @property
+    def frozen_time(self):
+        if self.real:
+            return self.contest.frozen_time
+        return 0
+
+    @property
+    def death_time(self):
+        if self.real:
+            return self.contest.death_time
+        return 0
 
     def get_submissions(self, problem, instance_bound=None):
         submissions = self.submissions.filter(problem=problem)

@@ -21,20 +21,7 @@ def can_see_code_of(user, submission):
 
 @register.filter()
 def can_see_details_of(user, submission):
-    """
-     Return true iff @user can see details of @submission
-     taking into account frozen and death time. Submission
-     details are: Result, Memory, Time, Judgement Details.
-    """
-    if user_is_admin(user) or user_is_browser(user):
-        return True
-    instance = submission.instance
-    if instance and instance.real and instance.is_running:
-        if instance.is_death_time:
-            return False
-        if instance.is_frozen_time:
-            return user == submission.user
-    return True
+    return submission.can_show_details_to(user)
 
 
 @register.filter()
