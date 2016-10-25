@@ -346,7 +346,7 @@ class Institution(models.Model):
 
 class RatingChange(models.Model):
     profile = models.ForeignKey('UserProfile', related_name='ratings')
-    contest = models.ForeignKey(Contest)
+    contest = models.ForeignKey(Contest, related_name='rating_changes')
     rating = models.IntegerField()
     rank = models.IntegerField()
     nick = models.CharField(max_length=20)
