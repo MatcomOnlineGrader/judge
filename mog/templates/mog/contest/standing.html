@@ -37,64 +37,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for instance in instances %}
-                        <tr class="standing-row">
-                            <td class="text-center">{{ instance.rank }}</td>
+                    {% for instance_result in instance_results %}
+                        {% with instance=instance_result.instance %}
+                            <tr class="standing-row">
+                                <td class="text-center">{{ instance_result.rank }}</td>
+                                <td>
+                                    <div style="min-height: 45px;">
+                                        {% if not instance.real %}
+                                            (~)
+                                        {% endif %}
 
-                            <td>
-                                <div style="min-height: 45px;">
-                                    {% if not instance.real %}
-                                        (~)
-                                    {% endif %}
+                                        {% if instance.team %}
+                                            {{ instance.team.name }}
+                                            (
+                                            {% for profile in instance.team.users %}
+                                                {% if forloop.counter > 1 %},{% endif %}
+                                                {% include 'mog/user/_link.html' with profile=profile %}
+                                            {% endfor %}
+                                            )
+                                        {% else %}
+                                            {% include 'mog/user/_link.html' with user=instance.user %}
+                                            {% with institution=instance.user.profile.institution %}
+                                                {% if institution %}
+                                                    <p><small>{{ institution.name }}</small></p>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    </div>
+                                </td>
 
-                                    {% if instance.team %}
-                                        {{ instance.team.name }}
-                                        (
-                                        {% for profile in instance.team.users %}
-                                            {% if forloop.counter > 1 %},{% endif %}
-                                            {% include 'mog/user/_link.html' with profile=profile %}
-                                        {% endfor %}
-                                        )
+                                <td class="text-center">{{ instance_result.solved }}</td>
+
+                                <td class="text-center">{{ instance_result.penalty|format_minutes }}</td>
+
+                                {% for problem_result in instance_result.problem_results %}
+                                    {% if problem_result.accepted %}
+                                        {% if problem_result.first_all %}
+                                            <td class="text-center contest-solved-first">
+                                        {% elif problem_result.first %}
+                                            <td class="text-center problem-solved-first">
+                                        {% else %}
+                                            <td class="text-center problem-solved">
+                                        {% endif %}
+                                    {% elif problem_result.attempts > 0 %}
+                                        <td class="text-center problem-failed">
                                     {% else %}
-                                        {% include 'mog/user/_link.html' with user=instance.user %}
-                                        {% with institution=instance.user.profile.institution %}
-                                            {% if institution %}
-                                                <p><small>{{ institution.name }}</small></p>
+                                        <td class="text-center">
+                                    {% endif %}
+                                            {% if problem_result.accepted %}
+                                                <div>
+                                                    {{ problem_result.acc_delta|format_delta }}
+                                                </div>
                                             {% endif %}
-                                        {% endwith %}
-                                    {% endif %}
-                                </div>
-                            </td>
-
-                            <td class="text-center">{{ instance.solved }}</td>
-
-                            <td class="text-center">{{ instance.penalty|format_minutes }}</td>
-
-                            {% for problem in instance.problems %}
-                                {% if problem.accepted %}
-                                    {% if problem.contest_first_solved %}
-                                        <td class="text-center contest-solved-first">
-                                    {% elif problem.first %}
-                                        <td class="text-center problem-solved-first">
-                                    {% else %}
-                                        <td class="text-center problem-solved">
-                                    {% endif %}
-                                {% elif problem.attempts > 0 %}
-                                    <td class="text-center problem-failed">
-                                {% else %}
-                                    <td class="text-center">
-                                {% endif %}
-                                        {% if problem.accepted %}
-                                            <div>
-                                                {{ problem.acc_delta|format_delta }}
-                                            </div>
-                                        {% endif %}
-                                        {% if problem.attempts > 0 %}
-                                            <small>(-{{ problem.attempts }})</small>
-                                        {% endif %}
-                                    </td>
-                            {% endfor %}
-                        </tr>
+                                            {% if problem_result.attempts > 0 %}
+                                                <small>(-{{ problem_result.attempts }})</small>
+                                            {% endif %}
+                                        </td>
+                                {% endfor %}
+                            </tr>
+                        {% endwith %}
                     {% empty %}
                         <tr><td colspan="{{ problems|length|add:2 }}">No one registered for this contest!</td></tr>
                     {% endfor %}

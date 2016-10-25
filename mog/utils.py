@@ -75,3 +75,105 @@ def write_to_test(problem, folder, test, content):
         path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder, test)
         with open(path, 'w') as f:
             f.write(content)
+
+
+class ProblemResult(object):
+    def __init__(self, accepted=False, attempts=False, acc_delta=None, first=False, first_all=False):
+        self.accepted = accepted
+        self.attempts = attempts
+        self.acc_delta = acc_delta
+        self.first = first
+        self.first_all = first_all
+
+    def delta(self):
+        if self.acc_delta:
+            return self.acc_delta.total_seconds()
+        return float('inf')
+
+
+class InstanceResult(object):
+    def __init__(self, instance=None, problem_results=None, rank=1, solved=0, penalty=0):
+        self.instance = instance
+        self.solved = solved
+        self.rank = rank
+        self.penalty = penalty
+        self.problem_results = []
+        if problem_results:
+            for problem_result in problem_results:
+                self.add_problem_result(problem_result)
+
+    def add_problem_result(self, problem_result):
+        if problem_result.accepted:
+            self.solved += 1
+            self.penalty += problem_result.acc_delta.total_seconds() / 60 + 20 * problem_result.attempts
+        self.problem_results.append(problem_result)
+
+
+def calculate_standing(contest, virtual=False):
+    from django.db.models import Q
+    instances = contest.instances.all() if virtual else \
+        contest.instances.filter(real=True)
+    problems = contest.problems.order_by('position')
+    instance_results = []
+    for instance in instances:
+        instance_result = InstanceResult(instance=instance)
+        for problem in problems:
+            submissions = instance.submissions\
+                .filter(problem=problem)\
+                .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+            accepted, attempts, acc_delta = 0, False, None
+            accepted_submission = submissions\
+                .filter(result__name__iexact='accepted').order_by('date').first()
+            if accepted_submission:
+                attempts = submissions\
+                    .filter(result__penalty=True, date__lt=accepted_submission.date).count()
+                if instance.real:
+                    acc_delta = accepted_submission.date - contest.start_date
+                else:
+                    acc_delta = accepted_submission.date - instance.start_date
+            else:
+                attempts = submissions.filter(result__penalty=True).count()
+            instance_result.add_problem_result(
+                ProblemResult(accepted=acc_delta, attempts=attempts, acc_delta=acc_delta)
+            )
+        instance_results.append(instance_result)
+
+    def instance_key(ir):
+        """Used to sort instances, first by number of solved problems (higher first),
+        second by penalty (lower first) and finally, in case of tie, users with the lowest
+        greater accepted time comes first, in case of tie, second lowest greater accepted
+        time come first, and so on.
+        """
+        acc_deltas = sorted(
+            [problem_result.delta() for problem_result in ir.problem_results],
+            key=lambda row: -row
+        )
+        return -ir.solved, ir.penalty, acc_deltas
+
+    instance_results.sort(key=instance_key)
+
+    # set ranks
+    for i in range(1, len(instance_results)):
+        if instance_key(instance_results[i]) == instance_key(instance_results[i - 1]):
+            instance_results[i].rank = instance_results[i - 1].rank
+        else:
+            instance_results[i].rank = instance_results[i - 1].rank + 1
+
+    # find first accepted submission by problem and in the
+    # contest in general.
+    global_instance, global_min_delta = None, float('inf')
+    for i in range(len(problems)):
+        local_instance, local_min_delta = None, float('inf')
+        for ir in instance_results:
+            delta = ir.problem_results[i].delta()
+            if delta < local_min_delta:
+                local_instance, local_min_delta = ir.problem_results[i], delta
+                if delta < global_min_delta:
+                    global_instance, global_min_delta = ir.problem_results[i], delta
+        if local_instance:
+            local_instance.first = True
+
+    if global_instance:
+        global_instance.first_all = True
+
+    return problems, instance_results

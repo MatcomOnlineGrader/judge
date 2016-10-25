@@ -3,14 +3,16 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
-from api.models import Contest, ContestInstance, Team, Result, Compiler
+from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange
 from mog.forms import ContestForm
-from mog.utils import user_is_admin
+from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
 
 
@@ -36,107 +38,20 @@ def contest_problems(request, contest_id):
 @require_http_methods(["GET"])
 def contest_standing(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
-
     if not contest.can_be_seen_by(request.user):
         raise Http404()
-
     user_instance = None
     if request.user.is_authenticated():
         user_instance = contest.virtual_registration(request.user)
-
     show_virtual = request.GET.get('show_virtual') == 'on'
-
-    instances = contest.instances if show_virtual else \
-        contest.instances.filter(real=True)
-
-    instances = instances.select_related('team', 'user').all()
-
-    problems = contest.problems.order_by('position').all()
-
-    context = {
-        'instances': [],
+    problems, instance_results = calculate_standing(contest, show_virtual)
+    return render(request, 'mog/contest/standing.html', {
         'contest': contest,
-        'problems': problems,
+        'instance_results': instance_results,
         'show_virtual': show_virtual,
-        'instance': user_instance
-    }
-
-    for instance in instances:
-        i = {
-            'problems': [],
-            'user': instance.user,
-            'team': instance.team,
-            'solved': 0,
-            'penalty': 0,
-            'real': instance.real
-        }
-        penalty, solved = 0, 0
-        for problem in problems:
-            accepted = instance.get_submissions(problem, user_instance)\
-                .filter(result__name__iexact='accepted').order_by('date').first()
-            if accepted:
-                attempts = instance.get_submissions(problem, user_instance) \
-                    .filter(result__penalty=True, date__lt=accepted.date).count()
-            else:
-                attempts = instance.get_submissions(problem, user_instance) \
-                    .filter(result__penalty=True).count()
-            acc_delta = None
-            if accepted:
-                if instance.real:
-                    acc_delta = accepted.date - contest.start_date
-                else:
-                    acc_delta = accepted.date - instance.start_date
-                penalty += acc_delta.total_seconds() / 60 + 20 * attempts
-                solved += 1
-            i['problems'].append({
-                'accepted': accepted is not None,
-                'acc_delta': acc_delta,
-                'attempts': attempts,
-                'first': False,
-            })
-        i['solved'] = solved
-        i['penalty'] = penalty
-        context['instances'].append(i)
-
-    contest_first_solved_problem = None
-    contest_first_solved_instance = None
-    contest_first_solved_time = None
-
-    for i in range(len(problems)):
-        problem_first_solved_instance = None
-        problem_first_solved_time = None
-        for j in range(len(instances)):
-            instance = context['instances'][j]
-            if instance['problems'][i]['accepted']:
-                acc_delta = instance['problems'][i]['acc_delta']
-                if problem_first_solved_instance is None or problem_first_solved_time > acc_delta:
-                    problem_first_solved_time = acc_delta
-                    problem_first_solved_instance = j
-        if problem_first_solved_instance is not None:
-            context['instances'][problem_first_solved_instance]['problems'][i]['first'] = True
-            if contest_first_solved_instance is None or \
-                            contest_first_solved_time > problem_first_solved_time:
-                contest_first_solved_problem = i
-                contest_first_solved_instance = problem_first_solved_instance
-                contest_first_solved_time = problem_first_solved_time
-
-    if contest_first_solved_instance is not None:
-        instance = context['instances'][contest_first_solved_instance]
-        problem = instance['problems'][contest_first_solved_problem]
-        problem['contest_first_solved'] = True
-
-    context['instances'] = sorted(context['instances'],
-        key=lambda inst: (-inst['solved'], inst['penalty'] or float("inf")))
-
-    previous, rank = None, 1
-    for instance in context['instances']:
-        if previous is not None and \
-                (instance['solved'] != previous['solved'] or instance['penalty'] != previous['penalty']):
-            rank += 1
-        instance['rank'] = rank
-        previous = instance
-
-    return render(request, 'mog/contest/standing.html', context)
+        'user_instance': user_instance,
+        'problems': problems
+    })
 
 
 @require_http_methods(["GET"])
