@@ -20,17 +20,10 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    url(r'^mog/', include('registration.backends.hmac.urls')),
     url(r'^mog/', include('mog.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^mog/account/password_reset/$', auth_views.password_reset,
-        {'template_name': 'mog/account/password_reset.html'}, name='password_reset'),
-    url(r'^mog/account/password_reset_done/$', auth_views.password_reset_done,
-        {'template_name': 'mog/account/password_reset_done.html'}, name='password_reset_done'),
-    url(r'^mog/account/password_reset_confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm,
-         {'template_name': 'mog/account/password_reset_confirm.html'}, name='password_reset'),
-    url(r'^mog/account/password_reset_complete/$', auth_views.password_reset_complete,
-        {'template_name': 'mog/account/password_reset_complete.html'}, name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -1,0 +1,16 @@
+{% extends "mog/base.html" %}
+
+{% block title %}Activation failed{% endblock %}
+
+{% load i18n %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="well well-lg text-center">
+                <p>{% trans "Account activation failed" %}</p>
+                <i class="glyphicon glyphicon-remove" style="color: red; font-size: 100px;"></i>
+            </div>
+        </div>
+    </div>
+{% endblock %}

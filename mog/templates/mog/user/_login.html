@@ -14,7 +14,7 @@
             <li><a href="{% url 'mog:user_edit' user.id %}"><i class="glyphicon glyphicon-edit"></i> {% trans 'Edit profile' %}</a></li>
             <li><a href="{% url 'mog:post_create' %}"><i class="glyphicon glyphicon-pencil"></i> {% trans 'Add blog entry' %}</a></li>
             <li class="divider"></li>
-            <li><a href="{% url 'mog:logout' %}">{% trans 'Logout' %}</a></li>
+            <li><a href="{% url 'mog:logout' %}?next={% url 'mog:index' %}">{% trans 'Logout' %}</a></li>
         </ul>
     </li>
 {% else %}

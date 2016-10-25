@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'debug_toolbar'
 ]
 
@@ -160,3 +161,16 @@ LANGUAGES = [
     ('es', _('Spanish')),
     ('en', _('English')),
 ]
+
+LOGIN_REDIRECT_URL = '/mog/'
+ACCOUNT_ACTIVATION_DAYS = 7
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 25
+EMAIL_HOST = 'mail.matcom.uh.cu'
+EMAIL_HOST_USER = 'mog'
+EMAIL_HOST_PASSWORD = 'mog_pepe'
+DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
+
+SITE_ID = 1

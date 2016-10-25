@@ -1,0 +1,16 @@
+{% extends "mog/base.html" %}
+{% load i18n %}
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form method="post" action=".">
+                {% csrf_token %}
+                {% include 'mog/includes/form.html' with form=form %}
+                <input type="submit" value="{% trans 'Register' %}" class="btn btn-primary pull-right"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "mog/base.html" %}
+{% load i18n %}
+
+{% block title %}Registration complete{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="well well-lg text-center">
+                <p>{% trans "You are now registered. Activation email sent." %}</p>
+                <i class="glyphicon glyphicon-check" style="color: green; font-size: 100px; cursor: default;"></i>
+            </div>
+        </div>
+    </div>
+{% endblock %}
