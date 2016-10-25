@@ -71,6 +71,4 @@ class Submit(View):
         if user_is_admin(request.user):
             submission.hidden = True
         submission.save()
-        return redirect(
-            reverse('mog:contest_submissions') + '?contest={0}'.format(problem.contest_id)
-        )
+        return redirect('mog:contest_submissions', problem.contest_id)
