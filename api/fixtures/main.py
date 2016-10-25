@@ -54,13 +54,14 @@ def fix():
 
 def unescape_():
     for contest in Contest.objects.all():
-        contest.description = unescape(contest.description)
-        contest.save()
+        if contest.description:
+            contest.description = unescape(contest.description)
+            contest.save()
 
     for post in Post.objects.order_by('modification_date'):
         if post.body:
             post.body = unescape(post.body)
-        post.save()
+            post.save()
 
     for problem in Problem.objects.all():
         if problem.body:
