@@ -15,7 +15,7 @@ def submissions(request):
     submission_list, query = filter_submissions(
         request.user,
         problem=request.GET.get('problem'), contest=request.GET.get('contest'),
-        user=request.GET.get('user'), result=request.GET.get('result'),
+        username=request.GET.get('username'), result=request.GET.get('result'),
         compiler=request.GET.get('compiler')
     )
     submissions = get_paginator(submission_list, 30, request.GET.get('page'))

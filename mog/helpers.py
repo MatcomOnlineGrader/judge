@@ -14,7 +14,7 @@ def get_paginator(query_set, rows_per_page, current_page=1):
     return items
 
 
-def filter_submissions(user_who_request, problem=None, contest=None, user=None, result=None, compiler=None, **kwargs):
+def filter_submissions(user_who_request, problem=None, contest=None, username=None, result=None, compiler=None, **kwargs):
     query = {}
     queryset = Submission.visible_submissions(user_who_request)
 
@@ -29,9 +29,9 @@ def filter_submissions(user_who_request, problem=None, contest=None, user=None, 
     except (Contest.DoesNotExist, ValueError):
         contest = None
 
-    if user:
-        queryset = queryset.filter(user__username__contains__iexact=user)
-        query['user'] = user  # no encode needed
+    if username:
+        queryset = queryset.filter(user__username__icontains=username)
+        query['username'] = username  # no encode needed
 
     try:
         result = Result.objects.get(pk=result)
