@@ -2,6 +2,7 @@
 
 {% load filters %}
 {% load i18n %}
+{% load security %}
 
 {% block title %}{{ contest.name }} | {% trans 'Problems' %}{% endblock %}
 
@@ -11,14 +12,64 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-12">
-            <h3 class="title">{% trans 'Problems' %}</h3>
-        </div>
-    </div>
-
-    <div class="row">
         <div class="col-md-8">
             <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">
+                        {% trans 'Problems' %}
+                        {% if not contest.allow_teams %}
+                            {% if contest.rated %}
+                                (<small>{% trans 'Rated' %}</small>)
+                            {% else %}
+                                (<small>{% trans 'Unrated' %}</small>)
+                            {% endif %}
+                        {% endif %}
+                        {% if user|can_edit_contest:contest %}
+                            <div class="dropdown pull-right">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="true">
+                                    {% trans 'Actions' %}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li>
+                                        <form id="rate_contest_form" action="{% url 'mog:rate_contest' contest.id %}"
+                                              method="post">
+                                            {% csrf_token %}
+                                        </form>
+                                        <a href="javascript:;" onclick="$('#rate_contest_form').submit();">Rate
+                                            contest</a>
+                                    </li>
+                                    <li>
+                                        <form id="force_rate_contest_form"
+                                              action="{% url 'mog:rate_contest' contest.id %}"
+                                              method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="force_rate" value="on"/>
+                                        </form>
+                                        <a href="javascript:;" onclick="$('#force_rate_contest_form').submit();">Force
+                                            rate
+                                            contest</a>
+                                    </li>
+                                    <li>
+                                        <form id="unrate_contest_form"
+                                              action="{% url 'mog:unrate_contest' contest.id %}"
+                                              method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="force_rate" value="on"/>
+                                        </form>
+                                        <a href="javascript:;" onclick="$('#unrate_contest_form').submit();">Unrate
+                                            contest</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Get CVS</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </h3>
+                </div>
+
                 <div class="col-md-12">
                     <table class="table table-bordered">
                         <thead>
@@ -48,7 +99,8 @@
                                     <a href="#"><i class="glyphicon glyphicon-file"></i></a>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{% url 'mog:submit' problem.id %}"><i class="glyphicon glyphicon-envelope"></i></a>
+                                    <a href="{% url 'mog:submit' problem.id %}"><i
+                                            class="glyphicon glyphicon-envelope"></i></a>
                                 </td>
                             </tr>
                         {% empty %}
@@ -59,14 +111,17 @@
                         </tbody>
                     </table>
                 </div>
-                {% if contest.description %}
-                    <div class="col-md-12">
-                        <h3 class="uniform-text uniform-big">{% trans 'Description' %}</h3>
-                        <div class="well bckg-white">
-                            <p>{{ contest.description|safe }}</p>
+
+                <div class="col-md-12">
+                    {% if contest.description %}
+                        <div class="col-md-12">
+                            <h3 class="uniform-text uniform-big">{% trans 'Description' %}</h3>
+                            <div class="well bckg-white">
+                                <p>{{ contest.description|safe }}</p>
+                            </div>
                         </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

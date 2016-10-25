@@ -174,3 +174,12 @@ EMAIL_HOST_PASSWORD = 'mog_pepe'
 DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 
 SITE_ID = 1
+
+# Value used to assign initial rating when user has not previous
+# rated contest. This value can be changed depending of division
+# thresholds.
+BASE_RATING = 1300
+
+# Rating changes are not allowed beyond MAX_RATING_DELTA. If this
+# happens, then the increase/decrease rating is truncated.
+MAX_RATING_DELTA = 150

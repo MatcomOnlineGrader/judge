@@ -68,6 +68,7 @@ class Contest(models.Model):
     death_time = models.IntegerField(verbose_name="Death time (minutes)", default=0)
     closed = models.BooleanField(verbose_name="Closed registration", default=False)
     allow_teams = models.BooleanField(verbose_name="Allow teams", default=False)
+    rated = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

@@ -102,6 +102,9 @@ class InstanceResult(object):
             for problem_result in problem_results:
                 self.add_problem_result(problem_result)
 
+    def attempts(self):
+        return sum([pr.attempts for pr in self.problem_results])
+
     def add_problem_result(self, problem_result):
         if problem_result.accepted:
             self.solved += 1
