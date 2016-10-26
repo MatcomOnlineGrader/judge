@@ -59,7 +59,7 @@ def fix():
                 pass
 
 
-def unescape():
+def unescape_():
     for contest in Contest.objects.all():
         if contest.description:
             contest.description = unescape(contest.description)
