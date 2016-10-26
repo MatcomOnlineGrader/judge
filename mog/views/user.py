@@ -107,6 +107,7 @@ def user_messages(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if not user_is_admin(request.user) and request.user != user:
         return HttpResponseForbidden()
+    user.messages_received.update(saw=True)
     return render(request, 'mog/user/messages.html', {
         'inbox': user.messages_received.order_by('-date').all(),
         'outbox': user.messages_sent.order_by('-date').all(),

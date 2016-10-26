@@ -13,4 +13,7 @@ def common(request):
     next = request.GET.get('next')
     if next:
         context['next'] = next
+    if request.user.is_authenticated():
+        context['unseen_messages'] = request.user\
+            .messages_received.filter(saw=False).count()
     return context

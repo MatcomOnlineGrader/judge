@@ -5,16 +5,18 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
            aria-expanded="false">
             {{ user.username }}
+            {% if unseen_messages %}
+                ({{ unseen_messages }})
+            {% endif %}
             <span class="caret"></span></a>
         <ul class="dropdown-menu">
-            <li><a href="#"><i class="glyphicon glyphicon-inbox"></i> {% trans 'Inbox' %}</a></li>
-            <li><a href="#"><i class="glyphicon glyphicon-share"></i> {% trans 'Outbox' %}</a></li>
+            <li><a href="{% url 'mog:user_messages' user.id %}"><i class="glyphicon glyphicon-envelope"></i> {% trans 'Messages' %}</a></li>
             <li class="divider"></li>
             <li><a href="{% url 'mog:user' user.id %}"><i class="glyphicon glyphicon-user"></i> {% trans 'View profile' %}</a></li>
             <li><a href="{% url 'mog:user_edit' user.id %}"><i class="glyphicon glyphicon-edit"></i> {% trans 'Edit profile' %}</a></li>
             <li><a href="{% url 'mog:post_create' %}"><i class="glyphicon glyphicon-pencil"></i> {% trans 'Add blog entry' %}</a></li>
             <li class="divider"></li>
-            <li><a href="{% url 'mog:logout' %}?next={% url 'mog:index' %}">{% trans 'Logout' %}</a></li>
+            <li><a href="{% url 'mog:logout' %}?next={% url 'mog:index' %}"><i class="glyphicon glyphicon-off"></i> {% trans 'Logout' %}</a></li>
         </ul>
     </li>
 {% else %}
