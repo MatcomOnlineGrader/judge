@@ -1,7 +1,7 @@
 venv/
+emails/
 media/
 api/fixtures/*.json
 .idea/
 *.pyc
 *.mo
-

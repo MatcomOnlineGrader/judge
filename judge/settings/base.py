@@ -16,15 +16,11 @@ from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+qk4e_qvi2k!!8b3_viloh*u-_$q-s6o%lhg@=ro_3cklr!src'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -40,8 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'debug_toolbar'
+    'django.contrib.sites'
 ]
 
 MIDDLEWARE = [
@@ -52,8 +47,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'judge.urls'
@@ -77,21 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'judge.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mog',
-        'USER': 'mog',
-        'PASSWORD': 'mog',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -137,21 +116,6 @@ MEDIA_URL = '/media/'
 
 LOGIN_URL = '/mog/login/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 25
-EMAIL_HOST = 'lab.matcom.uh.cu'
-EMAIL_HOST_USER = 'l.castillo'
-EMAIL_HOST_PASSWORD = ''
-SERVER_EMAIL = 'l.castillo@lab.matcom.uh.cu'
-DEFAULT_FROM_EMAIL = 'l.castillo@lab.matcom.uh.cu'
-
-# Resources used while grading
-SANDBOX_FOLDER = '/home/leandro/Desktop/@PROJECTS/sandbox'
-PROBLEMS_FOLDER = '/home/leandro/Desktop/@PROJECTS/problems'
-
-#INTERNAL_IPS = ['127.0.0.1']
-
 # Internationalization
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale')
@@ -162,16 +126,9 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 
+# Used by django_registration
 LOGIN_REDIRECT_URL = '/mog/'
 ACCOUNT_ACTIVATION_DAYS = 7
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 25
-EMAIL_HOST = 'mail.matcom.uh.cu'
-EMAIL_HOST_USER = 'mog'
-EMAIL_HOST_PASSWORD = 'mog_pepe'
-DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 
 SITE_ID = 1
 
