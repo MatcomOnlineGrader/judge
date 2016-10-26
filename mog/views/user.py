@@ -1,3 +1,5 @@
+from django.contrib.auth import login
+
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
@@ -87,28 +89,16 @@ class UserEditView(View):
         user = get_object_or_404(User, pk=user_id)
         if not user_is_admin(request.user) and request.user != user:
             return redirect('mog:index')
-        user_form, profile_form = UserForm(request.POST),\
-            UserProfileForm(request.POST, request.FILES)
+        user_form, profile_form = UserForm(request.POST, instance=user),\
+            UserProfileForm(request.POST, request.FILES, instance=user.profile)
         if not user_form.is_valid() or not profile_form.is_valid():
             return render(request, 'mog/user/edit.html', {
                 'user_in_profile': user, 'user_form': user_form,
                 'profile_form': profile_form
             })
-
-        user.email = user_form.cleaned_data['email']
-        user.first_name = user_form.cleaned_data['first_name']
-        user.last_name = user_form.cleaned_data['last_name']
-        user.save()
-
-        profile = user.profile
-        if profile_form.cleaned_data['avatar']:
-            profile.avatar = profile_form.cleaned_data['avatar']
-        profile.theme = profile_form.cleaned_data['theme']
-        profile.show_tags = profile_form.cleaned_data['show_tags']
-        profile.institution = profile_form.cleaned_data['institution']
-        profile.compiler = profile_form.cleaned_data['compiler']
-        profile.save()
-
+        user_form.save()
+        login(request, user)
+        profile_form.save()
         return redirect('mog:user', user_id=user.pk)
 
 
