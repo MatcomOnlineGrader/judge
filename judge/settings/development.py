@@ -28,7 +28,7 @@ DATABASES = {
 # INTERNAL_IPS = ['127.0.0.1']
 
 # Place to store problem test-cases & pdf
-PROBLEMS_FOLDER = '~/Desktop/problems/'
+PROBLEMS_FOLDER = '/home/leandro/Desktop/problems/'
 
 # The file backend writes emails to a file
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

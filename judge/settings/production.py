@@ -10,12 +10,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mog',
         'USER': 'mog',
-        'PASSWORD': 'mog',
+        'PASSWORD': '[REDACTED]',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
@@ -26,4 +25,4 @@ EMAIL_HOST_PASSWORD = 'mog_pepe'
 DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 
 # Place to store problem test-cases & pdf
-PROBLEMS_FOLDER = '~/problems/'
+PROBLEMS_FOLDER = '/home/mog/problems/'
