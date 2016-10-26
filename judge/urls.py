@@ -21,10 +21,10 @@ from registration.backends.hmac.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 
 urlpatterns = [
-    url(r'^mog/register/$',
+    url(r'^/register/$',
         RegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='registration_register'),
-    url(r'^mog/', include('registration.backends.hmac.urls')),
-    url(r'^mog/', include('mog.urls')),
+    url(r'^', include('registration.backends.hmac.urls')),
+    url(r'^', include('mog.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
