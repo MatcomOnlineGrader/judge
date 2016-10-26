@@ -127,7 +127,7 @@ LANGUAGES = [
 ]
 
 # Used by django_registration
-LOGIN_REDIRECT_URL = '/mog/'
+LOGIN_REDIRECT_URL = '/'
 ACCOUNT_ACTIVATION_DAYS = 7
 
 SITE_ID = 1
