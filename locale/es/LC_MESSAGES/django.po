@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-19 06:57+0000\n"
+"POT-Creation-Date: 2016-10-26 06:31-0400\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,37 +10,40 @@ msgstr ""
 "es/)\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:399
+#: api/models.py:393
 msgid "Code Editor Theme"
 msgstr "Tema del editor de código"
 
-#: api/models.py:400
+#: api/models.py:394
 msgid "Avatar"
 msgstr "Imagen"
 
-#: api/models.py:401
+#: api/models.py:395
 msgid "Show tags"
 msgstr "Mostrar etiquetas"
 
-#: api/models.py:402
+#: api/models.py:396
 msgid "Institution"
 msgstr "Institución"
 
-#: api/models.py:405 mog/templates/mog/submission/index.html:38
+#: api/models.py:399 mog/templates/mog/submission/index.html:38
+#: mog/templates/mog/submit/submit.html:53
 msgid "Compiler"
 msgstr "Compilador"
 
-#: judge/settings.py:160
+#: judge/settings/base.py:125
 msgid "Spanish"
 msgstr "Español"
 
-#: judge/settings.py:161
+#: judge/settings/base.py:126
 msgid "English"
 msgstr "Inglés"
 
 #: mog/templates/mog/account/login.html:12
 #: mog/templates/mog/account/login.html:46
 #: mog/templates/mog/user/_login.html:22
+#: mog/templates/registration/login.html:12
+#: mog/templates/registration/login.html:38
 msgid "Login"
 msgstr "Entrar"
 
@@ -48,10 +51,12 @@ msgstr "Entrar"
 #: mog/templates/mog/contest/submissions.html:23
 #: mog/templates/mog/contest/submissions.html:25
 #: mog/templates/mog/submission/index.html:20
+#: mog/templates/registration/login.html:26
 msgid "Username"
 msgstr "Nombre de usuario"
 
 #: mog/templates/mog/account/login.html:32
+#: mog/templates/registration/login.html:32
 msgid "Password"
 msgstr "Contraseña"
 
@@ -60,6 +65,7 @@ msgid "Remember me"
 msgstr "Recordar sesión"
 
 #: mog/templates/mog/account/login.html:52
+#: mog/templates/registration/login.html:44
 msgid "Forgot Password ?"
 msgstr "Olvidó la contraseña ?"
 
@@ -67,62 +73,23 @@ msgstr "Olvidó la contraseña ?"
 #: mog/templates/mog/contest/_coming_contests.html:36
 #: mog/templates/mog/contest/_register.html:10
 #: mog/templates/mog/user/_login.html:25
+#: mog/templates/registration/login.html:45
+#: mog/templates/registration/registration_form.html:4
+#: mog/templates/registration/registration_form.html:12
 msgid "Register"
 msgstr "Crear cuenta"
 
-#: mog/templates/mog/account/password_reset_complete.html:6
-#: mog/templates/mog/account/password_reset_confirm.html:6
 #: mog/templates/mog/base.html:120
 msgid "Home"
 msgstr "Inicio"
-
-#: mog/templates/mog/account/password_reset_complete.html:7
-msgid "Password reset"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_complete.html:16
-msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_complete.html:18
-msgid "Log in"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:7
-msgid "Password reset confirmation"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:17
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:21
-msgid "New password:"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:23
-msgid "Confirm password:"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:24
-msgid "Change my password"
-msgstr ""
-
-#: mog/templates/mog/account/password_reset_confirm.html:29
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
-msgstr ""
 
 #: mog/templates/mog/base.html:121 mog/templates/mog/user/index.html:12
 msgid "Users"
 msgstr "Usuarios"
 
 #: mog/templates/mog/base.html:122 mog/templates/mog/contest/_left.html:67
-#: mog/templates/mog/contest/problems.html:6
-#: mog/templates/mog/contest/problems.html:15
+#: mog/templates/mog/contest/problems.html:7
+#: mog/templates/mog/contest/problems.html:19
 msgid "Problems"
 msgstr "Problemas"
 
@@ -162,7 +129,7 @@ msgstr "Clasificación"
 msgid "Points"
 msgstr "Puntos"
 
-#: mog/templates/mog/base.html:209 mog/templates/mog/contest/problems.html:28
+#: mog/templates/mog/base.html:209 mog/templates/mog/contest/problems.html:79
 #: mog/templates/mog/user/detail.html:17 mog/templates/mog/user/index.html:40
 msgid "Solved"
 msgstr "Resueltos"
@@ -311,8 +278,11 @@ msgstr "Posiciones"
 
 #: mog/templates/mog/contest/_left.html:83
 #: mog/templates/mog/contest/_left.html:88
-#: mog/templates/mog/contest/problems.html:30
+#: mog/templates/mog/contest/problems.html:81
 #: mog/templates/mog/problem/detail.html:64
+#: mog/templates/mog/submit/submit.html:7
+#: mog/templates/mog/submit/submit.html:32
+#: mog/templates/registration/password_change_form.html:9
 msgid "Submit"
 msgstr "Enviar"
 
@@ -387,23 +357,41 @@ msgstr "Estás seguro que desea eliminar su participación en este concurso ?"
 msgid "Create contest"
 msgstr "Crear concurso"
 
-#: mog/templates/mog/contest/problems.html:27
+#: mog/templates/mog/contest/problems.html:22
+#, fuzzy
+#| msgid "Created"
+msgid "Rated"
+msgstr "Creado"
+
+#: mog/templates/mog/contest/problems.html:24
+#, fuzzy
+#| msgid "Created"
+msgid "Unrated"
+msgstr "Creado"
+
+#: mog/templates/mog/contest/problems.html:32
+#: mog/templates/mog/user/teams.html:18
+msgid "Actions"
+msgstr "Acciones"
+
+#: mog/templates/mog/contest/problems.html:78
 #: mog/templates/mog/contest/submissions.html:28
 #: mog/templates/mog/submission/_list.html:10
 #: mog/templates/mog/submission/index.html:23
 #: mog/templates/mog/submission/index.html:25
+#: mog/templates/mog/submit/submit.html:42
 msgid "Problem"
 msgstr "Problema"
 
-#: mog/templates/mog/contest/problems.html:29
+#: mog/templates/mog/contest/problems.html:80
 msgid "PDF"
 msgstr ""
 
-#: mog/templates/mog/contest/problems.html:56
+#: mog/templates/mog/contest/problems.html:108
 msgid "No problems included yet!"
 msgstr "No hay problemas incluídos todavía!"
 
-#: mog/templates/mog/contest/problems.html:64
+#: mog/templates/mog/contest/problems.html:118
 #: mog/templates/mog/user/teams.html:16
 msgid "Description"
 msgstr "Descripción"
@@ -702,10 +690,6 @@ msgstr "Equipo"
 msgid "Contestants"
 msgstr "Concursantes"
 
-#: mog/templates/mog/user/teams.html:18
-msgid "Actions"
-msgstr "Acciones"
-
 #: mog/templates/mog/user/teams.html:29
 msgid "No description provided"
 msgstr "Sin descripción"
@@ -717,6 +701,133 @@ msgstr "No se han creado equipos!"
 #: mog/templates/mog/user/teams.html:54
 msgid "Create team"
 msgstr "Crear equipo"
+
+#: mog/templates/registration/activate.html:3
+msgid "Activation failed"
+msgstr ""
+
+#: mog/templates/registration/activate.html:11
+msgid "Account activation failed"
+msgstr ""
+
+#: mog/templates/registration/activation_complete.html:4
+msgid "Activation completed"
+msgstr ""
+
+#: mog/templates/registration/activation_complete.html:10
+msgid "Your account is now activated"
+msgstr ""
+
+#: mog/templates/registration/activation_email.txt:2
+msgid "Activate account at"
+msgstr ""
+
+#: mog/templates/registration/activation_email.txt:6
+#, python-format
+msgid "Link is valid for %(expiration_days)s days."
+msgstr ""
+
+#: mog/templates/registration/activation_email_subject.txt:1
+msgid "Account activation on"
+msgstr ""
+
+#: mog/templates/registration/password_change_done.html:5
+#, fuzzy
+#| msgid "Password"
+msgid "Password changed"
+msgstr "Contraseña"
+
+#: mog/templates/registration/password_reset_complete.html:4
+#: mog/templates/registration/password_reset_complete.html:10
+msgid "Password reset successfully"
+msgstr "Reinicio de contraseña exitoso"
+
+#: mog/templates/registration/password_reset_complete.html:12
+msgid "Log in"
+msgstr "Entrar"
+
+#: mog/templates/registration/password_reset_confirm.html:4
+#, fuzzy
+#| msgid "Request Reset Password"
+msgid "Reset password"
+msgstr "Reiniciar contraseña"
+
+#: mog/templates/registration/password_reset_confirm.html:13
+msgid "Reset"
+msgstr "Reiniciar"
+
+#: mog/templates/registration/password_reset_confirm.html:16
+msgid "Password reset failed"
+msgstr "Reinicio de contraseña fallido"
+
+#: mog/templates/registration/password_reset_done.html:4
+msgid "Password instructions"
+msgstr "Instrucciones para cambio de contraseña"
+
+#: mog/templates/registration/password_reset_done.html:10
+msgid "Email with password reset instructions has been sent."
+msgstr "Un correo con las instrucciones para reiniciar su contraseña ha sido enviado."
+
+#: mog/templates/registration/password_reset_email.txt:2
+#, python-format
+msgid "Reset password at %(site_name)s"
+msgstr "Resetear contraseña en %(site_name)s"
+
+#: mog/templates/registration/password_reset_form.html:4
+#, fuzzy
+#| msgid "Password reset failed"
+msgid "Password Reset"
+msgstr "Reinicio de contraseña fallido"
+
+#: mog/templates/registration/password_reset_form.html:12
+msgid "Request Reset Password"
+msgstr "Reiniciar contraseña"
+
+#: mog/templates/registration/registration_closed.html:5
+msgid "Registration is currently closed."
+msgstr "Registro está cerrado."
+
+#: mog/templates/registration/registration_complete.html:4
+#, fuzzy
+#| msgid "Registration"
+msgid "Registration complete"
+msgstr "Registro"
+
+#: mog/templates/registration/registration_complete.html:10
+msgid "You are now registered. Activation email sent."
+msgstr "Ahora usted está registrado. Correo de activación enviado."
+
+#: mog/views/contest.py:236
+msgid "This contest cannot be rated because it's open for teams."
+msgstr "Este concurso no puede calificarse porque es abierto para equipos."
+
+#: mog/views/contest.py:240
+msgid ""
+"This contest have ben rated. If you want rate again, then force the "
+"operation."
+msgstr ""
+"Este concurso ha sido calificado anteriormente. Si desea calificarlo "
+"nuevamente, entonces fuerce la operación."
+
+#: mog/views/contest.py:245
+msgid "This contest cannot be rated because it's before a rated contest."
+msgstr ""
+"Este concurso no puede ser calificado porque ocurrió antes de un concurso "
+"calificado."
+
+#: mog/views/contest.py:300
+msgid "This contest have been rated successfully"
+msgstr "Este concurso ha sido calificado satisfactoriamente"
+
+#: mog/views/contest.py:315
+msgid "This contest cannot be unrated because it's before a rated contest"
+msgstr ""
+"Este concurso no se puede descalificar porque ocurrió antes de un concurso "
+"calificado."
+
+#: mog/views/contest.py:321
+msgid "This contest have been unrated successfully"
+msgstr "Este concurso ha sido descalificado satisfactoriamente"
 
 #: venv/lib/python2.7/site-packages/django/contrib/sitemaps/apps.py:7
 msgid "Site Maps"
@@ -968,7 +1079,7 @@ msgstr ""
 
 #: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1662
 msgid "Email address"
-msgstr ""
+msgstr "Dirección de correo"
 
 #: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1686
 msgid "File path"
