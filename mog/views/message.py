@@ -26,4 +26,4 @@ def send_message(request, user_id):
         body=body
     )
     msgs.success(request, 'Message sent successfully!', extra_tags='success')
-    return redirect('mog:user_messages', user_id=source.id)
+    return redirect('mog:user', user_id=target.id)
