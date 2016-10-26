@@ -290,6 +290,9 @@ class Post(models.Model):
             # Remove all scripts
             for tag in soup.find_all('script'):
                 tag.extract()
+            # Remove all forms
+            for tag in soup.find_all('form'):
+                tag.extract()
             # Remove all attributes starting with on-
             # to avoid js execution when events fired.
             for tag in soup.findAll():
