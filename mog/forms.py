@@ -1,4 +1,6 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
+
 from api.models import UserProfile, User, Post, Contest, Problem
 
 
@@ -53,6 +55,20 @@ class ContestForm(forms.ModelForm):
     class Meta:
         model = Contest
         exclude = []
+
+    def clean(self):
+        super(ContestForm, self).clean()
+        start_date, end_date = self.cleaned_data.get('start_date'),\
+                               self.cleaned_data.get('end_date')
+        if start_date and end_date and start_date >= end_date:
+            self.add_error('start_date', _('Start date must be less than end date'))
+        death_time, frozen_time = self.cleaned_data.get('death_time'), \
+                                  self.cleaned_data.get('frozen_time')
+        if death_time is not None and frozen_time is not None:
+            if frozen_time < death_time:
+                self.add_error('frozen_time', _('Frozen time must be greater or equal than death time'))
+            if start_date and end_date and (end_date - start_date).total_seconds() < death_time * 60:
+                self.add_error('death_time', _('Death time must be less or equal than contest duration'))
 
 
 class ProblemForm(forms.ModelForm):
