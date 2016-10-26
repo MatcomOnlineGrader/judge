@@ -96,7 +96,9 @@
                                     {{ problem.solved_in_real }}
                                 </td>
                                 <td class="text-center">
-                                    <a href="#"><i class="glyphicon glyphicon-file"></i></a>
+                                    <a href="{{ MEDIA_URL }}problem/pdf/{{ problem.id }}.pdf">
+                                        <i class="glyphicon glyphicon-file"></i>
+                                    </a>
                                 </td>
                                 <td class="text-center">
                                     <a href="{% url 'mog:submit' problem.id %}"><i
