@@ -39,15 +39,6 @@ class Tag(models.Model):
         return self.name
 
 
-class Validator(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField()
-    source = models.TextField()
-
-    def __unicode__(self):
-        return self.name
-
-
 class Checker(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
@@ -208,7 +199,6 @@ class Problem(models.Model):
     time_limit = models.PositiveIntegerField(verbose_name='Time limit (s)')
     memory_limit = models.PositiveIntegerField(verbose_name='Memory limit (MB)')
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
-    validator = models.ForeignKey(Validator, null=True)
     checker = models.ForeignKey(Checker, null=True)
     position = models.IntegerField()
     balloon = models.CharField(verbose_name="Balloon color", max_length=50)
