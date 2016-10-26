@@ -1,7 +1,34 @@
-{% autoescape on %}
-\documentclass{article}
-\begin{document}
-  {{ problem.title }}
-  {{ problem.body|safe }}
-\end{document}
-{% endautoescape %}
+<h1>{{ problem.title }}</h1>
+
+<div>
+    <div>Tiempo: {{ problem.time_limit }} s</div>
+    <div>Memoria: {{ problem.memory_limit }} MB</div>
+</div>
+
+<small>
+    <a href="http://mog.matcom.uh.cu">mog.matcom.uh.cu</a>
+</small>
+
+{{ problem.body|safe }}
+
+<h2>Entrada</h2>
+{{ problem.input|safe }}
+
+<h2>Salida</h2>
+{{ problem.output|safe }}
+
+<h2>Casos de ejemplo</h2>
+
+{% for si, so in samples %}
+    <div>
+        <div>Entrada</div>
+        <div><pre>{{ si }}</pre></div>
+        <div>Salida</div>
+        <div><pre>{{ so }}</pre></div>
+    </div>
+{% endfor %}
+
+{% if problem.hints %}
+    <h2>Pistas</h2>
+    {{ problem.hints|safe }}
+{% endif %}
