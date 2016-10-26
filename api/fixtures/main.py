@@ -2,6 +2,13 @@ import json
 from api.models import *
 from mog.utils import unescape
 
+# import django
+# django.setup()
+# from api.fixtures import main
+# main.fix()
+# main.fix_links_in_posts_acm()
+# main.unescape_()
+
 
 def fix():
     print 'slugify problem titles'
@@ -52,7 +59,7 @@ def fix():
                 pass
 
 
-def unescape_():
+def unescape():
     for contest in Contest.objects.all():
         if contest.description:
             contest.description = unescape(contest.description)
@@ -73,3 +80,39 @@ def unescape_():
         if problem.hints:
             problem.hints = unescape(problem.hints)
         problem.save()
+
+
+def fix_links_in_posts_acm():
+    for post in Post.objects.all():
+        if post.body:
+            soup = BeautifulSoup(post.body, 'html.parser')
+            for tag in soup.find_all('a'):
+                if tag['href'].startswith('../programacion'):
+                    tag['href'] = '#'
+
+                # This link need to point to some ftp
+                if tag['href'].startswith('../Documentation'):
+                    tag['href'] = '#'
+
+                if tag['href'].startswith('../Problem/Details/'):
+                    problem = Problem.objects.get(pk=tag['href'][19:])
+                    tag['href'] = reverse('mog:problem', args=(problem.id, problem.slug))
+
+                if tag['href'].startswith('../Contest/Standings/'):
+                    contest = Contest.objects.get(pk=tag['href'][21:])
+                    tag['href'] = reverse('mog:contest_standing', args=(contest.id, ))
+
+                if tag['href'].startswith('../User/Details/'):
+                    user = User.objects.get(pk=tag['href'][16:])
+                    tag['href'] = reverse('mog:user', args=(user.id, ))
+
+                if tag['href'].startswith('../Problem/SubmissionDetails/'):
+                    try:
+                        submission = Submission.objects.get(pk=tag['href'][29:])
+                        submission.public = True
+                        submission.save()
+                        tag['href'] = reverse('mog:submission', args=(submission.id,))
+                    except:
+                        tag['href'] = '#'
+            post.body = soup.prettify()
+            post.save()
