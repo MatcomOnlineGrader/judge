@@ -22,7 +22,7 @@ def submissions(request):
     return render(request, 'mog/submission/index.html', {
         'submissions': submissions,
         'results': Result.get_all_results(),
-        'compiler': Compiler.get_all_compilers(),
+        'compilers': Compiler.get_all_compilers(),
         'query': query
     })
 
