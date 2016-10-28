@@ -71,7 +71,7 @@ def contest_submissions(request, contest_id):
         'contest': contest,
         'submissions': submissions,
         'results': Result.get_all_results(),
-        'compiler': Compiler.get_all_compilers(),
+        'compilers': Compiler.get_all_compilers(),
         'query': query
     })
 
