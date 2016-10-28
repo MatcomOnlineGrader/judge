@@ -56,12 +56,13 @@
                     </div>
                     {% block content2 %}{% endblock %}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 text-center">
                     {% include 'mog/user/_image.html' with user=user_in_profile %}
                     {% if user.is_authenticated and user != user_in_profile %}
-                        <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#send-message">
+                        <a class="btn btn-primary btn-block margin-top-5" data-toggle="modal" data-target="#send-message">
                             <i class="glyphicon glyphicon-envelope"></i> {% trans 'Send a message' %}
                         </a>
+
                         {% include 'mog/message/_send_message.html' with target=user_in_profile %}
                     {% endif %}
                 </div>
