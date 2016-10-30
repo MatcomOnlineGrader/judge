@@ -67,6 +67,12 @@ def fix():
 
 
 def unescape_():
+    # Strip all html from comments
+    for comment in Comment.objects.order_by('date'):
+        soup = BeautifulSoup(comment.body, 'html.parser')
+        comment.body = soup.text
+        comment.save()
+
     for contest in Contest.objects.all():
         if contest.description:
             contest.description = unescape(contest.description)
@@ -140,5 +146,28 @@ def fix_links_in_posts():
                             pass
                 elif tag['href'].lower().startswith('http://judge.matcom.uh.cu/data/userfiles/'):
                     tag['href'] = '/media/compat/' + tag['href'][41:]
+            post.body = soup.prettify()
+            post.save()
+
+
+# import django
+# django.setup()
+# from api.fixtures import main
+# main.fix_scr_in_images()
+
+
+def fix_scr_in_images():
+    # Fixing images in posts
+    for post in Post.objects.all():
+        if post.body:
+            soup = BeautifulSoup(post.body, 'html.parser')
+            for tag in soup.find_all('img'):
+                if tag['src'].lower().lower().startswith('/data/userfiles/'):
+                    tag['src'] = '/media/compat/' + tag['src'][16:]
+                elif tag['src'].lower().lower().startswith('http://judge.matcom.uh.cu/data/userfiles/'):
+                    tag['src'] = '/media/compat/' + tag['src'][41:]
+                tag['class'] = 'img-responsive'
+                if not tag['src'].startswith('/media'):
+                    print post.id, tag['src']
             post.body = soup.prettify()
             post.save()
