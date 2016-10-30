@@ -21,7 +21,14 @@
                 <tbody>
                     {% for team in teams %}
                         <tr>
-                            <td>{{ team.name }}</td>
+                            <td>
+                                <div>
+                                    <strong>{{ team.name }}</strong>
+                                </div>
+                                {% if team.institution %}
+                                    <small>{{ team.institution.name }}</small>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if team.description %}
                                     {{ team.description }}

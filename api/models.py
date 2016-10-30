@@ -22,6 +22,7 @@ from mog.utils import user_is_admin, user_is_browser
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
+    institution = models.ForeignKey('Institution', null=True, blank=True)
     description = models.CharField(max_length=250, null=True)
 
     def __unicode__(self):
