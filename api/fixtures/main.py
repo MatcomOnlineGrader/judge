@@ -187,6 +187,7 @@ def fix_contests():
             for img in soup.find_all('img'):
                 img['src'] = fix_link(img['src'])
                 img['class'] = 'img-responsive'
+            contest.description = soup.prettify()
         # Set contest rated iff there is some rating change
         contest.rated = contest.rating_changes.count() > 0
         contest.save()
