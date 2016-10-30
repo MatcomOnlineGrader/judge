@@ -46,7 +46,7 @@ def contest_standing(request, contest_id):
     if request.user.is_authenticated():
         user_instance = contest.virtual_registration(request.user)
     show_virtual = request.GET.get('show_virtual') == 'on'
-    problems, instance_results = calculate_standing(contest, show_virtual)
+    problems, instance_results = calculate_standing(contest, show_virtual, user_instance)
     return render(request, 'mog/contest/standing.html', {
         'contest': contest,
         'instance_results': instance_results,

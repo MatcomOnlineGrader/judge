@@ -10,13 +10,20 @@
         <div class="col-md-12 text-center">
             <h1 class="title">Standing</h1>
             <h3 class="title"><a href="{% url 'mog:contest_problems' contest.pk %}">{{ contest.name }}</a></h3>
-            {% if instance %}
-                {% if instance.is_running %}
-                    <h5 class="title">{{ instance.relative_time|format_delta }} / -{{ instance.remaining_time|format_delta }}</h5>
+            {% if user_instance %}
+                {% if user_instance.is_running %}
+                    <h5 class="title">
+                        {{ user_instance.relative_time|format_delta }} / -{{ user_instance.remaining_time|format_delta }}
+                    </h5>
+                    {% if not user_instance.real %}
+                        <h5>(virtual)</h5>
+                    {% endif %}
                 {% endif %}
             {% else %}
                 {% if contest.is_running %}
-                    <h5 class="title">{{ contest.relative_time|format_delta }} / -{{ contest.remaining_time|format_delta }}</h5>
+                    <h5 class="title">
+                        {{ contest.relative_time|format_delta }} / -{{ contest.remaining_time|format_delta }}
+                    </h5>
                 {% endif %}
             {% endif %}
         </div>
