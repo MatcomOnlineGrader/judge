@@ -136,18 +136,28 @@ class InstanceResult(object):
         self.problem_results.append(problem_result)
 
 
-def calculate_standing(contest, virtual=False):
+def calculate_standing(contest, virtual=False, user_instance=None):
     from django.db.models import Q
     instances = contest.instances.all() if virtual else \
         contest.instances.filter(real=True)
+    if user_instance:
+        user_instance_relative_time =\
+            user_instance.relative_time
     problems = contest.problems.order_by('position')
     instance_results = []
     for instance in instances:
         instance_result = InstanceResult(instance=instance)
         for problem in problems:
             submissions = instance.submissions\
-                .filter(problem=problem)\
-                .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+                .filter(problem=problem).filter(hidden=False)
+            if user_instance and not user_instance.real:
+                # If user_instance is virtual, then we need keep only
+                # submissions sent no after than user_instance current
+                # time.
+                if instance.real:
+                    submissions = submissions.filter(date__lte=(contest.start_date + user_instance_relative_time))
+                else:
+                    submissions = submissions.filter(date__lte=(instance.start_date + user_instance_relative_time))
             accepted, attempts, acc_delta = 0, False, None
             accepted_submission = submissions\
                 .filter(result__name__iexact='accepted').order_by('date').first()
