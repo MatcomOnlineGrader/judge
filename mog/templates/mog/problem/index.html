@@ -71,7 +71,7 @@
                             {% if user|can_see_tags %}
                                 <div class="pull-right">
                                     {% for tag in problem.tags.all %}
-                                        <a href="?tag={{ tag.name }}">
+                                        <a class="problem-tag" href="?tag={{ tag.name }}">
                                             <span class="label label-default">{{ tag.name|lower }}</span>
                                         </a>
                                     {% endfor %}
