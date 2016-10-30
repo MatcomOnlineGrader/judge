@@ -206,7 +206,7 @@ class ProblemListView(generic.ListView):
         if q:
             problems = problems.filter(title__icontains=q)
 
-        return problems.order_by('contest__start_date', 'position')
+        return problems.order_by('-contest__start_date', 'position')
 
     def get_context_data(self, **kwargs):
         context = super(ProblemListView, self).get_context_data(**kwargs)
