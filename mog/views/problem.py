@@ -196,10 +196,7 @@ class ProblemListView(generic.ListView):
         q, tag = self.request.GET.get('q'),\
                  self.request.GET.get('tag')
 
-        try:
-            tag = Tag.objects.get(name=tag)
-        except Tag.DoesNotExist:
-            tag = None
+        tag = Tag.objects.filter(name=tag).first()
 
         if tag:
             problems = tag.get_visible_problems(user_is_admin(self.request.user))
