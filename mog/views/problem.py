@@ -139,7 +139,6 @@ class ProblemCreateView(View):
             hints=data['hints'],
             time_limit=data['time_limit'],
             memory_limit=data['memory_limit'],
-            validator=data['validator'],
             checker=data['checker'],
             position=data['position'],
             balloon=data['balloon'],
@@ -178,7 +177,6 @@ class ProblemEditView(View):
         problem.hints = data['hints']
         problem.time_limit = data['time_limit']
         problem.memory_limit = data['memory_limit']
-        problem.validator = data['validator']
         problem.checker = data['checker']
         problem.position = data['position']
         problem.balloon = data['balloon']
