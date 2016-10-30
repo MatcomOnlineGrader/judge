@@ -125,7 +125,7 @@
                         <li><a href="{% url 'mog:submissions' %}">{% trans 'Submissions' %}</a></li>
                         <li><a href="{% url 'mog:faq' %}">{% trans 'FAQ' %}</a></li>
                     </ul>
-                    <ul class="nav navbar-nav pull-right">
+                    <ul class="nav navbar-nav navbar-right">
                         {% block user_login %}
                             {% include 'mog/user/_login.html' %}
                         {% endblock %}
