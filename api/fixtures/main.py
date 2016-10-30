@@ -9,8 +9,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # django.setup()
 # from api.fixtures import main
 # main.fix()
-# main.fix_links_in_posts_acm()
-# main.unescape_()
 
 
 def fix():
@@ -62,6 +60,12 @@ def fix():
                 pass
 
 
+# import django
+# django.setup()
+# from api.fixtures import main
+# main.unescape_()
+
+
 def unescape_():
     for contest in Contest.objects.all():
         if contest.description:
@@ -85,31 +89,32 @@ def unescape_():
         problem.save()
 
 
-def fix_links_in_posts_acm():
+# import django
+# django.setup()
+# from api.fixtures import main
+# main.fix_links_in_posts()
+
+
+def fix_links_in_posts():
     for post in Post.objects.all():
         if post.body:
             soup = BeautifulSoup(post.body, 'html.parser')
             for tag in soup.find_all('a'):
                 if tag['href'].startswith('../programacion'):
                     tag['href'] = '#'
-
-                # This link need to point to some ftp
-                if tag['href'].startswith('../Documentation'):
+                elif tag['href'].startswith('../Documentation'):
+                    # This link need to point to some ftp
                     tag['href'] = '#'
-
-                if tag['href'].startswith('../Problem/Details/'):
+                elif tag['href'].startswith('../Problem/Details/'):
                     problem = Problem.objects.get(pk=tag['href'][19:])
                     tag['href'] = reverse('mog:problem', args=(problem.id, problem.slug))
-
-                if tag['href'].startswith('../Contest/Standings/'):
+                elif tag['href'].startswith('../Contest/Standings/'):
                     contest = Contest.objects.get(pk=tag['href'][21:])
                     tag['href'] = reverse('mog:contest_standing', args=(contest.id, ))
-
-                if tag['href'].startswith('../User/Details/'):
+                elif tag['href'].startswith('../User/Details/'):
                     user = User.objects.get(pk=tag['href'][16:])
                     tag['href'] = reverse('mog:user', args=(user.id, ))
-
-                if tag['href'].startswith('../Problem/SubmissionDetails/'):
+                elif tag['href'].startswith('../Problem/SubmissionDetails/'):
                     try:
                         submission = Submission.objects.get(pk=tag['href'][29:])
                         submission.public = True
@@ -117,5 +122,23 @@ def fix_links_in_posts_acm():
                         tag['href'] = reverse('mog:submission', args=(submission.id,))
                     except:
                         tag['href'] = '#'
+                elif tag['href'].startswith('http://judge.matcom.uh.cu/contest/'):
+                    tail = tag['href'][34:]
+                    if tail.endswith('standings'):
+                        code, standings = tail.split('/')
+                        try:
+                            contest = Contest.objects.get(code=code)
+                            tag['href'] = reverse('mog:contest_standing', args=(contest.id, ))
+                        except Contest.DoesNotExist:
+                            pass
+                    else:
+                        code = tail
+                        try:
+                            contest = Contest.objects.get(code=code)
+                            tag['href'] = reverse('mog:contest_problems', args=(contest.id, ))
+                        except Contest.DoesNotExist:
+                            pass
+                elif tag['href'].lower().startswith('http://judge.matcom.uh.cu/data/userfiles/'):
+                    tag['href'] = '/media/compat/' + tag['href'][41:]
             post.body = soup.prettify()
             post.save()
