@@ -2,6 +2,9 @@ import json
 from api.models import *
 from mog.utils import unescape
 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # import django
 # django.setup()
 # from api.fixtures import main
@@ -27,7 +30,7 @@ def fix():
             UserProfile.objects.create(user=user)
 
     print 'insert to api_userprofile_teams'
-    with open('userprofile_teams.json', 'r') as f:
+    with open(os.path.join(BASE_DIR, 'userprofile_teams.json'), 'r') as f:
         for row in json.load(f):
             user_id = row['fields']['user_id']
             team_id = row['fields']['team_id']
@@ -36,7 +39,7 @@ def fix():
             )
 
     print 'insert to api_problem_tags'
-    with open('problem_tags.json', 'r') as f:
+    with open(os.path.join(BASE_DIR, 'problem_tags.json'), 'r') as f:
         for row in json.load(f):
             problem_id = row['fields']['problem_id']
             tag_id = row['fields']['tag_id']
@@ -48,7 +51,7 @@ def fix():
                 pass
 
     print 'insert to api_comment_seen'
-    with open('comment_seen.json', 'r') as f:
+    with open(os.path.join(BASE_DIR, 'comment_seen.json'), 'r') as f:
         for row in json.load(f):
             user_id = row['fields']['user_id']
             comment_id = row['fields']['comment_id']
