@@ -23,6 +23,7 @@
 
             <form action="{% url 'mog:problems' %}" method="get" class="form-inline form-search pull-right">
                 <p>
+                    <input type="hidden" name="tag" value="{{ query.tag }}"/>
                     <input class="form-control" name="q" type="text"
                            placeholder="{% trans 'Search by name ...' %}" {% if query %}value="{{ query.q }}"{% endif %}/>
                     <button type="submit" class="btn btn-default">{% trans 'Search' %}</button>
