@@ -1,4 +1,5 @@
 import os
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 
@@ -8,6 +9,29 @@ from django.utils.safestring import mark_safe
 
 def unescape(value):
     return mark_safe(HTMLParser().unescape(value))
+
+
+def secure_html(html):
+    """
+    Remove all scrips, forms & events on every tag in
+    a chunk of HTML code
+    """
+    if not html:
+        return html
+    soup = BeautifulSoup(html, 'html.parser')
+    # Remove all scripts
+    for tag in soup.find_all('script'):
+        tag.extract()
+    # Remove all forms
+    for tag in soup.find_all('form'):
+        tag.extract()
+    # Remove all attributes starting with on-
+    # to avoid js execution when events fired.
+    for tag in soup.findAll():
+        for attr in tag.attrs.keys():
+            if attr and attr.startswith('on'):
+                del tag[attr]
+    return soup.prettify()
 
 
 def user_is_browser(user):
