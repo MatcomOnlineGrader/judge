@@ -17,12 +17,10 @@
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">
                         {% trans 'Problems' %}
-                        {% if not contest.allow_teams %}
-                            {% if contest.rated %}
-                                (<small>{% trans 'Rated' %}</small>)
-                            {% else %}
-                                (<small>{% trans 'Unrated' %}</small>)
-                            {% endif %}
+                        {% if contest.allow_teams and contest.rated %}
+                            (<small>{% trans 'Rated' %}</small>)
+                        {% else %}
+                            (<small>{% trans 'Unrated' %}</small>)
                         {% endif %}
                         {% if user|can_edit_contest:contest %}
                             <div class="dropdown pull-right">
