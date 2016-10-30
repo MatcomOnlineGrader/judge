@@ -168,6 +168,7 @@ def fix_problems():
                 # Fix image sources
                 for img in soup.find_all('img'):
                     img['src'] = fix_link(img['src'])
+                    img['class'] = 'img-responsive'
                 setattr(problem, field, soup.prettify())
         problem.save()
 
@@ -185,6 +186,7 @@ def fix_contests():
             # Fix image sources
             for img in soup.find_all('img'):
                 img['src'] = fix_link(img['src'])
+                img['class'] = 'img-responsive'
         # Set contest rated iff there is some rating change
         contest.rated = contest.rating_changes.count() > 0
         contest.save()
@@ -205,6 +207,7 @@ def fix_posts():
             # Fix image sources
             for img in soup.find_all('img'):
                 img['src'] = fix_link(img['src'])
+                img['class'] = 'img-responsive'
             post.body = soup.prettify()
         post.save()
 
