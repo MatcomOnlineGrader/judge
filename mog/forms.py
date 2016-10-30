@@ -54,7 +54,8 @@ class PostForm(forms.ModelForm):
 class ContestForm(forms.ModelForm):
     class Meta:
         model = Contest
-        exclude = []
+        fields = ['name', 'code', 'description', 'start_date', 'end_date', 'visible', 'frozen_time',
+                  'death_time', 'closed', 'allow_teams']
 
     def clean(self):
         super(ContestForm, self).clean()
@@ -74,4 +75,5 @@ class ContestForm(forms.ModelForm):
 class ProblemForm(forms.ModelForm):
     class Meta:
         model = Problem
-        exclude = ['slug']
+        fields = ['title', 'body', 'input', 'output', 'hints', 'time_limit',
+                  'memory_limit', 'checker', 'position', 'balloon', 'contest']
