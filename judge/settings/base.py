@@ -118,7 +118,7 @@ LOGIN_URL = '/mog/login/'
 
 # Internationalization
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale')
+    os.path.join(BASE_DIR, '..', 'locale')
 ]
 
 LANGUAGES = [
