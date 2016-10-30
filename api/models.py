@@ -276,21 +276,6 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        if self.body:
-            soup = BeautifulSoup(self.body, 'html.parser')
-            # Remove all scripts
-            for tag in soup.find_all('script'):
-                tag.extract()
-            # Remove all forms
-            for tag in soup.find_all('form'):
-                tag.extract()
-            # Remove all attributes starting with on-
-            # to avoid js execution when events fired.
-            for tag in soup.findAll():
-                for attr in tag.attrs.keys():
-                    if attr and attr.startswith('on'):
-                        del tag[attr]
-            self.body = soup.prettify()
         super(Post, self).save(*args, **kwargs)
 
     def can_be_edited_by(self, user, admin=False):
