@@ -32,20 +32,20 @@ def analyze(function):
 def fix_link(link):
     # link to data
     if link.lower().startswith('http://judge.matcom.uh.cu/data/userfiles/'):
-        return settings.MEDIA_URL + link[41:]
+        return settings.MEDIA_URL + 'compat/' + link[41:]
 
     if link.lower().startswith('/data/userfiles/'):
-        return settings.MEDIA_URL + link[16:]
+        return settings.MEDIA_URL + 'compat/' + link[16:]
 
     if link.lower().startswith('../../content/uploads/'):
         # FIXME: Files inside content/uploads needs to be copied from that folder
         # FIXME: into media folder. The do not belong to UserFiles folder.
-        return settings.MEDIA_URL + 'content/uploads/' + link[22:]
+        return settings.MEDIA_URL + 'compat/content/uploads/' + link[22:]
 
     if link.lower().startswith('../content/uploads/'):
         # FIXME: Files inside content/uploads needs to be copied from that folder
         # FIXME: into media folder. The do not belong to UserFiles folder.
-        return settings.MEDIA_URL + 'content/uploads/' + link[19:]
+        return settings.MEDIA_URL + 'compat/content/uploads/' + link[19:]
 
     # link to contest
     if link.lower().startswith('http://judge.matcom.uh.cu/contest/'):
