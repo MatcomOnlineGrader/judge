@@ -48,13 +48,16 @@
                                         {% endif %}
 
                                         {% if instance.team %}
-                                            {{ instance.team.name }}
-                                            (
-                                            {% for profile in instance.team.users %}
-                                                {% if forloop.counter > 1 %},{% endif %}
-                                                {% include 'mog/user/_link.html' with profile=profile %}
-                                            {% endfor %}
-                                            )
+                                            <div>
+                                                <strong>{{ instance.team.name }}</strong>
+                                            </div>
+                                            <div>
+                                                {% for profile in instance.team.profiles.all %}
+                                                    {% if forloop.counter > 1 %},{% endif %}
+                                                    {% include 'mog/user/_link.html' with profile=profile %}
+                                                {% endfor %}
+                                            </div>
+                                            <small>{{ instance.team.institution.name }}</small>
                                         {% else %}
                                             {% include 'mog/user/_link.html' with user=instance.user %}
                                             {% with institution=instance.user.profile.institution %}
