@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from api.models import UserProfile, User, Post, Contest, Problem
+from mog.utils import secure_html
 
 
 class UserProfileForm(forms.ModelForm):
@@ -50,12 +51,18 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['name', 'body']
 
+    def clean_body(self):
+        return secure_html(self.cleaned_data['body'])
+
 
 class ContestForm(forms.ModelForm):
     class Meta:
         model = Contest
         fields = ['name', 'code', 'description', 'start_date', 'end_date', 'visible', 'frozen_time',
                   'death_time', 'closed', 'allow_teams']
+
+    def clean_description(self):
+        return secure_html(self.cleaned_data['description'])
 
     def clean(self):
         super(ContestForm, self).clean()
