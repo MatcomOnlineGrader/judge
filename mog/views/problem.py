@@ -207,7 +207,7 @@ class ProblemListView(generic.ListView):
             problems = Problem.get_visible_problems(user_is_admin(self.request.user))
 
         if q:
-            problems = problems.filter(title__contains=q)
+            problems = problems.filter(title__icontains=q)
 
         return problems.order_by('contest__start_date', 'position')
 
