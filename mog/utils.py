@@ -137,7 +137,6 @@ class InstanceResult(object):
 
 
 def calculate_standing(contest, virtual=False, user_instance=None):
-    from django.db.models import Q
     instances = contest.instances.all() if virtual else \
         contest.instances.filter(real=True)
     if user_instance:
