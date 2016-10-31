@@ -26,3 +26,6 @@ DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 
 # Place to store problem test-cases & pdf
 PROBLEMS_FOLDER = '/home/mog/problems/'
+
+# Statics
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
