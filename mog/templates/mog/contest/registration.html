@@ -35,9 +35,11 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a class="btn btn-sm btn-default">
-                                            {% trans 'Unregister' %}
-                                        </a>
+                                        <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}" />
+                                            <input type="submit" class="btn btn-sm btn-default" value="{% trans 'Unregister' %}" />
+                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}
