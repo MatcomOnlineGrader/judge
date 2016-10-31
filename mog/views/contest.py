@@ -37,6 +37,15 @@ def contest_problems(request, contest_id):
     })
 
 
+def contest_registration(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+    if not contest.can_be_seen_by(request.user):
+        raise Http404()
+    return render(request, 'mog/contest/registration.html', {
+        'contest': contest
+    })
+
+
 @require_http_methods(["GET"])
 def contest_standing(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)

@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
 
+    url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
     url(r'^contest/unregister/(?P<contest_id>[0-9]+)$', views.contest_unregister, name='contest_unregister'),

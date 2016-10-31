@@ -24,7 +24,7 @@
                             <label for="name"></label>
                             <select id="name" name="team" class="form-control">
                                 <option>-- Individual --</option>
-                                {% for team in user.teams %}
+                                {% for team in user.profile.teams.all %}
                                     <option value="{{ team.id }}">{{ team.name }}</option>
                                 {% endfor %}
                             </select>
