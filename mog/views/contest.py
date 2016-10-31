@@ -130,37 +130,55 @@ def contest_register(request, contest_id):
     return redirect('mog:contest_problems', contest_id=contest.id)
 
 
+def remove_instance(request, instance):
+    nxt = request.POST.get('next')
+
+    if not instance:
+        msg = _('Instance does not exist')
+        messages.info(request, msg, extra_tags='info')
+        return redirect(nxt or reverse('mog:contests'))
+
+    if instance.submissions.count() > 0:
+        msg = _('Cannot remove registration because the user/team has actions on the contest.')
+        messages.warning(request, msg, extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
+
+    user = request.user
+
+    if not user_is_admin(user):
+        if instance.user != user and (instance.team and user.profile not in instance.team.profiles.all()):
+            return HttpResponseForbidden()
+
+    instance.delete()
+
+    msg = _('Successfully unregistered!')
+    messages.success(request, msg, extra_tags='success')
+
+    return redirect(nxt or reverse('mog:contests'))
+
+
 @login_required
 @require_http_methods(["POST"])
-def contest_unregister(request, contest_id):
+def contest_remove_instance(request, instance_id):
+    """
+    This action is more flexible than `contest_remove_registration`
+    and will be effectively used by admins, however, common users
+    can post to this URL too removing only their own instances.
+    """
+    instance = ContestInstance.objects.filter(id=instance_id).first()
+    return remove_instance(request, instance)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_remove_registration(request, contest_id):
+    """
+    Used by common users to remove their participation from a given
+    contest without specify the target instance.
+    """
     contest = get_object_or_404(Contest, pk=contest_id)
-    instances = contest.instances\
-        .filter(Q(user=request.user) | Q(team__in=request.user.profile.teams.all())).all()
-
-    if instances.count() == 0:
-        msg = u'You are not register in this contest!'
-        messages.success(request, msg, extra_tags='info')
-        return redirect('mog:contests')
-
-    if instances.count() > 1:
-        # TODO: Bad things here!
-        pass
-
-    errors = False
-    for instance in instances:
-        if instance.submissions.count() == 0:
-            instance.delete()
-        else:
-            errors = True
-
-    if errors:
-        msg = u'You cannot unregister from this contest because you have some actions on it!'
-        messages.success(request, msg, extra_tags='warning')
-    else:
-        msg = u'Successfully unregistered!'
-        messages.success(request, msg, extra_tags='success')
-
-    return redirect('mog:contests')
+    instance = contest.real_registration(request.user)
+    return remove_instance(request, instance)
 
 
 class ContestCreateView(View):
