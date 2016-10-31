@@ -28,27 +28,26 @@ urlpatterns = [
     url(r'^problem/(?P<problem_id>[0-9]+)/(?P<slug>[-\w]+)/$', views.problem, name='problem'),
     url(r'^problems/$', views.ProblemListView.as_view(), name='problems'),
 
-    url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
-    url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
-
-    url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
-    url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
-
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
     url(r'^contest/register/user/(?P<contest_id>[0-9]+)$', views.contest_register_user, name='contest_register_user'),
     url(r'^contest/register/team/(?P<contest_id>[0-9]+)$', views.contest_register_team, name='contest_register_team'),
-
     url(r'^contest/remove/instance/(?P<instance_id>[0-9]+)$', views.contest_remove_instance,
         name='contest_remove_instance'),
     url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration,
         name='contest_remove_registration'),
 
-    url(r'^contest/remove/(?P<contest_id>[0-9]+)$', views.remove_contest, name='contest_remove'),
+    url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
+    url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
+    url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
+    url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
     url(r'^contest/edit/(?P<contest_id>[0-9]+)$', views.ContestEditView.as_view(), name='contest_edit'),
+    url(r'^contest/remove/(?P<contest_id>[0-9]+)$', views.remove_contest, name='contest_remove'),
+
     url(r'^contest/create$', views.ContestCreateView.as_view(), name='contest_create'),
     url(r'^contests/$', views.contests, name='contests'),
-    url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
-    url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
+
+    url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
+    url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
 
     url(r'^submission/(?P<submission_id>[0-9]+)/$', views.submission, name='submission'),
     url(r'^submissions/$', views.submissions,name='submissions'),
