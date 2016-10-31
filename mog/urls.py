@@ -33,11 +33,16 @@ urlpatterns = [
 
     url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
+
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
+    url(r'^contest/register/user/(?P<contest_id>[0-9]+)$', views.contest_register_user, name='contest_register_user'),
+    url(r'^contest/register/team/(?P<contest_id>[0-9]+)$', views.contest_register_team, name='contest_register_team'),
+
     url(r'^contest/remove/instance/(?P<instance_id>[0-9]+)$', views.contest_remove_instance,
         name='contest_remove_instance'),
     url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration,
         name='contest_remove_registration'),
+
     url(r'^contest/remove/(?P<contest_id>[0-9]+)$', views.remove_contest, name='contest_remove'),
     url(r'^contest/edit/(?P<contest_id>[0-9]+)$', views.ContestEditView.as_view(), name='contest_edit'),
     url(r'^contest/create$', views.ContestCreateView.as_view(), name='contest_create'),

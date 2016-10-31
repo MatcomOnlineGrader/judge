@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange
+from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User
 from mog.forms import ContestForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
@@ -37,12 +37,15 @@ def contest_problems(request, contest_id):
     })
 
 
+@login_required
 def contest_registration(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
-    if not contest.can_be_seen_by(request.user):
+    if not user_is_admin(request.user):
         raise Http404()
     return render(request, 'mog/contest/registration.html', {
-        'contest': contest
+        'contest': contest,
+        'users': User.objects.all().order_by('username'),
+        'teams': Team.objects.all().order_by('name')
     })
 
 
@@ -97,37 +100,100 @@ def remove_contest(request, contest_id):
     return redirect('mog:contests')
 
 
+def register_instance(request, contest, user, team):
+    """User in request is registering user/team"""
+
+    nxt = request.POST.get('next')
+
+    if not user_is_admin(request.user):
+        if not contest.visible:
+            # Admins are the only ones that can register user when
+            # contest is hidden.
+            raise Http404()
+
+        if contest.closed:
+            # Admins are the only ones that can register user when
+            # registration is closed.
+            msg = _(u'Registration is closed for contest "{0}"'.format(contest.name))
+            messages.warning(request, msg, extra_tags='danger')
+            return redirect(nxt or reverse('mog:contests'))
+
+    # Check that no user has registered before.
+    if team:
+        users = [profile.user for profile in team.profiles.all()]
+    elif user:
+        users = [user]
+    else:
+        messages.error(request, _('No user to register'), extra_tags='error')
+        return redirect(nxt or reverse('mog:contests'))
+
+    # Check that user belongs to team
+    if user and user not in users:
+        messages.warning(request, _('Invalid user/team combination'), extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
+
+    # Check that every user can register for real
+    if all(contest.can_register_for_real(u) for u in users):
+        real, start_date = True, None
+    elif all(contest.can_register_for_virtual(u) for u in users):
+        real, start_date = False, timezone.now()
+    else:
+        msg = _('Registration cannot be accomplished')
+        messages.error(request, msg, extra_tags='danger')
+        return redirect(nxt or reverse('mog:contests'))
+
+    ContestInstance.objects.create(
+        contest=contest, user=user, team=team, real=real, start_date=start_date
+    )
+
+    if real:
+        msg = _('Successfully registered for real participation')
+    else:
+        msg = _('Successfully registered for virtual participation')
+
+    messages.success(request, msg, extra_tags='success')
+
+    return redirect(nxt or reverse('mog:contests'))
+
+
 @login_required
 @require_http_methods(["POST"])
 def contest_register(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
+    user = request.user
+    team = get_object_or_404(Team, pk=request.POST['team']) \
+        if 'team' in request.POST else None
+    return register_instance(request,contest,  user, team)
 
-    start_date, real, team = None, False, None
 
-    if contest.allow_teams:
-        team_id = request.POST.get('team')
-        if team_id is not None and team_id.isdigit():
-            team = get_object_or_404(Team, pk=int(team_id))
+@login_required
+@require_http_methods(["POST"])
+def contest_register_user(request, contest_id):
+    """Administrative tool: Register user in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    try:
+        user_id = int(request.POST.get('user'))
+    except (TypeError, ValueError):
+        raise Http404()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    user = get_object_or_404(User, pk=user_id)
+    return register_instance(request, contest, user, None)
 
-    if contest.can_register_for_real(request.user):
-        real = True
-    elif contest.can_register_for_virtual(request.user):
-        start_date = timezone.now()
-    else:
-        messages.success(request, 'You cannot register in this contest', extra_tags='success')
-        return redirect('mog:contests')
 
-    ContestInstance.objects.create(
-        user=request.user, contest=contest,
-        real=real, team=team, start_date=start_date
-    )
-
-    if real:
-        msg = u'Successfully registered for real participation in "{0}"!'.format(contest.name)
-        messages.success(request, msg, extra_tags='success')
-        return redirect('mog:contests')
-
-    return redirect('mog:contest_problems', contest_id=contest.id)
+@login_required
+@require_http_methods(["POST"])
+def contest_register_team(request, contest_id):
+    """Administrative tool: Register team in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    try:
+        team_id = int(request.POST.get('team'))
+    except (TypeError, ValueError):
+        raise Http404()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    team = get_object_or_404(Team, pk=team_id)
+    return register_instance(request, contest, None, team)
 
 
 def remove_instance(request, instance):

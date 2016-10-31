@@ -51,7 +51,38 @@
 
         </div>
         <div class="col-md-6">
+            <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
 
+            <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                <div class="form-group">
+                    <label for="user" class="sr-only">User</label>
+                    <select id="user" name="user" class="form-control">
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" value="{% trans 'Register' %}" class="form-control" />
+            </form>
+
+            {% if contest.allow_teams %}
+                <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
+                <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                    <div class="form-group">
+                        <label for="team" class="sr-only">Team</label>
+                        <select id="team" name="team" class="form-control">
+                            {% for team in teams %}
+                                <option value="{{ team.id }}">{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit" value="{% trans 'Register' %}" class="form-control" />
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
