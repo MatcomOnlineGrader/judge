@@ -13,7 +13,7 @@
             {% if user_instance %}
                 {% if user_instance.is_running %}
                     <h5 class="title">
-                        {{ user_instance.relative_time|format_delta }} / -{{ user_instance.remaining_time|format_delta }}
+                        {{ user_instance.relative_time|format_seconds }} / -{{ user_instance.remaining_time|format_seconds }}
                     </h5>
                     {% if not user_instance.real %}
                         <h5>(virtual)</h5>
@@ -22,7 +22,7 @@
             {% else %}
                 {% if contest.is_running %}
                     <h5 class="title">
-                        {{ contest.relative_time|format_delta }} / -{{ contest.remaining_time|format_delta }}
+                        {{ contest.relative_time|format_seconds }} / -{{ contest.remaining_time|format_seconds }}
                     </h5>
                 {% endif %}
             {% endif %}
@@ -74,7 +74,9 @@
 
                                 <td class="text-center">{{ instance_result.solved }}</td>
 
-                                <td class="text-center">{{ instance_result.penalty|format_minutes }}</td>
+                                <td class="text-center">
+                                    {{ instance_result.penalty|format_penalty }}
+                                </td>
 
                                 {% for problem_result in instance_result.problem_results %}
                                     {% if problem_result.accepted %}
@@ -92,7 +94,7 @@
                                     {% endif %}
                                             {% if problem_result.accepted %}
                                                 <div>
-                                                    {{ problem_result.acc_delta|format_delta }}
+                                                    {{ problem_result.acc_delta|format_minutes }}
                                                 </div>
                                             {% endif %}
                                             {% if problem_result.attempts > 0 %}

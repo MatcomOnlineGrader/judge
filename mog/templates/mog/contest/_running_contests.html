@@ -24,8 +24,8 @@
                         {% trans '( Hidden )' %}
                     {% endif %}
                 </td>
-                <td class="text-center">{{ contest.duration|format_time }}</td>
-                <td class="text-center">{{ contest.remaining_time|format_delta }}</td>
+                <td class="text-center">{{ contest.duration|format_minutes }}</td>
+                <td class="text-center">{{ contest.remaining_time|format_seconds }}</td>
                 <td class="text-center">
                     {% if contest.closed %}
                         {% trans 'Closed' %}
