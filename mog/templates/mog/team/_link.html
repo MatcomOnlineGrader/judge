@@ -1,0 +1,10 @@
+<div>
+    <strong>{{ team.name }}</strong>
+</div>
+
+<div>
+    {% for profile in team.profiles.all %}
+        {% if forloop.counter > 1 %},{% endif %}
+        {% include 'mog/user/_link.html' with profile=profile %}
+    {% endfor %}
+</div>
