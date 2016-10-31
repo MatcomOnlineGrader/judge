@@ -1,0 +1,55 @@
+{% extends 'mog/base.html' %}
+
+{% load i18n %}
+
+{% block title %}{{ contest.name }} | {% trans 'Registration' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest registration_active='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">{% trans 'Registration' %}</h3>
+                </div>
+
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">User/Team</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for instance in contest.instances.all %}
+                                <tr class="text-center">
+                                    <td>
+                                        {% if instance.team %}
+                                            {% include 'mog/team/_link.html' with team=instance.team %}
+                                        {% else %}
+                                            {% include 'mog/user/_link.html' with user=instance.user %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-default">
+                                            {% trans 'Unregister' %}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+{% endblock %}

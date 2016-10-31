@@ -97,6 +97,12 @@
                     <tr>
                         <td>
                             <ul class="nav nav-pills nav-stacked">
+                                <li class="{{ registration_active }}">
+                                    <a href="{% url 'mog:contest_registration' contest.id %}">
+                                        <i class="glyphicon glyphicon-check"></i> {% trans 'Registration' %}
+                                    </a>
+                                </li>
+
                                 <li class="{{ edit_active }}">
                                     <a href="{% url 'mog:contest_edit' contest.id %}">
                                         <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit contest' %}
