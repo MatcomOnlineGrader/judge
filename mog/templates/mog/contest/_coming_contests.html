@@ -44,7 +44,7 @@
                         {% include 'mog/contest/_unregister.html' with contest=contest %}
                     {% endif %}
                 </td>
-                <td class="text-center">{{ contest.duration|format_time }}</td>
+                <td class="text-center">{{ contest.duration|format_minutes }}</td>
                 <td class="text-center">{{ contest.start_date }}</td>
                 <td class="text-center">
                     {% if contest.closed %}

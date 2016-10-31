@@ -162,7 +162,6 @@ def is_checkbox(field):
     return type(field.field) is forms.fields.BooleanField
 
 
-
 @register.filter()
 def to(lo, hi):
     return range(lo, hi + 1)
@@ -180,26 +179,40 @@ def unseen_comments(user, post):
     return post.unseen_comments(user)
 
 
-@register.filter()
-def format_minutes(minutes):
-    minutes = int(minutes)
-    d = minutes / 60 / 24
-    minutes %= (60 * 24)
-    h = minutes / 60
-    minutes %=  60
-    m = minutes
-    return '%d:%02d:%02d' % (d, h, m) if d > 0 else\
-        '%02d:%02d' % (h, m)
+def unpack_seconds(seconds):
+    d = seconds / 86400
+    h = (seconds % 86400) / 3600
+    m = ((seconds % 86400) % 3600) / 60
+    s = ((seconds % 86400) % 3600) % 60
+    return d, h, m, s
+
+
+def unpack_delta(delta):
+    return unpack_seconds(delta.seconds)
 
 
 @register.filter()
-def format_delta(delta):
-    return format_minutes(int(delta.total_seconds()) // 60)
+def format_seconds(delta):
+    d, h, m, s = unpack_delta(delta)
+    if d > 0:
+        return '%d:%02d:%02d:%02d' % (d, h, m, s)
+    return '%02d:%02d:%02d' % (h, m, s)
 
 
 @register.filter()
-def format_time(time):
-    return format_minutes(int(time.total_seconds()) // 60)
+def format_minutes(delta):
+    d, h, m, _ = unpack_delta(delta)
+    if d > 0:
+        return '%d:%02d:%02d' % (d, h, m)
+    return '%02d:%02d' % (h, m)
+
+
+@register.filter()
+def format_penalty(penalty):
+    d, h, m, s = unpack_seconds(int(penalty * 60))
+    if d > 0:
+        return '%d:%02d:%02d:%02d' % (d, h, m, s)
+    return '%02d:%02d:%02d' % (h, m, s)
 
 
 @register.filter()
