@@ -25,7 +25,11 @@
                     {% endif %}
                 </td>
                 <td class="text-center">{{ contest.duration|format_minutes }}</td>
-                <td class="text-center">{{ contest.remaining_time|format_seconds }}</td>
+                <td class="text-center">
+                    <span class="time-update" data-delta="-1" data-enabled="on">
+                        {{ contest.remaining_time|format_seconds }}
+                    </span>
+                </td>
                 <td class="text-center">
                     {% if contest.closed %}
                         {% trans 'Closed' %}
