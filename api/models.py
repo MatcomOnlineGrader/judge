@@ -205,6 +205,7 @@ class Problem(models.Model):
     balloon = models.CharField(verbose_name="Balloon color", max_length=50)
     contest = models.ForeignKey(Contest, related_name='problems')
     slug = models.SlugField(max_length=100, null=True)
+    compilers = models.ManyToManyField('Compiler')
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -263,6 +264,25 @@ class Problem(models.Model):
     @property
     def points(self):
         return 108 / (12 + self.solved) + 1
+
+    @property
+    def compilers_by_relevance(self):
+        def relevance(compiler):
+            name = compiler.language.lower()
+            if name == 'csharp': return 0
+            if name == 'cpp': return 1
+            if name == 'python': return 2
+            if name == 'java': return 3
+            return 4
+        return sorted(self.compilers.all(), key=relevance)
+
+    @property
+    def first_compilers(self):
+        return ','.join([compiler.name for compiler in self.compilers_by_relevance[:2]])
+
+    @property
+    def compilers2str(self):
+        return '<br>'.join([compiler.language for compiler in self.compilers_by_relevance])
 
 
 class Post(models.Model):

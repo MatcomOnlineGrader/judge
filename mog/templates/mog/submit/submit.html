@@ -41,7 +41,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="problem" class="center">{% trans 'Problem' %}</label>
-                            <select id="problem" name="problem" class="form-control">
+                            <select id="problem" name="problem" class="form-control"
+                                    onchange="problemChanged(this);">
                                 {% for p in problem.contest.get_problems %}
                                     <option value="{{ p.id }}"
                                             {% if p == problem %}selected{% endif %}>{{ p.full_title }}</option>
@@ -97,10 +98,23 @@
     <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/gas/gas.js' %}"></script>
 
     <script>
+        var compilerNames = {};
+        {% for compiler in compilers %}
+            compilerNames[{{ compiler.id }}] = '{{ compiler.name }}';
+        {% endfor %}
+
         var compilerModes = {};
         {% for compiler in compilers %}
             // MIME type for language {{ compiler.name }} ({{ compiler.language }})
             compilerModes[{{ compiler.id }}] = '{{ compiler|compiler_mode }}';
+        {% endfor %}
+
+        var compilersPerProblem = {};
+        {% for problem_ in problem.contest.problems.all %}
+            compilersPerProblem[{{ problem_.id }}] = [];
+            {% for compiler in problem_.compilers.all %}
+                compilersPerProblem[{{ problem_.id }}].push({{ compiler.id }});
+            {% endfor %}
         {% endfor %}
 
         var sourceArea = document.getElementById('source');
@@ -115,6 +129,22 @@
             console.log(codeMirror.getOption('mode'));
         }
 
+        function problemChanged(problemHolder) {
+            var compilerHolder = $('#compiler')[0];
+            var problemID = problemHolder.options[problemHolder.selectedIndex].value;
+            var compilerID = compilerHolder.options[compilerHolder.selectedIndex].value;
+            var html = [];
+            compilersPerProblem[problemID].forEach(function(cid) {
+                if (cid == compilerID) {
+                    html.push('<option value="' + compilerNames[cid] + ' selected">' + compilerNames[cid] + '</option>');
+                } else {
+                    html.push('<option value="' + compilerNames[cid] + '">' + compilerNames[cid] + '</option>');
+                }
+            });
+            $(compilerHolder).html(html.join(''));
+        }
+
         compilerChanged(document.getElementById('compiler'));
+        problemChanged(document.getElementById('problem'));
     </script>
 {% endblock %}

@@ -267,6 +267,8 @@
 
         <script>
             $(document).ready(function () {
+                 $('[data-toggle="tooltip"]').tooltip();
+                 $('[data-toggle="popover"]').popover();
                 if (window.MOG !== undefined)
                     window.MOG.initializeSummernote({{ user|is_admin|yesno:"true,false" }});
             });

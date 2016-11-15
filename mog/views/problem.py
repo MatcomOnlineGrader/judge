@@ -182,6 +182,7 @@ class ProblemEditView(View):
         problem.balloon = data['balloon']
         problem.contest = data['contest']
         problem.tags = data['tags']
+        problem.compilers = data['compilers']
         problem.save()
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
