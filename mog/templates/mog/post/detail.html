@@ -33,12 +33,13 @@
 
                         <p>{{ comment.body }}</p>
 
-                        <a href="#" class="btn btn-link pull-right no-underline"
-                           data-toggle="modal" data-target="#edit-comment-{{ comment.id }}">
-                            <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit comment' %}
-                        </a>
-
-                        {% include 'mog/comment/_edit_comment.html' with comment=comment %}
+                        {% if user|can_edit_comment:comment %}
+                            <a href="#" class="btn btn-link pull-right no-underline"
+                               data-toggle="modal" data-target="#edit-comment-{{ comment.id }}">
+                                <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit comment' %}
+                            </a>
+                            {% include 'mog/comment/_edit_comment.html' with comment=comment %}
+                        {% endif %}
                     </div>
                 </div>
 
