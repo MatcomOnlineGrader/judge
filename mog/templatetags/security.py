@@ -89,3 +89,8 @@ def can_see_tags(user):
     if not user.is_authenticated() or not hasattr(user, 'profile'):
         return True
     return user.profile.show_tags
+
+
+@register.filter()
+def can_edit_comment(user, comment):
+    return user_is_admin(user)

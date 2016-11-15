@@ -40,6 +40,9 @@
             <div class="col-md-12">
                 <h5>{% trans 'Time limit' %}: {{ problem.time_limit }} {% trans 'second' %}{{ problem.time_limit|pluralize }}</h5>
                 <h5>{% trans 'Memory limit' %}: {{ problem.memory_limit }} {% trans 'megabyte' %}{{ problem.memory_limit|pluralize }}</h5>
+                <h5>{% trans 'Languages' %}: {{ problem.first_compilers }}
+                    <a href="#" data-html="true" data-toggle="tooltip" title="{{ problem.compilers2str }}" data-placement="right">...</a>
+                </h5>
             </div>
 
             <div class="col-md-12 margin-bottom-10">

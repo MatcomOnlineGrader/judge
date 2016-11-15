@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View, generic
+from django.utils.translation import ugettext_lazy as _
 
 from api.models import Submission, Compiler, Problem, Result, Contest
 from mog.helpers import filter_submissions, get_paginator
@@ -54,9 +56,15 @@ class Submit(View):
         compiler = get_object_or_404(Compiler, pk=compiler)
         if not user_is_admin(request.user) and not problem.contest.visible:
             return Http404()
+        if not user_is_admin(request.user) and compiler not in problem.compilers.all():
+            msg = _(u'Invalid language choice')
+            messages.warning(request, msg, extra_tags='danger')
+            return redirect('mog:submit', problem.id)
         if file is not None:
             source = file.read()
         if not source:
+            msg = _(u'Empty source code')
+            messages.info(request, msg, extra_tags='info')
             return redirect('mog:submit', problem_id=problem.id)
         try:
             instance = request.user.instances.get(contest=problem.contest)

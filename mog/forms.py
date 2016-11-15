@@ -84,4 +84,4 @@ class ProblemForm(forms.ModelForm):
         model = Problem
         fields = ['title', 'body', 'input', 'output', 'hints', 'time_limit',
                   'memory_limit', 'checker', 'position', 'balloon', 'contest',
-                  'tags']
+                  'tags', 'compilers']

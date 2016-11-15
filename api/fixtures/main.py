@@ -153,6 +153,10 @@ def fix_tags():
 
 def fix_problems():
     for problem in Problem.objects.all():
+        # Attach all compilers
+        problem.compilers.clear()
+        for compiler in Compiler.objects.all():
+            problem.compilers.add(compiler)
         # Slugify the problem title
         problem.slug = slugify(problem.title)
         for field in ['body', 'input', 'output', 'hints']:
