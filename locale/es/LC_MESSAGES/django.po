@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-26 06:31-0400\n"
+"POT-Creation-Date: 2016-11-18 14:22+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,24 +10,24 @@ msgstr ""
 "es/)\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:393
+#: api/models.py:399
 msgid "Code Editor Theme"
 msgstr "Tema del editor de código"
 
-#: api/models.py:394
+#: api/models.py:400
 msgid "Avatar"
 msgstr "Imagen"
 
-#: api/models.py:395
+#: api/models.py:401
 msgid "Show tags"
 msgstr "Mostrar etiquetas"
 
-#: api/models.py:396
+#: api/models.py:402
 msgid "Institution"
 msgstr "Institución"
 
-#: api/models.py:399 mog/templates/mog/submission/index.html:38
-#: mog/templates/mog/submit/submit.html:53
+#: api/models.py:405 mog/templates/mog/submission/index.html:38
+#: mog/templates/mog/submit/submit.html:55
 msgid "Compiler"
 msgstr "Compilador"
 
@@ -39,9 +39,21 @@ msgstr "Español"
 msgid "English"
 msgstr "Inglés"
 
+#: mog/forms.py:72
+msgid "Start date must be less than end date"
+msgstr ""
+
+#: mog/forms.py:77
+msgid "Frozen time must be greater or equal than death time"
+msgstr ""
+
+#: mog/forms.py:79
+msgid "Death time must be less or equal than contest duration"
+msgstr ""
+
 #: mog/templates/mog/account/login.html:12
 #: mog/templates/mog/account/login.html:46
-#: mog/templates/mog/user/_login.html:22
+#: mog/templates/mog/user/_login.html:24
 #: mog/templates/registration/login.html:12
 #: mog/templates/registration/login.html:38
 msgid "Login"
@@ -72,7 +84,9 @@ msgstr "Olvidó la contraseña ?"
 #: mog/templates/mog/account/login.html:53
 #: mog/templates/mog/contest/_coming_contests.html:36
 #: mog/templates/mog/contest/_register.html:10
-#: mog/templates/mog/user/_login.html:25
+#: mog/templates/mog/contest/registration.html:67
+#: mog/templates/mog/contest/registration.html:83
+#: mog/templates/mog/user/_login.html:27
 #: mog/templates/registration/login.html:45
 #: mog/templates/registration/registration_form.html:4
 #: mog/templates/registration/registration_form.html:12
@@ -124,12 +138,13 @@ msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
 msgid "Rating"
 msgstr "Clasificación"
 
-#: mog/templates/mog/base.html:206 mog/templates/mog/problem/index.html:39
+#: mog/templates/mog/base.html:206 mog/templates/mog/problem/index.html:40
 #: mog/templates/mog/user/detail.html:16 mog/templates/mog/user/index.html:37
 msgid "Points"
 msgstr "Puntos"
 
-#: mog/templates/mog/base.html:209 mog/templates/mog/contest/problems.html:79
+#: mog/templates/mog/base.html:209 mog/templates/mog/contest/problems.html:77
+#: mog/templates/mog/contest/standing.html:40
 #: mog/templates/mog/user/detail.html:17 mog/templates/mog/user/index.html:40
 msgid "Solved"
 msgstr "Resueltos"
@@ -182,8 +197,11 @@ msgid "Start Date"
 msgstr "Fecha de inicio"
 
 #: mog/templates/mog/contest/_coming_contests.html:13
+#: mog/templates/mog/contest/_left.html:102
 #: mog/templates/mog/contest/_past_contests.html:13
 #: mog/templates/mog/contest/_running_contests.html:12
+#: mog/templates/mog/contest/registration.html:5
+#: mog/templates/mog/contest/registration.html:16
 msgid "Registration"
 msgstr "Registro"
 
@@ -203,40 +221,41 @@ msgstr "( Oculto )"
 
 #: mog/templates/mog/contest/_coming_contests.html:42
 #: mog/templates/mog/contest/_unregister.html:10
+#: mog/templates/mog/contest/registration.html:41
 msgid "Unregister"
 msgstr "Eliminar participación"
 
 #: mog/templates/mog/contest/_coming_contests.html:51
 #: mog/templates/mog/contest/_past_contests.html:49
-#: mog/templates/mog/contest/_running_contests.html:31
+#: mog/templates/mog/contest/_running_contests.html:35
 msgid "Closed"
 msgstr "Cerrado"
 
 #: mog/templates/mog/contest/_coming_contests.html:53
 #: mog/templates/mog/contest/_past_contests.html:51
-#: mog/templates/mog/contest/_running_contests.html:33
+#: mog/templates/mog/contest/_running_contests.html:37
 msgid "Open"
 msgstr "Abierto"
 
 #: mog/templates/mog/contest/_coming_contests.html:58
-#: mog/templates/mog/contest/_left.html:142
+#: mog/templates/mog/contest/_left.html:148
 #: mog/templates/mog/contest/_past_contests.html:56
 #: mog/templates/mog/contest/_register.html:35
-#: mog/templates/mog/contest/_running_contests.html:38
+#: mog/templates/mog/contest/_running_contests.html:42
 #: mog/templates/mog/contest/_unregister.html:21
-#: mog/templates/mog/problem/detail.html:135
+#: mog/templates/mog/problem/detail.html:141
 #: mog/templates/mog/user/_remove_team.html:22
 #: venv/lib/python2.7/site-packages/django/forms/widgets.py:578
 msgid "Yes"
 msgstr "Si"
 
 #: mog/templates/mog/contest/_coming_contests.html:60
-#: mog/templates/mog/contest/_left.html:141
+#: mog/templates/mog/contest/_left.html:147
 #: mog/templates/mog/contest/_past_contests.html:58
 #: mog/templates/mog/contest/_register.html:34
-#: mog/templates/mog/contest/_running_contests.html:40
+#: mog/templates/mog/contest/_running_contests.html:44
 #: mog/templates/mog/contest/_unregister.html:20
-#: mog/templates/mog/problem/detail.html:134
+#: mog/templates/mog/problem/detail.html:140
 #: mog/templates/mog/user/_remove_team.html:21
 #: venv/lib/python2.7/site-packages/django/forms/widgets.py:579
 msgid "No"
@@ -273,29 +292,31 @@ msgid "Coming"
 msgstr "Más adelante"
 
 #: mog/templates/mog/contest/_left.html:72
+#: mog/templates/mog/contest/standing.html:7
+#: mog/templates/mog/contest/standing.html:12
 msgid "Standing"
 msgstr "Posiciones"
 
 #: mog/templates/mog/contest/_left.html:83
 #: mog/templates/mog/contest/_left.html:88
-#: mog/templates/mog/contest/problems.html:81
-#: mog/templates/mog/problem/detail.html:64
+#: mog/templates/mog/contest/problems.html:79
+#: mog/templates/mog/problem/detail.html:70
 #: mog/templates/mog/submit/submit.html:7
-#: mog/templates/mog/submit/submit.html:32
+#: mog/templates/mog/submit/submit.html:33
 #: mog/templates/registration/password_change_form.html:9
 msgid "Submit"
 msgstr "Enviar"
 
-#: mog/templates/mog/contest/_left.html:102
+#: mog/templates/mog/contest/_left.html:108
 msgid "Edit contest"
 msgstr "Editar concurso"
 
-#: mog/templates/mog/contest/_left.html:107
-#: mog/templates/mog/contest/_left.html:126
+#: mog/templates/mog/contest/_left.html:113
+#: mog/templates/mog/contest/_left.html:132
 msgid "Remove Contest"
 msgstr "Eliminar concurso"
 
-#: mog/templates/mog/contest/_left.html:131
+#: mog/templates/mog/contest/_left.html:137
 msgid ""
 "If you remove this contest all submissions related with it will be removed "
 "too."
@@ -345,7 +366,7 @@ msgstr "Concursos corriendo"
 msgid "Remaining"
 msgstr "Tiempo restante"
 
-#: mog/templates/mog/contest/_running_contests.html:45
+#: mog/templates/mog/contest/_running_contests.html:49
 msgid "No running contests!"
 msgstr "No hay concursos corriendo!"
 
@@ -357,33 +378,33 @@ msgstr "Estás seguro que desea eliminar su participación en este concurso ?"
 msgid "Create contest"
 msgstr "Crear concurso"
 
-#: mog/templates/mog/contest/problems.html:22
+#: mog/templates/mog/contest/problems.html:21
 #, fuzzy
 #| msgid "Created"
 msgid "Rated"
 msgstr "Creado"
 
-#: mog/templates/mog/contest/problems.html:24
+#: mog/templates/mog/contest/problems.html:23
 #, fuzzy
 #| msgid "Created"
 msgid "Unrated"
 msgstr "Creado"
 
-#: mog/templates/mog/contest/problems.html:32
+#: mog/templates/mog/contest/problems.html:30
 #: mog/templates/mog/user/teams.html:18
 msgid "Actions"
 msgstr "Acciones"
 
-#: mog/templates/mog/contest/problems.html:78
+#: mog/templates/mog/contest/problems.html:76
 #: mog/templates/mog/contest/submissions.html:28
 #: mog/templates/mog/submission/_list.html:10
 #: mog/templates/mog/submission/index.html:23
 #: mog/templates/mog/submission/index.html:25
-#: mog/templates/mog/submit/submit.html:42
+#: mog/templates/mog/submit/submit.html:43
 msgid "Problem"
 msgstr "Problema"
 
-#: mog/templates/mog/contest/problems.html:80
+#: mog/templates/mog/contest/problems.html:78
 msgid "PDF"
 msgstr ""
 
@@ -395,6 +416,43 @@ msgstr "No hay problemas incluídos todavía!"
 #: mog/templates/mog/user/teams.html:16
 msgid "Description"
 msgstr "Descripción"
+
+#: mog/templates/mog/contest/registration.html:54
+#, fuzzy
+#| msgid "Register"
+msgid "Register user"
+msgstr "Crear cuenta"
+
+#: mog/templates/mog/contest/registration.html:71
+#, fuzzy
+#| msgid "Register"
+msgid "Register team"
+msgstr "Crear cuenta"
+
+#: mog/templates/mog/contest/standing.html:38
+msgid "Rank"
+msgstr "Posición"
+
+#: mog/templates/mog/contest/standing.html:39
+msgid "Contestant"
+msgstr "Concursante"
+
+#: mog/templates/mog/contest/standing.html:39
+#: mog/templates/mog/user/teams.html:15
+msgid "Team"
+msgstr "Equipo"
+
+#: mog/templates/mog/contest/standing.html:41
+msgid "Penalty"
+msgstr "Penalización"
+
+#: mog/templates/mog/contest/standing.html:113
+msgid "No one registered for this contest!"
+msgstr "No se han registrado concursantes para este concurso"
+
+#: mog/templates/mog/contest/standing.html:127
+msgid "Show virtual participation"
+msgstr "Mostrar participación virtual"
 
 #: mog/templates/mog/contest/submissions.html:30
 msgid "-- Select problem --"
@@ -428,15 +486,15 @@ msgstr "por"
 msgid "Edit post"
 msgstr "Editar publicación"
 
-#: mog/templates/mog/post/detail.html:38
+#: mog/templates/mog/post/detail.html:39
 msgid "Edit comment"
 msgstr "Editar comentario"
 
-#: mog/templates/mog/post/detail.html:58
+#: mog/templates/mog/post/detail.html:59
 msgid "Add your comment here"
 msgstr "Escriba su comentario aquí"
 
-#: mog/templates/mog/post/detail.html:63
+#: mog/templates/mog/post/detail.html:64
 msgid "Send"
 msgstr "Enviar"
 
@@ -445,7 +503,7 @@ msgid "Author"
 msgstr "Autor"
 
 #: mog/templates/mog/post/index.html:20
-#: mog/templates/mog/problem/index.html:38
+#: mog/templates/mog/problem/index.html:39
 msgid "Title"
 msgstr "Título"
 
@@ -487,41 +545,47 @@ msgstr "Memoria límite"
 msgid "megabyte"
 msgstr ""
 
-#: mog/templates/mog/problem/detail.html:48
+#: mog/templates/mog/problem/detail.html:43
+#, fuzzy
+#| msgid "Lang"
+msgid "Languages"
+msgstr "Leng"
+
+#: mog/templates/mog/problem/detail.html:53
 msgid "All submissions"
 msgstr "Todos los envíos"
 
-#: mog/templates/mog/problem/detail.html:52
+#: mog/templates/mog/problem/detail.html:57
 msgid "Accepted submissions"
 msgstr "Envíos aceptados"
 
-#: mog/templates/mog/problem/detail.html:58
+#: mog/templates/mog/problem/detail.html:63
 msgid "My submissions"
 msgstr "Mis envíos"
 
-#: mog/templates/mog/problem/detail.html:74
-#: mog/templates/mog/problem/detail.html:90
+#: mog/templates/mog/problem/detail.html:80
+#: mog/templates/mog/problem/detail.html:96
 msgid "Input"
 msgstr "Entrada"
 
-#: mog/templates/mog/problem/detail.html:79
-#: mog/templates/mog/problem/detail.html:94
+#: mog/templates/mog/problem/detail.html:85
+#: mog/templates/mog/problem/detail.html:100
 msgid "Output"
 msgstr "Salida"
 
-#: mog/templates/mog/problem/detail.html:84
+#: mog/templates/mog/problem/detail.html:90
 msgid "Sample test(s)"
 msgstr "Caso(s) de ejemplo"
 
-#: mog/templates/mog/problem/detail.html:104
+#: mog/templates/mog/problem/detail.html:110
 msgid "Hints"
 msgstr "Pistas"
 
-#: mog/templates/mog/problem/detail.html:119
+#: mog/templates/mog/problem/detail.html:125
 msgid "Delete Problem"
 msgstr "Eliminar problema"
 
-#: mog/templates/mog/problem/detail.html:124
+#: mog/templates/mog/problem/detail.html:130
 msgid ""
 "If you remove this problem all submissions related with it will be removed "
 "too."
@@ -537,32 +601,32 @@ msgstr "Salvar"
 msgid "Create problem"
 msgstr "Crear problema"
 
-#: mog/templates/mog/problem/index.html:27
+#: mog/templates/mog/problem/index.html:28
 #: mog/templates/mog/user/index.html:19
 msgid "Search by name ..."
 msgstr "Buscar por nombre ..."
 
-#: mog/templates/mog/problem/index.html:28
+#: mog/templates/mog/problem/index.html:29
 #: mog/templates/mog/user/index.html:20
 msgid "Search"
 msgstr "Buscar"
 
-#: mog/templates/mog/problem/index.html:37
+#: mog/templates/mog/problem/index.html:38
 #: mog/templates/mog/submission/detail.html:31
 msgid "Code"
 msgstr "Código"
 
-#: mog/templates/mog/problem/index.html:41
+#: mog/templates/mog/problem/index.html:42
 #: mog/templates/mog/user/index.html:43
 msgid "ACC"
 msgstr "ACE"
 
-#: mog/templates/mog/problem/index.html:42
+#: mog/templates/mog/problem/index.html:43
 #: mog/templates/mog/user/index.html:46
 msgid "SUB"
 msgstr "ENV"
 
-#: mog/templates/mog/problem/index.html:43
+#: mog/templates/mog/problem/index.html:44
 #: mog/templates/mog/user/index.html:49
 #, python-format
 msgid "%% ACC"
@@ -605,34 +669,30 @@ msgstr "Detalles de la calificación"
 msgid "-- Select compiler --"
 msgstr "-- Compilador --"
 
-#: mog/templates/mog/user/_login.html:10
-#: mog/templates/mog/user/messages.html:12
-msgid "Inbox"
-msgstr "Bandeja de entrada"
-
-#: mog/templates/mog/user/_login.html:11
-#: mog/templates/mog/user/messages.html:13
-msgid "Outbox"
-msgstr "Bandeja de salida"
-
 #: mog/templates/mog/user/_login.html:13
+#: mog/templates/mog/user/profile.html:45
+#: venv/lib/python2.7/site-packages/django/contrib/messages/apps.py:7
+msgid "Messages"
+msgstr "Mensajes"
+
+#: mog/templates/mog/user/_login.html:15
 msgid "View profile"
 msgstr "Ver perfil"
 
-#: mog/templates/mog/user/_login.html:14
+#: mog/templates/mog/user/_login.html:16
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: mog/templates/mog/user/_login.html:15
+#: mog/templates/mog/user/_login.html:17
 msgid "Add blog entry"
 msgstr "Escribir publicacion"
 
-#: mog/templates/mog/user/_login.html:17
+#: mog/templates/mog/user/_login.html:19
 msgid "Logout"
 msgstr "Salir"
 
 #: mog/templates/mog/user/_remove_team.html:10
-#: mog/templates/mog/user/teams.html:41
+#: mog/templates/mog/user/teams.html:48
 msgid "Remove"
 msgstr "Eliminar"
 
@@ -643,6 +703,14 @@ msgstr "Estás seguro que desea eliminar este equipo ?"
 #: mog/templates/mog/user/detail.html:18
 msgid "Accepted"
 msgstr "Aceptados"
+
+#: mog/templates/mog/user/messages.html:12
+msgid "Inbox"
+msgstr "Bandeja de entrada"
+
+#: mog/templates/mog/user/messages.html:13
+msgid "Outbox"
+msgstr "Bandeja de salida"
 
 #: mog/templates/mog/user/messages.html:21
 msgid "From"
@@ -673,32 +741,23 @@ msgstr "Perfil"
 msgid "Edit Profile"
 msgstr "Editar perfil"
 
-#: mog/templates/mog/user/profile.html:45
-#: venv/lib/python2.7/site-packages/django/contrib/messages/apps.py:7
-msgid "Messages"
-msgstr "Mensajes"
-
 #: mog/templates/mog/user/profile.html:63
 msgid "Send a message"
 msgstr "Enviar un mensaje"
-
-#: mog/templates/mog/user/teams.html:15
-msgid "Team"
-msgstr "Equipo"
 
 #: mog/templates/mog/user/teams.html:17
 msgid "Contestants"
 msgstr "Concursantes"
 
-#: mog/templates/mog/user/teams.html:29
+#: mog/templates/mog/user/teams.html:36
 msgid "No description provided"
 msgstr "Sin descripción"
 
-#: mog/templates/mog/user/teams.html:46
+#: mog/templates/mog/user/teams.html:53
 msgid "No teams created!"
 msgstr "No se han creado equipos!"
 
-#: mog/templates/mog/user/teams.html:54
+#: mog/templates/mog/user/teams.html:61
 msgid "Create team"
 msgstr "Crear equipo"
 
@@ -766,7 +825,8 @@ msgstr "Instrucciones para cambio de contraseña"
 
 #: mog/templates/registration/password_reset_done.html:10
 msgid "Email with password reset instructions has been sent."
-msgstr "Un correo con las instrucciones para reiniciar su contraseña ha sido enviado."
+msgstr ""
+"Un correo con las instrucciones para reiniciar su contraseña ha sido enviado."
 
 #: mog/templates/registration/password_reset_email.txt:2
 #, python-format
@@ -797,11 +857,54 @@ msgstr "Registro"
 msgid "You are now registered. Activation email sent."
 msgstr "Ahora usted está registrado. Correo de activación enviado."
 
-#: mog/views/contest.py:236
+#: mog/views/contest.py:117
+#, fuzzy, python-brace-format
+#| msgid "Registration is currently closed."
+msgid "Registration is closed for contest \"{0}\""
+msgstr "Registro está cerrado."
+
+#: mog/views/contest.py:127
+msgid "No user to register"
+msgstr ""
+
+#: mog/views/contest.py:132
+msgid "Invalid user/team combination"
+msgstr ""
+
+#: mog/views/contest.py:141
+#, fuzzy
+#| msgid "Registration"
+msgid "Registration cannot be accomplished"
+msgstr "Registro"
+
+#: mog/views/contest.py:150
+msgid "Successfully registered for real participation"
+msgstr ""
+
+#: mog/views/contest.py:152
+#, fuzzy
+#| msgid "Remove virtual participation"
+msgid "Successfully registered for virtual participation"
+msgstr "Eliminar participación virtual"
+
+#: mog/views/contest.py:203
+msgid "Instance does not exist"
+msgstr ""
+
+#: mog/views/contest.py:208
+msgid ""
+"Cannot remove registration because the user/team has actions on the contest."
+msgstr ""
+
+#: mog/views/contest.py:220
+msgid "Successfully unregistered!"
+msgstr ""
+
+#: mog/views/contest.py:329
 msgid "This contest cannot be rated because it's open for teams."
 msgstr "Este concurso no puede calificarse porque es abierto para equipos."
 
-#: mog/views/contest.py:240
+#: mog/views/contest.py:333
 msgid ""
 "This contest have ben rated. If you want rate again, then force the "
 "operation."
@@ -809,25 +912,33 @@ msgstr ""
 "Este concurso ha sido calificado anteriormente. Si desea calificarlo "
 "nuevamente, entonces fuerce la operación."
 
-#: mog/views/contest.py:245
+#: mog/views/contest.py:338
 msgid "This contest cannot be rated because it's before a rated contest."
 msgstr ""
 "Este concurso no puede ser calificado porque ocurrió antes de un concurso "
 "calificado."
 
-#: mog/views/contest.py:300
+#: mog/views/contest.py:393
 msgid "This contest have been rated successfully"
 msgstr "Este concurso ha sido calificado satisfactoriamente"
 
-#: mog/views/contest.py:315
+#: mog/views/contest.py:408
 msgid "This contest cannot be unrated because it's before a rated contest"
 msgstr ""
 "Este concurso no se puede descalificar porque ocurrió antes de un concurso "
 "calificado."
 
-#: mog/views/contest.py:321
+#: mog/views/contest.py:414
 msgid "This contest have been unrated successfully"
 msgstr "Este concurso ha sido descalificado satisfactoriamente"
+
+#: mog/views/submission.py:60
+msgid "Invalid language choice"
+msgstr ""
+
+#: mog/views/submission.py:66
+msgid "Empty source code"
+msgstr ""
 
 #: venv/lib/python2.7/site-packages/django/contrib/sitemaps/apps.py:7
 msgid "Site Maps"
