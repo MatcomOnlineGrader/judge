@@ -126,7 +126,6 @@
             codeMirror.setOption('mode',
                     compilerModes[compilersHolder.options[compilersHolder.selectedIndex].value] || 'default'
             );
-            console.log(codeMirror.getOption('mode'));
         }
 
         function problemChanged(problemHolder) {
@@ -136,12 +135,13 @@
             var html = [];
             compilersPerProblem[problemID].forEach(function(cid) {
                 if (cid == compilerID) {
-                    html.push('<option value="' + compilerNames[cid] + ' selected">' + compilerNames[cid] + '</option>');
+                    html.push('<option value="' + cid + '" selected>' + compilerNames[cid] + '</option>');
                 } else {
-                    html.push('<option value="' + compilerNames[cid] + '">' + compilerNames[cid] + '</option>');
+                    html.push('<option value="' + cid + '">' + compilerNames[cid] + '</option>');
                 }
             });
             $(compilerHolder).html(html.join(''));
+            compilerChanged(compilerHolder);
         }
 
         compilerChanged(document.getElementById('compiler'));
