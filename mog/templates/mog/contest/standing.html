@@ -2,13 +2,14 @@
 
 {% load filters %}
 {% load humanize %}
+{% load i18n %}
 
-{% block title %}{{ contest.name }} | Standing{% endblock %}
+{% block title %}{{ contest.name }} | {% trans 'Standing' %}{% endblock %}
 
 {% block main %}
     <div class="row">
         <div class="col-md-12 text-center">
-            <h1 class="title">Standing</h1>
+            <h1 class="title">{% trans 'Standing'  %}</h1>
             <h3 class="title"><a href="{% url 'mog:contest_problems' contest.pk %}">{{ contest.name }}</a></h3>
             {% if user_instance %}
                 {% if user_instance.is_running %}
@@ -34,10 +35,10 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="cell-small">Rank</th>
-                        <th>Contestant / Team</th>
-                        <th class="text-center cell-small">Solved</th>
-                        <th class="text-center cell-small">Penalty</th>
+                        <th class="cell-small">{% trans 'Rank' %}</th>
+                        <th>{% trans 'Contestant' %} / {% trans 'Team' %}</th>
+                        <th class="text-center cell-small">{% trans 'Solved' %}</th>
+                        <th class="text-center cell-small">{% trans 'Penalty' %}</th>
                         {% for problem in problems %}
                             <th class="text-center cell-medium">
                                 <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.letter }}</a>
@@ -107,7 +108,11 @@
                             </tr>
                         {% endwith %}
                     {% empty %}
-                        <tr><td colspan="{{ problems|length|add:4 }}">No one registered for this contest!</td></tr>
+                        <tr>
+                            <td colspan="{{ problems|length|add:4 }}">
+                                {% trans 'No one registered for this contest!' %}
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -118,7 +123,9 @@
                 <div class="checkbox">
                     <input id="show_virtual" type="checkbox" name="show_virtual"
                            onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
-                    <label for="show_virtual">Show virtual participations (~)</label>
+                    <label for="show_virtual">
+                        {% trans 'Show virtual participation' %} (~)
+                    </label>
                 </div>
             </form>
         </div>
