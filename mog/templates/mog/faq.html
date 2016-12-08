@@ -1,5 +1,7 @@
 {% extends 'mog/base.html' %}
 
+{% load static %}
+
 {% block title %}FAQ{% endblock %}
 
 {% block content %}
@@ -79,6 +81,68 @@
                     problem memory limit.
                 </li>
             </ol>
+
+            <h3>How to solve A+B problem ?</h3>
+            <p>Given two small integers $A$ and $B$ what is the result of $A + B$ ?</p>
+
+            <small class="uniform-text">ASM</small>
+            <textarea class="code" data-mode="gas" data-url="{% static 'mog/a+b/a+b.asm' %}"></textarea>
+
+            <small class="uniform-text">C</small>
+            <textarea class="code" data-mode="text/x-csrc" data-url="{% static 'mog/a+b/a+b.c' %}"></textarea>
+
+            <small class="uniform-text">C++</small>
+            <textarea class="code" data-mode="text/x-c++src" data-url="{% static 'mog/a+b/a+b.cpp' %}"></textarea>
+
+            <small class="uniform-text">C#</small>
+            <textarea class="code" data-mode="text/x-csharp" data-url="{% static 'mog/a+b/a+b.cs' %}"></textarea>
+
+            <small class="uniform-text">F#</small>
+            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/a+b/a+b.fs' %}"></textarea>
+
+            <small class="uniform-text">Java</small>
+            <textarea class="code" data-mode="text/x-java" data-url="{% static 'mog/a+b/a+b.java' %}"></textarea>
+
+            <small class="uniform-text">Pascal</small>
+            <textarea class="code" data-mode="text/x-pascal" data-url="{% static 'mog/a+b/a+b.pas' %}"></textarea>
+
+            <small class="uniform-text">Python (2.7)</small>
+            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/a+b/a+b.py' %}"></textarea>
+
+            {# Looks like FSharp? #}
+            <small class="uniform-text">Tiger</small>
+            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/a+b/a+b.tig' %}"></textarea>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    <link href="/static/mog/plugins/codemirror/lib/codemirror.css" rel="stylesheet"/>
+    <link href="/static/mog/plugins/codemirror/theme/hopscotch.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/lib/codemirror.js"></script>
+
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/clike/clike.js"></script>
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/pascal/pascal.js"></script>
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/python/python.js"></script>
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/mllike/mllike.js"></script>
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/sql/sql.js"></script>
+    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/gas/gas.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('textarea.code').each(function() {
+                $(this).load($(this).data('url'), function(response, status, xhr) {
+                    if (status === 'success') {
+                        $(this).text(response);
+                        CodeMirror.fromTextArea(this, {
+                            lineNumbers: true, indentUnit: 4, theme: 'hopscotch', mode: $(this).data('mode')
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
