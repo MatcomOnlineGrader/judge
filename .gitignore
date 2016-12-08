@@ -6,4 +6,5 @@ api/fixtures/*.json
 *.pyc
 *.mo
 *~
-
+*.swp
+*.save
