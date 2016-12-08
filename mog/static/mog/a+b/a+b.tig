@@ -1,0 +1,24 @@
+let
+	var line := ""
+	var c := ""
+	var a :=  0
+	var b :=  0
+	var space_found := 0
+in
+	line := getline();
+	
+	/* parse input */
+	for i := 0 to size(line)-1 do (
+		c := substring(line, i, 1);
+		if (c = " ") then
+			space_found := 1
+		else (
+			if (space_found = 0) then
+				a := 10 * a + ord(c) - ord("0")
+			else
+				b := 10 * b + ord(c) - ord("0")
+		)
+	);
+	
+	printiline(a + b)
+end
