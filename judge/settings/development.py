@@ -2,13 +2,9 @@ from .base import *
 
 DEBUG = True
 
-INSTALLED_APPS += [
-    'debug_toolbar'
-]
+# Secret key
+SECRET_KEY = get_secret_value('development', 'SECRET_KEY')
 
-MIDDLEWARE += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
-]
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -16,15 +12,23 @@ MIDDLEWARE += [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mog',
-        'USER': 'mog',
-        'PASSWORD': 'mog',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'HOST': get_secret_value('development', 'DATABASE_HOST'),
+        'PORT': get_secret_value('development', 'DATABASE_PORT'),
+        'NAME': get_secret_value('development', 'DATABASE_NAME'),
+        'USER': get_secret_value('development', 'DATABASE_USER'),
+        'PASSWORD': get_secret_value('development', 'DATABASE_PASS'),
     }
 }
 
-# Uncomment this to work with debug_toolbar
+# Debug Toolbar
+# INSTALLED_APPS += [
+#     'debug_toolbar'
+# ]
+#
+# MIDDLEWARE += [
+#     'debug_toolbar.middleware.DebugToolbarMiddleware'
+# ]
+#
 # INTERNAL_IPS = ['127.0.0.1']
 
 # Place to store problem test-cases & pdf

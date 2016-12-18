@@ -11,16 +11,53 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
+
 from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+# Load sensitive information from a json-file named secrets.json
+# located at the root of the project with the following format:
+#
+# {
+#     "[config_name]": {
+#         "SECRET_KEY": "[secret_key]",
+#         "DATABASE_HOST": "[database_host]",
+#         "DATABASE_NAME": "[database_name]",
+#         "DATABASE_USER": "[database_user]",
+#         "DATABASE_PASS": "[database_pass]",
+#         "DATABASE_PORT": "[database_port]",
+#         "EMAIL_USER": "[email_user]",
+#         "EMAIL_PASS": "[email_pass]",
+#     },
+#     "[config_name]": {
+#         ...
+#     }
+# }
+#
+# In the simplest form, [config_name] should be development for a single developer.
+# secrets.json cannot be committed to source control and only the admins should
+# handle production settings in servers.
+#
+SECRET_FILE_CONTENT = None
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+qk4e_qvi2k!!8b3_viloh*u-_$q-s6o%lhg@=ro_3cklr!src'
+
+def get_secret_value(config_name, key):
+    global SECRET_FILE_CONTENT
+    if not SECRET_FILE_CONTENT:
+        import json
+        try:
+            with open(os.path.join(BASE_DIR, '..', 'secrets.json'), 'r') as f:
+                SECRET_FILE_CONTENT = json.load(f)
+        except:
+            raise ImproperlyConfigured("Error loading secret file content")
+    config = SECRET_FILE_CONTENT.get(config_name)
+    if not config:
+        raise ImproperlyConfigured('Configuration for config_name=%s not found' % config_name)
+    return config.get(key)
+
 
 ALLOWED_HOSTS = []
 
