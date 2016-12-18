@@ -138,7 +138,7 @@
                     if (status === 'success') {
                         $(this).text(response);
                         CodeMirror.fromTextArea(this, {
-                            lineNumbers: true, indentUnit: 4, theme: 'hopscotch', mode: $(this).data('mode')
+                            lineNumbers: true, indentUnit: 4, theme: 'hopscotch', mode: $(this).data('mode'), readOnly: true
                         });
                     }
                 });
