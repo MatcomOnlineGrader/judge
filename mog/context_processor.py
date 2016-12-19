@@ -17,3 +17,15 @@ def common(request):
         context['unseen_messages'] = request.user\
             .messages_received.filter(saw=False).count()
     return context
+
+
+def special_days(request):
+    now = timezone.now()
+    day = 'regular'
+    if now.month == 2 and now.day == 14:
+        day = 'valentine'
+    if now.month == 12 and 19 <= now.day <= 31:
+        day = 'christmas'
+    return {
+        'special_day': day
+    }

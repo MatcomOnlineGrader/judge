@@ -101,6 +101,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'mog.context_processor.common',
+                'mog.context_processor.special_days',
                 'django.template.context_processors.media',
             ],
         },
