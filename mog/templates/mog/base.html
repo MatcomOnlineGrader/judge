@@ -141,7 +141,17 @@
                     <div class="row">
                         <div class="col-md-3">
                             <a href="{% url 'mog:index' %}">
-                                <img src="{% static 'mog/images/logo.png' %}" class="img-responsive"/>
+                                {# Change logo depending the day :) #}
+                                {% if special_day == 'valentine' %}
+                                    <img src="{% static 'mog/images/logo-valentine.png' %}" class="img-responsive"
+                                         alt="MOG: Happy Valentine Day!"/>
+                                {% elif special_day == 'christmas' %}
+                                    <img src="{% static 'mog/images/logo-ch.png' %}" class="img-responsive"
+                                         alt="MOG: Happy Christmas!"/>
+                                {% else %}
+                                    <img src="{% static 'mog/images/logo.png' %}" class="img-responsive"
+                                         alt="MOG"/>
+                                {% endif %}
                             </a>
                         </div>
                         <div class="col-md-9">
