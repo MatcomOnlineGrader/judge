@@ -50,7 +50,7 @@ class Checker(models.Model):
 
 
 class Contest(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=False)
     code = models.CharField(max_length=20, unique=True)
     description = models.TextField(null=True, blank=True)
     start_date = models.DateTimeField()
