@@ -29,8 +29,8 @@ EMAIL_HOST_USER = get_secret_value('production', 'EMAIL_USER'),
 EMAIL_HOST_PASSWORD = get_secret_value('production', 'EMAIL_PASS'),
 DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 
-# Place to store problem test-cases & pdf
-PROBLEMS_FOLDER = '/home/mog/problems/'
+# Place to store problem test-cases ( secret location )
+PROBLEMS_FOLDER = get_secret_value('development', 'PROBLEMS_FOLDER')
 
 # Statics
 STATIC_ROOT = os.path.join(BASE_DIR, '../static')

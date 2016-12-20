@@ -31,6 +31,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #         "DATABASE_PORT": "[database_port]",
 #         "EMAIL_USER": "[email_user]",
 #         "EMAIL_PASS": "[email_pass]",
+#         "PROBLEMS_FOLDER": "[problems_folder]",
 #     },
 #     "[config_name]": {
 #         ...
