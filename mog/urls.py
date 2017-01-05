@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
 
     url(r'^submission/(?P<submission_id>[0-9]+)/$', views.submission, name='submission'),
+    url(r'^submission/rejudge/(?P<submission_id>[0-9]+)/$', views.rejudge, name='submission_rejudge'),
     url(r'^submissions/$', views.submissions,name='submissions'),
 
     url(r'^users/json$', views.users_json, name='users_json'),
