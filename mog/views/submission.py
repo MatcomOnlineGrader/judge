@@ -4,12 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views import View, generic
+from django.views import View
 from django.utils.translation import ugettext_lazy as _
 
-from api.models import Submission, Compiler, Problem, Result, Contest
+from api.models import Submission, Compiler, Problem, Result
 from mog.helpers import filter_submissions, get_paginator
 
 from mog.utils import user_is_admin
