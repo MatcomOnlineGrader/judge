@@ -1,3 +1,5 @@
+from django.contrib import messages
+
 from api.models import *
 
 
@@ -29,3 +31,25 @@ def special_days(request):
     return {
         'special_day': day
     }
+
+
+def incomplete_profile(request):
+    user = request.user
+    if user.is_authenticated:
+        profile = user.profile
+        fields = [
+            ('first name', user.first_name),
+            ('last name', user.last_name),
+            ('code theme', profile.theme),
+            ('avatar', profile.avatar),
+            ('institution', profile.institution),
+            ('compiler', profile.compiler),
+        ]
+        incomplete = ', '.join([name for name, value in fields if not value])
+        if incomplete:
+            msg = '<a href="%s">' % reverse('mog:user_edit', args=(user.id, ))\
+                  + 'Please edit your profile and fill incomplete fields'\
+                  + (' (%s)' % incomplete)\
+                  + '</a>'
+            messages.info(request, msg, extra_tags='info secure')
+    return {}
