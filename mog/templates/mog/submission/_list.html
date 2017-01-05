@@ -26,6 +26,15 @@
                             {% else %}
                                 {{ submission.id }}
                             {% endif %}
+                            {% if user|is_admin %}
+                                <form action="{% url 'mog:submission_rejudge' submission.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ submission.id }}">
+                                    <a href="javascript:;" onclick="this.parentNode.submit();">
+                                        <span class="glyphicon glyphicon-refresh"></span>
+                                    </a>
+                                </form>
+                            {% endif %}
                         </small>
                     </td>
                     <td class="text-center">

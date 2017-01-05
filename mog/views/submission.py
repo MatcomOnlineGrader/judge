@@ -1,6 +1,8 @@
+from django.views.decorators.http import require_http_methods
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -80,3 +82,15 @@ class Submit(View):
             submission.hidden = True
         submission.save()
         return redirect('mog:contest_submissions', problem.contest_id)
+
+
+@login_required
+@require_http_methods(["POST"])
+def rejudge(request, submission_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    submission = get_object_or_404(Submission, pk=submission_id)
+    submission.result = Result.objects.get(name__iexact='pending')
+    submission.save()
+    # TODO: Find a better way to redirect to previous page.
+    return redirect(request.META.get('HTTP_REFERER', '/'))
