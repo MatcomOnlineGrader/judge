@@ -97,8 +97,9 @@ class UserEditView(View):
                 'profile_form': profile_form
             })
         user_form.save()
-        login(request, user)
         profile_form.save()
+        if request.user == user:
+            login(request, user)
         return redirect('mog:user', user_id=user.pk)
 
 
