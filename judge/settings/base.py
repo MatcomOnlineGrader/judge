@@ -154,7 +154,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'mog/static')
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_URL = '/mog/login/'
+LOGIN_URL = '/login/'
 
 # Internationalization
 LOCALE_PATHS = [
