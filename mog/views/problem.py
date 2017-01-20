@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from api.models import Problem, Tag
 from mog.forms import ProblemForm
 from mog.utils import user_is_admin, get_tests, handle_tests,\
-    handle_remove_test, test_content, write_to_test
+    handle_remove_test, test_content, write_to_test, fix_problem_folder
 
 
 @login_required
@@ -146,6 +146,7 @@ class ProblemCreateView(View):
         )
         problem.save()
         problem.tags = data['tags']
+        fix_problem_folder(problem)
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
 
