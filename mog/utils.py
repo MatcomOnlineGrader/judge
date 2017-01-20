@@ -213,3 +213,16 @@ def calculate_standing(contest, virtual=False, user_instance=None):
         global_instance.first_all = True
 
     return problems, instance_results
+
+
+def fix_problem_folder(problem):
+    folders = [
+        os.path.join(settings.PROBLEMS_FOLDER, str(problem.id)),
+        os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'inputs'),
+        os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'outputs'),
+        os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'sample inputs'),
+        os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'sample outputs'),
+    ]
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
