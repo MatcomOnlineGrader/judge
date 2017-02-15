@@ -32,5 +32,6 @@ DEFAULT_FROM_EMAIL = 'mog@matcom.uh.cu'
 # Place to store problem test-cases ( secret location )
 PROBLEMS_FOLDER = get_secret_value('production', 'PROBLEMS_FOLDER')
 
-# Statics
-STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+# Media & Statics
+STATIC_ROOT = '/var/www/judge/static/'
+MEDIA_ROOT = '/var/www/judge/media/'
