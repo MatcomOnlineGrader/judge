@@ -48,6 +48,7 @@ urlpatterns = [
 
     url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
+    url(r'^contest/json/(?P<contest_id>[0-9]+)$', views.contest_json, name='contest_json'),
 
     url(r'^submission/(?P<submission_id>[0-9]+)/$', views.submission, name='submission'),
     url(r'^submission/rejudge/(?P<submission_id>[0-9]+)/$', views.rejudge, name='submission_rejudge'),
