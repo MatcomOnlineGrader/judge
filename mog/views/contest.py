@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -413,3 +413,40 @@ def unrate_contest(request, contest_id):
     msg = _("This contest have been unrated successfully")
     messages.success(request, msg, extra_tags='success')
     return redirect(next)
+
+
+@login_required
+def contest_json(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    result = {"contestName": contest.name,
+              "freezeTimeMinutesFromStart": int(contest.duration.seconds / 60) - contest.frozen_time,
+              "problemLetters": [x.letter for x in contest.get_problems],
+              "contestants": [instance.team.name if instance.team is not None else instance.user.username
+                              for instance in contest.instances.all()]}
+
+    runs = []
+    append = runs.append
+
+    # TODO: See Next Line!!!
+    # for instance in contest.instances.filter(real=True):
+    for instance in contest.instances.all():
+        for submission in instance.submissions.filter(result__penalty=True):
+            run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
+                   "problemLetter": submission.problem.letter,
+                   "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
+                   "success": False}
+            append(run)
+        for submission in instance.submissions.filter(result__name__iexact=u'Accepted'):
+            run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
+                   "problemLetter": submission.problem.letter,
+                   "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
+                   "success": True}
+            append(run)
+
+    runs.sort(key=lambda r: r["timeMinutesFromStart"])
+    result["runs"] = runs
+
+    return JsonResponse(data=result)
