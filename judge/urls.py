@@ -21,7 +21,7 @@ from registration.backends.hmac.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 
 urlpatterns = [
-    url(r'^register$',
+    url(r'^register/$',
         RegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='registration_register'),
     url(r'^', include('registration.backends.hmac.urls')),
     url(r'^', include('mog.urls')),
