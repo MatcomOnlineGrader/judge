@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User
+from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q
 from mog.forms import ContestForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
@@ -433,17 +433,11 @@ def contest_json(request, contest_id):
     # TODO: See Next Line!!!
     # for instance in contest.instances.filter(real=True):
     for instance in contest.instances.all():
-        for submission in instance.submissions.filter(result__penalty=True):
+        for submission in instance.submissions.filter(Q(result__penalty=True) | Q(result__name__iexact=u'Accepted')):
             run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
                    "problemLetter": submission.problem.letter,
                    "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
-                   "success": False}
-            append(run)
-        for submission in instance.submissions.filter(result__name__iexact=u'Accepted'):
-            run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
-                   "problemLetter": submission.problem.letter,
-                   "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
-                   "success": True}
+                   "success": submission.result.name == u'Accepted'}
             append(run)
 
     runs.sort(key=lambda r: r["timeMinutesFromStart"])
