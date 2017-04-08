@@ -64,7 +64,7 @@
                                     <li>
                                         <a href="{% url 'mog:contest_json' contest.id %}">Get JSON</a>
                                     </li>
-                                    <li><a href="#">Get CVS</a></li>
+                                    <li><a href="{% url 'mog:contest_csv' contest.id %}">Get CSV</a></li>
                                 </ul>
                             </div>
                         {% endif %}
