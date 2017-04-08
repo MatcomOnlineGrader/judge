@@ -467,7 +467,7 @@ def contest_csv(request, contest_id):
 
     header = [trans('Rank'), trans('Team'), trans('Solved'), trans('Penalty')]
     header.extend([problem.letter for problem in problems])
-    writerow(header)
+    writerow(map(lambda x: x.encode('utf-8'), header))
 
     append = list.append
 
