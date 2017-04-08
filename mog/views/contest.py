@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext as trans
 from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
@@ -15,6 +16,9 @@ from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingC
 from mog.forms import ContestForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
+
+import csv
+from mog.templatetags.filters import format_penalty, format_minutes
 
 
 def contests(request):
@@ -162,7 +166,7 @@ def contest_register(request, contest_id):
     user = request.user
     team = get_object_or_404(Team, pk=request.POST['team']) \
         if 'team' in request.POST else None
-    return register_instance(request,contest,  user, team)
+    return register_instance(request, contest, user, team)
 
 
 @login_required
@@ -322,7 +326,7 @@ def rate_contest(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     contest = get_object_or_404(Contest, pk=contest_id)
-    next = request.POST.get('next') or reverse('mog:contest_problems', args=(contest.id, ))
+    next = request.POST.get('next') or reverse('mog:contest_problems', args=(contest.id,))
     force_rate = request.POST.get('force_rate', False)
     if contest.allow_teams:
         msg = _("This contest cannot be rated because it's open for teams.")
@@ -332,7 +336,7 @@ def rate_contest(request, contest_id):
         msg = _("This contest have ben rated. If you want rate again, then force the operation.")
         messages.info(request, msg, extra_tags='info')
         return redirect(next)
-    if RatingChange.objects\
+    if RatingChange.objects \
             .filter(contest__rated=True, contest__start_date__gt=contest.start_date).count() > 0:
         msg = _("This contest cannot be rated because it's before a rated contest.")
         messages.success(request, msg, extra_tags='warning')
@@ -353,7 +357,7 @@ def rate_contest(request, contest_id):
 
     instance_results = [
         ir for ir in instance_results if ir.solved > 0
-    ]
+        ]
 
     ratings = []
     for ir in instance_results:
@@ -369,7 +373,7 @@ def rate_contest(request, contest_id):
     n = len(ratings)
     for i in range(n):
         for j in range(n):
-            expected[i] += 1 / (1 + 10**((ratings[i] - ratings[j]) / 400.0))
+            expected[i] += 1 / (1 + 10 ** ((ratings[i] - ratings[j]) / 400.0))
 
     for i in range(n):
         # TODO: allow users go bellow than zero ?
@@ -401,8 +405,8 @@ def unrate_contest(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     contest = get_object_or_404(Contest, pk=contest_id)
-    next = request.POST.get('next') or reverse('mog:contest_problems', args=(contest.id, ))
-    if RatingChange.objects\
+    next = request.POST.get('next') or reverse('mog:contest_problems', args=(contest.id,))
+    if RatingChange.objects \
             .filter(contest__rated=True, contest__start_date__gt=contest.start_date).count() > 0:
         msg = _("This contest cannot be unrated because it's before a rated contest")
         messages.warning(request, msg, extra_tags='warning')
@@ -444,3 +448,56 @@ def contest_json(request, contest_id):
     result["runs"] = runs
 
     return JsonResponse(data=result)
+
+
+@login_required
+def contest_csv(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    problems, instance_results = calculate_standing(contest, True, None)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(contest.name.encode('utf-8').strip())
+
+    response.write("sep=,\r\n")
+
+    writerow = csv.writer(response).writerow
+
+    header = [trans('Rank'), trans('Team'), trans('Solved'), trans('Penalty')]
+    header.extend([problem.letter for problem in problems])
+    writerow(header)
+
+    append = list.append
+
+    for instance_result in instance_results:
+        instance = instance_result.instance
+        row = []
+
+        append(row, instance_result.rank)
+        name = '' if instance.real else '(~) '
+
+        if instance.team is not None:
+            name += instance.team.name.encode('utf-8').strip()
+            if instance.team.institution is not None:
+                name += ' ({0})'.format(instance.team.institution.name.encode('utf-8').strip())
+        else:
+            name += instance.user.username.encode('utf-8').strip()
+            if instance.user.profile.institution is not None:
+                name += ' ({0})'.format(instance.user.profile.institution.name.encode('utf-8').strip())
+
+        append(row, name)
+        append(row, instance_result.solved)
+        append(row, format_penalty(instance_result.penalty))
+
+        for problem_result in instance_result.problem_results:
+            cell = ''
+            if problem_result.accepted:
+                cell = format_minutes(problem_result.acc_delta)
+            if problem_result.attempts > 0:
+                cell += ' (-{0})'.format(problem_result.attempts)
+            append(row, cell.strip())
+        writerow(row)
+
+    return response
