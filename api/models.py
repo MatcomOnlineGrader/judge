@@ -338,7 +338,7 @@ class Institution(models.Model):
     country = models.CharField(max_length=50)
 
     def __str__(self):
-        return str(self.__unicode__())
+        return self.__unicode__()
 
     def __unicode__(self):
         return '{0} ({1})'.format(self.name, self.country)
