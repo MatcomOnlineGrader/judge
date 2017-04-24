@@ -84,9 +84,15 @@
                                     </a>
                                 {% else %}
                                     {% with problem=contest|first_problem %}
-                                        <a href="{% url 'mog:submit' problem.id %}">
-                                            <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
-                                        </a>
+                                        {% if problem %}
+                                            <a href="{% url 'mog:submit' problem.id %}">
+                                                <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                                            </a>
+                                        {% else %}
+                                            <a href="#">
+                                                <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                                            </a>
+                                        {% endif %}
                                     {% endwith %}
                                 {% endif %}
                             </li>
