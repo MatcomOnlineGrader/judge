@@ -56,7 +56,7 @@
                     </div>
                     {% block content2 %}{% endblock %}
                 </div>
-                <div class="col-md-3 text-center">
+                <div class="col-md-3">
                     {% include 'mog/user/_image.html' with user=user_in_profile %}
                     {% if user.is_authenticated and user != user_in_profile %}
                         <a class="btn btn-primary btn-block margin-top-5" data-toggle="modal" data-target="#send-message">
