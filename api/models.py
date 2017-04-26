@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
-from django.db.models import F, Count
+from django.db.models import F
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
 
@@ -14,8 +14,6 @@ from django.db.models import Q
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-
-from bs4 import BeautifulSoup
 
 from mog.utils import user_is_admin, user_is_browser
 
@@ -284,6 +282,9 @@ class Problem(models.Model):
     def compilers2str(self):
         return '<br>'.join([compiler.language for compiler in self.compilers_by_relevance])
 
+    def __unicode__(self):
+        return self.title
+
 
 class Post(models.Model):
     name = models.CharField(max_length=250)
@@ -322,7 +323,7 @@ class Message(models.Model):
     target = models.ForeignKey(User, related_name='messages_received')
     subject = models.CharField(max_length=250)
     body = models.TextField()
-    date= models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
     saw = models.BooleanField(default=False)
 
 
@@ -331,14 +332,14 @@ class Division(models.Model):
     color = models.CharField(max_length=50)
     rating = models.PositiveIntegerField()
 
+    def __unicode__(self):
+        return self.title
+
 
 class Institution(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField()
     country = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.__unicode__()
 
     def __unicode__(self):
         return '{0} ({1})'.format(self.name, self.country)
@@ -359,9 +360,6 @@ class Compiler(models.Model):
     path = models.CharField(max_length=1000)
     file_extension = models.CharField(max_length=10, default='')
     exec_extension = models.CharField(max_length=10, default='')
-
-    def __str__(self):
-        return str(self.__unicode__())
 
     def __unicode__(self):
         return '[{0}] {1}'.format(self.language, self.name)
@@ -478,7 +476,7 @@ class UserProfile(models.Model):
         return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(0))). \
             order_by('-rating_value').select_related('user')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user.username
 
 
@@ -492,10 +490,13 @@ class Result(models.Model):
     def get_all_results():
         return Result.objects.all()
 
+    def __unicode__(self):
+        return self.name
+
 
 class Submission(models.Model):
     problem = models.ForeignKey(Problem, related_name='submissions')
-    instance = models.ForeignKey('ContestInstance', null=True, related_name='submissions')
+    instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions')
     date = models.DateTimeField(auto_now_add=True)
     execution_time = models.IntegerField(default=0)
     memory_used = models.IntegerField(default=0)
@@ -542,6 +543,9 @@ class Submission(models.Model):
         return Submission.objects \
             .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
 
+    def __unicode__(self):
+        return str(self.id)
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, related_name='comments')
@@ -560,6 +564,11 @@ class ContestInstance(models.Model):
     contest = models.ForeignKey(Contest, related_name='instances')
     start_date = models.DateTimeField(null=True)
     real = models.BooleanField()
+
+    def __unicode__(self):
+        if self.team:
+            return 'Team: ' + self.team.name
+        return self.user.username
 
     @property
     def end_date(self):
