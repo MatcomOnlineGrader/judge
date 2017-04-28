@@ -34,8 +34,19 @@
 {% block styles %}
     <link href="{% static 'mog/plugins/editor.summernote/summernote.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/font-awesome/css/font-awesome.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" src="{% static 'mog/plugins/editor.summernote/summernote.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/moment/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#id_start_date, #id_end_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+        });
+    </script>
 {% endblock %}
