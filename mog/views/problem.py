@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View, generic
 from django.views.decorators.http import require_http_methods
@@ -205,6 +206,9 @@ class ProblemListView(generic.ListView):
 
         if q:
             problems = problems.filter(title__icontains=q)
+
+        if not user_is_admin(self.request.user):
+            problems = problems.filter(contest__start_date__lte=timezone.now())
 
         return problems.order_by('-contest__start_date', 'position')
 
