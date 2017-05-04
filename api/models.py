@@ -393,7 +393,7 @@ THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True)
-    role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, null=True, blank=True, choices=ROLE_CHOICES)
     theme = models.CharField(max_length=20, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
     avatar = models.ImageField(upload_to='user/avatar', null=True, blank=True, verbose_name=_('Avatar'))
     show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
