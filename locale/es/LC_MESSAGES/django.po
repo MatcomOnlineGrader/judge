@@ -91,7 +91,7 @@ msgstr "Olvidó la contraseña ?"
 #: mog/templates/registration/registration_form.html:4
 #: mog/templates/registration/registration_form.html:12
 msgid "Register"
-msgstr "Crear cuenta"
+msgstr "Registrar"
 
 #: mog/templates/mog/base.html:120
 msgid "Home"
@@ -421,13 +421,13 @@ msgstr "Descripción"
 #, fuzzy
 #| msgid "Register"
 msgid "Register user"
-msgstr "Crear cuenta"
+msgstr "Registrar usuario"
 
 #: mog/templates/mog/contest/registration.html:71
 #, fuzzy
 #| msgid "Register"
 msgid "Register team"
-msgstr "Crear cuenta"
+msgstr "Registrar equipo"
 
 #: mog/templates/mog/contest/standing.html:38
 msgid "Rank"
