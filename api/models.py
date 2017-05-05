@@ -508,6 +508,20 @@ class Submission(models.Model):
     hidden = models.BooleanField(default=False)
     judgement_details = models.TextField(null=True)
 
+    def can_show_judgment_details_to(self, user):
+        if user_is_admin(user) or not self.instance \
+                or not self.instance.real or self.instance.is_past:
+            return True
+        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.death_time),\
+               self.instance.end_date
+        if self.instance.is_death_time and s < self.date < e:
+            return False
+        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.frozen_time), \
+               self.instance.end_date
+        if self.instance.is_frozen_time and s < self.date < e:
+            return self.user == user
+        return False
+
     def can_show_details_to(self, user):
         if user_is_admin(user) or not self.instance \
                 or not self.instance.real or self.instance.is_past:
