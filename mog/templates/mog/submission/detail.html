@@ -31,7 +31,7 @@
                 <small class="uniform-text uniform-big">{% trans 'Code' %}</small>
                 <textarea id="source" class="{{ submission.compiler.language|lower }}">{{ submission.source }}</textarea>
             </div>
-            {% if user|can_see_details_of:submission and submission.judgement_details %}
+            {% if user|can_see_judgment_details_of:submission and submission.judgement_details %}
                 <div class="margin-top-20">
                     <small class="uniform-text uniform-big">{% trans 'Judgement Details' %}</small>
                     <pre>{{ submission.judgement_details }}</pre>

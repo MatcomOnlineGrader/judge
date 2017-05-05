@@ -25,6 +25,11 @@ def can_see_details_of(user, submission):
 
 
 @register.filter()
+def can_see_judgment_details_of(user, submission):
+    return submission.can_show_judgment_details_to(user)
+
+
+@register.filter()
 def can_send_message_to(user1, user2):
     return user1.is_authenticated() and user1 != user2
 
