@@ -24,7 +24,10 @@ class Team(models.Model):
     description = models.CharField(max_length=250, null=True)
 
     def __unicode__(self):
-        return self.name
+        return '{0} ({1})'.format(
+            self.name,
+            ', '.join([profile.user.username for profile in self.profiles.all()])
+        )
 
 
 class Tag(models.Model):
