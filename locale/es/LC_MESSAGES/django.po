@@ -346,7 +346,7 @@ msgstr "No hay concursos pasados!"
 
 #: mog/templates/mog/contest/_register.html:15
 msgid "Are you sure you want to participate in this contest ?"
-msgstr "Estás seguro que desea participar virtualmente en este concurso ?"
+msgstr "Estás seguro que desea participar en este concurso ?"
 
 #: mog/templates/mog/contest/_register.html:17
 msgid ""
