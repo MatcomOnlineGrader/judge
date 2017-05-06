@@ -68,8 +68,8 @@ class Submit(View):
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:submit', problem_id=problem.id)
         try:
-            instance = request.user.instances.get(contest=problem.contest)
-            if not instance.is_running:
+            instance = problem.contest.real_registration(request.user)
+            if instance and not instance.is_running:
                 instance = None
         except:
             instance = None
