@@ -579,7 +579,7 @@ class ContestInstance(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, related_name='instances')
     team = models.ForeignKey(Team, null=True, blank=True, related_name='instances')
     contest = models.ForeignKey(Contest, related_name='instances')
-    start_date = models.DateTimeField(null=True)
+    start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
 
     def __unicode__(self):
