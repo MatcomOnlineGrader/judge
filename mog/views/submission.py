@@ -73,7 +73,7 @@ class Submit(View):
                 instance = None
         except:
             instance = None
-        if not instance and problem.contest.is_running:
+        if (not user_is_admin(request.user)) and (not instance) and problem.contest.is_running:
             msg = _(u'You cannot submit because you are not registered in the contest.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
