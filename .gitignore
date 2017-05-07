@@ -9,3 +9,4 @@ api/fixtures/*.json
 *.swp
 *.save
 secrets.json
+settings.ini

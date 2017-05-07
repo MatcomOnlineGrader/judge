@@ -11,56 +11,24 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from django.core.exceptions import ImproperlyConfigured
+from ConfigParser import RawConfigParser
 
 from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Load sensitive information from a json-file named secrets.json
-# located at the root of the project with the following format:
-#
-# {
-#     "[config_name]": {
-#         "SECRET_KEY": "[secret_key]",
-#         "DATABASE_HOST": "[database_host]",
-#         "DATABASE_NAME": "[database_name]",
-#         "DATABASE_USER": "[database_user]",
-#         "DATABASE_PASS": "[database_pass]",
-#         "DATABASE_PORT": "[database_port]",
-#         "EMAIL_USER": "[email_user]",
-#         "EMAIL_PASS": "[email_pass]",
-#         "PROBLEMS_FOLDER": "[problems_folder]",
-#     },
-#     "[config_name]": {
-#         ...
-#     }
-# }
-#
-# In the simplest form, [config_name] should be development for a single developer.
-# secrets.json cannot be committed to source control and only the admins should
-# handle production settings in servers.
-#
-SECRET_FILE_CONTENT = None
+# Import configuration from settings.ini file
+config = RawConfigParser()
+config.read(os.path.join(BASE_DIR, 'settings.ini'))
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config.get('secrets', 'SECRET_KEY')
 
-def get_secret_value(config_name, key):
-    global SECRET_FILE_CONTENT
-    if not SECRET_FILE_CONTENT:
-        import json
-        try:
-            with open(os.path.join(BASE_DIR, '..', 'secrets.json'), 'r') as f:
-                SECRET_FILE_CONTENT = json.load(f)
-        except:
-            raise ImproperlyConfigured("Error loading secret file content")
-    config = SECRET_FILE_CONTENT.get(config_name)
-    if not config:
-        raise ImproperlyConfigured('Configuration for config_name=%s not found' % config_name)
-    return config.get(key)
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config.getboolean('debugging', 'DEBUG')
 
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -112,6 +80,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'judge.wsgi.application'
 
+# Database
+# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': config.get('database', 'DATABASE_HOST'),
+        'PORT': config.getint('database', 'DATABASE_PORT'),
+        'NAME': config.get('database', 'DATABASE_NAME'),
+        'USER': config.get('database', 'DATABASE_USER'),
+        'PASSWORD': config.get('database', 'DATABASE_PASS')
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -149,10 +131,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'mog/static')
-
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 MEDIA_URL = '/media/'
+
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'mog/static')
+    MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+else:
+    STATIC_ROOT = '/var/www/judge/static/'
+    MEDIA_ROOT = '/var/www/judge/media/'
 
 LOGIN_URL = '/login/'
 
@@ -180,3 +166,25 @@ BASE_RATING = 1300
 # Rating changes are not allowed beyond MAX_RATING_DELTA. If this
 # happens, then the increase/decrease rating is truncated.
 MAX_RATING_DELTA = 150
+
+# Place to store problem test-cases ( secret location )
+PROBLEMS_FOLDER = config.get('others', 'PROBLEMS_FOLDER')
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = config.getboolean('email', 'EMAIL_USE_TLS')
+EMAIL_HOST = config.get('email', 'EMAIL_HOST')
+EMAIL_PORT = config.getint('email', 'EMAIL_PORT')
+EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config.get('email', 'DEFAULT_FROM_EMAIL')
+
+# Activate debug toolbar
+if config.getboolean('debugging', 'DEBUG_TOOLBAR'):
+    INSTALLED_APPS += [
+        'debug_toolbar'
+    ]
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware'
+    ]
+    INTERNAL_IPS = ['127.0.0.1']
