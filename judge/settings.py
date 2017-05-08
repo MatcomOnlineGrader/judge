@@ -134,17 +134,17 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 if DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'mog/static')
-    MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'mog/static'))
+    MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
 else:
-    STATIC_ROOT = '/var/www/judge/static/'
-    MEDIA_ROOT = '/var/www/judge/media/'
+    STATIC_ROOT = config.get('others', 'STATIC_ROOT')
+    MEDIA_ROOT = config.get('others', 'MEDIA_ROOT')
 
 LOGIN_URL = '/login/'
 
 # Internationalization
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, '..', 'locale')
+    os.path.join(BASE_DIR, 'locale')
 ]
 
 LANGUAGES = [
