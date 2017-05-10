@@ -203,6 +203,7 @@ class Problem(models.Model):
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
     checker = models.ForeignKey(Checker, null=True)
     position = models.IntegerField()
+    points = models.IntegerField()
     balloon = models.CharField(verbose_name="Balloon color", max_length=50)
     contest = models.ForeignKey(Contest, related_name='problems')
     slug = models.SlugField(max_length=100, null=True)
@@ -262,9 +263,11 @@ class Problem(models.Model):
         """Return number of contestants whom solved this problem in a real contest"""
         return self._accepted_submissions().filter(instance__real=True).distinct('user_id').count()
 
+    """
     @property
     def points(self):
         return 108 / (12 + self.solved) + 1
+    """
 
     @property
     def compilers_by_relevance(self):
