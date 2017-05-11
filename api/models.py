@@ -454,25 +454,21 @@ class UserProfile(models.Model):
 
     @property
     def points(self):
-        return Submission.objects.filter(Q(user=self.user) & Q(result__name__iexact='accepted') & Q(hidden=False)) \
+        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
             .values('problem_id').annotate(pnts=Max('problem__points')).aggregate(result=Sum('pnts'))['result']
 
     @property
     def solved_problems(self):
-        return Submission.objects.filter(
-            Q(user=self.user) & Q(result__name__iexact='accepted') & Q(hidden=False) &
-            (Q(instance=None) | Q(instance__contest__visible=True))
-        ).distinct('problem_id').count()
+        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
+            .distinct('problem_id').count()
 
     @property
     def accepted_submissions(self):
-        return self.user.submissions.\
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)) & Q(result__name__iexact='accepted')).count()
+        return self.user.submissions.filter(hidden=False, result__name__iexact='accepted').count()
 
     @property
     def total_submissions(self):
-        return self.user.submissions. \
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True))).count()
+        return self.user.submissions.filter(hidden=False).count()
 
     @staticmethod
     def sorted_by_ratings():
