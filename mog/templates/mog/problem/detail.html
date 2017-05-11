@@ -1,5 +1,6 @@
 {% extends 'mog/base.html' %}
 
+{% load static %}
 {% load security %}
 {% load filters %}
 {% load i18n %}
@@ -145,4 +146,13 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" async
+            src="{% static 'mog/plugins/MathJax/MathJax.js' %}">
+    </script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({messageStyle: "none"});
+    </script>
 {% endblock %}
