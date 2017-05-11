@@ -1,7 +1,3 @@
--- Trigger: check_update
-
--- DROP TRIGGER check_update ON public.api_submission;
-
 CREATE TRIGGER check_update
     BEFORE UPDATE OF result_id
     ON public.api_submission
