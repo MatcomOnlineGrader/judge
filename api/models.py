@@ -454,8 +454,9 @@ class UserProfile(models.Model):
 
     @property
     def points(self):
-        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
-            .values('problem_id').annotate(pnts=Max('problem__points')).aggregate(result=Sum('pnts'))['result']
+        query_result = self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
+            .values('problem_id').annotate(problem_points=Max('problem__points')).aggregate(points=Sum('problem_points'))
+        return query_result['points'] or 0
 
     @property
     def solved_problems(self):
