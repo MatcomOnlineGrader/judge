@@ -566,6 +566,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments')
     date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
+    html = models.TextField(default='')
     seen = models.ManyToManyField(User, related_name='seen_comments')
 
     def can_be_edited_by(self, user):
