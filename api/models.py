@@ -1,11 +1,17 @@
 from __future__ import unicode_literals
 
 import os
+import re
+import cgi
 
+from django.core.mail import send_mail
 from django.db.models import F, Max
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
 
+from django.template.loader import render_to_string
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
@@ -568,6 +574,41 @@ class Comment(models.Model):
     body = models.TextField()
     html = models.TextField(default='')
     seen = models.ManyToManyField(User, related_name='seen_comments')
+
+    def __init__(self, *args, **kwargs):
+        super(Comment, self).__init__(*args, **kwargs)
+        self.initial_body_value = self.body
+
+    def save(self, *args, **kwargs):
+        if not self.pk or (self.initial_body_value != self.body):
+            matches = map(
+                lambda match: (match.start(), match.end()),
+                list(re.finditer('@[\S]+', self.body, re.S))
+            )
+            self.html = ''
+            last_index, users = 0, set()
+            for s, e in matches:
+                if not last_index:
+                    self.html = cgi.escape(self.body[:s], quote=True)
+                username = self.body[(s + 1):e]
+                try:
+                    user = User.objects.get(username=username)
+                    users.add(user)
+                    url = render_to_string('mog/user/_link.html', {'user': user}).strip()
+                    self.html += ' ' + url
+                except:
+                    self.html += cgi.escape(self.body[s:e], quote=True)
+                last_index = e
+            self.html += cgi.escape(self.body[last_index:], quote=True)
+            # notify users about this comment
+            for user in users:
+                send_mail(
+                    '{0} has mentioned you in a comment'.format(self.user.username), '',
+                    settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=True
+                )
+        # save now
+        super(Comment, self).save(*args, **kwargs)
+
 
     def can_be_edited_by(self, user):
         return user_is_admin(user)
