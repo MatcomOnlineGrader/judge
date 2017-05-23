@@ -603,12 +603,22 @@ class Comment(models.Model):
             # notify users about this comment
             for user in users:
                 send_mail(
-                    '{0} has mentioned you in a comment'.format(self.user.username), '',
-                    settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=True
+                    '{0} has mentioned you in a comment'.format(self.user.username),
+                    message='<NO TEXT>',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=True,
+                    html_message=render_to_string(
+                        'mog/email/mention.html',
+                        {
+                            'user': self.user,
+                            'comment': self,
+                            'domain': 'http://judge.matcom.uh.cu'
+                        }
+                    )
                 )
         # save now
         super(Comment, self).save(*args, **kwargs)
-
 
     def can_be_edited_by(self, user):
         return user_is_admin(user)
