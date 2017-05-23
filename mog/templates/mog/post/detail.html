@@ -22,7 +22,7 @@
 
         <div class="col-md-12">
             {% for comment in post.sorted_comments %}
-                <div class="media">
+                <div id="comment-{{ comment.id }}" class="media">
                     <div class="media-left">
                         <a href="{% url 'mog:user' comment.user.id %}">
                             <img class="media-object" src="{{ comment.user|avatar }}" alt="{{ comment.user.username }}">
