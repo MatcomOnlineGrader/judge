@@ -18,7 +18,7 @@ def secure_html(html):
     """
     if not html:
         return html
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'html5lib')
     # Remove all scripts
     for tag in soup.find_all('script'):
         tag.extract()
