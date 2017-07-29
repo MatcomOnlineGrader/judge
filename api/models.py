@@ -613,7 +613,7 @@ class Comment(models.Model):
                         {
                             'user': self.user,
                             'comment': self,
-                            'domain': 'http://judge.matcom.uh.cu'
+                            'domain': 'http://matcomgrader.com'
                         }
                     )
                 )
