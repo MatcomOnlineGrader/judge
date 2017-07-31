@@ -292,7 +292,7 @@ class Problem(models.Model):
 
     @property
     def compilers2str(self):
-        return '<br>'.join([compiler.language for compiler in self.compilers_by_relevance])
+        return '<br>'.join([compiler.name for compiler in self.compilers_by_relevance])
 
     def __unicode__(self):
         return self.title
