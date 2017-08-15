@@ -93,7 +93,7 @@ def avatar(user):
 
 
 modes = {
-    'gcc': ('clike', 'text/x-csrc'),
+    'c': ('clike', 'text/x-csrc'),
     'c++': ('clike', 'text/x-c++src'),
     'cpp': ('clike', 'text/x-c++src'),
     'csharp': ('clike', 'text/x-csharp'),
