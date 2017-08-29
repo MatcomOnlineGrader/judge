@@ -413,6 +413,7 @@ class UserProfile(models.Model):
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
     rating_changes = models.ManyToManyField(Contest, through='RatingChange')
     compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'))
+    points = models.PositiveIntegerField(verbose_name=_('Points'), null=False, default=0)
 
     def __init__(self, *args, **kwargs):
         super(UserProfile, self).__init__(*args, **kwargs)
@@ -459,12 +460,6 @@ class UserProfile(models.Model):
         return data
 
     @property
-    def points(self):
-        query_result = self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
-            .values('problem_id').annotate(problem_points=Max('problem__points')).aggregate(points=Sum('problem_points'))
-        return query_result['points'] or 0
-
-    @property
     def solved_problems(self):
         return self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
             .distinct('problem_id').count()
@@ -480,7 +475,7 @@ class UserProfile(models.Model):
     @staticmethod
     def sorted_by_ratings():
         return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(0))). \
-            order_by('-rating_value').select_related('user')
+            order_by('-rating_value', '-points').select_related('user')
 
     def __unicode__(self):
         return self.user.username
