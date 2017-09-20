@@ -1,19 +1,29 @@
-CREATE OR REPLACE FUNCTION public.computeproblempoints(
-	problemid integer)
-    RETURNS integer
-    LANGUAGE 'plpgsql'
-    COST 100.0
-    VOLATILE 
+DROP FUNCTION IF EXISTS PUBLIC.compute_problem_points(INTEGER);
+
+CREATE OR REPLACE FUNCTION PUBLIC.compute_problem_points(in_problem_id INTEGER)
+  RETURNS INTEGER
+  LANGUAGE 'plpgsql'
+  COST 100.0
+  VOLATILE
 AS $function$
 
 DECLARE
-    solved int;
+    solved INTEGER;
 BEGIN
-  SELECT Count(DISTINCT api_submission.user_id) INTO solved FROM api_submission WHERE api_submission.problem_id = problemId AND api_submission.hidden = False AND api_submission.result_id=1;
-  return 108 / (12 + solved) + 1;
+  -- select the number of users that has at least one
+  -- visible & accepted submission and call this number
+  -- @solved.
+  -- @points = 108 / (12 + @solved) + 1
+  SELECT COUNT(DISTINCT api_submission.user_id)
+  INTO solved
+  FROM api_submission
+  WHERE (api_submission.problem_id = in_problem_id) AND
+        (api_submission.hidden = FALSE) AND
+        (api_submission.result_id = 1);
+  RETURN 108 / (12 + solved) + 1;
 END;
 
 $function$;
 
-ALTER FUNCTION public.computeproblempoints(integer)
+ALTER FUNCTION PUBLIC.compute_problem_points(INTEGER)
     OWNER TO postgres;
