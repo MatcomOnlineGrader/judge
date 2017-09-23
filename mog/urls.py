@@ -66,7 +66,4 @@ urlpatterns = [
     url(r'^submit/(?P<problem_id>[0-9]+)/$', views.Submit.as_view(), name='submit'),
 
     url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.Login.as_view(), name='login'),
-    url(r'^logout/$', views.Logout.as_view(), name='logout'),
-    url(r'^register/$', views.Register.as_view(), name='register'),
 ]
