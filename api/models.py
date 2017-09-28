@@ -209,7 +209,7 @@ class Problem(models.Model):
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
     checker = models.ForeignKey(Checker, null=True)
     position = models.IntegerField()
-    points = models.IntegerField()
+    points = models.IntegerField(default=0)
     balloon = models.CharField(verbose_name="Balloon color", max_length=50)
     contest = models.ForeignKey(Contest, related_name='problems')
     slug = models.SlugField(max_length=100, null=True)
