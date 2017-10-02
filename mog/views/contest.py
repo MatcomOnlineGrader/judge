@@ -164,8 +164,11 @@ def register_instance(request, contest, user, team):
 def contest_register(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     user = request.user
-    team = get_object_or_404(Team, pk=request.POST['team']) \
-        if 'team' in request.POST else None
+    try:
+        team_id = int(request.POST.get('team'))
+        team = get_object_or_404(Team, pk=team_id)
+    except (ValueError, TypeError) as _:
+        team = None
     return register_instance(request, contest, user, team)
 
 
