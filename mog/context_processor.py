@@ -28,6 +28,8 @@ def special_days(request):
         day = 'valentine'
     if now.month == 12 and 19 <= now.day <= 31:
         day = 'christmas'
+    if now.month == 10 and now.day == 31:
+        day = 'halloween'
     return {
         'special_day': day
     }
