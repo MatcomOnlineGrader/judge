@@ -1,5 +1,6 @@
 {% load filters %}
 {% load i18n %}
+{% load security %}
 
 <h3 class="title">{% trans 'Running Contests' %}</h3>
 
@@ -22,6 +23,19 @@
                     </a>
                     {% if not contest.visible %}
                         {% trans '( Hidden )' %}
+                    {% endif %}
+                    {% if user|can_register_for_real:contest %}
+                        <p class="margin-bottom-0">
+                            → <a class="btn btn-link margin-0 padding-0" href="#" data-toggle="modal"
+                                 data-target="#register-{{ contest.id }}">{% trans 'Register' %}</a>
+                        </p>
+                        {% include 'mog/contest/_register.html' with contest=contest %}
+                    {% elif user|registered_for_real:contest %}
+                        <p class="margin-bottom-0">
+                            → <a class="btn btn-link margin-0 padding-0" href="#" data-toggle="modal"
+                                 data-target="#unregister-{{ contest.id }}">{% trans 'Unregister' %}</a>
+                        </p>
+                        {% include 'mog/contest/_unregister.html' with contest=contest %}
                     {% endif %}
                 </td>
                 <td class="text-center">{{ contest.duration|format_minutes }}</td>
