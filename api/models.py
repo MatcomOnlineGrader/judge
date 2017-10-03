@@ -133,12 +133,12 @@ class Contest(models.Model):
         competition if the following five conditions
         hold:
         1) User is authenticated
-        2) Contest is coming.
+        2) Contest is coming or running.
         3) Contest is open for registration.
         4) User is not admin neither code browser.
         5) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated() or not self.is_coming or self.closed:
+        if not user.is_authenticated() or self.is_past or self.closed:
             return False
         if user_is_admin(user) or user_is_browser(user):
             return False
