@@ -115,6 +115,13 @@
             {% for compiler in problem_.compilers.all %}
                 compilersPerProblem[{{ problem_.id }}].push({{ compiler.id }});
             {% endfor %}
+            compilersPerProblem[{{ problem_.id }}].sort(function(a, b) {
+                if (compilerNames[a] < compilerNames[b])
+                    return -1;
+                if (compilerNames[a] > compilerNames[b])
+                    return +1;
+                return 0;
+            });
         {% endfor %}
 
         var sourceArea = document.getElementById('source');

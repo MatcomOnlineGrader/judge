@@ -378,7 +378,7 @@ class Compiler(models.Model):
 
     @staticmethod
     def get_all_compilers():
-        return Compiler.objects.all()
+        return Compiler.objects.order_by('name').all()
 
 
 ROLE_CHOICES = [
