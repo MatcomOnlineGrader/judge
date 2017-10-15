@@ -168,7 +168,16 @@ BASE_RATING = 1300
 MAX_RATING_DELTA = 150
 
 # Place to store problem test-cases ( secret location )
-PROBLEMS_FOLDER = config.get('others', 'PROBLEMS_FOLDER')
+PROBLEMS_FOLDER = config.get('grader', 'PROBLEMS_FOLDER')
+
+# Place to store temporal submission executables
+SANDBOX_FOLDER = config.get('grader', 'SANDBOX_FOLDER')
+
+# Path to runexe executable
+RUNEXE_PATH = config.get('grader', 'RUNEXE_PATH')
+
+# Path to testlib.h
+TESTLIB_PATH = config.get('grader', 'TESTLIB_PATH')
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
