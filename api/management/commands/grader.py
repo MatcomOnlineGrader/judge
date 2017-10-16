@@ -1,6 +1,7 @@
 import os
 import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -39,10 +40,18 @@ def set_compilation_error(submission, judgement_details=None):
     update_submission(submission, 0, 0, 'compilation error', judgement_details)
 
 
+def onerror(func, path, exc_info):
+    try:
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    except:
+        pass
+
+
 def remove_submission_folder(submission):
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
     if os.path.exists(submission_folder):
-        shutil.rmtree(submission_folder)
+        shutil.rmtree(submission_folder, onerror=onerror)
     return submission_folder
 
 
