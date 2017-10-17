@@ -15,6 +15,16 @@
         <link href="{% static 'mog/plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet"/>
         <link href="{% static 'mog/css/body.min.css' %}" rel="stylesheet"/>
 
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108230808-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-108230808-1');
+        </script>
+
         {% block mathjax %}
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({
