@@ -121,6 +121,9 @@ class Contest(models.Model):
             return None
         return self.instances.filter(Q(real=False) & (Q(user=user) | Q(team__in=user.profile.teams.all()))).first()
 
+    def registration(self, user):
+        return self.real_registration(user) or self.virtual_registration(user)
+
     def registered_for_real(self, user):
         return self.real_registration(user) is not None
 

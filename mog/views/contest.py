@@ -249,7 +249,7 @@ def contest_remove_registration(request, contest_id):
     contest without specify the target instance.
     """
     contest = get_object_or_404(Contest, pk=contest_id)
-    instance = contest.real_registration(request.user)
+    instance = contest.registration(request.user)
     return remove_instance(request, instance)
 
 
