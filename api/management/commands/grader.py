@@ -77,9 +77,9 @@ def compile_checker(checker, cwd):
     with open(settings.TESTLIB_PATH, 'r') as f:
         testlib_content = ''.join(f.readlines())
     with open(os.path.join(cwd, 'testlib.h'), 'wb') as f:
-        f.write(testlib_content)
+        f.write(testlib_content.encode('utf8'))
     with open(os.path.join(cwd, 'checker.cpp'), 'wb') as f:
-        f.write(checker.source)
+        f.write(checker.source.encode('utf8'))
     try:
         _, _, _ = get_exitcode_stdout_stderr('g++ checker.cpp -o checker.exe', cwd=cwd)
         if os.path.exists(os.path.join(cwd, 'checker.exe')):
@@ -104,7 +104,7 @@ def compile_submission(submission):
         exe_file = 'Main.class'
 
     with open(os.path.join(submission_folder, src_file), 'wb') as f:
-        f.write(submission.source)
+        f.write(submission.source.encode('utf8'))
 
     if compiler.language.lower() == 'python':
         return True
