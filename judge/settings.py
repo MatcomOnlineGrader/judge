@@ -173,11 +173,11 @@ PROBLEMS_FOLDER = config.get('grader', 'PROBLEMS_FOLDER')
 # Place to store temporal submission executables
 SANDBOX_FOLDER = config.get('grader', 'SANDBOX_FOLDER')
 
-# Path to runexe executable
-RUNEXE_PATH = config.get('grader', 'RUNEXE_PATH')
-
-# Path to testlib.h
-TESTLIB_PATH = config.get('grader', 'TESTLIB_PATH')
+# Resource folders
+# - runexe.exe
+# - testlib.h
+# - testlib4j.jar
+RESOURCES_FOLDER = config.get('grader', 'RESOURCES_FOLDER')
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

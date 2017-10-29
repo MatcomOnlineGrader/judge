@@ -48,9 +48,15 @@ class Tag(models.Model):
 
 
 class Checker(models.Model):
+    BACKEND_CHOICES = [
+        ('testlib.h', 'testlib.h'),
+        ('testlib4j.jar', 'testlib4j.jar')
+    ]
+
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     source = models.TextField()
+    backend = models.CharField(max_length=32, choices=BACKEND_CHOICES, default='testlib.h')
 
     def __unicode__(self):
         return self.name
