@@ -1,8 +1,6 @@
 import os
-import shlex
 import shutil
 import stat
-import subprocess
 import sys
 import time
 from xml.dom import minidom
@@ -12,16 +10,11 @@ import colorama
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 
-
 from api.models import Submission, Result
+from __utils import get_exitcode_stdout_stderr
 
 
-def get_exitcode_stdout_stderr(cmd, cwd):
-    args = shlex.split(cmd)
-    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-    out, err = proc.communicate()
-    exitcode = proc.returncode
-    return exitcode, out, err
+RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, 'runexe.exe')
 
 
 def update_submission(submission, execution_time, memory_used, result_name, judgement_details):
@@ -74,19 +67,8 @@ def check_problem_folder(problem):
 
 
 def compile_checker(checker, cwd):
-    with open(settings.TESTLIB_PATH, 'r') as f:
-        testlib_content = ''.join(f.readlines())
-    with open(os.path.join(cwd, 'testlib.h'), 'wb') as f:
-        f.write(testlib_content.encode('utf8'))
-    with open(os.path.join(cwd, 'checker.cpp'), 'wb') as f:
-        f.write(checker.source.encode('utf8'))
-    try:
-        _, _, _ = get_exitcode_stdout_stderr('g++ checker.cpp -o checker.exe', cwd=cwd)
-        if os.path.exists(os.path.join(cwd, 'checker.exe')):
-            return True
-    except:
-        pass
-    return False
+    from __checker_backends import compile_checker
+    return compile_checker(checker, cwd)
 
 
 def compile_submission(submission):
@@ -153,19 +135,22 @@ def grade_submission(submission):
 
     # compile checker
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
-    if not compile_checker(checker, submission_folder):
+
+    checker_command = compile_checker(checker, submission_folder)
+
+    if not checker_command:
         set_internal_error(submission, 'internal error compiling checker')
         return
 
     if compiler.language.lower() == 'java':
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" --no-idleness-check java -Xms32M -Xmx256M -DMOG=true Main'\
-              % (settings.RUNEXE_PATH, problem.time_limit, problem.memory_limit)
+              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit)
     elif compiler.language.lower() == 'python':
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" --no-idleness-check "%s" %s' \
-              % (settings.RUNEXE_PATH, problem.time_limit, problem.memory_limit, compiler.path, '%d.%s' % (submission.id, compiler.file_extension))
+              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, compiler.path, '%d.%s' % (submission.id, compiler.file_extension))
     else:
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" --no-idleness-check %s' \
-              % (settings.RUNEXE_PATH, problem.time_limit, problem.memory_limit, '%d.%s' % (submission.id, compiler.exec_extension))
+              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, '%d.%s' % (submission.id, compiler.exec_extension))
 
     i_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'inputs')
     o_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'outputs')
@@ -220,13 +205,13 @@ def grade_submission(submission):
                 judgement_details += 'runtime error\n'
                 result = 'runtime error'
             else:
-                rc, _, err = get_exitcode_stdout_stderr(
-                    cmd='"%s" "%s" output.txt "%s"' % (
-                        os.path.join(submission_folder, 'checker.exe'), input_file, answer_file
-                    ),
+                rc, out, err = get_exitcode_stdout_stderr(
+                    cmd=checker_command % (input_file, 'output.txt', answer_file),
                     cwd=submission_folder
                 )
-                judgement_details += err.strip() + '\n'
+                out = out.strip()
+                err = err.strip()
+                judgement_details += (out or err) + '\n'
                 if rc != 0:
                     result = 'wrong answer'
         except:
