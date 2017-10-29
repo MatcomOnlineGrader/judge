@@ -147,6 +147,7 @@ class ProblemCreateView(View):
         )
         problem.save()
         problem.tags = data['tags']
+        problem.compilers = data['compilers']
         fix_problem_folder(problem)
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
