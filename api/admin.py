@@ -25,9 +25,14 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username', )
     list_filter = (RoleFilter, )
 
+
+class CheckerAdmin(admin.ModelAdmin):
+    ordering = ('name', )
+
+
 admin.site.register(Team)
 admin.site.register(Tag)
-admin.site.register(Checker)
+admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Contest)
 admin.site.register(Problem)
 admin.site.register(Post)
