@@ -383,7 +383,7 @@ class Compiler(models.Model):
     exec_extension = models.CharField(max_length=10, default='')
 
     def __unicode__(self):
-        return '[{0}] {1}'.format(self.language, self.name)
+        return self.name
 
     @staticmethod
     def get_all_compilers():
