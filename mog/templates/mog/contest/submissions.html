@@ -10,6 +10,17 @@
     {% include 'mog/contest/_left.html' with contest=contest submissions_active='active' %}
 {% endblock %}
 
+{% block styles %}
+    <style>
+        form input, form select {
+            width: 20% !important;
+        }
+        form button{
+            width: 10% !important;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="col-md-12 text-center">
@@ -19,41 +30,29 @@
 
         <div class="col-md-12 text-center">
             <form action="{% url 'mog:contest_submissions' contest.id %}" method="get" class="form-inline">
-                <div class="form-group">
-                    <label for="username" class="sr-only">{% trans 'Username' %}</label>
-                    <input id="username" name="username" type="text" class="form-control" value="{{ query.username }}"
-                           placeholder="{% trans 'Username' %}">
-                </div>
-                <div class="form-group">
-                    <label for="problem" class="sr-only">{% trans 'Problem' %}</label>
-                    <select id="problem" name="problem" class="form-control">
-                        <option value="" selected>{% trans '-- Select problem --' %}</option>
-                        {% for problem in contest.problems.all %}
-                            <option value="{{ problem.title }}"
-                                    {% if query.problem == problem.title %}selected{% endif %}>{{ problem.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="result" class="sr-only">{% trans 'Result' %}</label>
-                    <select id="result" name="result" class="form-control">
-                        <option value="" selected>{% trans '-- Select result --' %}</option>
-                        {% for result in results %}
-                            <option value="{{ result.id }}"
-                                    {% if query.result|inteq:result.id %}selected{% endif %}>{{ result.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="compiler" class="sr-only">Language</label>
-                    <select id="compiler" name="compiler" class="form-control">
-                        <option value="" selected>-- Select compiler --</option>
-                        {% for compiler in compilers %}
-                            <option value="{{ compiler.id }}"
-                                    {% if query.compiler|inteq:compiler.id %}selected{% endif %}>{{ compiler.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <input id="username" name="username" type="text" class="form-control" value="{{ query.username }}"
+                       placeholder="{% trans 'Username' %}">
+                <select id="problem" name="problem" class="form-control">
+                    <option value="" selected>{% trans '-- Select problem --' %}</option>
+                    {% for problem in contest.problems.all %}
+                        <option value="{{ problem.title }}"
+                                {% if query.problem == problem.title %}selected{% endif %}>{{ problem.title }}</option>
+                    {% endfor %}
+                </select>
+                <select id="result" name="result" class="form-control">
+                    <option value="" selected>{% trans '-- Select result --' %}</option>
+                    {% for result in results %}
+                        <option value="{{ result.id }}"
+                                {% if query.result|inteq:result.id %}selected{% endif %}>{{ result.name }}</option>
+                    {% endfor %}
+                </select>
+                <select id="compiler" name="compiler" class="form-control">
+                    <option value="" selected>-- Select compiler --</option>
+                    {% for compiler in compilers %}
+                        <option value="{{ compiler.id }}"
+                                {% if query.compiler|inteq:compiler.id %}selected{% endif %}>{{ compiler.name }}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit" class="btn btn-default">{% trans 'Filter' %}</button>
             </form>
             <hr/>
