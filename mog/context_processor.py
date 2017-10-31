@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 
 from api.models import *
@@ -22,7 +24,7 @@ def common(request):
 
 
 def special_days(request):
-    now = timezone.now()
+    now = datetime.now()
     day = 'regular'
     if now.month == 2 and now.day == 14:
         day = 'valentine'
