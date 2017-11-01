@@ -21,7 +21,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from mog.utils import user_is_admin, user_is_browser
+from mog.utils import user_is_admin, user_is_browser, uuid_image_name
 
 
 class Team(models.Model):
@@ -416,7 +416,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True)
     role = models.CharField(max_length=10, null=True, blank=True, choices=ROLE_CHOICES)
     theme = models.CharField(max_length=20, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
-    avatar = models.ImageField(upload_to='user/avatar', null=True, blank=True, verbose_name=_('Avatar'))
+    avatar = models.ImageField(upload_to=uuid_image_name('user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
     show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
     institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'))
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
