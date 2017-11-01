@@ -6,6 +6,8 @@ from mog.utils import secure_html
 
 
 class UserProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(widget=forms.FileInput, required=False)
+
     class Meta:
         model = UserProfile
         fields = ['avatar', 'theme', 'show_tags', 'institution', 'compiler']
