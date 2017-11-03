@@ -20,6 +20,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 from django.utils.deconstruct import deconstructible
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -36,6 +37,22 @@ class UUIDImageName(object):
         if extension not in ['.jpg', '.jpeg', '.png', '.gif']:
             extension = '.png'
         return os.path.join(self.upload_to, '%s%s' % (str(uuid.uuid4()), extension))
+
+
+class Country(models.Model):
+    class Meta:
+        verbose_name_plural = 'Countries'
+
+    name = models.CharField(verbose_name='Country Name', max_length=64)
+    flag = models.CharField(verbose_name='Country Flag URL', max_length=128)
+
+    def __unicode__(self):
+        return self.name
+
+    def flag_image_tag(self):
+        return mark_safe('<img src="%s" alt="%s">' % (self.flag, self.name))
+
+    flag_image_tag.short_description = 'Flag Image'
 
 
 class Team(models.Model):
@@ -374,10 +391,12 @@ class Division(models.Model):
 class Institution(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField()
-    country = models.CharField(max_length=50)
+    country = models.ForeignKey(Country, null=True)
 
     def __unicode__(self):
-        return '{0} ({1})'.format(self.name, self.country)
+        if self.country:
+            return '%s (%s)' % (self.name, self.country.name)
+        return self.name
 
 
 class RatingChange(models.Model):
