@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 import re
 import cgi
+import uuid
 
 from django.core.mail import send_mail
 from django.db.models import F, Max
@@ -18,10 +19,23 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
+from django.utils.deconstruct import deconstructible
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from mog.utils import user_is_admin, user_is_browser, uuid_image_name
+from mog.utils import user_is_admin, user_is_browser
+
+
+@deconstructible
+class UUIDImageName(object):
+    def __init__(self, upload_to):
+        self.upload_to = upload_to
+
+    def __call__(self, instance, filename):
+        extension = '.' + filename.split('.')[-1].lower()
+        if extension not in ['.jpg', '.jpeg', '.png', '.gif']:
+            extension = '.png'
+        return os.path.join(self.upload_to, '%s%s' % (str(uuid.uuid4()), extension))
 
 
 class Team(models.Model):
@@ -416,7 +430,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile', primary_key=True)
     role = models.CharField(max_length=10, null=True, blank=True, choices=ROLE_CHOICES)
     theme = models.CharField(max_length=20, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
-    avatar = models.ImageField(upload_to=uuid_image_name('user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
+    avatar = models.ImageField(upload_to=UUIDImageName('user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
     show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
     institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'))
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
@@ -432,12 +446,16 @@ class UserProfile(models.Model):
         super(UserProfile, self).save(*args, **kwargs)
         if self.old_avatar_path != self.avatar.name:
             try:
-                os.remove(os.path.join(settings.MEDIA_ROOT, self.old_avatar_path))
+                if self.old_avatar_path:
+                    os.remove(os.path.join(settings.MEDIA_ROOT, self.old_avatar_path))
+            except:
+                pass
+            try:
                 from PIL import Image
                 img = Image.open(self.avatar.path)
                 img.thumbnail((300, 300))
                 img.save(self.avatar.path)
-            except Exception, e:
+            except:
                 pass
 
     @property

@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from bs4 import BeautifulSoup
 
@@ -7,15 +6,6 @@ from django.conf import settings
 
 from HTMLParser import HTMLParser
 from django.utils.safestring import mark_safe
-
-
-def uuid_image_name(upload_to):
-    def wrapper(instance, filename):
-        extension = '.' + filename.split('.')[-1].lower()
-        if extension not in ['.jpg', '.jpeg', '.png', '.gif']:
-            extension = '.png'
-        return os.path.join(upload_to, '%s%s' % (str(uuid.uuid4()), extension))
-    return wrapper
 
 
 def unescape(value):
