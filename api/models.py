@@ -390,7 +390,7 @@ class Division(models.Model):
 
 class Institution(models.Model):
     name = models.CharField(max_length=100)
-    url = models.URLField()
+    url = models.URLField(null=True, blank=True)
     country = models.ForeignKey(Country, null=True)
 
     def __unicode__(self):
