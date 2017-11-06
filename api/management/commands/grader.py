@@ -21,7 +21,7 @@ def update_submission(submission, execution_time, memory_used, result_name, judg
     submission.execution_time = execution_time
     submission.memory_used = memory_used
     submission.result = Result.objects.get(name__iexact=result_name)
-    submission.judgement_details = judgement_details.decode('latin1') if os.name('nt') else \
+    submission.judgement_details = judgement_details.decode('latin1') if (os.name == 'nt') else \
         judgement_details.decode('utf8')
     submission.save()
 
