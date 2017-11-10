@@ -188,7 +188,7 @@ def unpack_seconds(seconds):
 
 
 def unpack_delta(delta):
-    return unpack_seconds(delta.total_seconds())
+    return unpack_seconds(int(delta.total_seconds()))
 
 
 @register.filter()

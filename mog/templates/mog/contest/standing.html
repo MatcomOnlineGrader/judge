@@ -23,7 +23,7 @@
             {% else %}
                 {% if contest.is_running %}
                     <h5 class="title">
-                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.seconds }}">{{ contest.relative_time|format_seconds }}</span>
+                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ contest.relative_time|format_seconds }}</span>
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ contest.remaining_time|format_seconds }}</span>
                     </h5>
