@@ -32,7 +32,7 @@
                         {% include 'mog/user/_link.html' with user=comment.user %}
                         <small class="uniform-text uniform-small pull-right">{{ comment.date|naturaltime }}</small>
 
-                        <p>{{ comment.html|safe }}</p>
+                        <p>{{ comment.html|safe|linebreaks }}</p>
 
                         {% if user|can_edit_comment:comment %}
                             <a href="#" class="btn btn-link pull-right no-underline"
