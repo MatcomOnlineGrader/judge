@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="modal fade" id="message-received-{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -10,8 +12,13 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <p>{{ message.body|linebreaks }}</p>
+                <p>{{ message.body | linebreaks }}</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary  margin-top-5" data-toggle="modal" data-target="#send-message" data-dismiss="modal" onclick="$('#send-message #target-name').text('{{ message.source }}');$('#send-message #send-email-form').attr('action', '{% url 'mog:send_message' message.source.id %}');$('#send-message #subject,#send-message #body').val('');" ><i class="glyphicon glyphicon-envelope"></i> {% trans 'Reply' %} </a>
             </div>
         </div>
     </div>
 </div>
+
+
