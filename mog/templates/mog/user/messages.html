@@ -37,6 +37,8 @@
                             {% empty %}
                                 <tr><td colspan="3">{% trans 'No message received!' %}</td></tr>
                             {% endfor %}
+
+                            {% include 'mog/message/_send_message.html' with redirect_url=request.path %}
                         </tbody>
                     </table>
                 </div>

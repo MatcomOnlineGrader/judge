@@ -2,321 +2,324 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-18 14:22+0000\n"
-"Language: es\n"
+"POT-Creation-Date: 2017-11-11 09:29-0500\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "es/)\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:399
+#: .\api\models.py:451
 msgid "Code Editor Theme"
 msgstr "Tema del editor de código"
 
-#: api/models.py:400
+#: .\api\models.py:452
 msgid "Avatar"
 msgstr "Imagen"
 
-#: api/models.py:401
+#: .\api\models.py:453
 msgid "Show tags"
 msgstr "Mostrar etiquetas"
 
-#: api/models.py:402
+#: .\api\models.py:454
 msgid "Institution"
 msgstr "Institución"
 
-#: api/models.py:405 mog/templates/mog/submission/index.html:38
-#: mog/templates/mog/submit/submit.html:55
+#: .\api\models.py:457 .\mog\templates\mog\submission\index.html:38
+#: .\mog\templates\mog\submit\submit.html:55
 msgid "Compiler"
 msgstr "Compilador"
 
-#: judge/settings/base.py:125
-msgid "Spanish"
-msgstr "Español"
-
-#: judge/settings/base.py:126
-msgid "English"
-msgstr "Inglés"
-
-#: mog/forms.py:72
-msgid "Start date must be less than end date"
-msgstr ""
-
-#: mog/forms.py:77
-msgid "Frozen time must be greater or equal than death time"
-msgstr ""
-
-#: mog/forms.py:79
-msgid "Death time must be less or equal than contest duration"
-msgstr ""
-
-#: mog/templates/mog/account/login.html:12
-#: mog/templates/mog/account/login.html:46
-#: mog/templates/mog/user/_login.html:24
-#: mog/templates/registration/login.html:12
-#: mog/templates/registration/login.html:38
-msgid "Login"
-msgstr "Entrar"
-
-#: mog/templates/mog/account/login.html:26
-#: mog/templates/mog/contest/submissions.html:23
-#: mog/templates/mog/contest/submissions.html:25
-#: mog/templates/mog/submission/index.html:20
-#: mog/templates/registration/login.html:26
-msgid "Username"
-msgstr "Nombre de usuario"
-
-#: mog/templates/mog/account/login.html:32
-#: mog/templates/registration/login.html:32
-msgid "Password"
-msgstr "Contraseña"
-
-#: mog/templates/mog/account/login.html:41
-msgid "Remember me"
-msgstr "Recordar sesión"
-
-#: mog/templates/mog/account/login.html:52
-#: mog/templates/registration/login.html:44
-msgid "Forgot Password ?"
-msgstr "Olvidó la contraseña ?"
-
-#: mog/templates/mog/account/login.html:53
-#: mog/templates/mog/contest/_coming_contests.html:36
-#: mog/templates/mog/contest/_register.html:10
-#: mog/templates/mog/contest/registration.html:67
-#: mog/templates/mog/contest/registration.html:83
-#: mog/templates/mog/user/_login.html:27
-#: mog/templates/registration/login.html:45
-#: mog/templates/registration/registration_form.html:4
-#: mog/templates/registration/registration_form.html:12
-msgid "Register"
-msgstr "Registrar"
-
-#: mog/templates/mog/base.html:120
-msgid "Home"
-msgstr "Inicio"
-
-#: mog/templates/mog/base.html:121 mog/templates/mog/user/index.html:12
-msgid "Users"
-msgstr "Usuarios"
-
-#: mog/templates/mog/base.html:122 mog/templates/mog/contest/_left.html:67
-#: mog/templates/mog/contest/problems.html:7
-#: mog/templates/mog/contest/problems.html:19
-msgid "Problems"
-msgstr "Problemas"
-
-#: mog/templates/mog/base.html:123 mog/templates/mog/contest/index.html:6
-msgid "Contests"
-msgstr "Concursos"
-
-#: mog/templates/mog/base.html:124 mog/templates/mog/post/index.html:8
-#: mog/templates/mog/post/index.html:13
-msgid "Posts"
-msgstr "Publicaciones"
-
-#: mog/templates/mog/base.html:125 mog/templates/mog/contest/_left.html:77
-#: mog/templates/mog/contest/submissions.html:7
-#: mog/templates/mog/contest/submissions.html:16
-#: mog/templates/mog/submission/index.html:8
-#: mog/templates/mog/submission/index.html:13
-#: mog/templates/mog/user/detail.html:19
-msgid "Submissions"
-msgstr "Envíos"
-
-#: mog/templates/mog/base.html:126
-msgid "FAQ"
-msgstr "Ayuda"
-
-#: mog/templates/mog/base.html:166
-msgid "Faculty of Mathematics and Computer Science of University of Havana"
-msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
-
-#: mog/templates/mog/base.html:203 mog/templates/mog/user/detail.html:15
-#: mog/templates/mog/user/index.html:34
-msgid "Rating"
-msgstr "Clasificación"
-
-#: mog/templates/mog/base.html:206 mog/templates/mog/problem/index.html:40
-#: mog/templates/mog/user/detail.html:16 mog/templates/mog/user/index.html:37
+#: .\api\models.py:458 .\mog\templates\mog\base.html:232
+#: .\mog\templates\mog\problem\index.html:40
+#: .\mog\templates\mog\user\detail.html:16
+#: .\mog\templates\mog\user\index.html:37
 msgid "Points"
 msgstr "Puntos"
 
-#: mog/templates/mog/base.html:209 mog/templates/mog/contest/problems.html:77
-#: mog/templates/mog/contest/standing.html:40
-#: mog/templates/mog/user/detail.html:17 mog/templates/mog/user/index.html:40
+#: .\judge\settings.py:151
+msgid "Spanish"
+msgstr "Español"
+
+#: .\judge\settings.py:152
+msgid "English"
+msgstr "Inglés"
+
+#: .\mog\forms.py:74
+msgid "Start date must be less than end date"
+msgstr ""
+
+#: .\mog\forms.py:79
+msgid "Frozen time must be greater or equal than death time"
+msgstr ""
+
+#: .\mog\forms.py:81
+msgid "Death time must be less or equal than contest duration"
+msgstr ""
+
+#: .\mog\templates\mog\account\login.html:12
+#: .\mog\templates\mog\account\login.html:46
+#: .\mog\templates\mog\user\_login.html:24
+#: .\mog\templates\registration\login.html:12
+#: .\mog\templates\registration\login.html:38
+msgid "Login"
+msgstr "Entrar"
+
+#: .\mog\templates\mog\account\login.html:26
+#: .\mog\templates\mog\contest\submissions.html:34
+#: .\mog\templates\mog\submission\index.html:20
+#: .\mog\templates\registration\login.html:26
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: .\mog\templates\mog\account\login.html:32
+#: .\mog\templates\registration\login.html:32
+msgid "Password"
+msgstr "Contraseña"
+
+#: .\mog\templates\mog\account\login.html:41
+msgid "Remember me"
+msgstr "Recordar sesión"
+
+#: .\mog\templates\mog\account\login.html:52
+#: .\mog\templates\registration\login.html:44
+msgid "Forgot Password ?"
+msgstr "Olvidó la contraseña ?"
+
+#: .\mog\templates\mog\account\login.html:53
+#: .\mog\templates\mog\contest\_coming_contests.html:36
+#: .\mog\templates\mog\contest\_register.html:10
+#: .\mog\templates\mog\contest\_running_contests.html:30
+#: .\mog\templates\mog\contest\registration.html:67
+#: .\mog\templates\mog\contest\registration.html:83
+#: .\mog\templates\mog\user\_login.html:27
+#: .\mog\templates\registration\login.html:45
+#: .\mog\templates\registration\registration_form.html:4
+#: .\mog\templates\registration\registration_form.html:12
+msgid "Register"
+msgstr "Registrar"
+
+#: .\mog\templates\mog\base.html:133
+msgid "Home"
+msgstr "Inicio"
+
+#: .\mog\templates\mog\base.html:134 .\mog\templates\mog\user\index.html:12
+msgid "Users"
+msgstr "Usuarios"
+
+#: .\mog\templates\mog\base.html:135 .\mog\templates\mog\contest\_left.html:67
+#: .\mog\templates\mog\contest\problems.html:8
+#: .\mog\templates\mog\contest\problems.html:20
+msgid "Problems"
+msgstr "Problemas"
+
+#: .\mog\templates\mog\base.html:136 .\mog\templates\mog\contest\index.html:6
+msgid "Contests"
+msgstr "Concursos"
+
+#: .\mog\templates\mog\base.html:137 .\mog\templates\mog\post\index.html:8
+#: .\mog\templates\mog\post\index.html:13
+msgid "Posts"
+msgstr "Publicaciones"
+
+#: .\mog\templates\mog\base.html:138 .\mog\templates\mog\contest\_left.html:77
+#: .\mog\templates\mog\contest\submissions.html:7
+#: .\mog\templates\mog\contest\submissions.html:27
+#: .\mog\templates\mog\submission\index.html:8
+#: .\mog\templates\mog\submission\index.html:13
+#: .\mog\templates\mog\user\detail.html:19
+msgid "Submissions"
+msgstr "Envíos"
+
+#: .\mog\templates\mog\base.html:139
+msgid "FAQ"
+msgstr "Ayuda"
+
+#: .\mog\templates\mog\base.html:192
+msgid "Faculty of Mathematics and Computer Science of University of Havana"
+msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
+
+#: .\mog\templates\mog\base.html:229 .\mog\templates\mog\user\detail.html:15
+#: .\mog\templates\mog\user\index.html:34
+msgid "Rating"
+msgstr "Clasificación"
+
+#: .\mog\templates\mog\base.html:235
+#: .\mog\templates\mog\contest\problems.html:81
+#: .\mog\templates\mog\contest\standing.html:40
+#: .\mog\templates\mog\user\detail.html:17
+#: .\mog\templates\mog\user\index.html:40
 msgid "Solved"
 msgstr "Resueltos"
 
-#: mog/templates/mog/base.html:230
+#: .\mog\templates\mog\base.html:256
 msgid "Top rated users"
 msgstr "Mejores usuarios"
 
-#: mog/templates/mog/base.html:234
+#: .\mog\templates\mog\base.html:260
 msgid "Recent posts"
 msgstr "Publicaciones recientes"
 
-#: mog/templates/mog/comment/_edit_comment.html:11
+#: .\mog\templates\mog\comment\_edit_comment.html:11
 msgid "said"
 msgstr "dijo"
 
-#: mog/templates/mog/comment/_edit_comment.html:22
+#: .\mog\templates\mog\comment\_edit_comment.html:22
 msgid "Body"
 msgstr "Contenido"
 
-#: mog/templates/mog/comment/_edit_comment.html:28
-#: mog/templates/mog/problem/edit.html:28
+#: .\mog\templates\mog\comment\_edit_comment.html:28
+#: .\mog\templates\mog\problem\edit.html:28
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: mog/templates/mog/comment/_edit_comment.html:31
+#: .\mog\templates\mog\comment\_edit_comment.html:31
 msgid "Edit"
 msgstr "Editar"
 
-#: mog/templates/mog/contest/_coming_contests.html:5
+#: .\mog\templates\mog\contest\_coming_contests.html:5
 msgid "Coming Contests"
 msgstr "Concursos futuros"
 
-#: mog/templates/mog/contest/_coming_contests.html:10
-#: mog/templates/mog/contest/_past_contests.html:10
-#: mog/templates/mog/contest/_running_contests.html:9
+#: .\mog\templates\mog\contest\_coming_contests.html:10
+#: .\mog\templates\mog\contest\_past_contests.html:10
+#: .\mog\templates\mog\contest\_running_contests.html:10
 msgid "Contest"
 msgstr "Concurso"
 
-#: mog/templates/mog/contest/_coming_contests.html:11
-#: mog/templates/mog/contest/_past_contests.html:11
-#: mog/templates/mog/contest/_running_contests.html:10
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1610
+#: .\mog\templates\mog\contest\_coming_contests.html:11
+#: .\mog\templates\mog\contest\_past_contests.html:11
+#: .\mog\templates\mog\contest\_running_contests.html:11
 msgid "Duration"
 msgstr "Duración"
 
-#: mog/templates/mog/contest/_coming_contests.html:12
-#: mog/templates/mog/contest/_past_contests.html:12
+#: .\mog\templates\mog\contest\_coming_contests.html:12
+#: .\mog\templates\mog\contest\_past_contests.html:12
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
-#: mog/templates/mog/contest/_coming_contests.html:13
-#: mog/templates/mog/contest/_left.html:102
-#: mog/templates/mog/contest/_past_contests.html:13
-#: mog/templates/mog/contest/_running_contests.html:12
-#: mog/templates/mog/contest/registration.html:5
-#: mog/templates/mog/contest/registration.html:16
+#: .\mog\templates\mog\contest\_coming_contests.html:13
+#: .\mog\templates\mog\contest\_left.html:108
+#: .\mog\templates\mog\contest\_past_contests.html:13
+#: .\mog\templates\mog\contest\_running_contests.html:13
+#: .\mog\templates\mog\contest\registration.html:5
+#: .\mog\templates\mog\contest\registration.html:16
 msgid "Registration"
 msgstr "Registro"
 
-#: mog/templates/mog/contest/_coming_contests.html:14
-#: mog/templates/mog/contest/_past_contests.html:14
-#: mog/templates/mog/contest/_running_contests.html:13
-#: mog/templates/mog/user/detail.html:20
-#: mog/templates/mog/user/profile.html:50
+#: .\mog\templates\mog\contest\_coming_contests.html:14
+#: .\mog\templates\mog\contest\_past_contests.html:14
+#: .\mog\templates\mog\contest\_running_contests.html:14
+#: .\mog\templates\mog\user\detail.html:20
+#: .\mog\templates\mog\user\profile.html:50
 msgid "Teams"
 msgstr "Equipos"
 
-#: mog/templates/mog/contest/_coming_contests.html:30
-#: mog/templates/mog/contest/_past_contests.html:26
-#: mog/templates/mog/contest/_running_contests.html:24
+#: .\mog\templates\mog\contest\_coming_contests.html:30
+#: .\mog\templates\mog\contest\_past_contests.html:26
+#: .\mog\templates\mog\contest\_running_contests.html:25
 msgid "( Hidden )"
 msgstr "( Oculto )"
 
-#: mog/templates/mog/contest/_coming_contests.html:42
-#: mog/templates/mog/contest/_unregister.html:10
-#: mog/templates/mog/contest/registration.html:41
+#: .\mog\templates\mog\contest\_coming_contests.html:42
+#: .\mog\templates\mog\contest\_running_contests.html:36
+#: .\mog\templates\mog\contest\_unregister.html:10
+#: .\mog\templates\mog\contest\registration.html:41
 msgid "Unregister"
 msgstr "Eliminar participación"
 
-#: mog/templates/mog/contest/_coming_contests.html:51
-#: mog/templates/mog/contest/_past_contests.html:49
-#: mog/templates/mog/contest/_running_contests.html:35
+#: .\mog\templates\mog\contest\_coming_contests.html:51
+#: .\mog\templates\mog\contest\_past_contests.html:49
+#: .\mog\templates\mog\contest\_running_contests.html:49
 msgid "Closed"
 msgstr "Cerrado"
 
-#: mog/templates/mog/contest/_coming_contests.html:53
-#: mog/templates/mog/contest/_past_contests.html:51
-#: mog/templates/mog/contest/_running_contests.html:37
+#: .\mog\templates\mog\contest\_coming_contests.html:53
+#: .\mog\templates\mog\contest\_past_contests.html:51
+#: .\mog\templates\mog\contest\_running_contests.html:51
 msgid "Open"
 msgstr "Abierto"
 
-#: mog/templates/mog/contest/_coming_contests.html:58
-#: mog/templates/mog/contest/_left.html:148
-#: mog/templates/mog/contest/_past_contests.html:56
-#: mog/templates/mog/contest/_register.html:35
-#: mog/templates/mog/contest/_running_contests.html:42
-#: mog/templates/mog/contest/_unregister.html:21
-#: mog/templates/mog/problem/detail.html:141
-#: mog/templates/mog/user/_remove_team.html:22
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:578
+#: .\mog\templates\mog\contest\_coming_contests.html:58
+#: .\mog\templates\mog\contest\_left.html:154
+#: .\mog\templates\mog\contest\_past_contests.html:56
+#: .\mog\templates\mog\contest\_register.html:35
+#: .\mog\templates\mog\contest\_running_contests.html:56
+#: .\mog\templates\mog\contest\_unregister.html:21
+#: .\mog\templates\mog\problem\detail.html:142
+#: .\mog\templates\mog\user\_remove_team.html:22
 msgid "Yes"
 msgstr "Si"
 
-#: mog/templates/mog/contest/_coming_contests.html:60
-#: mog/templates/mog/contest/_left.html:147
-#: mog/templates/mog/contest/_past_contests.html:58
-#: mog/templates/mog/contest/_register.html:34
-#: mog/templates/mog/contest/_running_contests.html:44
-#: mog/templates/mog/contest/_unregister.html:20
-#: mog/templates/mog/problem/detail.html:140
-#: mog/templates/mog/user/_remove_team.html:21
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:579
+#: .\mog\templates\mog\contest\_coming_contests.html:60
+#: .\mog\templates\mog\contest\_left.html:153
+#: .\mog\templates\mog\contest\_past_contests.html:58
+#: .\mog\templates\mog\contest\_register.html:34
+#: .\mog\templates\mog\contest\_running_contests.html:58
+#: .\mog\templates\mog\contest\_unregister.html:20
+#: .\mog\templates\mog\problem\detail.html:141
+#: .\mog\templates\mog\user\_remove_team.html:21
 msgid "No"
 msgstr "No"
 
-#: mog/templates/mog/contest/_coming_contests.html:65
+#: .\mog\templates\mog\contest\_coming_contests.html:65
 #, fuzzy
 #| msgid "No running contests!"
 msgid "No coming contests!"
 msgstr "No hay concursos corriendo!"
 
-#: mog/templates/mog/contest/_left.html:29
-#: mog/templates/mog/contest/_left.html:48
+#: .\mog\templates\mog\contest\_left.html:29
+#: .\mog\templates\mog\contest\_left.html:48
 msgid "(Death time)"
 msgstr "(Tiempo muerto)"
 
-#: mog/templates/mog/contest/_left.html:31
-#: mog/templates/mog/contest/_left.html:50
+#: .\mog\templates\mog\contest\_left.html:31
+#: .\mog\templates\mog\contest\_left.html:50
 msgid "(Frozen time)"
 msgstr "(Tiempo congelado)"
 
-#: mog/templates/mog/contest/_left.html:34
+#: .\mog\templates\mog\contest\_left.html:34
 msgid "(Virtual)"
 msgstr "(Virtual)"
 
-#: mog/templates/mog/contest/_left.html:37
-#: mog/templates/mog/contest/_left.html:53
+#: .\mog\templates\mog\contest\_left.html:37
+#: .\mog\templates\mog\contest\_left.html:53
 msgid "Ended"
 msgstr "Finalizado"
 
-#: mog/templates/mog/contest/_left.html:39
-#: mog/templates/mog/contest/_left.html:55
+#: .\mog\templates\mog\contest\_left.html:39
+#: .\mog\templates\mog\contest\_left.html:55
 msgid "Coming"
 msgstr "Más adelante"
 
-#: mog/templates/mog/contest/_left.html:72
-#: mog/templates/mog/contest/standing.html:7
-#: mog/templates/mog/contest/standing.html:12
+#: .\mog\templates\mog\contest\_left.html:72
+#: .\mog\templates\mog\contest\standing.html:7
+#: .\mog\templates\mog\contest\standing.html:12
 msgid "Standing"
 msgstr "Posiciones"
 
-#: mog/templates/mog/contest/_left.html:83
-#: mog/templates/mog/contest/_left.html:88
-#: mog/templates/mog/contest/problems.html:79
-#: mog/templates/mog/problem/detail.html:70
-#: mog/templates/mog/submit/submit.html:7
-#: mog/templates/mog/submit/submit.html:33
-#: mog/templates/registration/password_change_form.html:9
+#: .\mog\templates\mog\contest\_left.html:83
+#: .\mog\templates\mog\contest\_left.html:89
+#: .\mog\templates\mog\contest\_left.html:93
+#: .\mog\templates\mog\contest\problems.html:83
+#: .\mog\templates\mog\problem\detail.html:71
+#: .\mog\templates\mog\submit\submit.html:7
+#: .\mog\templates\mog\submit\submit.html:33
+#: .\mog\templates\registration\password_change_form.html:9
 msgid "Submit"
 msgstr "Enviar"
 
-#: mog/templates/mog/contest/_left.html:108
+#: .\mog\templates\mog\contest\_left.html:114
 msgid "Edit contest"
 msgstr "Editar concurso"
 
-#: mog/templates/mog/contest/_left.html:113
-#: mog/templates/mog/contest/_left.html:132
+#: .\mog\templates\mog\contest\_left.html:119
+#: .\mog\templates\mog\contest\_left.html:138
 msgid "Remove Contest"
 msgstr "Eliminar concurso"
 
-#: mog/templates/mog/contest/_left.html:137
+#: .\mog\templates\mog\contest\_left.html:143
 msgid ""
 "If you remove this contest all submissions related with it will be removed "
 "too."
@@ -324,31 +327,31 @@ msgstr ""
 "Si elimina este concurso todos los envíos relacionados con él serán "
 "eliminados también."
 
-#: mog/templates/mog/contest/_past_contests.html:5
+#: .\mog\templates\mog\contest\_past_contests.html:5
 msgid "Past Contests"
 msgstr "Concursos pasados"
 
-#: mog/templates/mog/contest/_past_contests.html:30
+#: .\mog\templates\mog\contest\_past_contests.html:30
 msgid "Participated"
 msgstr "Participó"
 
-#: mog/templates/mog/contest/_past_contests.html:34
+#: .\mog\templates\mog\contest\_past_contests.html:34
 msgid "Virtual participation"
 msgstr "Participación virtual"
 
-#: mog/templates/mog/contest/_past_contests.html:40
+#: .\mog\templates\mog\contest\_past_contests.html:40
 msgid "Remove virtual participation"
 msgstr "Eliminar participación virtual"
 
-#: mog/templates/mog/contest/_past_contests.html:63
+#: .\mog\templates\mog\contest\_past_contests.html:63
 msgid "No past contests!"
 msgstr "No hay concursos pasados!"
 
-#: mog/templates/mog/contest/_register.html:15
+#: .\mog\templates\mog\contest\_register.html:15
 msgid "Are you sure you want to participate in this contest ?"
 msgstr "Estás seguro que desea participar en este concurso ?"
 
-#: mog/templates/mog/contest/_register.html:17
+#: .\mog\templates\mog\contest\_register.html:17
 msgid ""
 "If you select a team then virtual participation for other team members will "
 "be disabled. So, pick one if and only if your teammates are ready to compete "
@@ -358,234 +361,231 @@ msgstr ""
 "miembros estará desabilitada. Por esto, seleccione esta opción si sus "
 "compañeros de equipo están listos para competir con usted."
 
-#: mog/templates/mog/contest/_running_contests.html:4
+#: .\mog\templates\mog\contest\_running_contests.html:5
 msgid "Running Contests"
 msgstr "Concursos corriendo"
 
-#: mog/templates/mog/contest/_running_contests.html:11
+#: .\mog\templates\mog\contest\_running_contests.html:12
 msgid "Remaining"
 msgstr "Tiempo restante"
 
-#: mog/templates/mog/contest/_running_contests.html:49
+#: .\mog\templates\mog\contest\_running_contests.html:63
 msgid "No running contests!"
 msgstr "No hay concursos corriendo!"
 
-#: mog/templates/mog/contest/_unregister.html:15
+#: .\mog\templates\mog\contest\_unregister.html:15
 msgid "Are you sure you want to un-register participation in this contest ?"
 msgstr "Estás seguro que desea eliminar su participación en este concurso ?"
 
-#: mog/templates/mog/contest/index.html:13
+#: .\mog\templates\mog\contest\index.html:13
 msgid "Create contest"
 msgstr "Crear concurso"
 
-#: mog/templates/mog/contest/problems.html:21
+#: .\mog\templates\mog\contest\problems.html:22
 #, fuzzy
 #| msgid "Created"
 msgid "Rated"
 msgstr "Creado"
 
-#: mog/templates/mog/contest/problems.html:23
+#: .\mog\templates\mog\contest\problems.html:24
 #, fuzzy
 #| msgid "Created"
 msgid "Unrated"
 msgstr "Creado"
 
-#: mog/templates/mog/contest/problems.html:30
-#: mog/templates/mog/user/teams.html:18
+#: .\mog\templates\mog\contest\problems.html:31
+#: .\mog\templates\mog\user\teams.html:18
 msgid "Actions"
 msgstr "Acciones"
 
-#: mog/templates/mog/contest/problems.html:76
-#: mog/templates/mog/contest/submissions.html:28
-#: mog/templates/mog/submission/_list.html:10
-#: mog/templates/mog/submission/index.html:23
-#: mog/templates/mog/submission/index.html:25
-#: mog/templates/mog/submit/submit.html:43
+#: .\mog\templates\mog\contest\problems.html:80
+#: .\mog\templates\mog\submission\_list.html:10
+#: .\mog\templates\mog\submission\index.html:23
+#: .\mog\templates\mog\submission\index.html:25
+#: .\mog\templates\mog\submit\submit.html:43
 msgid "Problem"
 msgstr "Problema"
 
-#: mog/templates/mog/contest/problems.html:78
+#: .\mog\templates\mog\contest\problems.html:82
 msgid "PDF"
 msgstr ""
 
-#: mog/templates/mog/contest/problems.html:108
+#: .\mog\templates\mog\contest\problems.html:112
 msgid "No problems included yet!"
 msgstr "No hay problemas incluídos todavía!"
 
-#: mog/templates/mog/contest/problems.html:118
-#: mog/templates/mog/user/teams.html:16
+#: .\mog\templates\mog\contest\problems.html:122
+#: .\mog\templates\mog\user\teams.html:16
 msgid "Description"
 msgstr "Descripción"
 
-#: mog/templates/mog/contest/registration.html:54
+#: .\mog\templates\mog\contest\registration.html:54
 #, fuzzy
 #| msgid "Register"
 msgid "Register user"
 msgstr "Registrar usuario"
 
-#: mog/templates/mog/contest/registration.html:71
+#: .\mog\templates\mog\contest\registration.html:71
 #, fuzzy
 #| msgid "Register"
 msgid "Register team"
 msgstr "Registrar equipo"
 
-#: mog/templates/mog/contest/standing.html:38
+#: .\mog\templates\mog\contest\standing.html:38
 msgid "Rank"
 msgstr "Posición"
 
-#: mog/templates/mog/contest/standing.html:39
+#: .\mog\templates\mog\contest\standing.html:39
 msgid "Contestant"
 msgstr "Concursante"
 
-#: mog/templates/mog/contest/standing.html:39
-#: mog/templates/mog/user/teams.html:15
+#: .\mog\templates\mog\contest\standing.html:39
+#: .\mog\templates\mog\user\teams.html:15
 msgid "Team"
 msgstr "Equipo"
 
-#: mog/templates/mog/contest/standing.html:41
+#: .\mog\templates\mog\contest\standing.html:41
 msgid "Penalty"
 msgstr "Penalización"
 
-#: mog/templates/mog/contest/standing.html:113
+#: .\mog\templates\mog\contest\standing.html:113
 msgid "No one registered for this contest!"
 msgstr "No se han registrado concursantes para este concurso"
 
-#: mog/templates/mog/contest/standing.html:127
+#: .\mog\templates\mog\contest\standing.html:127
 msgid "Show virtual participation"
 msgstr "Mostrar participación virtual"
 
-#: mog/templates/mog/contest/submissions.html:30
+#: .\mog\templates\mog\contest\submissions.html:36
 msgid "-- Select problem --"
 msgstr "-- Problema --"
 
-#: mog/templates/mog/contest/submissions.html:38
-#: mog/templates/mog/submission/_list.html:11
-#: mog/templates/mog/submission/index.html:28
-msgid "Result"
-msgstr "Resultado"
-
-#: mog/templates/mog/contest/submissions.html:40
-#: mog/templates/mog/submission/index.html:30
+#: .\mog\templates\mog\contest\submissions.html:43
+#: .\mog\templates\mog\submission\index.html:30
 msgid "-- Select result --"
 msgstr "-- Resultado --"
 
-#: mog/templates/mog/contest/submissions.html:57
-#: mog/templates/mog/submission/index.html:47
+#: .\mog\templates\mog\contest\submissions.html:56
+#: .\mog\templates\mog\submission\index.html:47
 msgid "Filter"
 msgstr "Filtrar"
 
-#: mog/templates/mog/index.html:15
+#: .\mog\templates\mog\index.html:16
 msgid "Read more"
 msgstr "Leer más"
 
-#: mog/templates/mog/post/_post.html:9
+#: .\mog\templates\mog\message\_message_received.html:16
+msgid "Reply"
+msgstr "Responder"
+
+#: .\mog\templates\mog\post\_post.html:9
 msgid "by"
 msgstr "por"
 
-#: mog/templates/mog/post/detail.html:17
+#: .\mog\templates\mog\post\detail.html:18
 msgid "Edit post"
 msgstr "Editar publicación"
 
-#: mog/templates/mog/post/detail.html:39
+#: .\mog\templates\mog\post\detail.html:40
 msgid "Edit comment"
 msgstr "Editar comentario"
 
-#: mog/templates/mog/post/detail.html:59
+#: .\mog\templates\mog\post\detail.html:60
 msgid "Add your comment here"
 msgstr "Escriba su comentario aquí"
 
-#: mog/templates/mog/post/detail.html:64
+#: .\mog\templates\mog\post\detail.html:65
 msgid "Send"
 msgstr "Enviar"
 
-#: mog/templates/mog/post/index.html:19
+#: .\mog\templates\mog\post\index.html:19
 msgid "Author"
 msgstr "Autor"
 
-#: mog/templates/mog/post/index.html:20
-#: mog/templates/mog/problem/index.html:39
+#: .\mog\templates\mog\post\index.html:20
+#: .\mog\templates\mog\problem\index.html:39
 msgid "Title"
 msgstr "Título"
 
-#: mog/templates/mog/post/index.html:21
+#: .\mog\templates\mog\post\index.html:21
 msgid "Created"
 msgstr "Creado"
 
-#: mog/templates/mog/post/index.html:37
+#: .\mog\templates\mog\post\index.html:37
 msgid "No posts written yet!"
 msgstr "No hay publicaciones escritas todavía!"
 
-#: mog/templates/mog/problem/detail.html:24
+#: .\mog\templates\mog\problem\detail.html:25
 msgid "Remove problem"
 msgstr "Eliminar problema"
 
-#: mog/templates/mog/problem/detail.html:29
+#: .\mog\templates\mog\problem\detail.html:30
 msgid "Edit tests"
 msgstr "Editar tests"
 
-#: mog/templates/mog/problem/detail.html:34
-#: mog/templates/mog/problem/edit.html:6
-#: mog/templates/mog/problem/edit.html:16
+#: .\mog\templates\mog\problem\detail.html:35
+#: .\mog\templates\mog\problem\edit.html:6
+#: .\mog\templates\mog\problem\edit.html:16
 msgid "Edit problem"
 msgstr "Editar problema"
 
-#: mog/templates/mog/problem/detail.html:41
+#: .\mog\templates\mog\problem\detail.html:42
 msgid "Time limit"
 msgstr "Tiempo límite"
 
-#: mog/templates/mog/problem/detail.html:41
+#: .\mog\templates\mog\problem\detail.html:42
 msgid "second"
 msgstr "segundo"
 
-#: mog/templates/mog/problem/detail.html:42
+#: .\mog\templates\mog\problem\detail.html:43
 msgid "Memory limit"
 msgstr "Memoria límite"
 
-#: mog/templates/mog/problem/detail.html:42
+#: .\mog\templates\mog\problem\detail.html:43
 msgid "megabyte"
 msgstr ""
 
-#: mog/templates/mog/problem/detail.html:43
+#: .\mog\templates\mog\problem\detail.html:44
 #, fuzzy
 #| msgid "Lang"
 msgid "Languages"
 msgstr "Leng"
 
-#: mog/templates/mog/problem/detail.html:53
+#: .\mog\templates\mog\problem\detail.html:54
 msgid "All submissions"
 msgstr "Todos los envíos"
 
-#: mog/templates/mog/problem/detail.html:57
+#: .\mog\templates\mog\problem\detail.html:58
 msgid "Accepted submissions"
 msgstr "Envíos aceptados"
 
-#: mog/templates/mog/problem/detail.html:63
+#: .\mog\templates\mog\problem\detail.html:64
 msgid "My submissions"
 msgstr "Mis envíos"
 
-#: mog/templates/mog/problem/detail.html:80
-#: mog/templates/mog/problem/detail.html:96
+#: .\mog\templates\mog\problem\detail.html:81
+#: .\mog\templates\mog\problem\detail.html:97
 msgid "Input"
 msgstr "Entrada"
 
-#: mog/templates/mog/problem/detail.html:85
-#: mog/templates/mog/problem/detail.html:100
+#: .\mog\templates\mog\problem\detail.html:86
+#: .\mog\templates\mog\problem\detail.html:101
 msgid "Output"
 msgstr "Salida"
 
-#: mog/templates/mog/problem/detail.html:90
+#: .\mog\templates\mog\problem\detail.html:91
 msgid "Sample test(s)"
 msgstr "Caso(s) de ejemplo"
 
-#: mog/templates/mog/problem/detail.html:110
+#: .\mog\templates\mog\problem\detail.html:111
 msgid "Hints"
 msgstr "Pistas"
 
-#: mog/templates/mog/problem/detail.html:125
+#: .\mog\templates\mog\problem\detail.html:126
 msgid "Delete Problem"
 msgstr "Eliminar problema"
 
-#: mog/templates/mog/problem/detail.html:130
+#: .\mog\templates\mog\problem\detail.html:131
 msgid ""
 "If you remove this problem all submissions related with it will be removed "
 "too."
@@ -593,318 +593,321 @@ msgstr ""
 "Si elimina este problema todos los envíos relacionados con él serán "
 "eliminados también."
 
-#: mog/templates/mog/problem/edit.html:33
+#: .\mog\templates\mog\problem\edit.html:33
 msgid "Save"
 msgstr "Salvar"
 
-#: mog/templates/mog/problem/index.html:20
+#: .\mog\templates\mog\problem\index.html:20
 msgid "Create problem"
 msgstr "Crear problema"
 
-#: mog/templates/mog/problem/index.html:28
-#: mog/templates/mog/user/index.html:19
+#: .\mog\templates\mog\problem\index.html:28
+#: .\mog\templates\mog\user\index.html:19
 msgid "Search by name ..."
 msgstr "Buscar por nombre ..."
 
-#: mog/templates/mog/problem/index.html:29
-#: mog/templates/mog/user/index.html:20
+#: .\mog\templates\mog\problem\index.html:29
+#: .\mog\templates\mog\user\index.html:20
 msgid "Search"
 msgstr "Buscar"
 
-#: mog/templates/mog/problem/index.html:38
-#: mog/templates/mog/submission/detail.html:31
+#: .\mog\templates\mog\problem\index.html:38
+#: .\mog\templates\mog\submission\detail.html:31
 msgid "Code"
 msgstr "Código"
 
-#: mog/templates/mog/problem/index.html:42
-#: mog/templates/mog/user/index.html:43
+#: .\mog\templates\mog\problem\index.html:42
+#: .\mog\templates\mog\user\index.html:43
 msgid "ACC"
 msgstr "ACE"
 
-#: mog/templates/mog/problem/index.html:43
-#: mog/templates/mog/user/index.html:46
+#: .\mog\templates\mog\problem\index.html:43
+#: .\mog\templates\mog\user\index.html:46
 msgid "SUB"
 msgstr "ENV"
 
-#: mog/templates/mog/problem/index.html:44
-#: mog/templates/mog/user/index.html:49
+#: .\mog\templates\mog\problem\index.html:44
+#: .\mog\templates\mog\user\index.html:49
 #, python-format
 msgid "%% ACC"
 msgstr "%% ACE"
 
-#: mog/templates/mog/submission/_list.html:8
-#: mog/templates/mog/user/messages.html:23
-#: mog/templates/mog/user/messages.html:50
+#: .\mog\templates\mog\submission\_list.html:8
+#: .\mog\templates\mog\user\messages.html:23
+#: .\mog\templates\mog\user\messages.html:50
 msgid "Date"
 msgstr "Fecha"
 
-#: mog/templates/mog/submission/_list.html:9
-#: mog/templates/mog/submission/index.html:19
-#: mog/templates/mog/user/index.html:32
+#: .\mog\templates\mog\submission\_list.html:9
+#: .\mog\templates\mog\submission\index.html:19
+#: .\mog\templates\mog\user\index.html:32
 msgid "User"
 msgstr "Usuario"
 
-#: mog/templates/mog/submission/_list.html:12
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2151
+#: .\mog\templates\mog\submission\_list.html:11
+#: .\mog\templates\mog\submission\index.html:28
+msgid "Result"
+msgstr "Resultado"
+
+#: .\mog\templates\mog\submission\_list.html:12
 msgid "Time"
 msgstr "Tiempo"
 
-#: mog/templates/mog/submission/_list.html:13
+#: .\mog\templates\mog\submission\_list.html:13
 msgid "Mem"
 msgstr "Memoria"
 
-#: mog/templates/mog/submission/_list.html:14
+#: .\mog\templates\mog\submission\_list.html:14
 msgid "Lang"
 msgstr "Leng"
 
-#: mog/templates/mog/submission/detail.html:8
+#: .\mog\templates\mog\submission\detail.html:8
 msgid "Submission"
 msgstr "Envío"
 
-#: mog/templates/mog/submission/detail.html:36
+#: .\mog\templates\mog\submission\detail.html:36
 msgid "Judgement Details"
 msgstr "Detalles de la calificación"
 
-#: mog/templates/mog/submission/index.html:40
+#: .\mog\templates\mog\submission\index.html:40
 msgid "-- Select compiler --"
 msgstr "-- Compilador --"
 
-#: mog/templates/mog/user/_login.html:13
-#: mog/templates/mog/user/profile.html:45
-#: venv/lib/python2.7/site-packages/django/contrib/messages/apps.py:7
+#: .\mog\templates\mog\user\_login.html:13
+#: .\mog\templates\mog\user\profile.html:45
 msgid "Messages"
 msgstr "Mensajes"
 
-#: mog/templates/mog/user/_login.html:15
+#: .\mog\templates\mog\user\_login.html:15
 msgid "View profile"
 msgstr "Ver perfil"
 
-#: mog/templates/mog/user/_login.html:16
+#: .\mog\templates\mog\user\_login.html:16
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: mog/templates/mog/user/_login.html:17
+#: .\mog\templates\mog\user\_login.html:17
 msgid "Add blog entry"
 msgstr "Escribir publicacion"
 
-#: mog/templates/mog/user/_login.html:19
+#: .\mog\templates\mog\user\_login.html:19
 msgid "Logout"
 msgstr "Salir"
 
-#: mog/templates/mog/user/_remove_team.html:10
-#: mog/templates/mog/user/teams.html:48
+#: .\mog\templates\mog\user\_remove_team.html:10
+#: .\mog\templates\mog\user\teams.html:48
 msgid "Remove"
 msgstr "Eliminar"
 
-#: mog/templates/mog/user/_remove_team.html:15
+#: .\mog\templates\mog\user\_remove_team.html:15
 msgid "Are you sure you want to remove this team ?"
 msgstr "Estás seguro que desea eliminar este equipo ?"
 
-#: mog/templates/mog/user/detail.html:18
+#: .\mog\templates\mog\user\detail.html:18
 msgid "Accepted"
 msgstr "Aceptados"
 
-#: mog/templates/mog/user/messages.html:12
+#: .\mog\templates\mog\user\messages.html:12
 msgid "Inbox"
 msgstr "Bandeja de entrada"
 
-#: mog/templates/mog/user/messages.html:13
+#: .\mog\templates\mog\user\messages.html:13
 msgid "Outbox"
 msgstr "Bandeja de salida"
 
-#: mog/templates/mog/user/messages.html:21
+#: .\mog\templates\mog\user\messages.html:21
 msgid "From"
 msgstr "De"
 
-#: mog/templates/mog/user/messages.html:22
-#: mog/templates/mog/user/messages.html:49
+#: .\mog\templates\mog\user\messages.html:22
+#: .\mog\templates\mog\user\messages.html:49
 msgid "Subject"
 msgstr "Asunto"
 
-#: mog/templates/mog/user/messages.html:38
+#: .\mog\templates\mog\user\messages.html:38
 msgid "No message received!"
 msgstr "No se han recibido mensajes!"
 
-#: mog/templates/mog/user/messages.html:48
+#: .\mog\templates\mog\user\messages.html:48
 msgid "To"
 msgstr "Para"
 
-#: mog/templates/mog/user/messages.html:65
+#: .\mog\templates\mog\user\messages.html:65
 msgid "No message sent!"
 msgstr "No se han enviado mensajes!"
 
-#: mog/templates/mog/user/profile.html:35
+#: .\mog\templates\mog\user\profile.html:35
 msgid "Profile"
 msgstr "Perfil"
 
-#: mog/templates/mog/user/profile.html:40
+#: .\mog\templates\mog\user\profile.html:40
 msgid "Edit Profile"
 msgstr "Editar perfil"
 
-#: mog/templates/mog/user/profile.html:63
+#: .\mog\templates\mog\user\profile.html:63
 msgid "Send a message"
 msgstr "Enviar un mensaje"
 
-#: mog/templates/mog/user/teams.html:17
+#: .\mog\templates\mog\user\teams.html:17
 msgid "Contestants"
 msgstr "Concursantes"
 
-#: mog/templates/mog/user/teams.html:36
+#: .\mog\templates\mog\user\teams.html:36
 msgid "No description provided"
 msgstr "Sin descripción"
 
-#: mog/templates/mog/user/teams.html:53
+#: .\mog\templates\mog\user\teams.html:53
 msgid "No teams created!"
 msgstr "No se han creado equipos!"
 
-#: mog/templates/mog/user/teams.html:61
+#: .\mog\templates\mog\user\teams.html:61
 msgid "Create team"
 msgstr "Crear equipo"
 
-#: mog/templates/registration/activate.html:3
+#: .\mog\templates\registration\activate.html:3
 msgid "Activation failed"
 msgstr ""
 
-#: mog/templates/registration/activate.html:11
+#: .\mog\templates\registration\activate.html:11
 msgid "Account activation failed"
 msgstr ""
 
-#: mog/templates/registration/activation_complete.html:4
+#: .\mog\templates\registration\activation_complete.html:4
 msgid "Activation completed"
 msgstr ""
 
-#: mog/templates/registration/activation_complete.html:10
+#: .\mog\templates\registration\activation_complete.html:10
 msgid "Your account is now activated"
 msgstr ""
 
-#: mog/templates/registration/activation_email.txt:2
+#: .\mog\templates\registration\activation_email.txt:2
 msgid "Activate account at"
 msgstr ""
 
-#: mog/templates/registration/activation_email.txt:6
+#: .\mog\templates\registration\activation_email.txt:6
 #, python-format
 msgid "Link is valid for %(expiration_days)s days."
 msgstr ""
 
-#: mog/templates/registration/activation_email_subject.txt:1
+#: .\mog\templates\registration\activation_email_subject.txt:1
 msgid "Account activation on"
 msgstr ""
 
-#: mog/templates/registration/password_change_done.html:5
+#: .\mog\templates\registration\password_change_done.html:5
 #, fuzzy
 #| msgid "Password"
 msgid "Password changed"
 msgstr "Contraseña"
 
-#: mog/templates/registration/password_reset_complete.html:4
-#: mog/templates/registration/password_reset_complete.html:10
+#: .\mog\templates\registration\password_reset_complete.html:4
+#: .\mog\templates\registration\password_reset_complete.html:10
 msgid "Password reset successfully"
 msgstr "Reinicio de contraseña exitoso"
 
-#: mog/templates/registration/password_reset_complete.html:12
+#: .\mog\templates\registration\password_reset_complete.html:12
 msgid "Log in"
 msgstr "Entrar"
 
-#: mog/templates/registration/password_reset_confirm.html:4
+#: .\mog\templates\registration\password_reset_confirm.html:4
 #, fuzzy
 #| msgid "Request Reset Password"
 msgid "Reset password"
 msgstr "Reiniciar contraseña"
 
-#: mog/templates/registration/password_reset_confirm.html:13
+#: .\mog\templates\registration\password_reset_confirm.html:13
 msgid "Reset"
 msgstr "Reiniciar"
 
-#: mog/templates/registration/password_reset_confirm.html:16
+#: .\mog\templates\registration\password_reset_confirm.html:16
 msgid "Password reset failed"
 msgstr "Reinicio de contraseña fallido"
 
-#: mog/templates/registration/password_reset_done.html:4
+#: .\mog\templates\registration\password_reset_done.html:4
 msgid "Password instructions"
 msgstr "Instrucciones para cambio de contraseña"
 
-#: mog/templates/registration/password_reset_done.html:10
+#: .\mog\templates\registration\password_reset_done.html:10
 msgid "Email with password reset instructions has been sent."
 msgstr ""
 "Un correo con las instrucciones para reiniciar su contraseña ha sido enviado."
 
-#: mog/templates/registration/password_reset_email.txt:2
+#: .\mog\templates\registration\password_reset_email.txt:2
 #, python-format
 msgid "Reset password at %(site_name)s"
 msgstr "Resetear contraseña en %(site_name)s"
 
-#: mog/templates/registration/password_reset_form.html:4
+#: .\mog\templates\registration\password_reset_form.html:4
 #, fuzzy
 #| msgid "Password reset failed"
 msgid "Password Reset"
 msgstr "Reinicio de contraseña fallido"
 
-#: mog/templates/registration/password_reset_form.html:12
+#: .\mog\templates\registration\password_reset_form.html:12
 msgid "Request Reset Password"
 msgstr "Reiniciar contraseña"
 
-#: mog/templates/registration/registration_closed.html:5
+#: .\mog\templates\registration\registration_closed.html:5
 msgid "Registration is currently closed."
 msgstr "Registro está cerrado."
 
-#: mog/templates/registration/registration_complete.html:4
+#: .\mog\templates\registration\registration_complete.html:4
 #, fuzzy
 #| msgid "Registration"
 msgid "Registration complete"
 msgstr "Registro"
 
-#: mog/templates/registration/registration_complete.html:10
+#: .\mog\templates\registration\registration_complete.html:10
 msgid "You are now registered. Activation email sent."
 msgstr "Ahora usted está registrado. Correo de activación enviado."
 
-#: mog/views/contest.py:117
-#, fuzzy, python-brace-format
+#: .\mog\views\contest.py:120
+#, fuzzy
 #| msgid "Registration is currently closed."
 msgid "Registration is closed for contest \"{0}\""
 msgstr "Registro está cerrado."
 
-#: mog/views/contest.py:127
+#: .\mog\views\contest.py:130
 msgid "No user to register"
 msgstr ""
 
-#: mog/views/contest.py:132
+#: .\mog\views\contest.py:135
 msgid "Invalid user/team combination"
 msgstr ""
 
-#: mog/views/contest.py:141
+#: .\mog\views\contest.py:144
 #, fuzzy
 #| msgid "Registration"
 msgid "Registration cannot be accomplished"
 msgstr "Registro"
 
-#: mog/views/contest.py:150
+#: .\mog\views\contest.py:153
 msgid "Successfully registered for real participation"
 msgstr ""
 
-#: mog/views/contest.py:152
+#: .\mog\views\contest.py:155
 #, fuzzy
 #| msgid "Remove virtual participation"
 msgid "Successfully registered for virtual participation"
 msgstr "Eliminar participación virtual"
 
-#: mog/views/contest.py:203
+#: .\mog\views\contest.py:209
 msgid "Instance does not exist"
 msgstr ""
 
-#: mog/views/contest.py:208
+#: .\mog\views\contest.py:214
 msgid ""
 "Cannot remove registration because the user/team has actions on the contest."
 msgstr ""
 
-#: mog/views/contest.py:220
+#: .\mog\views\contest.py:226
 msgid "Successfully unregistered!"
 msgstr ""
 
-#: mog/views/contest.py:329
+#: .\mog\views\contest.py:335
 msgid "This contest cannot be rated because it's open for teams."
 msgstr "Este concurso no puede calificarse porque es abierto para equipos."
 
-#: mog/views/contest.py:333
+#: .\mog\views\contest.py:339
 msgid ""
 "This contest have ben rated. If you want rate again, then force the "
 "operation."
@@ -912,1110 +915,76 @@ msgstr ""
 "Este concurso ha sido calificado anteriormente. Si desea calificarlo "
 "nuevamente, entonces fuerce la operación."
 
-#: mog/views/contest.py:338
+#: .\mog\views\contest.py:344
 msgid "This contest cannot be rated because it's before a rated contest."
 msgstr ""
 "Este concurso no puede ser calificado porque ocurrió antes de un concurso "
 "calificado."
 
-#: mog/views/contest.py:393
+#: .\mog\views\contest.py:399
 msgid "This contest have been rated successfully"
 msgstr "Este concurso ha sido calificado satisfactoriamente"
 
-#: mog/views/contest.py:408
+#: .\mog\views\contest.py:414
 msgid "This contest cannot be unrated because it's before a rated contest"
 msgstr ""
 "Este concurso no se puede descalificar porque ocurrió antes de un concurso "
 "calificado."
 
-#: mog/views/contest.py:414
+#: .\mog\views\contest.py:420
 msgid "This contest have been unrated successfully"
 msgstr "Este concurso ha sido descalificado satisfactoriamente"
 
-#: mog/views/submission.py:60
+#: .\mog\views\submission.py:61
 msgid "Invalid language choice"
 msgstr ""
 
-#: mog/views/submission.py:66
+#: .\mog\views\submission.py:67
 msgid "Empty source code"
 msgstr ""
 
-#: venv/lib/python2.7/site-packages/django/contrib/sitemaps/apps.py:7
-msgid "Site Maps"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/contrib/staticfiles/apps.py:7
-msgid "Static Files"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/contrib/syndication/apps.py:7
-msgid "Syndication"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:33
-msgid "Enter a valid value."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:106
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:663
-msgid "Enter a valid URL."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:159
-msgid "Enter a valid integer."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:170
-msgid "Enter a valid email address."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:243
-msgid ""
-"Enter a valid 'slug' consisting of letters, numbers, underscores or hyphens."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:250
-msgid ""
-"Enter a valid 'slug' consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:255
-#: venv/lib/python2.7/site-packages/django/core/validators.py:274
-msgid "Enter a valid IPv4 address."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:260
-#: venv/lib/python2.7/site-packages/django/core/validators.py:275
-msgid "Enter a valid IPv6 address."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:270
-#: venv/lib/python2.7/site-packages/django/core/validators.py:273
-msgid "Enter a valid IPv4 or IPv6 address."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:305
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1110
-msgid "Enter only digits separated by commas."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:311
-#, python-format
-msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:342
-#, python-format
-msgid "Ensure this value is less than or equal to %(limit_value)s."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:351
-#, python-format
-msgid "Ensure this value is greater than or equal to %(limit_value)s."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:361
-#, python-format
-msgid ""
-"Ensure this value has at least %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at least %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:376
-#, python-format
-msgid ""
-"Ensure this value has at most %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at most %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:396
-#, python-format
-msgid "Ensure that there are no more than %(max)s digit in total."
-msgid_plural "Ensure that there are no more than %(max)s digits in total."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:401
-#, python-format
-msgid "Ensure that there are no more than %(max)s decimal place."
-msgid_plural "Ensure that there are no more than %(max)s decimal places."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/core/validators.py:406
-#, python-format
-msgid ""
-"Ensure that there are no more than %(max)s digit before the decimal point."
-msgid_plural ""
-"Ensure that there are no more than %(max)s digits before the decimal point."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/base.py:1191
-#: venv/lib/python2.7/site-packages/django/forms/models.py:734
-msgid "and"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/base.py:1193
-#, python-format
-msgid "%(model_name)s with this %(field_labels)s already exists."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:110
-#, python-format
-msgid "Value %(value)r is not a valid choice."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:111
-msgid "This field cannot be null."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:112
-msgid "This field cannot be blank."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:113
-#, python-format
-msgid "%(model_name)s with this %(field_label)s already exists."
-msgstr ""
-
-#. Translators: The 'lookup_type' is one of 'date', 'year' or 'month'.
-#. Eg: "Title must be unique for pub_date year"
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:117
-#, python-format
-msgid ""
-"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:134
-#, python-format
-msgid "Field of type: %(field_type)s"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:881
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1788
-msgid "Integer"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:885
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1786
-#, python-format
-msgid "'%(value)s' value must be an integer."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:960
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1857
-msgid "Big (8 byte) integer"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:972
-#, python-format
-msgid "'%(value)s' value must be either True or False."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:974
-msgid "Boolean (Either True or False)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1040
-#, python-format
-msgid "String (up to %(max_length)s)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1094
-msgid "Comma-separated integers"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1151
-#, python-format
-msgid ""
-"'%(value)s' value has an invalid date format. It must be in YYYY-MM-DD "
-"format."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1153
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1298
-#, python-format
-msgid ""
-"'%(value)s' value has the correct format (YYYY-MM-DD) but it is an invalid "
-"date."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1156
-msgid "Date (without time)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1296
-#, python-format
-msgid ""
-"'%(value)s' value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
-"uuuuuu]][TZ] format."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1300
-#, python-format
-msgid ""
-"'%(value)s' value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1304
-msgid "Date (with time)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1454
-#, python-format
-msgid "'%(value)s' value must be a decimal number."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1456
-msgid "Decimal number"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1607
-#, python-format
-msgid ""
-"'%(value)s' value has an invalid format. It must be in [DD] [HH:[MM:]]ss[."
-"uuuuuu] format."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1662
-msgid "Email address"
-msgstr "Dirección de correo"
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1686
-msgid "File path"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1752
-#, python-format
-msgid "'%(value)s' value must be a float."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1754
-msgid "Floating point number"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1872
-msgid "IPv4 address"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1903
-msgid "IP address"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1985
-#, python-format
-msgid "'%(value)s' value must be either None, True or False."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1987
-msgid "Boolean (Either True, False or None)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2054
-msgid "Positive integer"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2066
-msgid "Positive small integer"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2079
-#, python-format
-msgid "Slug (up to %(max_length)s)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2113
-msgid "Small integer"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2120
-msgid "Text"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2146
-#, python-format
-msgid ""
-"'%(value)s' value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
-"format."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2148
-#, python-format
-msgid ""
-"'%(value)s' value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
-"invalid time."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2279
-msgid "URL"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2302
-msgid "Raw binary data"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/__init__.py:2349
-#, python-format
-msgid "'%(value)s' is not a valid UUID."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/files.py:225
-msgid "File"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/files.py:387
-msgid "Image"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:734
-#, python-format
-msgid "%(model)s instance with %(field)s %(value)r does not exist."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:736
-msgid "Foreign Key (type determined by related field)"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:974
-msgid "One-to-one relationship"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:1049
-#, python-format
-msgid "%(from)s-%(to)s relationship"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:1050
-#, python-format
-msgid "%(from)s-%(to)s relationships"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/db/models/fields/related.py:1092
-msgid "Many-to-many relationship"
-msgstr ""
-
-#. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
-#: venv/lib/python2.7/site-packages/django/forms/boundfield.py:156
-msgid ":?.!"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:56
-msgid "This field is required."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:250
-msgid "Enter a whole number."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:295
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:332
-msgid "Enter a number."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:410
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:1136
-msgid "Enter a valid date."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:434
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:1137
-msgid "Enter a valid time."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:456
-msgid "Enter a valid date/time."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:485
-msgid "Enter a valid duration."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:542
-msgid "No file was submitted. Check the encoding type on the form."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:543
-msgid "No file was submitted."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:544
-msgid "The submitted file is empty."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:546
-#, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
-msgid_plural ""
-"Ensure this filename has at most %(max)d characters (it has %(length)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:549
-msgid "Please either submit a file or check the clear checkbox, not both."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:611
-msgid ""
-"Upload a valid image. The file you uploaded was either not an image or a "
-"corrupted image."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:767
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:863
-#: venv/lib/python2.7/site-packages/django/forms/models.py:1240
-#, python-format
-msgid "Select a valid choice. %(value)s is not one of the available choices."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:864
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:979
-#: venv/lib/python2.7/site-packages/django/forms/models.py:1239
-msgid "Enter a list of values."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:980
-msgid "Enter a complete value."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/fields.py:1195
-msgid "Enter a valid UUID."
-msgstr ""
-
-#. Translators: This is the default suffix added to form field labels
-#: venv/lib/python2.7/site-packages/django/forms/forms.py:84
-msgid ":"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/forms.py:199
-#, python-format
-msgid "(Hidden field %(name)s) %(error)s"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:97
-msgid "ManagementForm data is missing or has been tampered with"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:350
-#, python-format
-msgid "Please submit %d or fewer forms."
-msgid_plural "Please submit %d or fewer forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:357
-#, python-format
-msgid "Please submit %d or more forms."
-msgid_plural "Please submit %d or more forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:385
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:387
-msgid "Order"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/formsets.py:389
-msgid "Delete"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:729
-#, python-format
-msgid "Please correct the duplicate data for %(field)s."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:733
-#, python-format
-msgid "Please correct the duplicate data for %(field)s, which must be unique."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:739
-#, python-format
-msgid ""
-"Please correct the duplicate data for %(field_name)s which must be unique "
-"for the %(lookup)s in %(date_field)s."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:748
-msgid "Please correct the duplicate values below."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:1072
-msgid "The inline foreign key did not match the parent instance primary key."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:1133
-msgid "Select a valid choice. That choice is not one of the available choices."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/models.py:1242
-#, python-format
-msgid "\"%(pk)s\" is not a valid value for a primary key."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/utils.py:172
-#, python-format
-msgid ""
-"%(datetime)s couldn't be interpreted in time zone %(current_timezone)s; it "
-"may be ambiguous or it may not exist."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:358
-msgid "Currently"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:359
-msgid "Change"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:360
-msgid "Clear"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/forms/widgets.py:577
-msgid "Unknown"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:848
-msgid "yes,no,maybe"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:877
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:894
-#, python-format
-msgid "%(size)d byte"
-msgid_plural "%(size)d bytes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:896
-#, python-format
-msgid "%s KB"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:898
-#, python-format
-msgid "%s MB"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:900
-#, python-format
-msgid "%s GB"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:902
-#, python-format
-msgid "%s TB"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/template/defaultfilters.py:904
-#, python-format
-msgid "%s PB"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:66
-msgid "p.m."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:67
-msgid "a.m."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:72
-msgid "PM"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:73
-msgid "AM"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:158
-msgid "midnight"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dateformat.py:160
-msgid "noon"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:6
-msgid "Monday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:6
-msgid "Tuesday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:6
-msgid "Wednesday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:6
-msgid "Thursday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:6
-msgid "Friday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:7
-msgid "Saturday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:7
-msgid "Sunday"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:10
-msgid "Mon"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:10
-msgid "Tue"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:10
-msgid "Wed"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:10
-msgid "Thu"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:10
-msgid "Fri"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:11
-msgid "Sat"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:11
-msgid "Sun"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "January"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "February"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "March"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "April"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "May"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:18
-msgid "June"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:19
-msgid "July"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:19
-msgid "August"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:19
-msgid "September"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:19
-msgid "October"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:19
-msgid "November"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:20
-msgid "December"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "jan"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "feb"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "mar"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "apr"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "may"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:23
-msgid "jun"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "jul"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "aug"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "sep"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "oct"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "nov"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:24
-msgid "dec"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:31
-msgctxt "abbrev. month"
-msgid "Jan."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:32
-msgctxt "abbrev. month"
-msgid "Feb."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:33
-msgctxt "abbrev. month"
-msgid "March"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:34
-msgctxt "abbrev. month"
-msgid "April"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:35
-msgctxt "abbrev. month"
-msgid "May"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:36
-msgctxt "abbrev. month"
-msgid "June"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:37
-msgctxt "abbrev. month"
-msgid "July"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:38
-msgctxt "abbrev. month"
-msgid "Aug."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:39
-msgctxt "abbrev. month"
-msgid "Sept."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:40
-msgctxt "abbrev. month"
-msgid "Oct."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:41
-msgctxt "abbrev. month"
-msgid "Nov."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:42
-msgctxt "abbrev. month"
-msgid "Dec."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:45
-msgctxt "alt. month"
-msgid "January"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:46
-msgctxt "alt. month"
-msgid "February"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:47
-msgctxt "alt. month"
-msgid "March"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:48
-msgctxt "alt. month"
-msgid "April"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:49
-msgctxt "alt. month"
-msgid "May"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:50
-msgctxt "alt. month"
-msgid "June"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:51
-msgctxt "alt. month"
-msgid "July"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:52
-msgctxt "alt. month"
-msgid "August"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:53
-msgctxt "alt. month"
-msgid "September"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:54
-msgctxt "alt. month"
-msgid "October"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:55
-msgctxt "alt. month"
-msgid "November"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/dates.py:56
-msgctxt "alt. month"
-msgid "December"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/ipv6.py:12
-msgid "This is not a valid IPv6 address."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/text.py:78
-#, python-format
-msgctxt "String to return when truncating text"
-msgid "%(truncated_text)s..."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/text.py:248
-msgid "or"
-msgstr "o"
-
-#. Translators: This string is used as a separator between list elements
-#: venv/lib/python2.7/site-packages/django/utils/text.py:267
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:63
-msgid ", "
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:11
-#, python-format
-msgid "%d year"
-msgid_plural "%d years"
-msgstr[0] "%d año"
-msgstr[1] "%d años"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:12
-#, python-format
-msgid "%d month"
-msgid_plural "%d months"
-msgstr[0] "%d mes"
-msgstr[1] "%d meses"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:13
-#, python-format
-msgid "%d week"
-msgid_plural "%d weeks"
-msgstr[0] "%d semana"
-msgstr[1] "%d semanas"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:14
-#, python-format
-msgid "%d day"
-msgid_plural "%d days"
-msgstr[0] "%d día"
-msgstr[1] "%d días"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:15
-#, python-format
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d hora"
-msgstr[1] "%d horas"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:16
-#, python-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d minuto"
-msgstr[1] "%d minutos"
-
-#: venv/lib/python2.7/site-packages/django/utils/timesince.py:52
-msgid "0 minutes"
-msgstr "0 minutos"
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:109
-msgid "Forbidden"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:110
-msgid "CSRF verification failed. Request aborted."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:114
-msgid ""
-"You are seeing this message because this HTTPS site requires a 'Referer "
-"header' to be sent by your Web browser, but none was sent. This header is "
-"required for security reasons, to ensure that your browser is not being "
-"hijacked by third parties."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:119
-msgid ""
-"If you have configured your browser to disable 'Referer' headers, please re-"
-"enable them, at least for this site, or for HTTPS connections, or for 'same-"
-"origin' requests."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:124
-msgid ""
-"You are seeing this message because this site requires a CSRF cookie when "
-"submitting forms. This cookie is required for security reasons, to ensure "
-"that your browser is not being hijacked by third parties."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:129
-msgid ""
-"If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for 'same-origin' requests."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/csrf.py:134
-msgid "More information is available with DEBUG=True."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/debug.py:509
-msgid "Welcome to Django"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/debug.py:510
-msgid "It worked!"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/debug.py:511
-msgid "Congratulations on your first Django-powered page."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/debug.py:513
-msgid ""
-"Of course, you haven't actually done any work yet. Next, start your first "
-"app by running <code>python manage.py startapp [app_label]</code>."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/debug.py:517
-msgid ""
-"You're seeing this message because you have <code>DEBUG = True</code> in "
-"your Django settings file and you haven't configured any URLs. Get to work!"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:48
-msgid "No year specified"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:104
-msgid "No month specified"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:163
-msgid "No day specified"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:219
-msgid "No week specified"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:378
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:406
-#, python-format
-msgid "No %(verbose_name_plural)s available"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:660
-#, python-format
-msgid ""
-"Future %(verbose_name_plural)s not available because %(class_name)s."
-"allow_future is False."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/dates.py:694
-#, python-format
-msgid "Invalid date string '%(datestr)s' given format '%(format)s'"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/detail.py:55
-#, python-format
-msgid "No %(verbose_name)s found matching the query"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/list.py:76
-msgid "Page is not 'last', nor can it be converted to an int."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/list.py:81
-#, python-format
-msgid "Invalid page (%(page_number)s): %(message)s"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/generic/list.py:171
-#, python-format
-msgid "Empty list and '%(class_name)s.allow_empty' is False."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/static.py:58
-msgid "Directory indexes are not allowed here."
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/static.py:60
-#, python-format
-msgid "\"%(path)s\" does not exist"
-msgstr ""
-
-#: venv/lib/python2.7/site-packages/django/views/static.py:100
-#, python-format
-msgid "Index of %(directory)s"
-msgstr ""
+#: .\mog\views\submission.py:74
+msgid "You cannot submit because you are not registered in the contest."
+msgstr ""
+
+#~ msgid "Email address"
+#~ msgstr "Dirección de correo"
+
+#~ msgid "or"
+#~ msgstr "o"
+
+#~ msgid "%d year"
+#~ msgid_plural "%d years"
+#~ msgstr[0] "%d año"
+#~ msgstr[1] "%d años"
+
+#~ msgid "%d month"
+#~ msgid_plural "%d months"
+#~ msgstr[0] "%d mes"
+#~ msgstr[1] "%d meses"
+
+#~ msgid "%d week"
+#~ msgid_plural "%d weeks"
+#~ msgstr[0] "%d semana"
+#~ msgstr[1] "%d semanas"
+
+#~ msgid "%d day"
+#~ msgid_plural "%d days"
+#~ msgstr[0] "%d día"
+#~ msgstr[1] "%d días"
+
+#~ msgid "%d hour"
+#~ msgid_plural "%d hours"
+#~ msgstr[0] "%d hora"
+#~ msgstr[1] "%d horas"
+
+#~ msgid "%d minute"
+#~ msgid_plural "%d minutes"
+#~ msgstr[0] "%d minuto"
+#~ msgstr[1] "%d minutos"
+
+#~ msgid "0 minutes"
+#~ msgstr "0 minutos"
 
 #~ msgid "Delete Contest"
 #~ msgstr "Eliminar concurso"
