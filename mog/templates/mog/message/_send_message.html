@@ -5,13 +5,17 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendMessageModalLabel">
-                    Send message to <b>{{ target.username }}</b>
+                    Send message to <b id='target-name'> {% if target %} {{ target.username }} {% endif %}</b>
                 </h4>
             </div>
             <div class="modal-body">
-                <form action="{% url 'mog:send_message' target.id %}" method="post">
+                <form id='send-email-form' action=" {% if target %} {% url 'mog:send_message' target.id %} {% endif %}" method="post">
                     {% csrf_token %}
 
+                    {% if redirect_url %}
+                        <input hidden name="redirect_url" value="{{ redirect_url }}"/>
+                    {% endif %}
+                    
                     <div class="form-group">
                         <label for="subject">Subject</label>
                         <input id="subject" name="subject" class="form-control" />
