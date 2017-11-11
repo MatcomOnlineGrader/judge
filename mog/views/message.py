@@ -24,4 +24,9 @@ def send_message(request, user_id):
         body=body
     )
     msgs.success(request, 'Message sent successfully!', extra_tags='success')
+
+    redirect_url = request.POST.get('redirect_url', '').strip()
+
+    if len(redirect_url) != 0:
+        return redirect(redirect_url)
     return redirect('mog:user', user_id=target.id)
