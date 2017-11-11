@@ -12,14 +12,18 @@ Matcom Online Grader
     - Install `virtualenv`
 
 **requirements.txt**
-
 - beautifulsoup4==4.5.1
+- colorama==0.3.9
 - Django==1.10.1
 - django-debug-toolbar==1.6
 - django-registration==2.1.2
+- html5lib==0.999999999
 - Pillow==3.3.1
 - psycopg2==2.6.2
-- sqlparse==0.2.1
+- six==1.10.0
+- sqlparse==0.2.0
+- webencodings==0.5.1
+
 
 **Secret file:**
 
@@ -41,17 +45,22 @@ DATABASE_PORT: 5432
 SECRET_KEY: secret_key
 
 [email]
-EMAIL_USE_TLS: true
-EMAIL_HOST: smtp.gmail.com
-EMAIL_PORT: 587
+EMAIL_USE_TLS: true|false
+EMAIL_HOST: smpt_host
+EMAIL_PORT: smpt_port
 EMAIL_HOST_USER: email_host_user
 EMAIL_HOST_PASSWORD: email_host_password
 DEFAULT_FROM_EMAIL: default_from_email
 
 [others]
-PROBLEMS_FOLDER: problem_folder
 MEDIA_ROOT: media_root
 STATIC_ROOT: static_root
+
+[grader]
+SANDBOX_FOLDER: sandbox_folder
+PROBLEMS_FOLDER: problems_folder
+RESOURCES_FOLDER: resources_folder
+
 ```
 
 **Postgres:**
