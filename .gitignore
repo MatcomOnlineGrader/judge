@@ -11,3 +11,5 @@ api/fixtures/*.json
 *.save
 secrets.json
 settings.ini
+mog/static/admin/
+mog/static/debug_toolbar/
