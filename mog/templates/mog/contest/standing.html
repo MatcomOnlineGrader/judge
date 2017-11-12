@@ -6,6 +6,38 @@
 
 {% block title %}{{ contest.name }} | {% trans 'Standing' %}{% endblock %}
 
+{% block styles %}
+    <style>
+        table > thead > tr > th {
+            font-weight: 600;
+            font-size: 14px;
+            background-color: #F7F8F9;
+        }
+
+        table > thead > tr > th > a {
+            display: block;
+            padding: 10px;
+            text-decoration: none !important;
+        }
+
+        table > thead > tr > th > a:hover {
+            text-decoration: none !important;
+        }
+
+        table > thead > tr > th > a.black-text {
+            color: #000000 !important;
+        }
+
+        table > thead > tr > th:nth-child(1),
+        table > thead > tr > th:nth-child(2),
+        table > thead > tr > th:nth-child(3),
+        table > thead > tr > th:nth-child(4)
+        {
+            padding: 18px 8px !important;
+        }
+    </style>
+{% endblock %}
+
 {% block main %}
     <div class="row">
         <div class="col-md-12 text-center">
@@ -41,7 +73,16 @@
                         <th class="text-center cell-small">{% trans 'Penalty' %}</th>
                         {% for problem in problems %}
                             <th class="text-center cell-medium">
-                                <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.letter }}</a>
+                                <a data-toggle="tooltip" href="{% url 'mog:problem' problem.id problem.slug %}" title="{{ problem.title }}"
+                                   {% if problem.balloon and problem.balloon.0 == '#' %}
+                                       {% if problem.balloon == '#ffffff' %}
+                                           class="black-text"
+                                       {% endif %}
+                                       style="color: white; background: no-repeat center/25px url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 17.5 20.2&quot;><path fill=&quot; {{ problem.balloon|urlencode }} &quot; d=&quot;M17.5 8.3c0 6-8.7 11.8-8.7 11.8S0 14.3 0 8.3C0 3.7 3.9 0 8.7 0S17.5 3.7 17.5 8.3z&quot;/></svg>');"
+                                   {% endif %}
+                                >
+                                    {{ problem.letter }}
+                                </a>
                             </th>
                         {% endfor %}
                     </tr>
