@@ -30,8 +30,18 @@
 {% block styles %}
     <link href="{% static 'mog/plugins/editor.summernote/summernote.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/font-awesome/css/font-awesome.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/jquery.minicolors/jquery.minicolors.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript" src="{% static 'mog/plugins/editor.summernote/summernote.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/jquery.minicolors/jquery.minicolors.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_balloon').minicolors({
+                theme: 'bootstrap',
+                position: 'top left'
+            });
+        });
+    </script>
 {% endblock %}
