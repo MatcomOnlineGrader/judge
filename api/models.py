@@ -239,6 +239,10 @@ class Contest(models.Model):
 
 
 class Problem(models.Model):
+    LETTER_COLOR_CHOICES = [
+        ('#ffffff', 'white'),
+        ('#000000', 'black')
+    ]
     title = models.CharField(max_length=100)
     body = models.TextField(blank=True)
     input = models.TextField(blank=True)
@@ -251,6 +255,7 @@ class Problem(models.Model):
     position = models.IntegerField()
     points = models.IntegerField(default=0)
     balloon = models.CharField(verbose_name="Balloon color", max_length=50, null=True, blank=True)
+    letter_color = models.CharField(max_length=20, choices=LETTER_COLOR_CHOICES, default='#ffffff')
     contest = models.ForeignKey(Contest, related_name='problems')
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
