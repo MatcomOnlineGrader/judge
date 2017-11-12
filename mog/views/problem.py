@@ -143,6 +143,7 @@ class ProblemCreateView(View):
             checker=data['checker'],
             position=data['position'],
             balloon=data['balloon'],
+            letter_color=data['letter_color'],
             contest=data['contest'],
         )
         problem.save()
@@ -183,6 +184,7 @@ class ProblemEditView(View):
         problem.checker = data['checker']
         problem.position = data['position']
         problem.balloon = data['balloon']
+        problem.letter_color = data['letter_color']
         problem.contest = data['contest']
         problem.tags = data['tags']
         problem.compilers = data['compilers']
