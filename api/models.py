@@ -250,7 +250,7 @@ class Problem(models.Model):
     checker = models.ForeignKey(Checker, null=True)
     position = models.IntegerField()
     points = models.IntegerField(default=0)
-    balloon = models.CharField(verbose_name="Balloon color", max_length=50)
+    balloon = models.CharField(verbose_name="Balloon color", max_length=50, null=True, blank=True)
     contest = models.ForeignKey(Contest, related_name='problems')
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
