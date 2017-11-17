@@ -31,7 +31,7 @@ class CheckerAdmin(admin.ModelAdmin):
 
 
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ('flag_image_tag', 'name')
+    list_display = ('name', )
     ordering = ('name', )
     readonly_fields = ('flag_image_tag', )
 
