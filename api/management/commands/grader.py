@@ -196,9 +196,9 @@ def grade_submission(submission):
                 judgement_details += comment + '\n'
                 result = {
                     'SECURITY_VIOLATION': 'runtime error',
-                    'MEMORY_LIMIT_EXCEEDED': 'memory limit exceded',
-                    'TIME_LIMIT_EXCEEDED': 'time limit exceded',
-                    'IDLENESS_LIMIT_EXCEEDED': 'time limit exceded',
+                    'MEMORY_LIMIT_EXCEEDED': 'memory limit exceeded',
+                    'TIME_LIMIT_EXCEEDED': 'time limit exceeded',
+                    'IDLENESS_LIMIT_EXCEEDED': 'time limit exceeded',
                     'CRASH': 'internal error',
                     'FAIL': 'internal error'
                 }[invocation_verdict]
