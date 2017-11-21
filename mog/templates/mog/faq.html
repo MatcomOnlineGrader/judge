@@ -5,7 +5,6 @@
 {% block title %}FAQ{% endblock %}
 
 {% block content %}
-
     <div class="row">
         <div class="col-md-12">
             <h3 class="title">Frequently Asked Questions</h3>
@@ -17,14 +16,16 @@
                 The system supports the following programming languages:
             </p>
             <ol>
-                <li><strong><a href="#">C</a></strong> – C language.</li>
-                <li><strong><a href="#">C++</a></strong> – C++ language</li>
-                <li><strong><a href="#">C# 4.0</a></strong> – C# language</li>
-                <li><strong><a href="#">Java</a></strong> – Java language</li>
-                <li><strong><a href="#">Pascal</a></strong> – Pascal language</li>
-                <li><strong><a href="#">Python</a></strong> – Python language</li>
-                <li><strong><a href="#">Haskell</a></strong> – Haskell language</li>
-                <li><strong><a href="#">FSharp</a></strong> – FSharp language</li>
+                <li><strong>C</strong> – GNU GCC 5.1.0</li>
+                <li><strong>C++</strong> – GNU G++ 5.1.0</li>
+                <li><strong>C++11</strong> – GNU G++11 5.1.0</li>
+                <li><strong>C#</strong> – MS C# .NET 4.7.2053</li>
+                <li><strong>Java</strong> – Java 1.8.0_131</li>
+                <li><strong>Pascal</strong> – Free Pascal 2.6.4</li>
+                <li><strong>Python 2.7</strong> – Python 2.7.13</li>
+                <li><strong>Python 3.5</strong> – Python 3.5.3</li>
+                <li><strong>Haskell</strong> – Haskell GHC 8.0.2</li>
+                <li><strong>Tiger</strong> – <a href="http://matcomgrader.com/media/faq/tiger.pdf">tiger.pdf</a> (<small>101.8 kB</small>)</li>
             </ol>
             <h5><u>Special notes about Java</u></h5>
             There must be a class which must contain a name for the 'main' static methods (functions), this method is
@@ -39,28 +40,44 @@
                 Here is a list with the possible submission results you can get:
             </p>
             <ol>
-                <li><strong><a href="javascript:;">Pending</a></strong> – Your solution is waiting for judgment, this process is generally not very long.</li>
-                <li><strong><a href="javascript:;">Compiling</a></strong> – Your code is being compiled.</li>
-                <li><strong><a href="javascript:;">Running</a></strong> – Your program is running.</li>
-                <li><strong><a href="javascript:;">Accepted</a></strong> – Your program is correct, congratulations!</li>
-                <li><strong><a href="javascript:;">Wrong Answer</a></strong> – Your solution didn't output the correct solution.</li>
-                <li><strong><a href="javascript:;">Runtime Error</a></strong> – Your solution crashed during execution.</li>
-                <li><strong><a href="javascript:;">Time Limit Exceeded</a></strong> – The running time of your program is beyond the problem time limit.</li>
-                <li><strong><a href="javascript:;">Memory Limit Exceeded</a></strong> – The running memory of your program is beyond the problem memory limit.</li>
-                <li><strong><a href="javascript:;">Compile Error</a></strong> – Your code couldn't be compiled. You can see the errors at the submission's details.</li>
-                <li><strong><a href="javascript:;">Internal Error</a></strong> – There was an error on MOG system.</li>
+                <li><strong>Pending</strong> – Your solution is waiting for judgment, this process is generally not very long.</li>
+                <li><strong>Compiling</strong> – Your code is being compiled.</li>
+                <li><strong>Running</strong> – Your program is running.</li>
+                <li><strong>Accepted</strong> – Your program is correct, congratulations!</li>
+                <li><strong>Wrong Answer</strong> – Your solution didn't output the correct solution.</li>
+                <li><strong>Runtime Error</strong> – Your solution crashed during execution.</li>
+                <li><strong>Time Limit Exceeded</strong> – The running time of your program is beyond the problem time limit.</li>
+                <li><strong>Memory Limit Exceeded</strong> – The running memory of your program is beyond the problem memory limit.</li>
+                <li><strong>Compile Error</strong> – Your code couldn't be compiled. You can see the errors at the submission's details.</li>
+                <li><strong>Internal Error</strong> – There was an error on MOG system.</li>
             </ol>
 
             <h3>Which kind of errors will be penalized during a contest?</h3>
             <ol>
-                <li><strong><a href="javascript:;">Wrong Answer</a></strong></li>
-                <li><strong><a href="javascript:;">Runtime Error</a></strong></li>
-                <li><strong><a href="javascript:;">Time Limit Exceeded</a></strong></li>
-                <li><strong><a href="javascript:;">Memory Limit Exceeded</a></strong></li>
+                <li><strong>Wrong Answer</strong></li>
+                <li><strong>Runtime Error</strong></li>
+                <li><strong>Time Limit Exceeded</strong></li>
+                <li><strong>Memory Limit Exceeded</strong></li>
             </ol>
 
+            <h3>Problem Score</h3>
+            <p style="text-align: justify;">
+                Once a user solves a new problem his score will increase in
+                value equal to the problem score. A problem is considered
+                solved if the user accepted it in a real or virtual contest
+                too, thus no extra submissions are needed.
+            </p>
+
+            <p style="text-align: justify;">
+                The problem score formula is quite simple:
+                $\large{\lfloor \frac{108}{12 + S} \rfloor + 1}$, where $S$ is the
+                different number of users who solve the problem. The problem
+                score is an integer between $1$ and $10$ inclusive and of course, the
+                more users solve a problem, the lower the score will be.
+            </p>
+
             <h3>How to solve A+B problem ?</h3>
-            <p>Given two small integers A and B what is the result of A + B ?</p>
+            <p>Given two small integers $A$ and $B$ what is the result of $A + B$ ?</p>
 
             <small class="uniform-text">ASM</small>
             <textarea class="code" data-mode="gas" data-url="{% static 'mog/aplusb/aplusb.asm.txt' %}"></textarea>
@@ -121,5 +138,12 @@
                 });
             });
         });
+    </script>
+
+    <script type="text/javascript" async
+            src="{% static 'mog/plugins/MathJax/MathJax.js' %}">
+    </script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({messageStyle: "none"});
     </script>
 {% endblock %}
