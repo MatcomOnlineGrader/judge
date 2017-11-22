@@ -8,6 +8,28 @@ from HTMLParser import HTMLParser
 from django.utils.safestring import mark_safe
 
 
+def get_special_day(date):
+    """
+    Given a date returns a string describing
+    whether that day is special or not. Non
+    special days are considered regulars.
+    - Valentine Day (February, 14)
+    - Halloween (October, 31)
+    - Thanksgiving (Fourth Thursday of November)
+    - Christmas (19 to 31 of December)
+    """
+    day = 'regular'
+    if date.month == 2 and date.day == 14:
+        day = 'valentine'
+    if date.month == 10 and date.day == 31:
+        day = 'halloween'
+    if date.month == 11 and 22 <= date.day <= 28 and date.weekday() == 3:
+        day = 'thanksgiving'
+    if date.month == 12 and 19 <= date.day <= 31:
+        day = 'christmas'
+    return day
+
+
 def unescape(value):
     return mark_safe(HTMLParser().unescape(value))
 
