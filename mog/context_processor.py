@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib import messages
 
 from api.models import *
+from mog.utils import get_special_day
 
 
 def common(request):
@@ -23,19 +24,9 @@ def common(request):
     return context
 
 
-def special_days(request):
-    now = datetime.now()
-    day = 'regular'
-    if now.month == 2 and now.day == 14:
-        day = 'valentine'
-    if now.month == 10 and now.day == 31:
-        day = 'halloween'
-    if now.month == 11 and 22 <= now.day <= 28 and now.weekday() == 3:
-        day = 'thanksgiving'
-    if now.month == 12 and 19 <= now.day <= 31:
-        day = 'christmas'
+def special_day(request):
     return {
-        'special_day': day
+        'special_day': get_special_day(datetime.now())
     }
 
 
