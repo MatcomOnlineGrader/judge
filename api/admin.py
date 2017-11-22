@@ -36,16 +36,24 @@ class CountryAdmin(admin.ModelAdmin):
     readonly_fields = ('flag_image_tag', )
 
 
+class InstitutionAdmin(admin.ModelAdmin):
+    ordering = ('name',)
+
+
+class TagAdmin(admin.ModelAdmin):
+    ordering = ('name',)
+
+
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Team)
-admin.site.register(Tag)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Contest)
 admin.site.register(Problem)
 admin.site.register(Post)
 admin.site.register(Message)
 admin.site.register(Division)
-admin.site.register(Institution)
+admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(RatingChange)
 admin.site.register(Compiler)
 admin.site.register(UserProfile, UserProfileAdmin)
