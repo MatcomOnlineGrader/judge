@@ -197,3 +197,11 @@ if config.getboolean('debugging', 'DEBUG_TOOLBAR'):
         'debug_toolbar.middleware.DebugToolbarMiddleware'
     ]
     INTERNAL_IPS = ['127.0.0.1']
+
+# Cache settings
+CACHES = {
+    'default': {
+        'BACKEND': config.get('cache', 'BACKEND'),
+        'LOCATION': config.get('cache', 'LOCATION')
+    }
+}
