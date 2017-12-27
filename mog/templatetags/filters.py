@@ -1,4 +1,4 @@
-from django.utils import timezone
+from django.core.cache import cache
 from django.utils.safestring import mark_safe
 from django import template
 from api.models import Division, Result
@@ -6,21 +6,14 @@ from django import forms
 
 register = template.Library()
 
-# Cache
-divisions = None      # Divisions ( cached forever )
-results = None        # Submission results ( cached forever )
-ratings = {}          # User ratings ( cached by one minute )
-
 
 def get_color(rating):
     """Given a rating value returns the color of the corresponding division"""
-    global divisions
-    value = rating
-    if type(value) is None:
-        value = 0
-    value = max(value, 0)
-    if not divisions:
+    value = max(rating or 0, 0)
+    divisions = cache.get('divisions')
+    if divisions is None:
         divisions = Division.objects.order_by('-rating').all()
+        cache.set('divisions', divisions)
     for division in divisions:
         if value >= division.rating:
             return division.color
@@ -37,13 +30,11 @@ def put_into_array(obj):
 
 @register.filter()
 def rating(user):
-    global ratings
-    if user.id not in ratings or (timezone.now() - ratings[user.id]['updated']).seconds > 60:
-        ratings[user.id] = {
-            'updated': timezone.now(),
-            'rating': user.profile.rating if hasattr(user, 'profile') else 0
-        }
-    return ratings[user.id]['rating']
+    result = cache.get(user.id)
+    if result is None:
+        result = user.profile.rating if hasattr(user, 'profile') else 0
+        cache.set(user.id, result, 5 * 60)  # 5 minutes
+    return result
 
 
 @register.filter()
@@ -217,12 +208,13 @@ def format_penalty(penalty):
 
 @register.filter()
 def result_by_name(name):
-    global results
-    if not results:
+    results = cache.get('results')
+    if results is None:
         results = {}
         for result in Result.objects.all():
             results[result.name.lower()] = result.id
-    return results[name.lower()]
+        cache.set('results', results)
+    return results
 
 
 @register.filter()
