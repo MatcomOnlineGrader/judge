@@ -1,3 +1,5 @@
+import json
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
@@ -90,5 +92,10 @@ class ProblemForm(forms.ModelForm):
                   'contest', 'tags', 'compilers']
 
 
-class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
+class DisposableEmailForm(RegistrationFormNoFreeEmail):
+    """https://github.com/ivolo/disposable-email-domains/blob/master/index.json"""
+    bad_domains = json.load(open('disposable.json', 'r'))
+
+
+class MOGRegistrationForm(DisposableEmailForm, RegistrationFormUniqueEmail):
     pass
