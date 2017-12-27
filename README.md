@@ -31,36 +31,39 @@ Create a file named __settings.ini__ at the root of the project with the followi
 
 ```
 [debugging]
-DEBUG: true|false
-DEBUG_TOOLBAR: true|false
+DEBUG: <bool> [true|false]
+DEBUG_TOOLBAR: <bool> [true|false]
 
 [database]
-DATABASE_NAME: database_name
-DATABASE_USER: database_user
-DATABASE_PASS: database_pass
-DATABASE_HOST: localhost | xxx.xxx.xxx.xxx | mydomain.com
-DATABASE_PORT: 5432
+DATABASE_NAME: <str> [database name]
+DATABASE_USER: <str> [database user]
+DATABASE_PASS: <str> [database password]
+DATABASE_HOST: <str> [localhost | xxx.xxx.xxx.xxx | mydomain.com]
+DATABASE_PORT: <int> [5432 for PostgreSQL, 3306 for MySQL, etc]
 
 [secrets]
-SECRET_KEY: secret_key
+SECRET_KEY: <str> [random string]
 
 [email]
-EMAIL_USE_TLS: true|false
-EMAIL_HOST: smpt_host
-EMAIL_PORT: smpt_port
-EMAIL_HOST_USER: email_host_user
-EMAIL_HOST_PASSWORD: email_host_password
-DEFAULT_FROM_EMAIL: default_from_email
+EMAIL_USE_TLS: <bool> [true|false]
+EMAIL_HOST: <str> [SMTP host]
+EMAIL_PORT: <int> [SMTP port]
+EMAIL_HOST_USER: <str> [email host user]
+EMAIL_HOST_PASSWORD: <str> [email host password]
+DEFAULT_FROM_EMAIL: <str> [default from email]
 
 [others]
-MEDIA_ROOT: media_root
-STATIC_ROOT: static_root
+MEDIA_ROOT: <str> [path to media folder]
+STATIC_ROOT: <str> [path to static folder]
 
 [grader]
-SANDBOX_FOLDER: sandbox_folder
-PROBLEMS_FOLDER: problems_folder
-RESOURCES_FOLDER: resources_folder
+RESOURCES_FOLDER: <str> [path to resources folder]
+SANDBOX_FOLDER: <str> [path to sandbox folder]
+PROBLEMS_FOLDER: <str> [path to problems folder]
 
+[cache]
+BACKEND: <str> [redis, memcached, in-memory, etc]
+LOCATION: <str> [depends on the backend]
 ```
 
 **Postgres:**
