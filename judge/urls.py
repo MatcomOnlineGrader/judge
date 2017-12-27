@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from registration.backends.hmac.views import RegistrationView
-from registration.forms import RegistrationFormUniqueEmail
+
+from mog.forms import MOGRegistrationForm
 
 urlpatterns = [
     url(r'^register/$',
-        RegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='registration_register'),
+        RegistrationView.as_view(form_class=MOGRegistrationForm), name='registration_register'),
     url(r'^', include('registration.backends.hmac.urls')),
     url(r'^', include('mog.urls')),
     url(r'^admin/', admin.site.urls),

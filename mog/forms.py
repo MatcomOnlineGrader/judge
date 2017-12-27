@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
 from api.models import UserProfile, User, Post, Contest, Problem
 from mog.utils import secure_html
@@ -87,3 +88,7 @@ class ProblemForm(forms.ModelForm):
         fields = ['title', 'body', 'input', 'output', 'hints', 'time_limit',
                   'memory_limit', 'checker', 'position', 'balloon', 'letter_color',
                   'contest', 'tags', 'compilers']
+
+
+class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
+    pass
