@@ -31,7 +31,11 @@ settings=${settings}"MEDIA_ROOT: -\n"
 settings=${settings}"[grader]\n"
 settings=${settings}"RESOURCES_FOLDER: -\n"
 settings=${settings}"SANDBOX_FOLDER: -\n"
-settings=${settings}"PROBLEMS_FOLDER: -"
+settings=${settings}"PROBLEMS_FOLDER: -\n"
+
+settings=${settings}"[cache]\n"
+settings=${settings}"BACKEND: django.core.cache.backends.locmem.LocMemCache\n"
+settings=${settings}"LOCATION: mog-cache"
 
 if [ ! -f "settings.ini" ]
 then
