@@ -31,17 +31,17 @@ def can_see_judgment_details_of(user, submission):
 
 @register.filter()
 def can_send_message_to(user1, user2):
-    return user1.is_authenticated() and user1 != user2
+    return user1.is_authenticated and user1 != user2
 
 
 @register.filter()
 def can_see_profile_of(user1, user2):
-    return user1.is_authenticated() and (user_is_admin(user1) or user1 == user2)
+    return user1.is_authenticated and (user_is_admin(user1) or user1 == user2)
 
 
 @register.filter()
 def can_edit_post(user, post):
-    return user.is_authenticated() and (user_is_admin(user) or user == post.user)
+    return user.is_authenticated and (user_is_admin(user) or user == post.user)
 
 
 @register.filter()
@@ -86,12 +86,12 @@ def registered_for_virtual(user, contest):
 
 @register.filter()
 def can_edit_profile(user, user2):
-    return user.is_authenticated() and (user.profile.is_admin or user == user2)
+    return user.is_authenticated and (user.profile.is_admin or user == user2)
 
 
 @register.filter()
 def can_see_tags(user):
-    if not user.is_authenticated() or not hasattr(user, 'profile'):
+    if not user.is_authenticated or not hasattr(user, 'profile'):
         return True
     return user.profile.show_tags
 
