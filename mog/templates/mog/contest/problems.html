@@ -79,7 +79,6 @@
                             <th class="cell-problem-letter"></th>
                             <th>{% trans 'Problem' %}</th>
                             <th class="cell-small">{% trans 'Solved' %}</th>
-                            <th class="cell-small">{% trans 'PDF' %}</th>
                             <th class="cell-small">{% trans 'Submit' %}</th>
                         </tr>
                         </thead>
@@ -96,11 +95,6 @@
                                 {# TODO: Check wheter the property below has a link in MOG! #}
                                 <td class="text-center">
                                     {{ problem.solved_in_real }}
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ MEDIA_URL }}problem/pdf/{{ problem.id }}.pdf">
-                                        <i class="glyphicon glyphicon-file"></i>
-                                    </a>
                                 </td>
                                 <td class="text-center">
                                     <a href="{% url 'mog:submit' problem.id %}"><i
