@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -58,7 +58,7 @@ def contest_standing(request, contest_id):
     if not contest.can_be_seen_by(request.user):
         raise Http404()
     user_instance = None
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         user_instance = contest.virtual_registration(request.user)
     show_virtual = request.GET.get('show_virtual') == 'on'
     problems, instance_results = calculate_standing(contest, show_virtual, user_instance)
