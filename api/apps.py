@@ -7,4 +7,4 @@ class ApiConfig(AppConfig):
     name = 'api'
 
     def ready(self):
-        from signals.main import create_profile_for_user
+        from .signals.main import create_profile_for_user
