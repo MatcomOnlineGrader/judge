@@ -64,9 +64,6 @@
                                 {% trans 'My submissions' %}
                             </a>
                         </li>
-                        <li role="presentation">
-                            <a href="{{ MEDIA_URL }}problem/pdf/{{ problem.id }}/{{ problem.id }}.pdf">PDF</a>
-                        </li>
                     {% endif %}
                     <li role="presentation"><a href="{% url 'mog:submit' problem.id %}">{% trans 'Submit' %}</a></li>
                 </ul>
