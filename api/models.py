@@ -1,21 +1,18 @@
-from __future__ import unicode_literals
-
 import os
 import re
 import cgi
 import uuid
 
 from django.core.mail import send_mail
-from django.db.models import F, Max
+from django.db.models import F
 from django.db.models import Sum, Value
 from django.db.models.functions import Coalesce
 
 from django.template.loader import render_to_string
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
@@ -46,7 +43,7 @@ class Country(models.Model):
     name = models.CharField(verbose_name='Country Name', max_length=64)
     flag = models.CharField(verbose_name='Country Flag URL', max_length=128)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def flag_image_tag(self):
@@ -57,10 +54,14 @@ class Country(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
-    institution = models.ForeignKey('Institution', null=True, blank=True)
+    institution = models.ForeignKey(
+        'Institution',
+        null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
     description = models.CharField(max_length=250, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '{0} ({1})'.format(
             self.name,
             ', '.join([profile.user.username for profile in self.profiles.all()])
@@ -74,7 +75,7 @@ class Tag(models.Model):
     def get_visible_problems(self, admin=False):
         return self.problems if admin else self.problems.filter(contest__visible=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -89,7 +90,7 @@ class Checker(models.Model):
     source = models.TextField()
     backend = models.CharField(max_length=32, choices=BACKEND_CHOICES, default='testlib.h')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -106,7 +107,7 @@ class Contest(models.Model):
     allow_teams = models.BooleanField(verbose_name="Allow teams", default=False)
     rated = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def can_be_seen_by(self, user):
@@ -128,7 +129,7 @@ class Contest(models.Model):
 
     @property
     def percent(self):
-        return (timezone.now() - self.start_date).total_seconds() * 100 / self.duration.total_seconds()
+        return (timezone.now() - self.start_date).total_seconds() * 100 // self.duration.total_seconds()
 
     @property
     def duration(self):
@@ -148,13 +149,13 @@ class Contest(models.Model):
 
     def real_registration(self, user):
         """Return the real instance related with this contest and a given user"""
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return None
         return self.instances.filter(Q(real=True) & (Q(user=user) | Q(team__in=user.profile.teams.all()))).first()
 
     def virtual_registration(self, user):
         """Return the virtual instance related with this contest and a given user"""
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return None
         return self.instances.filter(Q(real=False) & (Q(user=user) | Q(team__in=user.profile.teams.all()))).first()
 
@@ -178,7 +179,7 @@ class Contest(models.Model):
         4) User is not admin neither code browser.
         5) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated() or self.is_past or self.closed:
+        if not user.is_authenticated or self.is_past or self.closed:
             return False
         if user_is_admin(user) or user_is_browser(user):
             return False
@@ -203,7 +204,7 @@ class Contest(models.Model):
         3) User is not admin neither code browser.
         4) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated() or not self.is_past:
+        if not user.is_authenticated or not self.is_past:
             return False
         if user_is_admin(user) or user_is_browser(user):
             return False
@@ -251,12 +252,12 @@ class Problem(models.Model):
     time_limit = models.PositiveIntegerField(verbose_name='Time limit (s)')
     memory_limit = models.PositiveIntegerField(verbose_name='Memory limit (MB)')
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
-    checker = models.ForeignKey(Checker, null=True)
+    checker = models.ForeignKey(Checker, null=True, on_delete=models.SET_NULL)
     position = models.IntegerField()
     points = models.IntegerField(default=0)
     balloon = models.CharField(verbose_name="Balloon color", max_length=50, null=True, blank=True)
     letter_color = models.CharField(max_length=20, choices=LETTER_COLOR_CHOICES, default='#ffffff')
-    contest = models.ForeignKey(Contest, related_name='problems')
+    contest = models.ForeignKey(Contest, related_name='problems', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
 
@@ -323,12 +324,12 @@ class Problem(models.Model):
     @property
     def compilers_by_relevance(self):
         def relevance(compiler):
-            name = compiler.language.lower()
-            if name == 'csharp': return 0
-            if name == 'cpp': return 1
-            if name == 'python': return 2
-            if name == 'java': return 3
-            return 4
+            return {
+                'csharp': 0,
+                'cpp': 1,
+                'python': 2,
+                'java': 3
+            }.get(compiler.language.lower(), 4)
         return sorted(self.compilers.all(), key=relevance)
 
     @property
@@ -339,7 +340,7 @@ class Problem(models.Model):
     def compilers2str(self):
         return '<br>'.join([compiler.name for compiler in self.compilers_by_relevance])
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -348,7 +349,7 @@ class Post(models.Model):
     body = models.TextField(blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     modification_date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     show_in_main_page = models.BooleanField(default=False)
     slug = models.SlugField(max_length=250, null=True)
 
@@ -371,13 +372,13 @@ class Post(models.Model):
     def sorted_comments(self):
         return self.comments.order_by('-date').all()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Message(models.Model):
-    source = models.ForeignKey(User, related_name='messages_sent')
-    target = models.ForeignKey(User, related_name='messages_received')
+    source = models.ForeignKey(User, related_name='messages_sent', on_delete=models.CASCADE)
+    target = models.ForeignKey(User, related_name='messages_received', on_delete=models.CASCADE)
     subject = models.CharField(max_length=250)
     body = models.TextField()
     date = models.DateTimeField(auto_now=True)
@@ -389,24 +390,24 @@ class Division(models.Model):
     color = models.CharField(max_length=50)
     rating = models.PositiveIntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
 class Institution(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField(null=True, blank=True)
-    country = models.ForeignKey(Country, null=True)
+    country = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.country:
             return '%s (%s)' % (self.name, self.country.name)
         return self.name
 
 
 class RatingChange(models.Model):
-    profile = models.ForeignKey('UserProfile', related_name='ratings')
-    contest = models.ForeignKey(Contest, related_name='rating_changes')
+    profile = models.ForeignKey('UserProfile', related_name='ratings', on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, related_name='rating_changes', on_delete=models.CASCADE)
     rating = models.IntegerField()
     rank = models.IntegerField()
     nick = models.CharField(max_length=20)
@@ -420,7 +421,7 @@ class Compiler(models.Model):
     file_extension = models.CharField(max_length=10, default='')
     exec_extension = models.CharField(max_length=10, default='')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @staticmethod
@@ -451,15 +452,15 @@ THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='profile', primary_key=True)
+    user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, null=True, blank=True, choices=ROLE_CHOICES)
     theme = models.CharField(max_length=25, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
     avatar = models.ImageField(upload_to=UUIDImageName('user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
     show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
-    institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'))
+    institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'), on_delete=models.SET_NULL)
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
     rating_changes = models.ManyToManyField(Contest, through='RatingChange')
-    compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'))
+    compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'), on_delete=models.SET_NULL)
     points = models.PositiveIntegerField(verbose_name=_('Points'), null=False, default=0)
 
     def __init__(self, *args, **kwargs):
@@ -528,7 +529,7 @@ class UserProfile(models.Model):
         return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(0))). \
             order_by('-rating_value', '-points').select_related('user')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.username
 
 
@@ -542,20 +543,20 @@ class Result(models.Model):
     def get_all_results():
         return Result.objects.all()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Submission(models.Model):
-    problem = models.ForeignKey(Problem, related_name='submissions')
-    instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions')
+    problem = models.ForeignKey(Problem, related_name='submissions', on_delete=models.CASCADE)
+    instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions', on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
     execution_time = models.IntegerField(default=0)
     memory_used = models.IntegerField(default=0)
     source = models.TextField()
-    user = models.ForeignKey(User, related_name='submissions')
-    result = models.ForeignKey(Result)
-    compiler = models.ForeignKey(Compiler)
+    user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
+    result = models.ForeignKey(Result, on_delete=models.CASCADE)
+    compiler = models.ForeignKey(Compiler, on_delete=models.CASCADE)
     public = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     judgement_details = models.TextField(null=True)
@@ -593,7 +594,7 @@ class Submission(models.Model):
         return not self.hidden and (self.instance is None or self.instance.contest.visible)
 
     def can_show_source_to(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if self.user == user:
             return True
@@ -609,13 +610,13 @@ class Submission(models.Model):
         return Submission.objects \
             .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.id)
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, related_name='comments')
-    post = models.ForeignKey(Post, related_name='comments')
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     html = models.TextField(default='')
@@ -671,13 +672,13 @@ class Comment(models.Model):
 
 
 class ContestInstance(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, related_name='instances')
-    team = models.ForeignKey(Team, null=True, blank=True, related_name='instances')
-    contest = models.ForeignKey(Contest, related_name='instances')
+    user = models.ForeignKey(User, null=True, blank=True, related_name='instances', on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, null=True, blank=True, related_name='instances', on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, related_name='instances', on_delete=models.CASCADE)
     start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
 
-    def __unicode__(self):
+    def __str__(self):
         if self.team:
             return 'Team: ' + self.team.name
         return self.user.username
@@ -704,7 +705,7 @@ class ContestInstance(models.Model):
     def percent(self):
         if self.real:
             return self.contest.percent
-        return (timezone.now() - self.start_date).total_seconds() * 100 / self.contest.duration.total_seconds()
+        return (timezone.now() - self.start_date).total_seconds() * 100 // self.contest.duration.total_seconds()
 
     @property
     def is_coming(self):
