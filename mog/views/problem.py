@@ -147,8 +147,8 @@ class ProblemCreateView(View):
             contest=data['contest'],
         )
         problem.save()
-        problem.tags = data['tags']
-        problem.compilers = data['compilers']
+        problem.tags.set(data['tags'])
+        problem.compilers.set(data['compilers'])
         fix_problem_folder(problem)
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
@@ -186,8 +186,8 @@ class ProblemEditView(View):
         problem.balloon = data['balloon']
         problem.letter_color = data['letter_color']
         problem.contest = data['contest']
-        problem.tags = data['tags']
-        problem.compilers = data['compilers']
+        problem.tags.set(data['tags'])
+        problem.compilers.set(data['compilers'])
         problem.save()
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
