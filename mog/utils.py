@@ -1,10 +1,8 @@
+import html
 import os
 
 from bs4 import BeautifulSoup
-
 from django.conf import settings
-
-from HTMLParser import HTMLParser
 from django.utils.safestring import mark_safe
 
 
@@ -31,7 +29,7 @@ def get_special_day(date):
 
 
 def unescape(value):
-    return mark_safe(HTMLParser().unescape(value))
+    return mark_safe(html.unescape(value))
 
 
 def secure_html(html):
@@ -59,12 +57,12 @@ def secure_html(html):
 
 def user_is_browser(user):
     """return True iff logged user is administrator"""
-    return user.is_authenticated() and hasattr(user, 'profile') and user.profile.is_browser
+    return user.is_authenticated and hasattr(user, 'profile') and user.profile.is_browser
 
 
 def user_is_admin(user):
     """return True iff logged user is administrator"""
-    return user.is_authenticated() and hasattr(user, 'profile') and user.profile.is_admin
+    return user.is_authenticated and hasattr(user, 'profile') and user.profile.is_admin
 
 
 def user_rating(user):
