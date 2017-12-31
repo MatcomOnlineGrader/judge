@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 
 from api.models import Submission, Result
-from __utils import get_exitcode_stdout_stderr
+from .__utils import get_exitcode_stdout_stderr
 
 
 RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, 'runexe.exe')
@@ -21,8 +21,7 @@ def update_submission(submission, execution_time, memory_used, result_name, judg
     submission.execution_time = execution_time
     submission.memory_used = memory_used
     submission.result = Result.objects.get(name__iexact=result_name)
-    submission.judgement_details = judgement_details.decode('latin1') if (os.name == 'nt') else \
-        judgement_details.decode('utf8')
+    submission.judgement_details = judgement_details
     submission.save()
 
 
@@ -68,7 +67,7 @@ def check_problem_folder(problem):
 
 
 def compile_checker(checker, cwd):
-    from __checker_backends import compile_checker
+    from .__checker_backends import compile_checker
     return compile_checker(checker, cwd)
 
 
