@@ -2,7 +2,7 @@ import os
 import shutil
 from django.conf import settings
 
-from __utils import get_exitcode_stdout_stderr
+from .__utils import get_exitcode_stdout_stderr
 
 
 def compile_checker_testlib_h(checker, cwd):
