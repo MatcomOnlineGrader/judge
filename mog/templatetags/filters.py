@@ -226,7 +226,7 @@ def first_problem(contest):
 def get_instance(user, contest):
     try:
         return user.instances.get(contest=contest)
-    except Exception, e:
+    except:
         return None
 
 
