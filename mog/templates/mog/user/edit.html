@@ -1,5 +1,6 @@
 {% extends 'mog/user/profile.html' %}
 
+{% load i18n %}
 {% load filters %}
 
 {% block _edition %}active{% endblock %}
@@ -10,9 +11,15 @@
             <form action="{% url 'mog:user_edit' user_in_profile.pk %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="for-group margin-bottom-10">
-                    <label for="username">Username</label>
+                    <label for="username">{% trans "Username" %}</label>
                     <input type="text" id="username" name="username" class="form-control" disabled=""
                            value="{{ user_in_profile.username }}">
+                </div>
+
+                <div class="for-group margin-bottom-10">
+                    <label for="username">{% trans "Email" %}</label>
+                    <input type="text" id="email" name="email" class="form-control" disabled=""
+                           value="{{ user_in_profile.email }}">
                 </div>
 
                 {% include 'mog/includes/form.html' with form=user_form %}

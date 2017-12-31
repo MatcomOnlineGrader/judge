@@ -27,12 +27,12 @@ class UserProfileForm(forms.ModelForm):
 
 
 class UserForm(forms.ModelForm):
-    password_1 = forms.CharField(label='Password', widget=forms.PasswordInput, required=False)
-    password_2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, required=False)
+    password_1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput, required=False)
+    password_2 = forms.CharField(label=_('Password confirmation'), widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name']
 
     def clean_password_2(self):
         password_1 = self.cleaned_data.get("password_1")
@@ -42,7 +42,6 @@ class UserForm(forms.ModelForm):
         return password_2
 
     def save(self, commit=True):
-        self.instance.email = self.cleaned_data['email']
         self.instance.first_name = self.cleaned_data['first_name']
         self.instance.last_name = self.cleaned_data['last_name']
         if self.cleaned_data["password_2"]:
