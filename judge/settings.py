@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
 from django.utils.translation import ugettext_lazy as _
 
