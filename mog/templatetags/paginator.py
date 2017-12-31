@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 
 from django import template
 from django.utils.html import mark_safe
@@ -7,15 +7,15 @@ register = template.Library()
 
 
 def encode_parameters(page_number, query):
-    query = dict((k, v.encode('utf8')) for k, v in query.iteritems())
-    return '?' + urllib.urlencode(dict(query, page=page_number))
+    query = dict((k, v.encode('utf8')) for k, v in query.items())
+    return '?' + urllib.parse.urlencode(dict(query, page=page_number))
 
 
 @register.filter(needs_autoscape=True)
 def paginate(page, query=None):
     paginator = page.paginator
     footer = min(10, paginator.num_pages)
-    first = footer * ((page.number - 1) / footer) + 1
+    first = footer * ((page.number - 1) // footer) + 1
     last = min(paginator.num_pages, first + footer - 1)
     query = query or {}
 
