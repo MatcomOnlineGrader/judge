@@ -57,7 +57,7 @@ def colorize_rating(rating):
 
 @register.filter()
 def percent(num, den):
-    return 0 if den == 0 else num * 100 / den
+    return 0 if den == 0 else num * 100 // den
 
 
 @register.filter()
