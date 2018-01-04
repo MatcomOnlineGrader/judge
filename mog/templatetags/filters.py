@@ -214,7 +214,7 @@ def result_by_name(name):
         for result in Result.objects.all():
             results[result.name.lower()] = result.id
         cache.set('results', results)
-    return results
+    return results.get(name)
 
 
 @register.filter()
