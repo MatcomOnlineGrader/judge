@@ -7,23 +7,25 @@ Matcom Online Grader
 
 **Softwares**
 - Postgres-9.5.*
-- Python-2.7.*
+- Python3
     - Install `pip`
     - Install `virtualenv`
 
 **requirements.txt**
-- beautifulsoup4==4.5.1
-- colorama==0.3.9
-- Django==1.10.1
-- django-debug-toolbar==1.6
-- django-registration==2.1.2
-- html5lib==0.999999999
-- Pillow==3.3.1
-- psycopg2==2.6.2
-- six==1.10.0
-- sqlparse==0.2.0
-- webencodings==0.5.1
 
+    beautifulsoup4==4.5.1
+    colorama==0.3.9
+    confusable-homoglyphs==2.0.2
+    Django==2.0
+    django-debug-toolbar==1.9.1
+    django-registration==2.3
+    html5lib==0.999999999
+    Pillow==5.0.0
+    psycopg2==2.6.2
+    pytz==2017.3
+    six==1.10.0
+    sqlparse==0.2.4
+    webencodings==0.5.1
 
 **Secret file:**
 
