@@ -171,9 +171,9 @@ def unseen_comments(user, post):
 
 
 def unpack_seconds(seconds):
-    d = seconds / 86400
-    h = (seconds % 86400) / 3600
-    m = ((seconds % 86400) % 3600) / 60
+    d = seconds // 86400
+    h = (seconds % 86400) // 3600
+    m = ((seconds % 86400) % 3600) // 60
     s = ((seconds % 86400) % 3600) % 60
     return d, h, m, s
 
