@@ -156,7 +156,7 @@ def register_instance(request, contest, user, team):
 
     messages.success(request, msg, extra_tags='success')
 
-    return redirect(nxt or reverse('mog:contests'))
+    return redirect(nxt or reverse('mog:contest_problems', args=(contest.pk, )))
 
 
 @login_required
