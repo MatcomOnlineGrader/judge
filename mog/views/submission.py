@@ -62,7 +62,7 @@ class Submit(View):
             messages.warning(request, msg, extra_tags='danger')
             return redirect('mog:submit', problem.id)
         if file is not None:
-            source = file.read()
+            source = file.read().decode('utf8')
         if not source:
             msg = _(u'Empty source code')
             messages.info(request, msg, extra_tags='info')
