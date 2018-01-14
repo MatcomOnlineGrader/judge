@@ -70,7 +70,7 @@ class Team(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=250, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def get_visible_problems(self, admin=False):
         return self.problems if admin else self.problems.filter(contest__visible=True)
