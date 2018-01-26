@@ -462,6 +462,9 @@ class UserProfile(models.Model):
     rating_changes = models.ManyToManyField(Contest, through='RatingChange')
     compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'), on_delete=models.SET_NULL)
     points = models.PositiveIntegerField(verbose_name=_('Points'), null=False, default=0)
+    email_notifications = models.BooleanField(
+        verbose_name=_('Send email notifications'), default=True
+    )
 
     def __init__(self, *args, **kwargs):
         super(UserProfile, self).__init__(*args, **kwargs)

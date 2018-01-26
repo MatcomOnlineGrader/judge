@@ -13,7 +13,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['avatar', 'theme', 'show_tags', 'institution', 'compiler']
+        fields = ['avatar', 'theme', 'institution', 'compiler', 'show_tags', 'email_notifications']
 
     def save(self, commit=True):
         if self.cleaned_data['avatar']:
