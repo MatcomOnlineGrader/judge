@@ -5,6 +5,7 @@ from . import views
 app_name = 'mog'
 urlpatterns = [
     url(r'^faq/$', views.faq, name='faq'),
+    url(r'^privacy/$', views.privacy, name='privacy'),
 
     url(r'^message/send/(?P<user_id>[0-9]+)$', views.send_message, name='send_message'),
 
