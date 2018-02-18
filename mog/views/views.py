@@ -22,3 +22,7 @@ def index(request):
 
 def faq(request):
     return render(request, 'mog/faq.html')
+
+
+def privacy(request):
+    return render(request, 'mog/privacy.html')
