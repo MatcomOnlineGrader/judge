@@ -1,43 +1,57 @@
 #!/bin/sh
 
-settings=""
+settings=$(cat <<-END
+[debugging]
+DEBUG: false
+DEBUG_TOOLBAR: false
 
-settings=${settings}"[debugging]\n"
-settings=${settings}"DEBUG: false\n"
-settings=${settings}"DEBUG_TOOLBAR: false\n"
+[database]
+DATABASE_NAME: default
+DATABASE_USER: postgres
+DATABASE_PASS: postgres
+DATABASE_HOST: postgres
+DATABASE_PORT: 5432
 
-settings=${settings}"[database]\n"
-settings=${settings}"DATABASE_NAME: default\n"
-settings=${settings}"DATABASE_USER: postgres\n"
-settings=${settings}"DATABASE_PASS: postgres\n"
-settings=${settings}"DATABASE_HOST: postgres\n"
-settings=${settings}"DATABASE_PORT: 5432\n"
+[secrets]
+SECRET_KEY: dhs7bvc2r*li%9jjf6^e25#y9du-rcj_5+=t9arf308p4)zpu!
 
-settings=${settings}"[secrets]\n"
-settings=${settings}"SECRET_KEY: dhs7bvc2r*li%9jjf6^e25#y9du-rcj_5+=t9arf308p4)zpu!\n"
+[email]
+EMAIL_USE_TLS: true
+EMAIL_HOST: -
+EMAIL_PORT: 587
+EMAIL_HOST_USER: -
+EMAIL_HOST_PASSWORD: -
+DEFAULT_FROM_EMAIL: -
 
-settings=${settings}"[email]\n"
-settings=${settings}"EMAIL_USE_TLS: true\n"
-settings=${settings}"EMAIL_HOST: -\n"
-settings=${settings}"EMAIL_PORT: 587\n"
-settings=${settings}"EMAIL_HOST_USER: -\n"
-settings=${settings}"EMAIL_HOST_PASSWORD: -\n"
-settings=${settings}"DEFAULT_FROM_EMAIL: -\n"
+[others]
+STATIC_ROOT: -
+MEDIA_ROOT: -
 
-settings=${settings}"[others]\n"
-settings=${settings}"STATIC_ROOT: -\n"
-settings=${settings}"MEDIA_ROOT: -\n"
+[grader]
+RESOURCES_FOLDER: -
+SANDBOX_FOLDER: -
+PROBLEMS_FOLDER: -
 
-settings=${settings}"[grader]\n"
-settings=${settings}"RESOURCES_FOLDER: -\n"
-settings=${settings}"SANDBOX_FOLDER: -\n"
-settings=${settings}"PROBLEMS_FOLDER: -\n"
+[cache]
+BACKEND: django.core.cache.backends.locmem.LocMemCache
+LOCATION: mog-cache
 
-settings=${settings}"[cache]\n"
-settings=${settings}"BACKEND: django.core.cache.backends.locmem.LocMemCache\n"
-settings=${settings}"LOCATION: mog-cache"
+[social]
+SOCIAL_AUTH_FACEBOOK_KEY:-
+SOCIAL_AUTH_FACEBOOK_SECRET:-
+SOCIAL_AUTH_FACEBOOK_SCOPE:-
+SOCIAL_AUTH_GITHUB_KEY:-
+SOCIAL_AUTH_GITHUB_SECRET:-
+SOCIAL_AUTH_GITHUB_SCOPE:-
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_LOCALE:-
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_FIELDS:-
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY:-
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET:-
+SOCIAL_AUTH_GOOGLE_SCOPE:-
+END
+)
 
 if [ ! -f "settings.ini" ]
 then
-    echo -e ${settings} > "settings.ini"
+    echo "${settings}" > "settings.ini"
 fi
