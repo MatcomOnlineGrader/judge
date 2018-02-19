@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-26 14:17-0500\n"
+"POT-Creation-Date: 2018-02-18 22:12-0500\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,39 +37,37 @@ msgstr "Compilador"
 msgid "Points"
 msgstr "Puntos"
 
-#: api/models.py:465
+#: api/models.py:466
 msgid "Send email notifications"
 msgstr "Enviar notificaciones por correo"
 
-#: judge/settings.py:151
+#: judge/settings.py:196
 msgid "Spanish"
 msgstr "Español"
 
-#: judge/settings.py:152
+#: judge/settings.py:197
 msgid "English"
 msgstr "Inglés"
 
-#: mog/forms.py:30 mog/templates/registration/login.html:32
+#: mog/forms.py:30 mog/templates/registration/login.html:34
 msgid "Password"
 msgstr "Contraseña"
 
 #: mog/forms.py:31
-#, fuzzy
-#| msgid "Password instructions"
 msgid "Password confirmation"
-msgstr "Instrucciones para cambio de contraseña"
+msgstr "Confirmación de contraseña"
 
 #: mog/forms.py:76
 msgid "Start date must be less than end date"
-msgstr ""
+msgstr "La fecha de inicio debe ser menor que la de finalización."
 
 #: mog/forms.py:81
 msgid "Frozen time must be greater or equal than death time"
-msgstr ""
+msgstr "Duración del tiempo congelado debe ser mayor o igual que el tiempo muerto."
 
 #: mog/forms.py:83
 msgid "Death time must be less or equal than contest duration"
-msgstr ""
+msgstr "La duración del tiempo muerto debe ser menor o igual que la duración de la competencia."
 
 #: mog/templates/mog/base.html:133
 msgid "Home"
@@ -129,6 +127,10 @@ msgstr "Mejores usuarios"
 #: mog/templates/mog/base.html:263
 msgid "Recent posts"
 msgstr "Publicaciones recientes"
+
+#: mog/templates/mog/base.html:294
+msgid "Privacy Policy"
+msgstr "Política de Privacidad"
 
 #: mog/templates/mog/comment/_edit_comment.html:11
 msgid "said"
@@ -196,9 +198,10 @@ msgstr "( Oculto )"
 #: mog/templates/mog/contest/registration.html:67
 #: mog/templates/mog/contest/registration.html:83
 #: mog/templates/mog/user/_login.html:27
-#: mog/templates/registration/login.html:45
+#: mog/templates/registration/login.html:47
 #: mog/templates/registration/registration_form.html:4
-#: mog/templates/registration/registration_form.html:12
+#: mog/templates/registration/registration_form.html:9
+#: mog/templates/registration/registration_form.html:23
 msgid "Register"
 msgstr "Registrar"
 
@@ -244,10 +247,8 @@ msgid "No"
 msgstr "No"
 
 #: mog/templates/mog/contest/_coming_contests.html:65
-#, fuzzy
-#| msgid "No running contests!"
 msgid "No coming contests!"
-msgstr "No hay concursos corriendo!"
+msgstr "No hay concursos futuros!"
 
 #: mog/templates/mog/contest/_left.html:29
 #: mog/templates/mog/contest/_left.html:48
@@ -362,16 +363,12 @@ msgid "Create contest"
 msgstr "Crear concurso"
 
 #: mog/templates/mog/contest/problems.html:22
-#, fuzzy
-#| msgid "Created"
 msgid "Rated"
-msgstr "Creado"
+msgstr "Calificado"
 
 #: mog/templates/mog/contest/problems.html:24
-#, fuzzy
-#| msgid "Created"
 msgid "Unrated"
-msgstr "Creado"
+msgstr "No calificado"
 
 #: mog/templates/mog/contest/problems.html:31
 #: mog/templates/mog/user/teams.html:18
@@ -396,14 +393,10 @@ msgid "Description"
 msgstr "Descripción"
 
 #: mog/templates/mog/contest/registration.html:54
-#, fuzzy
-#| msgid "Register"
 msgid "Register user"
 msgstr "Registrar usuario"
 
 #: mog/templates/mog/contest/registration.html:71
-#, fuzzy
-#| msgid "Register"
 msgid "Register team"
 msgstr "Registrar equipo"
 
@@ -434,7 +427,7 @@ msgstr "Mostrar participación virtual"
 
 #: mog/templates/mog/contest/submissions.html:34
 #: mog/templates/mog/submission/index.html:20
-#: mog/templates/mog/user/edit.html:14 mog/templates/registration/login.html:26
+#: mog/templates/mog/user/edit.html:14 mog/templates/registration/login.html:28
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -526,10 +519,8 @@ msgid "megabyte"
 msgstr ""
 
 #: mog/templates/mog/problem/detail.html:44
-#, fuzzy
-#| msgid "Lang"
 msgid "Languages"
-msgstr "Leng"
+msgstr "Lenguajes"
 
 #: mog/templates/mog/problem/detail.html:54
 msgid "All submissions"
@@ -669,8 +660,8 @@ msgid "Logout"
 msgstr "Salir"
 
 #: mog/templates/mog/user/_login.html:24
-#: mog/templates/registration/login.html:12
-#: mog/templates/registration/login.html:38
+#: mog/templates/registration/login.html:14
+#: mog/templates/registration/login.html:40
 msgid "Login"
 msgstr "Entrar"
 
@@ -750,40 +741,42 @@ msgstr "Crear equipo"
 
 #: mog/templates/registration/activate.html:3
 msgid "Activation failed"
-msgstr ""
+msgstr "Activación fallida"
 
 #: mog/templates/registration/activate.html:11
 msgid "Account activation failed"
-msgstr ""
+msgstr "La activación de la cuenta falló"
 
 #: mog/templates/registration/activation_complete.html:4
 msgid "Activation completed"
-msgstr ""
+msgstr "Activación completada"
 
 #: mog/templates/registration/activation_complete.html:10
 msgid "Your account is now activated"
-msgstr ""
+msgstr "Su cuenta está ahora activada."
 
 #: mog/templates/registration/activation_email.txt:2
 msgid "Activate account at"
-msgstr ""
+msgstr "Activación de la cuenta en"
 
 #: mog/templates/registration/activation_email.txt:6
 #, python-format
 msgid "Link is valid for %(expiration_days)s days."
-msgstr ""
+msgstr "Hipervínculo válido por %(expiration_days)s días."
 
 #: mog/templates/registration/activation_email_subject.txt:1
 msgid "Account activation on"
 msgstr ""
 
-#: mog/templates/registration/login.html:44
+#: mog/templates/registration/login.html:46
 msgid "Forgot Password ?"
 msgstr "Olvidó la contraseña ?"
 
+#: mog/templates/registration/login.html:54
+msgid "Or login with"
+msgstr "O entre con"
+
 #: mog/templates/registration/password_change_done.html:5
-#, fuzzy
-#| msgid "Password"
 msgid "Password changed"
 msgstr "Contraseña"
 
@@ -797,8 +790,6 @@ msgid "Log in"
 msgstr "Entrar"
 
 #: mog/templates/registration/password_reset_confirm.html:4
-#, fuzzy
-#| msgid "Request Reset Password"
 msgid "Reset password"
 msgstr "Reiniciar contraseña"
 
@@ -819,16 +810,15 @@ msgid "Email with password reset instructions has been sent."
 msgstr ""
 "Un correo con las instrucciones para reiniciar su contraseña ha sido enviado."
 
+#: mog/templates/registration/password_reset_email.html:2
 #: mog/templates/registration/password_reset_email.txt:2
 #, python-format
 msgid "Reset password at %(site_name)s"
 msgstr "Resetear contraseña en %(site_name)s"
 
 #: mog/templates/registration/password_reset_form.html:4
-#, fuzzy
-#| msgid "Password reset failed"
 msgid "Password Reset"
-msgstr "Reinicio de contraseña fallido"
+msgstr "Reiniciar contraseña"
 
 #: mog/templates/registration/password_reset_form.html:12
 msgid "Request Reset Password"
@@ -839,57 +829,54 @@ msgid "Registration is currently closed."
 msgstr "Registro está cerrado."
 
 #: mog/templates/registration/registration_complete.html:4
-#, fuzzy
-#| msgid "Registration"
 msgid "Registration complete"
-msgstr "Registro"
+msgstr "Registro completado"
 
 #: mog/templates/registration/registration_complete.html:10
 msgid "You are now registered. Activation email sent."
 msgstr "Ahora usted está registrado. Correo de activación enviado."
 
+#: mog/templates/registration/registration_form.html:32
+msgid "Or register with"
+msgstr "O regístrese con"
+
 #: mog/views/contest.py:120
-#, fuzzy, python-brace-format
-#| msgid "Registration is currently closed."
 msgid "Registration is closed for contest \"{0}\""
-msgstr "Registro está cerrado."
+msgstr "Registro está cerrado para la competencia \"{0}\""
 
 #: mog/views/contest.py:130
 msgid "No user to register"
-msgstr ""
+msgstr "Ningún usuario para registrar"
 
 #: mog/views/contest.py:135
 msgid "Invalid user/team combination"
-msgstr ""
+msgstr "Combinación inválida usuario/equipo"
 
 #: mog/views/contest.py:144
-#, fuzzy
-#| msgid "Registration"
 msgid "Registration cannot be accomplished"
-msgstr "Registro"
+msgstr "El registro no pudo ser completado"
 
 #: mog/views/contest.py:153
 msgid "Successfully registered for real participation"
-msgstr ""
+msgstr "Registrado correctamente para participación real"
 
 #: mog/views/contest.py:155
-#, fuzzy
-#| msgid "Remove virtual participation"
 msgid "Successfully registered for virtual participation"
-msgstr "Eliminar participación virtual"
+msgstr "Registrado correctamente para participación virtual."
 
 #: mog/views/contest.py:212
 msgid "Instance does not exist"
-msgstr ""
+msgstr "La instancia no existe"
 
 #: mog/views/contest.py:217
 msgid ""
 "Cannot remove registration because the user/team has actions on the contest."
 msgstr ""
+"No se puede eliminar el registro porque el usuario/equipo tiene acciones en la competencia"
 
 #: mog/views/contest.py:229
 msgid "Successfully unregistered!"
-msgstr ""
+msgstr "Se eliminó el registro satisfactoriamente!"
 
 #: mog/views/contest.py:338
 msgid "This contest cannot be rated because it's open for teams."
@@ -925,15 +912,15 @@ msgstr "Este concurso ha sido descalificado satisfactoriamente"
 
 #: mog/views/submission.py:61
 msgid "Invalid language choice"
-msgstr ""
+msgstr "Selección de lenguaje inválida"
 
 #: mog/views/submission.py:67
 msgid "Empty source code"
-msgstr ""
+msgstr "Código fuente vacío"
 
 #: mog/views/submission.py:74
 msgid "You cannot submit because you are not registered in the contest."
-msgstr ""
+msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
 #~ msgid "Remember me"
 #~ msgstr "Recordar sesión"
