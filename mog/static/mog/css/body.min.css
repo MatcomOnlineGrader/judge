@@ -221,6 +221,12 @@ a.problem-tag {
 }
 
 /* login/register */
+.social-button {
+    text-decoration: none !important;
+    padding: 0 !important;
+    margin: 0 5px 0 5px !important;
+}
+
 .lined-text {
     width: 100%;
     text-align: center;
