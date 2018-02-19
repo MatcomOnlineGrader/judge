@@ -1,0 +1,21 @@
+{% load static %}
+
+<style>
+    .social-button {
+        text-decoration: none;
+        padding: 0 !important;
+        margin: 0 5px 0 5px;
+    }
+</style>
+
+<a class="social-button" href="{% url "social:begin" "github" %}">
+    <img src="{% static 'mog/images/github.png' %}">
+</a>
+
+<a class="social-button" href="{% url "social:begin" "google-oauth2" %}">
+    <img src="{% static 'mog/images/google-plus.png' %}">
+</a>
+
+<a class="social-button" href="{% url "social:begin" "facebook" %}">
+    <img src="{% static 'mog/images/fl.png' %}">
+</a>

@@ -219,3 +219,17 @@ textarea {
 a.problem-tag {
     text-decoration: none;
 }
+
+/* login/register */
+.lined-text {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #999;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+}
+
+.lined-text span {
+    background: #fff;
+    padding: 0 10px;
+}
