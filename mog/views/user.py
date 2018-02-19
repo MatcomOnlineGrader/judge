@@ -99,7 +99,8 @@ class UserEditView(View):
         user_form.save()
         profile_form.save()
         if request.user == user:
-            login(request, user)
+            login(request, user,
+                  backend='django.contrib.auth.backends.ModelBackend')
         return redirect('mog:user', user_id=user.pk)
 
 
