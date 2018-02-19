@@ -46,30 +46,15 @@
                                 <a href="{% url 'auth_password_reset' %}" class="btn">{% trans 'Forgot Password ?' %}</a>
                                 <a href="{% url 'registration_register' %}" class="btn">{% trans 'Register' %}</a>
                             </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <h5 class="lined-text uniform-text uniform-medium">
+                                <span>{% trans 'Or login with' %}</span>
+                            </h5>
 
-                            <div class="well text-center" style="margin: 0 !important;">
-                                <div class="margin-bottom-10">
-                                    <small class="uniform-text uniform-medium">
-                                        {% trans 'Or singin with' %}
-                                    </small>
-                                </div>
-
-                                <a style="text-decoration: none" href="{% url "social:begin" "github" %}">
-                                    <img src="{% static 'mog/images/github.png' %}">
-                                </a>
-
-                                <span style="margin: 0 10px 0 10px;"></span>
-
-                                <a style="text-decoration: none" href="{% url "social:begin" "google-oauth2" %}">
-                                    <img src="{% static 'mog/images/google-plus.png' %}">
-                                </a>
-
-                                <span style="margin: 0 10px 0 10px;"></span>
-
-                                <a style="text-decoration: none" href="{% url "social:begin" "facebook" %}">
-                                    <img src="{% static 'mog/images/fl.png' %}">
-                                </a>
-                            </div>
+                            {% include 'mog/includes/_social.html' %}
                         </td>
                     </tr>
                 </tbody>
