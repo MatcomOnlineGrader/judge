@@ -23,9 +23,9 @@ class UserListView(generic.ListView):
         result = UserProfile.sorted_by_ratings()
         if 'q' in self.request.GET:
             result = result.filter(
-                Q(user__username__contains=self.request.GET['q']) |
-                Q(user__first_name__contains=self.request.GET['q']) |
-                Q(user__last_name__contains=self.request.GET['q'])
+                Q(user__username__icontains=self.request.GET['q']) |
+                Q(user__first_name__icontains=self.request.GET['q']) |
+                Q(user__last_name__icontains=self.request.GET['q'])
             )
         return result
 
