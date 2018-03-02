@@ -16,7 +16,7 @@ def can_see_code_of(user, submission):
     @submission. This can happens iff @user is
     CodeBrowser, Admin or the owner of @submission.
     """
-    return user_is_admin(user) or user_is_browser(user) or user == submission.user
+    return submission.can_show_source_to(user)
 
 
 @register.filter()

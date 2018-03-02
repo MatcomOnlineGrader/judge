@@ -597,13 +597,28 @@ class Submission(models.Model):
         return not self.hidden and (self.instance is None or self.instance.contest.visible)
 
     def can_show_source_to(self, user):
-        if not user.is_authenticated:
-            return False
-        if self.user == user:
-            return True
-        profile = user.profile if hasattr(user, 'profile') else None
-        if profile:
-            return profile.is_admin or (profile.is_browser and self.visible)
+        """Determine whether the current submission's has the
+        permissions to see the current submission's source code.
+
+        Parameters
+        ----------
+        user: User
+
+        Returns
+        -------
+        bool
+            True only if `user` has permissions to see the current
+            submission's source code. False otherwise.
+        """
+        if user.is_authenticated:
+            if self.user == user:
+                return True
+            profile = user.profile if hasattr(user, 'profile') else None
+            if profile:
+                return profile.is_admin or (
+                    self.visible and (self.public or profile.is_browser)
+                )
+        return False
 
     @staticmethod
     def visible_submissions(user):
