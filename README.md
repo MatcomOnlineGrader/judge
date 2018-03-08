@@ -53,6 +53,7 @@ EMAIL_PORT: <int> [SMTP port]
 EMAIL_HOST_USER: <str> [email host user]
 EMAIL_HOST_PASSWORD: <str> [email host password]
 DEFAULT_FROM_EMAIL: <str> [default from email]
+EMAIL_TIMEOUT: <int>
 
 [others]
 MEDIA_ROOT: <str> [path to media folder]
