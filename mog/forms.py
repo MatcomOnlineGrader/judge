@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
-from api.models import UserProfile, User, Post, Contest, Problem
+from api.models import UserProfile, User, Post, Contest, Problem, Clarification
 from mog.utils import secure_html
 
 
@@ -98,3 +98,42 @@ class DisposableEmailForm(RegistrationFormNoFreeEmail):
 
 class MOGRegistrationForm(DisposableEmailForm, RegistrationFormUniqueEmail):
     pass
+
+
+class ClarificationForm(forms.ModelForm):
+    question = forms.CharField(
+        widget=forms.Textarea,
+        label=_('Question')
+    )
+
+    class Meta:
+        model = Clarification
+        fields = ['problem', 'question']
+
+    def __init__(self, contest=None, *args, **kwargs):
+        super(ClarificationForm, self).__init__(*args, **kwargs)
+        self.contest = contest or self.instance.contest
+        self.fields['problem'].choices = [(None, '----- General -----')]
+        for problem in self.contest.problems.order_by('position'):
+            self.fields['problem'].choices.append((problem.pk, problem.full_title))
+        self.fields['problem'].initial = self.instance.problem if self.instance else None
+
+    def clean_question(self):
+        return self.cleaned_data['question'].strip()
+
+    def clean(self):
+        super(ClarificationForm, self).clean()
+        problem = self.cleaned_data['problem']
+        if problem and problem.contest != self.contest:
+            self.add_error('problem', _('Problem not included in contest'))
+
+
+class ClarificationExtendedForm(ClarificationForm):
+    answer = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4}),
+        label=_('Answer')
+    )
+
+    class Meta:
+        model = Clarification
+        fields = ['problem', 'question', 'answer', 'public']

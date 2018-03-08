@@ -170,6 +170,11 @@ def unseen_comments(user, post):
     return post.unseen_comments(user)
 
 
+@register.filter()
+def unseen_clarifications(user, contest):
+    return contest.unseen_clarifications(user)
+
+
 def unpack_seconds(seconds):
     d = seconds // 86400
     h = (seconds % 86400) // 3600

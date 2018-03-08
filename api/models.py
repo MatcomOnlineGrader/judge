@@ -11,6 +11,7 @@ from django.db.models.functions import Coalesce
 from django.template.loader import render_to_string
 
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -21,6 +22,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from mog.tasks import report_clarification
 from mog.utils import user_is_admin, user_is_browser
 
 
@@ -224,6 +226,21 @@ class Contest(models.Model):
     @property
     def is_frozen_time(self):
         return self.end_date - timezone.timedelta(minutes=self.frozen_time) <= timezone.now() <= self.end_date
+
+    def visible_clarifications(self, user):
+        if user_is_admin(user):
+            return self.clarifications.order_by('-asked_date')
+        if user.is_authenticated:
+            return self.clarifications.filter(Q(public=True) | Q(sender=user))\
+                .order_by('-asked_date')
+        return self.clarifications.filter(public=True)\
+            .order_by('-asked_date')
+
+    def unseen_clarifications(self, user):
+        if user.is_authenticated:
+            clarifications = self.clarifications if user_is_admin(user) else\
+                self.clarifications.filter(Q(public=True) | Q(sender=user))
+            return clarifications.filter(~Q(pk__in=user.seen_clarifications.all())).count()
 
     @staticmethod
     def get_visible_contests(admin=False):
@@ -775,3 +792,60 @@ class ContestInstance(models.Model):
                     | (Q(instance__real=False) & Q(instance__start_date__gte=(F('date') - instance_bound.relative_time)))
                 )
         return submissions
+
+
+class Clarification(models.Model):
+    contest = models.ForeignKey(
+        Contest,
+        on_delete=models.CASCADE,
+        related_name='clarifications',
+        verbose_name=_('Contest')
+    )
+    problem = models.ForeignKey(
+        Problem,
+        on_delete=models.SET_NULL,
+        related_name='clarifications',
+        blank=True, null=True,
+        verbose_name=_('Problem')
+    )
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='clarifications',
+        null=True,
+    )
+    fixer = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        default=None, null=True,
+    )
+    seen = models.ManyToManyField(
+        User,
+        related_name='seen_clarifications'
+    )
+    public = models.BooleanField(
+        default=False,
+        verbose_name=_('Public')
+    )
+    question = models.CharField(
+        max_length=2048,
+        verbose_name=_('Question')
+    )
+    answer = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Answer')
+    )
+    asked_date = models.DateTimeField(auto_now_add=True)
+    answered_date = models.DateTimeField(null=True)
+
+    def save(self, *args, **kwargs):
+        new_instance = self.pk is None
+        super(Clarification, self).save(*args, **kwargs)
+        if new_instance:
+            report_clarification(clarification=self)
+
+    def formset(self):
+        from mog.forms import ClarificationExtendedForm
+        return ClarificationExtendedForm(
+            instance=self
+        )

@@ -96,6 +96,18 @@
                                     {% endwith %}
                                 {% endif %}
                             </li>
+                            <li class="{{ clarifications_active }}">
+                                <a href="{% url 'mog:contest_clarifications' contest.id %}">
+                                    <i class="glyphicon glyphicon-question-sign"></i> {% trans 'Clarifications' %}
+                                    {% if user.is_authenticated %}
+                                        {% with uc=user|unseen_clarifications:contest %}
+                                            {% if uc %}
+                                                <span class="badge pull-right">{{ uc }}</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endif %}
+                                </a>
+                            </li>
                         </ul>
                     </td>
                 </tr>

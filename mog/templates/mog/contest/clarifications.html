@@ -1,0 +1,133 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load security %}
+{% load humanize %}
+
+{% block title %}{{ contest.name }} | {% trans 'Clarifications' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest clarifications_active='active' %}
+{% endblock %}
+
+{% block content %}
+    {% if user|is_admin %}
+        <!-- Modals -->
+        {% for clarification in contest.clarifications.all %}
+            <div class="modal fade" id="edit-clarification-{{ clarification.pk }}" tabindex="-1" role="dialog"
+                 aria-labelledby="editClarificationLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="editClarificationLabel">
+                                {% trans 'Edit Clarification' %}
+                                (
+                                <small>
+                                    {% trans 'Asked by' %}
+                                    {% include 'mog/user/_link.html' with user=clarification.sender %}
+                                </small>
+                                )
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'mog:clarification_edit' clarification.pk %}" method="post">
+                                {% csrf_token %}
+                                {% include 'mog/includes/form.html' with form=clarification.formset %}
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <!-- Modals -->
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="title margin-bottom-20">
+                {% trans 'Clarifications' %}
+            </h3>
+        </div>
+
+        <div class="col-md-12 small">
+            <table class="table table-bordered" style="table-layout: fixed;">
+                <thead>
+                    <tr>
+                        <th class="col-sm-1 text-center">#</th>
+                        <th class="col-sm-1 text-center">{% trans 'Who?' %}</th>
+                        <th class="col-sm-2 text-center">{% trans 'When?' %}</th>
+                        <th class="col-sm-4 text-center">{% trans 'Question' %}</th>
+                        <th class="col-sm-4 text-center">{% trans 'Answer' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for clarification in clarifications %}
+                        <tr>
+                            <td class="text-center">
+                                {% if user|is_admin %}
+                                    <a href="#" style="text-decoration: none" data-toggle="modal"
+                                       data-target="#edit-clarification-{{ clarification.pk }}">
+                                {% endif %}
+                                {{ forloop.counter }}
+                                {% if user|is_admin %}
+                                    <br>
+                                    {% if clarification.public %}
+                                        ({% trans 'public' %})
+                                    {% else %}
+                                        ({% trans 'private' %})
+                                    {% endif %}
+                                {% endif %}
+                                {% if user|is_admin %}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% include 'mog/user/_link.html' with user=clarification.sender %}
+                            </td>
+                            <td class="text-center">
+                                {{ clarification.asked_date | naturaltime }}
+                            </td>
+                            <td style="word-wrap: break-word !important;">
+                                {% if clarification.problem %}
+                                    <b>{{ clarification.problem.full_title }}</b> <br>
+                                {% else %}
+                                    <b>General</b> <br>
+                                {% endif %}
+                                {{ clarification.question|linebreaks }}
+                            </td>
+                            <td>
+                                {{ clarification.answer|default_if_none:'-'|linebreaks }}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">
+                                {% trans 'No clarifications yet!' %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if contest|can_create_clarification:user %}
+        <div class="row">
+            <div class="col-md-8">
+                <form action="{% url 'mog:clarification_create' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'mog/includes/form.html' with form=form %}
+                    <input type="hidden" value="{{ contest.pk }}" name="contest">
+                    <input type="submit" value="{% trans 'Send' %}" class="btn btn-primary pull-right">
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

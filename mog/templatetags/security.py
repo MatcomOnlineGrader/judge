@@ -99,3 +99,35 @@ def can_see_tags(user):
 @register.filter()
 def can_edit_comment(user, comment):
     return user_is_admin(user)
+
+
+@register.filter()
+def can_create_clarification(contest, user):
+    """Determines whether an user can create a clarification
+    or not in a contest. `user` can ask for clarification in
+    `contest` if the following conditions met:
+
+    - `user` is authenticated
+    - `contest` is running
+    - `user` is registered in `contest`
+
+    If `user` is an admin, then he/she can create a clarification
+    under any situation.
+
+    Parameters
+    ----------
+    contest : Contest,
+              A contest instance.
+
+    user : User,
+           An user instance.
+
+    Returns
+    -------
+    bool
+        True only if `user` can ask for clarification in `contest`.
+        False otherwise.
+    """
+    if user_is_admin(user):
+        return True
+    return user.is_authenticated and (contest.is_running and contest.real_registration(user))

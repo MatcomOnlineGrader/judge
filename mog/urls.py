@@ -28,6 +28,9 @@ urlpatterns = [
     url(r'^problem/(?P<problem_id>[0-9]+)/(?P<slug>[-\w]+)/$', views.problem, name='problem'),
     url(r'^problems/$', views.ProblemListView.as_view(), name='problems'),
 
+    url(r'^clarification/create/$', views.clarification_create, name='clarification_create'),
+    url(r'^clarification/(?P<clarification_id>[0-9]+)/edit/$', views.clarification_edit, name='clarification_edit'),
+
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
     url(r'^contest/register/user/(?P<contest_id>[0-9]+)$', views.contest_register_user, name='contest_register_user'),
     url(r'^contest/register/team/(?P<contest_id>[0-9]+)$', views.contest_register_team, name='contest_register_team'),
@@ -36,6 +39,7 @@ urlpatterns = [
     url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration,
         name='contest_remove_registration'),
 
+    url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
     url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
     url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),

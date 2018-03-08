@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q
-from mog.forms import ContestForm
+from mog.forms import ContestForm, ClarificationForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
 
@@ -27,6 +27,21 @@ def contests(request):
         'running_contests': running,
         'coming_contests': coming,
         'past_contests': past,
+    })
+
+
+def contest_clarifications(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+    if not contest.can_be_seen_by(request.user):
+        raise Http404()
+    clarifications = contest.visible_clarifications(request.user)
+    if request.user.is_authenticated:
+        for clarification in clarifications:
+            clarification.seen.add(request.user)
+    return render(request, 'mog/contest/clarifications.html', {
+        'contest': contest,
+        'clarifications': clarifications,
+        'form': ClarificationForm(contest=contest)
     })
 
 

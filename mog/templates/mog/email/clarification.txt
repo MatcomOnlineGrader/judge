@@ -1,0 +1,15 @@
+Time: {{ clarification.asked_date }}
+User: {{ clarification.sender }}
+Problem: {{ clarification.problem|default_if_none:'General' }}
+Contest: {{ clarification.contest }}
+
+--------------------
+
+{{ clarification.question }}
+
+--------------------
+
+Reply at {{ domain }}{% url 'mog:contest_clarifications' clarification.contest.pk %}
+
+Matcom Online Grader
+{{ domain }}
