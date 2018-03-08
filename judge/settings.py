@@ -232,6 +232,8 @@ EMAIL_PORT = config.getint('email', 'EMAIL_PORT')
 EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config.get('email', 'DEFAULT_FROM_EMAIL')
+EMAIL_TIMEOUT = config.getint('email', 'EMAIL_TIMEOUT')
+
 
 # Activate debug toolbar
 if config.getboolean('debugging', 'DEBUG_TOOLBAR'):
