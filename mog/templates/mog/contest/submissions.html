@@ -10,17 +10,6 @@
     {% include 'mog/contest/_left.html' with contest=contest submissions_active='active' %}
 {% endblock %}
 
-{% block styles %}
-    <style>
-        form input, form select {
-            width: 20% !important;
-        }
-        form button{
-            width: 10% !important;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-12 text-center">
@@ -29,7 +18,7 @@
         </div>
 
         <div class="col-md-12 text-center">
-            <form action="{% url 'mog:contest_submissions' contest.id %}" method="get" class="form-inline">
+            <form action="{% url 'mog:contest_submissions' contest.id %}" method="get" class="filter">
                 <input id="username" name="username" type="text" class="form-control" value="{{ query.username }}"
                        placeholder="{% trans 'Username' %}">
                 <select id="problem" name="problem" class="form-control">
