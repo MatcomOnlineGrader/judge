@@ -22,7 +22,7 @@ def clarification_create(request):
     if not user_is_admin(request.user):
         if not contest.is_running:
             error = _(u'You cannot ask in a contest that is not running')
-        elif contest.real_registration(request.user):
+        elif not contest.real_registration(request.user):
             error = _(u'You cannot ask questions because you are not registered in the contest.')
     if error:
         messages.error(request, error, extra_tags='danger')
