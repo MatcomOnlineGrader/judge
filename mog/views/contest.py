@@ -380,12 +380,14 @@ def rate_contest(request, contest_id):
         ir for ir in instance_results if ir.solved > 0
         ]
 
-    ratings = []
+    ratings, before = [], []
     for ir in instance_results:
         profile = ir.instance.user.profile
         if profile.rating_changes.count() > 0:
+            before.append(True)
             ratings.append(profile.rating)
         else:
+            before.append(False)
             ratings.append(settings.BASE_RATING)
 
     expected = [0.5] * len(ratings)
@@ -397,13 +399,14 @@ def rate_contest(request, contest_id):
             expected[i] += 1 / (1 + 10 ** ((ratings[i] - ratings[j]) / 400.0))
 
     for i in range(n):
-        # TODO: allow users go bellow than zero ?
         ir = instance_results[i]
-        rating_delta = 32 * (expected[i] - ir.rank)
+        rating_delta = int(32 * (expected[i] - ir.rank))
         if rating_delta < -settings.MAX_RATING_DELTA:
             rating_delta = -settings.MAX_RATING_DELTA
         if rating_delta > +settings.MAX_RATING_DELTA:
             rating_delta = +settings.MAX_RATING_DELTA
+        if not before[i]:
+            rating_delta += ratings[i]
         RatingChange.objects.create(
             profile=ir.instance.user.profile,
             contest=contest,
