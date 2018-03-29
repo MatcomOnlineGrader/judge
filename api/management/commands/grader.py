@@ -194,7 +194,7 @@ def grade_submission(submission, number_of_executions):
                     invocation_verdict = 'TIME_LIMIT_EXCEEDED'
 
                 if invocation_verdict != 'SUCCESS':
-                    result = {
+                    comment = result = {
                         'SECURITY_VIOLATION': 'runtime error',
                         'MEMORY_LIMIT_EXCEEDED': 'memory limit exceeded',
                         'TIME_LIMIT_EXCEEDED': 'time limit exceeded',
@@ -203,8 +203,7 @@ def grade_submission(submission, number_of_executions):
                         'FAIL': 'internal error'
                     }[invocation_verdict]
                 elif exit_code != 0:
-                    comment = 'runtime error'
-                    result = 'runtime error'
+                    comment = result = 'runtime error'
                 else:
                     rc, out, err = get_exitcode_stdout_stderr(
                         cmd=checker_command % (input_file, 'output.txt', answer_file),
