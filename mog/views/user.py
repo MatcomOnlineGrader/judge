@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views import View, generic
 
-from api.models import User, UserProfile, Division
+from api.models import User, UserProfile, Division, Institution
 from mog.forms import UserProfileForm, UserForm
 from mog.utils import user_is_admin
 
@@ -124,5 +124,6 @@ def user_teams(request, user_id):
         return HttpResponseForbidden()
     return render(request, 'mog/user/teams.html', {
         'user_in_profile': user_in_profile,
-        'teams': user_in_profile.profile.teams.all()
+        'teams': user_in_profile.profile.teams.all(),
+        'institutions': Institution.objects.order_by('name')
     })

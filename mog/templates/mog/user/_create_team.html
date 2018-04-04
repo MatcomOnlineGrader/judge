@@ -1,11 +1,13 @@
-<div class="modal fade" id="create-new-team" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+{% load i18n %}
+
+<div class="modal fade" id="create-new-team" tabindex="-1" role="dialog" aria-labelledby="createNewTeamModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">
-                    Create new team
+                <h4 class="modal-title" id="createNewTeamModalLabel">
+                    {% trans 'Create new team' %}
                 </h4>
             </div>
 
@@ -17,17 +19,27 @@
                     <input type="hidden" name="main_user" value="{{ user_in_profile.id }}">
 
                     <div class="form-group">
-                        <label for="name">Name *</label>
+                        <label for="name">{% trans 'Name' %} *</label>
                         <input id="name" name="name" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <label for="description">{% trans 'Description' %}</label>
                         <textarea id="description" name="description" class="form-control" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="members">Add Members</label>
+                        <label for="institution">{% trans 'Institution' %}</label>
+                        <select id="institution" name="institution" class="form-control">
+                            <option value="">-----</option>
+                            {% for institution in institutions %}
+                                <option value="{{ institution.pk }}">{{ institution }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="members">{% trans 'Add Members' %}</label>
                         <input id="members" name="members" class="form-control">
                     </div>
 
@@ -36,11 +48,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <a href="#" class="btn btn-lg btn-default btn-block" data-dismiss="modal">
-                                        Cancel
+                                        {% trans 'Cancel' %}
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+                                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                        {% trans 'Save' %}
+                                    </button>
                                 </div>
                             </div>
                         </div>
