@@ -3,7 +3,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
-from api.models import User, Team, Submission
+from api.models import User, Team, Submission, Institution
 from mog.utils import user_is_admin
 
 
@@ -26,6 +26,14 @@ def create_team(request):
         messages.success(request, 'Create Team: Invalid data!', extra_tags='danger')
         return redirect('mog:index')
 
+    try:
+        institution = None
+        if request.POST.get('institution'):
+            institution = Institution.objects.get(pk=request.POST.get('institution'))
+    except:
+        messages.success(request, 'Create Team: Invalid institution!', extra_tags='danger')
+        redirect('mog:user_teams', user_id=main_user.id)
+
     if not user_is_admin(request.user) and request.user != main_user:
         messages.success(request, 'Create Team: Permission denied!', extra_tags='danger')
         return redirect('mog:index')
@@ -35,7 +43,9 @@ def create_team(request):
         return redirect('mog:index')
 
     team = Team.objects.create(
-        name=name, description=description,
+        name=name,
+        description=description,
+        institution=institution
     )
 
     for user in users:
