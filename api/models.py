@@ -255,6 +255,12 @@ class Contest(models.Model):
         past = contests.filter(end_date__lt=now).order_by('-start_date')
         return running, coming, past
 
+    def group_names(self):
+        return list(
+            self.instances.order_by('group')\
+                .values_list('group', flat=True).distinct()
+        )
+
 
 class Problem(models.Model):
     LETTER_COLOR_CHOICES = [
@@ -712,6 +718,7 @@ class ContestInstance(models.Model):
     contest = models.ForeignKey(Contest, related_name='instances', on_delete=models.CASCADE)
     start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
+    group = models.CharField(max_length=64, null=True, blank=True, verbose_name=_('Group name'))
 
     def __str__(self):
         if self.team:

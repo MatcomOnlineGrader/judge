@@ -157,9 +157,11 @@ class InstanceResult(object):
         self.problem_results.append(problem_result)
 
 
-def calculate_standing(contest, virtual=False, user_instance=None):
+def calculate_standing(contest, virtual=False, user_instance=None, group=None):
     instances = contest.instances.all() if virtual else \
         contest.instances.filter(real=True)
+    if group:
+        instances = instances.filter(group=group)
     if user_instance:
         user_instance_relative_time =\
             user_instance.relative_time
