@@ -12,3 +12,4 @@ from .views import index, faq, privacy
 from .message import send_message
 from .comment import edit_comment
 from .clarification import clarification_create, clarification_edit
+from .instance import instance_group_list, instance_edit_group

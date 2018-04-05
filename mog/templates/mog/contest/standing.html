@@ -8,6 +8,10 @@
 
 {% block styles %}
     <style>
+        .badge {
+            background-color: #337ab7;
+        }
+
         table > thead > tr > th {
             font-weight: 600;
             font-size: 14px;
@@ -63,102 +67,138 @@
             {% endif %}
         </div>
 
-        <div class="col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="cell-small">{% trans 'Rank' %}</th>
-                        <th>{% trans 'Contestant' %} / {% trans 'Team' %}</th>
-                        <th class="text-center cell-small">{% trans 'Solved' %}</th>
-                        <th class="text-center cell-small">{% trans 'Penalty' %}</th>
-                        {% for problem in problems %}
-                            <th class="text-center cell-medium">
-                                <a data-toggle="tooltip" href="{% url 'mog:problem' problem.id problem.slug %}" title="{{ problem.title }}"
-                                   {% if problem.balloon and problem.balloon.0 == '#' %}
-                                       style="color: {{ problem.letter_color }}; background: no-repeat center/25px url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 17.5 20.2&quot;><path fill=&quot; {{ problem.balloon|urlencode }} &quot; d=&quot;M17.5 8.3c0 6-8.7 11.8-8.7 11.8S0 14.3 0 8.3C0 3.7 3.9 0 8.7 0S17.5 3.7 17.5 8.3z&quot;/></svg>');"
-                                   {% endif %}
-                                >
-                                    {{ problem.letter }}
-                                </a>
-                            </th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for instance_result in instance_results %}
-                        {% with instance=instance_result.instance %}
-                            <tr class="standing-row">
-                                <td class="text-center">{{ instance_result.rank }}</td>
-                                <td>
-                                    <div style="min-height: 45px;">
-                                        {% if not instance.real %}
-                                            (~)
-                                        {% endif %}
-
-                                        {% if instance.team %}
-                                            {% include 'mog/team/_link.html' with team=instance.team %}
-                                            {% with institution=instance.team.institution %}
-                                                {% if institution %}
-                                                    <small>{{ institution.name }}</small>
-                                                {% endif %}
-                                            {% endwith %}
-                                        {% else %}
-                                            {% include 'mog/user/_link.html' with user=instance.user %}
-                                            {% with institution=instance.user.profile.institution %}
-                                                {% if institution %}
-                                                    <p><small>{{ institution.name }}</small></p>
-                                                {% endif %}
-                                            {% endwith %}
-                                        {% endif %}
-                                    </div>
-                                </td>
-
-                                <td class="text-center">{{ instance_result.solved }}</td>
-
-                                <td class="text-center">
-                                    {{ instance_result.penalty|format_penalty }}
-                                </td>
-
-                                {% for problem_result in instance_result.problem_results %}
-                                    {% if problem_result.accepted %}
-                                        {% if problem_result.first_all %}
-                                            <td class="text-center contest-solved-first">
-                                        {% elif problem_result.first %}
-                                            <td class="text-center problem-solved-first">
-                                        {% else %}
-                                            <td class="text-center problem-solved">
-                                        {% endif %}
-                                    {% elif problem_result.attempts > 0 %}
-                                        <td class="text-center problem-failed">
-                                    {% else %}
-                                        <td class="text-center">
-                                    {% endif %}
-                                            {% if problem_result.accepted %}
-                                                <div>
-                                                    {{ problem_result.acc_delta|format_minutes }}
-                                                </div>
-                                            {% endif %}
-                                            {% if problem_result.attempts > 0 %}
-                                                <small>(-{{ problem_result.attempts }})</small>
-                                            {% endif %}
-                                        </td>
-                                {% endfor %}
+        {% for ranking in ranking_groups %}
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        {% if group_names|length > 1 %}
+                            <tr>
+                                <th colspan="{{ ranking.problems|length|add:4 }}" style="padding: 2px !important;">
+                                    {{ ranking.group|default_if_none:'' }}
+                                    <span class="pull-right">
+                                        <span class="badge badge-info"><i class="glyphicon glyphicon-ok"></i> {{ ranking.solved }}</span>
+                                        <span class="badge badge-info"><i class="glyphicon glyphicon-user"></i> {{ ranking.instances }}</span>
+                                        <span class="badge badge-info"><i class="glyphicon glyphicon-time"></i> {{ ranking.penalty|format_penalty }}</span>
+                                    </span>
+                                </th>
                             </tr>
-                        {% endwith %}
-                    {% empty %}
+                        {% endif %}
                         <tr>
-                            <td colspan="{{ problems|length|add:4 }}">
-                                {% trans 'No one registered for this contest!' %}
-                            </td>
+                            <th class="cell-small">{% trans 'Rank' %}</th>
+                            <th>{% trans 'Contestant' %} / {% trans 'Team' %}</th>
+                            <th class="text-center cell-small">{% trans 'Solved' %}</th>
+                            <th class="text-center cell-small">{% trans 'Penalty' %}</th>
+                            {% for problem in ranking.problems %}
+                                <th class="text-center cell-medium">
+                                    <a data-toggle="tooltip" href="{% url 'mog:problem' problem.id problem.slug %}" title="{{ problem.title }}"
+                                       {% if problem.balloon and problem.balloon.0 == '#' %}
+                                           style="color: {{ problem.letter_color }}; background: no-repeat center/25px url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 17.5 20.2&quot;><path fill=&quot; {{ problem.balloon|urlencode }} &quot; d=&quot;M17.5 8.3c0 6-8.7 11.8-8.7 11.8S0 14.3 0 8.3C0 3.7 3.9 0 8.7 0S17.5 3.7 17.5 8.3z&quot;/></svg>');"
+                                       {% endif %}
+                                    >
+                                        {{ problem.letter }}
+                                    </a>
+                                </th>
+                            {% endfor %}
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {% for instance_result in ranking.instance_results %}
+                            {% with instance=instance_result.instance %}
+                                <tr class="standing-row">
+                                    <td class="text-center">{{ instance_result.rank }}</td>
+                                    <td>
+                                        <div style="min-height: 45px;">
+                                            {% if not instance.real %}
+                                                (~)
+                                            {% endif %}
+
+                                            {% if instance.team %}
+                                                {% include 'mog/team/_link.html' with team=instance.team %}
+                                                {% with institution=instance.team.institution %}
+                                                    {% if institution %}
+                                                        <small>{{ institution.name }}</small>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% else %}
+                                                {% include 'mog/user/_link.html' with user=instance.user %}
+                                                {% with institution=instance.user.profile.institution %}
+                                                    {% if institution %}
+                                                        <p><small>{{ institution.name }}</small></p>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">{{ instance_result.solved }}</td>
+
+                                    <td class="text-center">
+                                        {{ instance_result.penalty|format_penalty }}
+                                    </td>
+
+                                    {% for problem_result in instance_result.problem_results %}
+                                        {% if problem_result.accepted %}
+                                            {% if problem_result.first_all %}
+                                                <td class="text-center contest-solved-first">
+                                            {% elif problem_result.first %}
+                                                <td class="text-center problem-solved-first">
+                                            {% else %}
+                                                <td class="text-center problem-solved">
+                                            {% endif %}
+                                        {% elif problem_result.attempts > 0 %}
+                                            <td class="text-center problem-failed">
+                                        {% else %}
+                                            <td class="text-center">
+                                        {% endif %}
+                                                {% if problem_result.accepted %}
+                                                    <div>
+                                                        {{ problem_result.acc_delta|format_minutes }}
+                                                    </div>
+                                                {% endif %}
+                                                {% if problem_result.attempts > 0 %}
+                                                    <small>(-{{ problem_result.attempts }})</small>
+                                                {% endif %}
+                                            </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endwith %}
+                        {% empty %}
+                            <tr>
+                                <td colspan="{{ ranking.problems|length|add:4 }}">
+                                    {% trans 'No one registered for this contest!' %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
 
         <div class="col-md-12">
-            <form action="{% url 'mog:contest_standing' contest.pk %}" method="get" style="margin-left: 20px !important;">
-                <div class="checkbox">
+            <form action="{% url 'mog:contest_standing' contest.pk %}" method="GET">
+                <!-- Group -->
+                {% if group_names|length > 1 %}
+                    <div>
+                        <label for="group_in_ranking sr-only">
+                            {% trans 'Group' %}
+                        </label>
+
+                        <select id="group_in_ranking" name="group_in_ranking" onchange="$(this).closest('form').submit();">
+                            <option value="<all>" {% if group_in_ranking == '<all>' %}selected{% endif %}>{% trans 'Show all groups' %}</option>
+                            <option value="<one>" {% if group_in_ranking == '<one>' %}selected{% endif %}>{% trans 'Show all in one group' %}</option>
+                            {% for name in group_names %}
+                                {% if name %}
+                                    <option value="{{ name }}" {% if name == group_in_ranking %}selected{% endif %}>
+                                        - {{ name }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+
+                <!-- Show Virtual -->
+                <div>
                     <input id="show_virtual" type="checkbox" name="show_virtual"
                            onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
                     <label for="show_virtual">

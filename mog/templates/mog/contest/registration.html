@@ -1,8 +1,13 @@
 {% extends 'mog/base.html' %}
 
 {% load i18n %}
+{% load static %}
 
 {% block title %}{{ contest.name }} | {% trans 'Registration' %}{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
+{% endblock %}
 
 {% block left %}
     {% include 'mog/contest/_left.html' with contest=contest registration_active='active' %}
@@ -10,7 +15,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">{% trans 'Registration' %}</h3>
@@ -19,70 +24,120 @@
                 <div class="col-md-12">
                     <table class="table table-bordered table-striped">
                         <thead>
-                            <tr>
-                                <th class="text-center">User/Team</th>
-                                <th class="text-center">Action</th>
-                            </tr>
+                        <tr>
+                            <th class="text-center cell-medium">{% trans "User/Team" %}</th>
+                            <th class="text-center cell-medium">{% trans "Group" %}</th>
+                            <th class="text-center cell-small">{% trans "Action" %}</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for instance in contest.instances.all %}
-                                <tr class="text-center">
-                                    <td>
-                                        {% if instance.team %}
-                                            {% include 'mog/team/_link.html' with team=instance.team %}
-                                        {% else %}
-                                            {% include 'mog/user/_link.html' with user=instance.user %}
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}" />
-                                            <input type="submit" class="btn btn-sm btn-default" value="{% trans 'Unregister' %}" />
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for instance in instances %}
+                            <tr class="text-center">
+                                <td>
+                                    {% if instance.team %}
+                                        {% include 'mog/team/_link.html' with team=instance.team %}
+                                    {% else %}
+                                        {% include 'mog/user/_link.html' with user=instance.user %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <select class="select2" style="width: 100%;"
+                                            data-url-edit="{% url "mog:api_instance_edit_group" instance.pk %}">
+                                        <option value="{{ instance.group|default_if_none:'' }}">
+                                            {{ instance.group|default_if_none:'-----' }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next"
+                                               value="{% url 'mog:contest_registration' contest.id %}"/>
+                                        <input type="submit" class="btn btn-sm btn-default"
+                                               value="{% trans 'Unregister' %}"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-
         </div>
-        <div class="col-md-6">
-            <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
-
-            <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                <div class="form-group">
-                    <label for="user" class="sr-only">User</label>
-                    <select id="user" name="user" class="form-control">
-                        {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.username }}</option>
-                        {% endfor %}
-                    </select>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
+                    <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                        <div class="form-group">
+                            <label for="user" class="sr-only">User</label>
+                            <select id="user" name="user" class="form-control">
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
+                    </form>
                 </div>
-                <input type="submit" value="{% trans 'Register' %}" class="form-control" />
-            </form>
 
-            {% if contest.allow_teams %}
-                <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
-                <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                    <div class="form-group">
-                        <label for="team" class="sr-only">Team</label>
-                        <select id="team" name="team" class="form-control">
-                            {% for team in teams %}
-                                <option value="{{ team.id }}">{{ team }}</option>
-                            {% endfor %}
-                        </select>
+                {% if contest.allow_teams %}
+                    <div class="col-md-6">
+                        <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
+                        <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                            <div class="form-group">
+                                <label for="team" class="sr-only">Team</label>
+                                <select id="team" name="team" class="form-control">
+                                    {% for team in teams %}
+                                        <option value="{{ team.id }}">{{ team }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
+                        </form>
                     </div>
-                    <input type="submit" value="{% trans 'Register' %}" class="form-control" />
-                </form>
-            {% endif %}
+                {% endif %}
+
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'mog/plugins/select2/js/select2.full.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                tags: true,
+                closeOnSelect: true,
+                ajax: {
+                    url: "{% url 'mog:api_instance_group_list' %}",
+                    dataType: 'json',
+                    processResults: function (response, params) {
+                        return {
+                            results: response.data.map(function (group) {
+                                return {
+                                    id: group, text: group
+                                }
+                            })
+                        }
+                    }
+                }
+            }).on("select2:select", function(e) {
+                $.post($(e.target).data('url-edit'), {group: $(e.target).val()})
+                    .done(function(response) {
+                        if (!response.success)
+                            alert(response.message);
+                    })
+                    .fail(function() {
+                        alert('some error ocurrs!');
+                    })
+            });
+        });
+    </script>
 {% endblock %}
