@@ -6,7 +6,7 @@ import uuid
 from django.core.mail import send_mail
 from django.db.models import F
 from django.db.models import Sum, Value
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Lower
 
 from django.template.loader import render_to_string
 
@@ -254,6 +254,12 @@ class Contest(models.Model):
         coming = contests.filter(start_date__gt=now).order_by('start_date')
         past = contests.filter(end_date__lt=now).order_by('-start_date')
         return running, coming, past
+
+    def group_names(self):
+        return list(
+            self.instances.order_by(Lower('group'))\
+                .values_list('group', flat=True).distinct()
+        )
 
 
 class Problem(models.Model):
@@ -712,6 +718,7 @@ class ContestInstance(models.Model):
     contest = models.ForeignKey(Contest, related_name='instances', on_delete=models.CASCADE)
     start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
+    group = models.CharField(max_length=64, null=True, blank=True, verbose_name=_('Group name'))
 
     def __str__(self):
         if self.team:

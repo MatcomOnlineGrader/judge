@@ -7,6 +7,11 @@ urlpatterns = [
     url(r'^faq/$', views.faq, name='faq'),
     url(r'^privacy/$', views.privacy, name='privacy'),
 
+    url(r'^api/instance/group/list/$', views.instance_group_list,
+        name='api_instance_group_list'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/group/$', views.instance_edit_group,
+        name='api_instance_edit_group'),
+
     url(r'^message/send/(?P<user_id>[0-9]+)$', views.send_message, name='send_message'),
 
     url(r'^team/create$', views.create_team, name='create_team'),
