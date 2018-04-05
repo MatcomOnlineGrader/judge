@@ -68,7 +68,7 @@
                                 </a>
                             </li>
                             <li class="{{ standings_active }}">
-                                <a href="{% url 'mog:contest_standing' contest.id %}">
+                                <a href="{% url 'mog:contest_standing' contest.id %}?group=<all>">
                                     <i class="glyphicon glyphicon-signal"></i> {% trans 'Standing' %}
                                 </a>
                             </li>

@@ -1,3 +1,4 @@
+from django.db.models.functions import Lower
 from django.urls import reverse
 
 from django.contrib import messages
@@ -62,6 +63,7 @@ def contest_registration(request, contest_id):
         raise Http404()
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
+        'instances': contest.instances.order_by(Lower('group')),
         'users': User.objects.all().order_by('username'),
         'teams': Team.objects.all().order_by('name')
     })
@@ -76,13 +78,36 @@ def contest_standing(request, contest_id):
     if request.user.is_authenticated:
         user_instance = contest.virtual_registration(request.user)
     show_virtual = request.GET.get('show_virtual') == 'on'
-    problems, instance_results = calculate_standing(contest, show_virtual, user_instance)
+
+    group_in_ranking = request.GET.get('group', None)
+    if group_in_ranking == '<all>':
+        group_names = (contest.group_names() or [None])
+    elif group_in_ranking == '<one>':
+        group_names = [None]
+    else:
+        group_names = [group_in_ranking]
+
+    # get ranking for every group
+    ranking_groups = []
+    for group in group_names:
+        problems, instance_results = calculate_standing(
+            contest, show_virtual, user_instance, group
+        )
+        ranking_groups.append({
+            'group': group,
+            'problems': problems,
+            'instance_results': instance_results,
+            'solved': sum(ir.solved for ir in instance_results),
+            'penalty': sum(ir.penalty for ir in instance_results),
+            'instances': len(instance_results)
+        })
     return render(request, 'mog/contest/standing.html', {
         'contest': contest,
-        'instance_results': instance_results,
+        'ranking_groups': ranking_groups,
         'show_virtual': show_virtual,
         'user_instance': user_instance,
-        'problems': problems
+        'group_names': contest.group_names(),
+        'group_in_ranking': group_in_ranking
     })
 
 
