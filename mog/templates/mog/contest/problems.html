@@ -63,6 +63,15 @@
                                     </li>
                                     <li role="separator" class="divider"></li>
                                     <li>
+                                        <form id="unfreeze_contest_form" action="{% url 'mog:contest_unfreeze' contest.id %}" method="post">
+                                            {% csrf_token %}
+                                        </form>
+                                        <a href="javascript:" onclick="$('#unfreeze_contest_form').submit();">
+                                            {% trans 'Unfreeze contest' %}
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
                                         <a href="{% url 'mog:contest_json' contest.id %}">Get JSON</a>
                                     </li>
                                     <li><a href="{% url 'mog:contest_csv' contest.id %}">Get CSV</a></li>
