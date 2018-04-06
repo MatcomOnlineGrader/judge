@@ -145,10 +145,14 @@
                                             {% else %}
                                                 <td class="text-center problem-solved">
                                             {% endif %}
-                                        {% elif problem_result.attempts > 0 %}
-                                            <td class="text-center problem-failed">
                                         {% else %}
-                                            <td class="text-center">
+                                            {% if problem_result.pending > 0 %}
+                                                <td class="text-center problem-pending">
+                                            {% elif problem_result.attempts > 0 %}
+                                                <td class="text-center problem-failed">
+                                            {% else %}
+                                                <td class="text-center">
+                                            {% endif %}
                                         {% endif %}
                                                 {% if problem_result.accepted %}
                                                     <div>
@@ -157,6 +161,11 @@
                                                 {% endif %}
                                                 {% if problem_result.attempts > 0 %}
                                                     <small>(-{{ problem_result.attempts }})</small>
+                                                {% endif %}
+                                                {% if not problem_result.accepted %}
+                                                    {% if problem_result.pending > 0 %}
+                                                        <small>(+{{ problem_result.pending }})</small>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                     {% endfor %}

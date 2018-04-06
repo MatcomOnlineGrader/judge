@@ -3,6 +3,7 @@ import os
 
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.db.models import Q
 from django.utils.safestring import mark_safe
 
 
@@ -123,12 +124,13 @@ def write_to_test(problem, folder, test, content):
 
 
 class ProblemResult(object):
-    def __init__(self, accepted=False, attempts=False, acc_delta=None, first=False, first_all=False):
+    def __init__(self, accepted=False, attempts=False, acc_delta=None, first=False, first_all=False, pending=0):
         self.accepted = accepted
         self.attempts = attempts
         self.acc_delta = acc_delta
         self.first = first
         self.first_all = first_all
+        self.pending = pending
 
     def delta(self):
         if self.acc_delta:
@@ -157,7 +159,7 @@ class InstanceResult(object):
         self.problem_results.append(problem_result)
 
 
-def calculate_standing(contest, virtual=False, user_instance=None, group=None):
+def calculate_standing(contest, virtual=False, user_instance=None, group=None, admin=False):
     instances = contest.instances.all() if virtual else \
         contest.instances.filter(real=True)
     if group:
@@ -170,16 +172,54 @@ def calculate_standing(contest, virtual=False, user_instance=None, group=None):
     for instance in instances:
         instance_result = InstanceResult(instance=instance)
         for problem in problems:
-            submissions = instance.submissions\
-                .filter(problem=problem).filter(hidden=False)
-            if user_instance and not user_instance.real:
-                # If user_instance is virtual, then we need keep only
-                # submissions sent no after than user_instance current
-                # time.
-                if instance.real:
-                    submissions = submissions.filter(date__lte=(contest.start_date + user_instance_relative_time))
+            if admin:
+                # user is administrator, this imply he/she can see the contest
+                # without any pending submissions.
+                pending_submissions = 0
+                submissions = instance.submissions\
+                    .filter(Q(problem=problem) & Q(hidden=False))
+            elif user_instance:
+                if user_instance.real:
+                    # if the instance looking at the ranking is real (participant),
+                    # then two cases may follow:
+                    # 1) The user is looking at his/her row. In this case he/she will
+                    #    be able to see all his/her submissions except death
+                    #    submissions (frozen & normal). Pending submissions will
+                    #    be death submissions.
+                    # 2) The user is looking at another row. In this case he/she will
+                    #    be able to see only normal submissions for this row. Pending
+                    #    submissions will be frozen & death submissions.
+                    if user_instance == instance:
+                        # case1
+                        pending_submissions = instance.submissions\
+                            .filter(Q(problem=problem) & Q(hidden=False) & Q(status='death')).count()
+                        submissions = instance.submissions\
+                            .filter(Q(problem=problem) & Q(hidden=False) & (Q(status='normal') | Q(status='frozen')))
+                    else:
+                        # case2
+                        pending_submissions = instance.submissions\
+                            .filter(Q(problem=problem) & Q(hidden=False) & ~Q(status='normal')).count()
+                        submissions = instance.submissions\
+                            .filter(Q(problem=problem) & Q(hidden=False) & Q(status='normal'))
                 else:
-                    submissions = submissions.filter(date__lte=(instance.start_date + user_instance_relative_time))
+                    # if the instance is virtual, then it will simulate the contest,
+                    # the number of pending submissions will be 0 because here frozen/death
+                    # time are disabled.
+                    pending_submissions = 0
+                    submissions = instance.submissions.filter(
+                        Q(problem=problem) &
+                        Q(hidden=False) &
+                        Q(date__lte=(instance.start_date + user_instance_relative_time))
+                    )
+            else:
+                # user not registered in contest, in this case, only normal solutions will
+                # be displayed (solutions before frozen time), pending solutions will be
+                # those submissions marked as 'frozen' or 'death'.
+                submissions = instance.submissions\
+                    .filter(Q(problem=problem) & Q(hidden=False) & Q(status='normal'))
+                pending_submissions = instance.submissions\
+                    .filter(Q(problem=problem) & Q(hidden=False) & (Q(status='frozen') | Q(status='death'))).count()
+
             accepted, attempts, acc_delta = 0, False, None
             accepted_submission = submissions\
                 .filter(result__name__iexact='accepted').order_by('date').first()
@@ -193,7 +233,7 @@ def calculate_standing(contest, virtual=False, user_instance=None, group=None):
             else:
                 attempts = submissions.filter(result__penalty=True).count()
             instance_result.add_problem_result(
-                ProblemResult(accepted=acc_delta, attempts=attempts, acc_delta=acc_delta)
+                ProblemResult(accepted=acc_delta, attempts=attempts, acc_delta=acc_delta, pending=pending_submissions)
             )
         instance_results.append(instance_result)
 
@@ -204,8 +244,7 @@ def calculate_standing(contest, virtual=False, user_instance=None, group=None):
         time come first, and so on.
         """
         acc_deltas = sorted(
-            [problem_result.delta() for problem_result in ir.problem_results],
-            key=lambda row: -row
+            [problem_result.delta() for problem_result in ir.problem_results], key=lambda row: -row
         )
         return -ir.solved, ir.penalty, acc_deltas
 

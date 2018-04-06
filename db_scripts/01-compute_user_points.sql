@@ -15,7 +15,8 @@ BEGIN
     FROM api_problem JOIN api_submission ON (api_problem.id = api_submission.problem_id)
     WHERE (api_submission.hidden = FALSE) AND
           (api_submission.result_id = 1) AND
-          (api_submission.user_id = in_user_id)
+          (api_submission.user_id = in_user_id) AND
+          (api_submission.status = 'normal')
   ) AS solved_problems;
   RETURN user_points;
 END;

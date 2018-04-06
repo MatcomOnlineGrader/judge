@@ -145,9 +145,12 @@ class Contest(models.Model):
     def is_past(self):
         return self.end_date < timezone.now()
 
+    def is_running_at(self, timestamp):
+        return self.visible and self.start_date <= timestamp <= self.end_date
+
     @property
     def is_running(self):
-        return self.visible and self.start_date <= timezone.now() <= self.end_date
+        return self.is_running_at(timezone.now())
 
     def real_registration(self, user):
         """Return the real instance related with this contest and a given user"""
@@ -293,7 +296,7 @@ class Problem(models.Model):
             filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
 
     def _accepted_submissions(self):
-        return self._visible_submissions().filter(result__name__iexact='accepted')
+        return self._visible_submissions().filter(result__name__iexact='accepted', status='normal')
 
     @staticmethod
     def get_visible_problems(admin=False):
@@ -539,12 +542,12 @@ class UserProfile(models.Model):
 
     @property
     def solved_problems(self):
-        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False)\
+        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False, status='normal')\
             .distinct('problem_id').count()
 
     @property
     def accepted_submissions(self):
-        return self.user.submissions.filter(hidden=False, result__name__iexact='accepted').count()
+        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False, status='normal').count()
 
     @property
     def total_submissions(self):
@@ -574,9 +577,15 @@ class Result(models.Model):
 
 
 class Submission(models.Model):
+    STATUS_CHOICES = [
+        ('normal', 'normal'),
+        ('frozen', 'frozen'),
+        ('death', 'death')
+    ]
+
     problem = models.ForeignKey(Problem, related_name='submissions', on_delete=models.CASCADE)
     instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions', on_delete=models.SET_NULL)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
     execution_time = models.IntegerField(default=0)
     memory_used = models.IntegerField(default=0)
     source = models.TextField()
@@ -586,38 +595,47 @@ class Submission(models.Model):
     public = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     judgement_details = models.TextField(null=True)
-
-    def can_show_judgment_details_to(self, user):
-        if user_is_admin(user) or not self.instance \
-                or not self.instance.real or self.instance.is_past:
-            return True
-        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.death_time),\
-               self.instance.end_date
-        if self.instance.is_death_time and s < self.date < e:
-            return False
-        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.frozen_time), \
-               self.instance.end_date
-        if self.instance.is_frozen_time and s < self.date < e:
-            return self.user == user
-        return False
-
-    def can_show_details_to(self, user):
-        if user_is_admin(user) or not self.instance \
-                or not self.instance.real or self.instance.is_past:
-            return True
-        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.death_time),\
-               self.instance.end_date
-        if self.instance.is_death_time and s < self.date < e:
-            return False
-        s, e = self.instance.end_date - timezone.timedelta(minutes=self.instance.frozen_time), \
-               self.instance.end_date
-        if self.instance.is_frozen_time and s < self.date < e:
-            return self.user == user
-        return True
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='normal')
 
     @property
     def visible(self):
         return not self.hidden and (self.instance is None or self.instance.contest.visible)
+
+    @staticmethod
+    def visible_submissions(user):
+        """Submissions to show in submission list"""
+        if user_is_admin(user):
+            return Submission.objects
+        return Submission.objects \
+            .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+
+    def can_show_judgment_details_to(self, user):
+        """Determine whether an user can see judgment details of the submission.
+        An user can see judgment details only if:
+        - The user is an administrator, or
+        - The submission is public or owned by `user` AND
+          The submission is a normal submission AND
+          There is not an instance or the instance is past.
+        """
+        if user_is_admin(user):
+            return True
+        if (self.user == user or self.public) and (not self.instance or self.instance.is_past) and \
+                (self.status == 'normal'):
+            return True
+        return False
+
+    def can_show_details_to(self, user):
+        """Determine whether an user can see details of the submission
+        (result, time, memory, etc) or not. An user can see details only
+        if:
+        - The user is an administrator, or
+        - The submission is a normal submission (other than frozen & death), or
+        - The submission is frozen but the user is the owner.
+        """
+        if user_is_admin(user) or (self.status == 'normal') or \
+                (self.user == user and self.status == 'frozen'):
+            return True
+        return False
 
     def can_show_source_to(self, user):
         """Determine whether the current submission's has the
@@ -642,14 +660,6 @@ class Submission(models.Model):
                     self.visible and (self.public or profile.is_browser)
                 )
         return False
-
-    @staticmethod
-    def visible_submissions(user):
-        """Submissions to show in submission list"""
-        if user_is_admin(user):
-            return Submission.objects
-        return Submission.objects \
-            .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
 
     def __str__(self):
         return str(self.id)
@@ -762,11 +772,14 @@ class ContestInstance(models.Model):
             return self.contest.is_past
         return timezone.now() > self.start_date + self.contest.duration
 
+    def is_running_at(self, timestamp):
+        if self.real:
+            return self.contest.is_running_at(timestamp)
+        return self.start_date <= timestamp <= self.start_date + self.contest.duration
+
     @property
     def is_running(self):
-        if self.real:
-            return self.contest.is_running
-        return self.start_date <= timezone.now() <= self.start_date + self.contest.duration
+        return self.is_running_at(timezone.now())
 
     @property
     def is_frozen_time(self):
