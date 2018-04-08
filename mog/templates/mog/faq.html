@@ -21,6 +21,7 @@
                 <li><strong>C++11</strong> – GNU G++11 5.1.0</li>
                 <li><strong>C#</strong> – MS C# .NET 4.7.2053</li>
                 <li><strong>Java</strong> – Java 1.8.0_131</li>
+                <li><strong>JavaScript</strong> – JavaScript v8 4.8.0</li>
                 <li><strong>Pascal</strong> – Free Pascal 2.6.4</li>
                 <li><strong>Python 2.7</strong> – Python 2.7.13</li>
                 <li><strong>Python 3.5</strong> – Python 3.5.3</li>
@@ -81,8 +82,8 @@
             <h3>How to solve A+B problem ?</h3>
             <p>Given two small integers $A$ and $B$ what is the result of $A + B$ ?</p>
 
-            <small class="uniform-text">ASM</small>
-            <textarea class="code" data-mode="gas" data-url="{% static 'mog/aplusb/aplusb.asm.txt' %}"></textarea>
+{#            <small class="uniform-text">ASM</small>#}
+{#            <textarea class="code" data-mode="gas" data-url="{% static 'mog/aplusb/aplusb.asm.txt' %}"></textarea>#}
 
             <small class="uniform-text">C</small>
             <textarea class="code" data-mode="text/x-csrc" data-url="{% static 'mog/aplusb/aplusb.c.txt' %}"></textarea>
@@ -93,17 +94,23 @@
             <small class="uniform-text">C#</small>
             <textarea class="code" data-mode="text/x-csharp" data-url="{% static 'mog/aplusb/aplusb.cs.txt' %}"></textarea>
 
-            <small class="uniform-text">F#</small>
-            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.fs.txt' %}"></textarea>
+{#            <small class="uniform-text">F#</small>#}
+{#            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.fs.txt' %}"></textarea>#}
 
             <small class="uniform-text">Java</small>
             <textarea class="code" data-mode="text/x-java" data-url="{% static 'mog/aplusb/aplusb.java.txt' %}"></textarea>
 
+            <small class="uniform-text">JavaScript</small>
+            <textarea class="code" data-mode="text/javascript" data-url="{% static 'mog/aplusb/aplusb.js.txt' %}"></textarea>
+
             <small class="uniform-text">Pascal</small>
             <textarea class="code" data-mode="text/x-pascal" data-url="{% static 'mog/aplusb/aplusb.pas.txt' %}"></textarea>
 
-            <small class="uniform-text">Python (2.7)</small>
-            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py.txt' %}"></textarea>
+            <small class="uniform-text">Python2</small>
+            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py2.txt' %}"></textarea>
+
+            <small class="uniform-text">Python3</small>
+            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py3.txt' %}"></textarea>
 
             {# Looks like FSharp? #}
             <small class="uniform-text">Tiger</small>
@@ -118,14 +125,14 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/lib/codemirror.js"></script>
-
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/clike/clike.js"></script>
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/pascal/pascal.js"></script>
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/python/python.js"></script>
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/mllike/mllike.js"></script>
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/sql/sql.js"></script>
-    <script type="text/javascript" src="/static/mog/plugins/codemirror/mode/gas/gas.js"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/lib/codemirror.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/clike/clike.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/pascal/pascal.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/python/python.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/mllike/mllike.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/sql/sql.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/gas/gas.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/javascript/javascript.js' %}"></script>
 
     <script>
         $(document).ready(function() {

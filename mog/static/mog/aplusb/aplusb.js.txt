@@ -1,0 +1,4 @@
+var tokens = readline().split(' ');
+var a = parseInt(tokens[0]);
+var b = parseInt(tokens[1]);
+print(a+b);
