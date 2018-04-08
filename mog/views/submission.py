@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from django.contrib import messages
@@ -55,8 +58,9 @@ class Submit(View):
         file = request.FILES.get('file')
         problem = get_object_or_404(Problem, pk=problem)
         compiler = get_object_or_404(Compiler, pk=compiler)
+        date = timezone.now()
         if not user_is_admin(request.user) and not problem.contest.visible:
-            return Http404()
+            raise Http404()
         if not user_is_admin(request.user) and compiler not in problem.compilers.all():
             msg = _(u'Invalid language choice')
             messages.warning(request, msg, extra_tags='danger')
@@ -68,16 +72,44 @@ class Submit(View):
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:submit', problem_id=problem.id)
         instance = problem.contest.registration(request.user)
-        if instance and not instance.is_running:
+        if instance and not instance.is_running_at(date):
             instance = None
         if (not user_is_admin(request.user)) and (not instance) and problem.contest.is_running:
             msg = _(u'You cannot submit because you are not registered in the contest.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
-        submission = Submission(problem=problem, source=source,
-                                user=request.user, compiler=compiler,
-                                result=Result.objects.get(name__iexact='pending'),
-                                instance=instance)
+
+        # check if this submission was sent twice too quick
+        previous = Submission.objects.filter(user=request.user)\
+            .order_by('date').last()
+        if previous and (date - previous.date).total_seconds() < 5:
+            if (previous.problem == problem) and (previous.compiler == compiler) \
+                    and (previous.source == source):
+                msg = _(u'Sending same submission twice too quickly.')
+                messages.info(request, msg, extra_tags='warning')
+                return redirect('mog:contest_submissions', problem.contest.id)
+
+        # determine whether the current submission was sent in normal,
+        # froze or death time.
+        status = 'normal'
+        if instance and instance.real:
+            contest = instance.contest
+            if date < contest.end_date - timedelta(minutes=contest.frozen_time):
+                status = 'normal'
+            elif date < contest.end_date - timedelta(minutes=contest.death_time):
+                status = 'frozen'
+            else:
+                status = 'death'
+        submission = Submission(
+            problem=problem,
+            source=source,
+            user=request.user,
+            compiler=compiler,
+            result=Result.objects.get(name__iexact='pending'),
+            instance=instance,
+            date=date,
+            status=status
+        )
         if user_is_admin(request.user):
             submission.hidden = True
         submission.save()

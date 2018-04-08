@@ -75,6 +75,8 @@ Execute `psql` and run:
 ```
 postgres=# CREATE USER [DATABASE_USER] PASSWORD '[DATABASE_PASS]';
 postgres=# CREATE DATABASE [DATABASE_NAME] OWNER [DATABASE_USER];
+postgres=# GRANT postgres TO [DATABASE_USER];
+postgres=# ALTER USER [DATABASE_USER] CREATEDB;
 ```
 
 **Run some python scripts:**
