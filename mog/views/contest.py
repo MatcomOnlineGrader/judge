@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q
+from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q, Submission
 from mog.forms import ContestForm, ClarificationForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
@@ -74,9 +74,10 @@ def contest_standing(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     if not contest.can_be_seen_by(request.user):
         raise Http404()
+
     user_instance = None
     if request.user.is_authenticated:
-        user_instance = contest.virtual_registration(request.user)
+        user_instance = contest.instances.filter(user=request.user).first()
     show_virtual = request.GET.get('show_virtual') == 'on'
 
     group_in_ranking = request.GET.get('group', None)
@@ -466,6 +467,19 @@ def unrate_contest(request, contest_id):
     msg = _("This contest have been unrated successfully")
     messages.success(request, msg, extra_tags='success')
     return redirect(next)
+
+
+@login_required
+@require_http_methods(["POST"])
+def unfreeze_contest(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    updated = Submission.objects.filter(Q(problem__contest=contest) & ~Q(status='normal'))\
+        .update(status='normal')
+    msg = '%s %d %s' % (_("Contest unfrozen successfully"), updated, _('submission(s) affected'))
+    messages.success(request, msg, extra_tags='success')
+    return redirect(reverse('mog:contest_problems', args=(contest.id,)))
 
 
 @login_required
