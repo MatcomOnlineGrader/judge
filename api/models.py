@@ -108,6 +108,7 @@ class Contest(models.Model):
     closed = models.BooleanField(verbose_name="Closed registration", default=False)
     allow_teams = models.BooleanField(verbose_name="Allow teams", default=False)
     rated = models.BooleanField(default=False)
+    group = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Default group'))
 
     def __str__(self):
         return self.name

@@ -187,7 +187,12 @@ def register_instance(request, contest, user, team):
         return redirect(nxt or reverse('mog:contests'))
 
     ContestInstance.objects.create(
-        contest=contest, user=user, team=team, real=real, start_date=start_date
+        contest=contest,
+        user=user,
+        team=team,
+        real=real,
+        start_date=start_date,
+        group=contest.group
     )
 
     if real:
@@ -326,7 +331,8 @@ class ContestCreateView(View):
             frozen_time=data['frozen_time'],
             death_time=data['death_time'],
             closed=data['closed'],
-            allow_teams=data['allow_teams']
+            allow_teams=data['allow_teams'],
+            group=data['group']
         )
         contest.save()
         return redirect('mog:contest_problems', contest_id=contest.id)
