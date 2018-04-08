@@ -72,10 +72,10 @@ def compile_checker(checker, cwd):
 
 
 def compile_submission(submission):
+    compiler = submission.compiler
+
     submission.result = Result.objects.get(name__iexact='compiling')
     submission.save()
-
-    compiler = submission.compiler
 
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
     src_file = '%d.%s' % (submission.id, compiler.file_extension)
@@ -88,7 +88,7 @@ def compile_submission(submission):
     with open(os.path.join(submission_folder, src_file), 'wb') as f:
         f.write(submission.source.encode('utf8'))
 
-    if compiler.language.lower() == 'python':
+    if compiler.language.lower() in ['python', 'javascript']:
         return True
 
     try:
@@ -145,9 +145,9 @@ def grade_submission(submission, number_of_executions):
     if compiler.language.lower() == 'java':
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx256M -DMOG=true Main'\
               % (RUNEXE_PATH, problem.time_limit, problem.memory_limit)
-    elif compiler.language.lower() == 'python':
-        cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s %s' \
-              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, compiler.path, compiler.arguments, '%d.%s' % (submission.id, compiler.file_extension))
+    elif compiler.language.lower() in ['python', 'javascript']:
+        cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s' \
+              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, compiler.path, compiler.arguments.format('%d.%s' % (submission.id, compiler.file_extension)))
     else:
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" %s' \
               % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, '%d.%s' % (submission.id, compiler.exec_extension))

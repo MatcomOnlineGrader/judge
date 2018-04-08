@@ -206,11 +206,18 @@ def calculate_standing(contest, virtual=False, user_instance=None, group=None, a
                     # the number of pending submissions will be 0 because here frozen/death
                     # time are disabled.
                     pending_submissions = 0
-                    submissions = instance.submissions.filter(
-                        Q(problem=problem) &
-                        Q(hidden=False) &
-                        Q(date__lte=(instance.start_date + user_instance_relative_time))
-                    )
+                    if instance.real:
+                        submissions = instance.submissions.filter(
+                            Q(problem=problem) &
+                            Q(hidden=False) &
+                            Q(date__lte=(contest.start_date + user_instance_relative_time))
+                        )
+                    else:
+                        submissions = instance.submissions.filter(
+                            Q(problem=problem) &
+                            Q(hidden=False) &
+                            Q(date__lte=(instance.start_date + user_instance_relative_time))
+                        )
             else:
                 # user not registered in contest, in this case, only normal solutions will
                 # be displayed (solutions before frozen time), pending solutions will be
