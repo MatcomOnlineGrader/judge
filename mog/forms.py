@@ -63,7 +63,7 @@ class ContestForm(forms.ModelForm):
     class Meta:
         model = Contest
         fields = ['name', 'code', 'description', 'start_date', 'end_date', 'visible', 'frozen_time',
-                  'death_time', 'closed', 'allow_teams']
+                  'death_time', 'group', 'closed', 'allow_teams']
 
     def clean_description(self):
         return secure_html(self.cleaned_data['description'])
