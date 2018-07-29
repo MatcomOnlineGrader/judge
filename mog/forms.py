@@ -91,13 +91,14 @@ class ProblemForm(forms.ModelForm):
                   'contest', 'tags', 'compilers']
 
 
-class DisposableEmailForm(RegistrationFormNoFreeEmail):
+class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
     """https://github.com/ivolo/disposable-email-domains/blob/master/index.json"""
     bad_domains = json.load(open('disposable.json', 'r'))
 
-
-class MOGRegistrationForm(DisposableEmailForm, RegistrationFormUniqueEmail):
-    pass
+    def clean_email(self):
+        RegistrationFormNoFreeEmail.clean_email(self)
+        RegistrationFormUniqueEmail.clean_email(self)
+        return self.cleaned_data['email']
 
 
 class ClarificationForm(forms.ModelForm):
