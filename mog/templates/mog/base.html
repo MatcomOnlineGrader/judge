@@ -12,7 +12,8 @@
               content="programming algorithm contest competition informatics olympiads c++ java python graphs matcom havana habana" />
         <title>{% block title %}{% endblock %} | MatCom Online Grader</title>
         <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'mog/images/favicon.ico' %}"/>
-        <link href="{% static 'mog/plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet"/>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
         <link href="{% static 'mog/css/body.css' %}" rel="stylesheet"/>
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -24,23 +25,6 @@
 
           gtag('config', 'UA-108230808-1');
         </script>
-
-        {% block mathjax %}
-            <script type="text/x-mathjax-config">
-                MathJax.Hub.Config({
-                    extensions: ["tex2jax.js"],
-                    jax: ["input/TeX", "output/HTML-CSS"],
-                    tex2jax: {
-                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-                        processEscapes: true
-                    },
-                    "HTML-CSS": { availableFonts: ["TeX"] }
-                });
-            </script>
-        {% endblock %}
-
-
 
         {% block styles %}
             {# Additional styles here! #}
@@ -299,10 +283,9 @@
             </footer>
         </div>
 
-        <script type="text/javascript" src="{% static 'mog/plugins/jquery/js/jquery-3.1.0.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'mog/plugins/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="{% static 'mog/js/mog.js' %}"></script>
-
 
         {% block scripts %}
             {# Additional scripts here! #}

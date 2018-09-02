@@ -39,15 +39,11 @@
     </div>
 {% endblock %}
 
-{% block mathjax %}
-    {# remove MathJax #}
-{% endblock %}
-
 {% block styles %}
-    <link href="{% static 'mog/plugins/editor.summernote/summernote.css' %}" rel="stylesheet"/>
-    <link href="{% static 'mog/plugins/font-awesome/css/font-awesome.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.css" integrity="sha256-LtkRmRit98lUHXAO6AkQ740CIP8xLrzmSMW+weZj/Ys=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha256-VBrFgheoreGl4pKmWgZh3J23pJrhNlSUOBek+8Z2Gv0=" crossorigin="anonymous" />
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{% static 'mog/plugins/editor.summernote/summernote.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.js" integrity="sha256-h14wZWLJSYljixnsAiegAH/D/hSC9DLl55Jd3+PQSBM=" crossorigin="anonymous"></script>
 {% endblock %}
