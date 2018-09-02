@@ -32,15 +32,15 @@
 {% endblock %}
 
 {% block styles %}
-    <link href="{% static 'mog/plugins/editor.summernote/summernote.css' %}" rel="stylesheet"/>
-    <link href="{% static 'mog/plugins/font-awesome/css/font-awesome.css' %}" rel="stylesheet"/>
-    <link href="{% static 'mog/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.css" integrity="sha256-LtkRmRit98lUHXAO6AkQ740CIP8xLrzmSMW+weZj/Ys=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha256-VBrFgheoreGl4pKmWgZh3J23pJrhNlSUOBek+8Z2Gv0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" integrity="sha256-yMjaV542P+q1RnH6XByCPDfUFhmOafWbeLPmqKh11zo=" crossorigin="anonymous" />
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{% static 'mog/plugins/editor.summernote/summernote.js' %}"></script>
-    <script type="text/javascript" src="{% static 'mog/plugins/moment/moment.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'mog/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.js" integrity="sha256-h14wZWLJSYljixnsAiegAH/D/hSC9DLl55Jd3+PQSBM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js" integrity="sha256-5YmaxAwMjIpMrVlK84Y/+NjCpKnFYa8bWWBbUHSBGfU=" crossorigin="anonymous"></script>
 
     <script>
         $(document).ready(function() {
