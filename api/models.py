@@ -281,7 +281,7 @@ class Problem(models.Model):
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
     checker = models.ForeignKey(Checker, null=True, on_delete=models.SET_NULL)
     position = models.IntegerField()
-    points = models.IntegerField(default=0)
+    points = models.IntegerField(default=10)
     balloon = models.CharField(verbose_name="Balloon color", max_length=50, null=True, blank=True)
     letter_color = models.CharField(max_length=20, choices=LETTER_COLOR_CHOICES, default='#ffffff')
     contest = models.ForeignKey(Contest, related_name='problems', on_delete=models.CASCADE)
