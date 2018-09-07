@@ -379,6 +379,8 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     show_in_main_page = models.BooleanField(default=False)
     slug = models.SlugField(max_length=250, null=True)
+    meta_description = models.CharField(max_length=1024, null=True)
+    meta_image = models.CharField(max_length=512, null=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
