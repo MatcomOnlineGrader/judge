@@ -9,6 +9,31 @@
 
 {% block title %}{{ post.name }}{% endblock %}
 
+{% block metas %}
+    <!--  Essential META Tags -->
+    <meta property="og:title" content="{{post.name}}" />
+
+    {% if post.meta_description %}
+        <meta property="og:description" content="{{post.meta_description}}" />
+    {% endif %}
+
+    {% if post.meta_image %}
+        <meta property="og:image" content="{{post.meta_image}}" />
+    {% endif %}
+
+    <meta property="og:url" content="http://matcomgrader.com{% url 'mog:post' post.pk post.slug %}" />
+
+    <!--  Non-Essential, But Recommended -->
+    <meta property="og:site_name" content='Matcom Online Grader' />
+
+    <!--  Article META Tags -->
+    <meta property="og:type" content="article"/>
+    <meta property="article:author' content="http://matcomgrader.com{% url 'mog:user' post.user.pk %}" />
+    <meta property="article:publisher" content="http://matcomgrader.com" />
+    <meta property="article:published_time" content='{{post.creation_date | date:"c"}}' />
+    <meta property="article:modified_time" content='{{post.modification_date | date:"c"}}' />
+{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="col-md-12 well bckg-white">

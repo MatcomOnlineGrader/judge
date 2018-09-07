@@ -10,6 +10,9 @@
               content="{% block meta_description %}Matcom Online Grader. Programming contests, algorithms and mathematics.{% endblock %}">
         <meta name="keywords"
               content="programming algorithm contest competition informatics olympiads c++ java python graphs matcom havana habana" />
+        {% block metas %}
+            {# add meta tags here #}
+        {% endblock %}
         <title>{% block title %}{% endblock %} | MatCom Online Grader</title>
         <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="{% static 'mog/images/favicon.ico' %}"/>
 

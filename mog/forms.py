@@ -53,7 +53,7 @@ class UserForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['name', 'body']
+        fields = ['name', 'body', 'meta_description', 'meta_image']
 
     def clean_body(self):
         return secure_html(self.cleaned_data['body'])

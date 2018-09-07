@@ -55,7 +55,13 @@ class PostCreateView(View):
                 'form': form
             })
         data = form.cleaned_data
-        post = Post(name=data['name'], body=data['body'], user=request.user)
+        post = Post(
+            name=data['name'],
+            body=data['body'],
+            meta_description=data['meta_description'],
+            meta_image=data['meta_image'],
+            user=request.user
+        )
         if user_is_admin(request.user):
             post.show_in_main_page = \
                 request.POST.get('show_in_main_page', None) is not None
@@ -87,6 +93,8 @@ class EditPostView(View):
         data = form.cleaned_data
         post.name = data['name']
         post.body = data['body']
+        post.meta_description = data['meta_description']
+        post.meta_image = data['meta_image']
         if user_is_admin(request.user):
             post.show_in_main_page =\
                 request.POST.get('show_in_main_page', None) is not None
