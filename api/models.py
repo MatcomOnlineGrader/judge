@@ -559,7 +559,7 @@ class UserProfile(models.Model):
     @staticmethod
     def sorted_by_ratings():
         return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(0))). \
-            order_by('-rating_value', '-points').select_related('user')
+            order_by('-rating_value', '-points', 'pk').select_related('user')
 
     def __str__(self):
         return self.user.username
