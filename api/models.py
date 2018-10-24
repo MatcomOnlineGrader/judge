@@ -590,7 +590,7 @@ class Submission(models.Model):
     instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions', on_delete=models.SET_NULL)
     date = models.DateTimeField()
     execution_time = models.IntegerField(default=0)
-    memory_used = models.IntegerField(default=0)
+    memory_used = models.BigIntegerField(default=0)
     source = models.TextField()
     user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
     result = models.ForeignKey(Result, on_delete=models.CASCADE)
