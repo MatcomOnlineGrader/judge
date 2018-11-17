@@ -44,6 +44,10 @@ class TagAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
+class UserFeedbackAdmin(admin.ModelAdmin):
+    ordering = ('-submitted_date',)
+
+
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Team)
 admin.site.register(Tag, TagAdmin)
@@ -61,3 +65,4 @@ admin.site.register(Result)
 admin.site.register(Submission)
 admin.site.register(Comment)
 admin.site.register(ContestInstance)
+admin.site.register(UserFeedback, UserFeedbackAdmin)

@@ -262,6 +262,8 @@
                 </div>
             {% endblock %}
 
+            <div id="report-issues"></div>
+
             <hr>
 
             <footer>
@@ -289,6 +291,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="{% static 'mog/js/mog.js' %}"></script>
+
+        {% comment %}
+        Move this to an special file where we collect information
+        during the time django is rendering its templates.
+        {% endcomment %}
+        <script>
+            var CurrentUser = {
+                csrftoken: '{{csrf_token}}',
+                authenticated: ('{{user.is_authenticated}}' === 'True')
+            };
+        </script>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+        <script type="text/javascript" src="{% static 'frontend/dist/bundle.js' %}"></script>
 
         {% block scripts %}
             {# Additional scripts here! #}

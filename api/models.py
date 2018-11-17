@@ -872,3 +872,31 @@ class Clarification(models.Model):
         return ClarificationExtendedForm(
             instance=self
         )
+
+
+class UserFeedback(models.Model):
+    sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='feedbacks'
+    )
+    submitted_date = models.DateTimeField(
+        auto_now_add=True
+    )
+    subject = models.CharField(
+        max_length=1024,
+        verbose_name=_('Subject')
+    )
+    description = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Description')
+    )
+    screenshot = models.ImageField(
+        upload_to=UUIDImageName('screenshot'),
+        null=True,
+        blank=True,
+        verbose_name=_('Screenshot')
+    )
+
+    def __str__(self):
+        return self.subject

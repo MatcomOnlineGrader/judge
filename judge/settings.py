@@ -69,6 +69,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'mog.apps.MogConfig',
+    'frontend.apps.FrontendConfig',
     'social_django',
     'django.contrib.humanize',
     'django.contrib.admin',

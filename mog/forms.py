@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
-from api.models import UserProfile, User, Post, Contest, Problem, Clarification
+from api.models import UserProfile, UserFeedback, User, Post, Contest, Problem, Clarification
 from mog.utils import secure_html
 
 
@@ -138,3 +138,10 @@ class ClarificationExtendedForm(ClarificationForm):
     class Meta:
         model = Clarification
         fields = ['problem', 'question', 'answer', 'public']
+
+
+
+class UserFeedbackForm(forms.ModelForm):
+    class Meta:
+        model = UserFeedback
+        fields = ['subject', 'description', 'screenshot']

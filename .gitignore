@@ -16,3 +16,7 @@ mog/static/admin/
 mog/static/debug_toolbar/
 categories.json
 confusables.json
+package-lock.json
+node_modules/
+frontend/static/frontend/dist/*
+!frontend/static/frontend/dist/.gitkeep
