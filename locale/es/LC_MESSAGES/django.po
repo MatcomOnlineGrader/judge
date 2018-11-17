@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-06 15:31-0400\n"
+"POT-Creation-Date: 2018-11-15 01:54-0500\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,72 +10,91 @@ msgstr ""
 "es/)\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: api/models.py:483
+#: api/models.py:111
+msgid "Default group"
+msgstr ""
+
+#: api/models.py:486
 msgid "Code Editor Theme"
 msgstr "Tema del editor de código"
 
-#: api/models.py:484
+#: api/models.py:487
 msgid "Avatar"
 msgstr "Imagen"
 
-#: api/models.py:485
+#: api/models.py:488
 msgid "Show tags"
 msgstr "Mostrar etiquetas"
 
-#: api/models.py:486 mog/templates/mog/user/_create_team.html:32
+#: api/models.py:489 mog/templates/mog/user/_create_team.html:32
 msgid "Institution"
 msgstr "Institución"
 
-#: api/models.py:489 mog/templates/mog/submit/submit.html:55
+#: api/models.py:492 mog/templates/mog/submit/submit.html:55
 msgid "Compiler"
 msgstr "Compilador"
 
-#: api/models.py:490 mog/templates/mog/base.html:236
+#: api/models.py:493 mog/templates/mog/base.html:223
 #: mog/templates/mog/problem/index.html:40
 #: mog/templates/mog/user/detail.html:16 mog/templates/mog/user/index.html:37
 msgid "Points"
 msgstr "Puntos"
 
-#: api/models.py:492
+#: api/models.py:495
 msgid "Send email notifications"
 msgstr "Enviar notificaciones por correo"
 
-#: api/models.py:731
+#: api/models.py:734
 msgid "Group name"
 msgstr "Nombre del grupo"
 
-#: api/models.py:822 mog/templates/mog/contest/_coming_contests.html:10
+#: api/models.py:825 mog/templates/mog/contest/_coming_contests.html:10
 #: mog/templates/mog/contest/_past_contests.html:10
 #: mog/templates/mog/contest/_running_contests.html:10
 msgid "Contest"
 msgstr "Concurso"
 
-#: api/models.py:829 mog/templates/mog/contest/problems.html:89
+#: api/models.py:832 mog/templates/mog/contest/problems.html:89
 #: mog/templates/mog/submission/_list.html:10
 #: mog/templates/mog/submission/index.html:21
 #: mog/templates/mog/submit/submit.html:43
 msgid "Problem"
 msgstr "Problema"
 
-#: api/models.py:848
+#: api/models.py:851
 msgid "Public"
 msgstr "Público"
 
-#: api/models.py:852 mog/forms.py:106
+#: api/models.py:855 mog/forms.py:107
 #: mog/templates/mog/contest/clarifications.html:66
 msgid "Question"
 msgstr "Pregunta"
 
-#: api/models.py:856 mog/forms.py:134
+#: api/models.py:859 mog/forms.py:135
 #: mog/templates/mog/contest/clarifications.html:67
 msgid "Answer"
 msgstr "Respuesta"
 
-#: judge/settings.py:196
+#: api/models.py:888 mog/templates/mog/user/messages.html:22
+#: mog/templates/mog/user/messages.html:51
+msgid "Subject"
+msgstr "Asunto"
+
+#: api/models.py:892 mog/templates/mog/contest/problems.html:125
+#: mog/templates/mog/user/_create_team.html:27
+#: mog/templates/mog/user/teams.html:16
+msgid "Description"
+msgstr "Descripción"
+
+#: api/models.py:898
+msgid "Screenshot"
+msgstr ""
+
+#: judge/settings.py:197
 msgid "Spanish"
 msgstr "Español"
 
-#: judge/settings.py:197
+#: judge/settings.py:198
 msgid "English"
 msgstr "Inglés"
 
@@ -102,34 +121,34 @@ msgstr ""
 "La duración del tiempo muerto debe ser menor o igual que la duración de la "
 "competencia."
 
-#: mog/forms.py:128
+#: mog/forms.py:129
 msgid "Problem not included in contest"
 msgstr "Problema no incluído en el concurso"
 
-#: mog/templates/mog/base.html:134
+#: mog/templates/mog/base.html:121
 msgid "Home"
 msgstr "Inicio"
 
-#: mog/templates/mog/base.html:135 mog/templates/mog/user/index.html:12
+#: mog/templates/mog/base.html:122 mog/templates/mog/user/index.html:12
 msgid "Users"
 msgstr "Usuarios"
 
-#: mog/templates/mog/base.html:136 mog/templates/mog/contest/_left.html:67
+#: mog/templates/mog/base.html:123 mog/templates/mog/contest/_left.html:67
 #: mog/templates/mog/contest/problems.html:8
 #: mog/templates/mog/contest/problems.html:20
 msgid "Problems"
 msgstr "Problemas"
 
-#: mog/templates/mog/base.html:137 mog/templates/mog/contest/index.html:6
+#: mog/templates/mog/base.html:124 mog/templates/mog/contest/index.html:6
 msgid "Contests"
 msgstr "Concursos"
 
-#: mog/templates/mog/base.html:138 mog/templates/mog/post/index.html:8
+#: mog/templates/mog/base.html:125 mog/templates/mog/post/index.html:8
 #: mog/templates/mog/post/index.html:13
 msgid "Posts"
 msgstr "Publicaciones"
 
-#: mog/templates/mog/base.html:139 mog/templates/mog/contest/_left.html:77
+#: mog/templates/mog/base.html:126 mog/templates/mog/contest/_left.html:77
 #: mog/templates/mog/contest/submissions.html:7
 #: mog/templates/mog/contest/submissions.html:16
 #: mog/templates/mog/submission/index.html:8
@@ -138,34 +157,34 @@ msgstr "Publicaciones"
 msgid "Submissions"
 msgstr "Envíos"
 
-#: mog/templates/mog/base.html:140
+#: mog/templates/mog/base.html:127
 msgid "FAQ"
 msgstr "Ayuda"
 
-#: mog/templates/mog/base.html:196
+#: mog/templates/mog/base.html:183
 msgid "Faculty of Mathematics and Computer Science of University of Havana"
 msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
 
-#: mog/templates/mog/base.html:233 mog/templates/mog/user/detail.html:15
+#: mog/templates/mog/base.html:220 mog/templates/mog/user/detail.html:15
 #: mog/templates/mog/user/index.html:34
 msgid "Rating"
 msgstr "Clasificación"
 
-#: mog/templates/mog/base.html:239 mog/templates/mog/contest/problems.html:90
+#: mog/templates/mog/base.html:226 mog/templates/mog/contest/problems.html:90
 #: mog/templates/mog/contest/standing.html:89
 #: mog/templates/mog/user/detail.html:17 mog/templates/mog/user/index.html:40
 msgid "Solved"
 msgstr "Resueltos"
 
-#: mog/templates/mog/base.html:260
+#: mog/templates/mog/base.html:247
 msgid "Top rated users"
 msgstr "Mejores usuarios"
 
-#: mog/templates/mog/base.html:264
+#: mog/templates/mog/base.html:251
 msgid "Recent posts"
 msgstr "Publicaciones recientes"
 
-#: mog/templates/mog/base.html:295
+#: mog/templates/mog/base.html:284
 msgid "Privacy Policy"
 msgstr "Política de Privacidad"
 
@@ -428,7 +447,7 @@ msgid "No clarifications yet!"
 msgstr "No hay clarificaciones todavía!"
 
 #: mog/templates/mog/contest/clarifications.html:128
-#: mog/templates/mog/post/detail.html:65
+#: mog/templates/mog/post/detail.html:90
 msgid "Send"
 msgstr "Enviar"
 
@@ -456,12 +475,6 @@ msgstr "Descongelar concurso"
 #: mog/templates/mog/contest/problems.html:115
 msgid "No problems included yet!"
 msgstr "No hay problemas incluídos todavía!"
-
-#: mog/templates/mog/contest/problems.html:125
-#: mog/templates/mog/user/_create_team.html:27
-#: mog/templates/mog/user/teams.html:16
-msgid "Description"
-msgstr "Descripción"
 
 #: mog/templates/mog/contest/registration.html:28
 msgid "User/Team"
@@ -549,15 +562,15 @@ msgstr "Responder"
 msgid "by"
 msgstr "por"
 
-#: mog/templates/mog/post/detail.html:18
+#: mog/templates/mog/post/detail.html:43
 msgid "Edit post"
 msgstr "Editar publicación"
 
-#: mog/templates/mog/post/detail.html:40
+#: mog/templates/mog/post/detail.html:65
 msgid "Edit comment"
 msgstr "Editar comentario"
 
-#: mog/templates/mog/post/detail.html:60
+#: mog/templates/mog/post/detail.html:85
 msgid "Add your comment here"
 msgstr "Escriba su comentario aquí"
 
@@ -795,11 +808,6 @@ msgstr "Bandeja de salida"
 msgid "From"
 msgstr "De"
 
-#: mog/templates/mog/user/messages.html:22
-#: mog/templates/mog/user/messages.html:51
-msgid "Subject"
-msgstr "Asunto"
-
 #: mog/templates/mog/user/messages.html:38
 msgid "No message received!"
 msgstr "No se han recibido mensajes!"
@@ -965,43 +973,43 @@ msgstr "Clarificación editada satisfactoriamente."
 msgid "Unable to edit clarification"
 msgstr "Incapaz de editar la clarificación"
 
-#: mog/views/contest.py:167
+#: mog/views/contest.py:161
 #, python-brace-format
 msgid "Registration is closed for contest \"{0}\""
 msgstr "Registro está cerrado para la competencia \"{0}\""
 
-#: mog/views/contest.py:177
+#: mog/views/contest.py:171
 msgid "No user to register"
 msgstr "Ningún usuario para registrar"
 
-#: mog/views/contest.py:182
+#: mog/views/contest.py:176
 msgid "Invalid user/team combination"
 msgstr "Combinación inválida usuario/equipo"
 
-#: mog/views/contest.py:191
+#: mog/views/contest.py:185
 msgid "Registration cannot be accomplished"
 msgstr "El registro no pudo ser completado"
 
-#: mog/views/contest.py:200
+#: mog/views/contest.py:199
 msgid "Successfully registered for real participation"
 msgstr "Registrado correctamente para participación real"
 
-#: mog/views/contest.py:202
+#: mog/views/contest.py:201
 msgid "Successfully registered for virtual participation"
 msgstr "Registrado correctamente para participación virtual."
 
-#: mog/views/contest.py:259
+#: mog/views/contest.py:258
 msgid "Instance does not exist"
 msgstr "La instancia no existe"
 
-#: mog/views/contest.py:264
+#: mog/views/contest.py:263
 msgid ""
 "Cannot remove registration because the user/team has actions on the contest."
 msgstr ""
 "No se puede eliminar el registro porque el usuario/equipo tiene acciones en "
 "la competencia"
 
-#: mog/views/contest.py:276
+#: mog/views/contest.py:275
 msgid "Successfully unregistered!"
 msgstr "Se eliminó el registro satisfactoriamente!"
 
@@ -1033,6 +1041,7 @@ msgstr ""
 "Este concurso no se puede descalificar porque ocurrió antes de un concurso "
 "calificado."
 
+#: mog/views/contest.py:473
 msgid "This contest have been unrated successfully"
 msgstr "Este concurso ha sido descalificado satisfactoriamente"
 
@@ -1043,6 +1052,10 @@ msgstr "Concurso descongelado satisfactoriamente"
 #: mog/views/contest.py:486
 msgid "submission(s) affected"
 msgstr "envíos(s) afectados"
+
+#: mog/views/feedback.py:26
+msgid "Feedback received"
+msgstr "Retroalimentación recibida"
 
 #: mog/views/submission.py:65
 msgid "Invalid language choice"
@@ -1056,9 +1069,17 @@ msgstr "Código fuente vacío"
 msgid "You cannot submit because you are not registered in the contest."
 msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
-#: mog/views/submission.py:87
+#: mog/views/submission.py:88
 msgid "Sending same submission twice too quickly."
 msgstr "Enviando solución repetida muy rápdio."
+
+#: venv/lib/python3.5/site-packages/captcha/fields.py:18
+msgid "Incorrect, please try again."
+msgstr ""
+
+#: venv/lib/python3.5/site-packages/captcha/fields.py:19
+msgid "Error verifying input, please try again."
+msgstr ""
 
 #: venv/lib/python3.5/site-packages/django/contrib/sitemaps/apps.py:7
 msgid "Site Maps"

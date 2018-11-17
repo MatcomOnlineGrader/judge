@@ -4,6 +4,7 @@
 }
 
 body {
+    position: relative;
     padding-top: 40px;
     padding-bottom: 30px
 }
@@ -199,4 +200,19 @@ form.filter * {
     form.filter * {
         margin: 2px 0 2px;
     }
+}
+
+#report-issues a.reporter-button {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  font-size: 25px;
+  color: #337ab7;
+}
+
+.modal-open {
+  position: fixed;
+  overflow: scroll;
+  width: 100%;
+  padding-right: 0 !important;
 }
