@@ -1,8 +1,11 @@
 from django.core.cache import cache
 from django.utils.safestring import mark_safe
 from django import template
-from api.models import Division, Result
 from django import forms
+
+from api.models import Division, Result
+import api.utils as api_utils
+
 
 register = template.Library()
 
@@ -78,9 +81,7 @@ def user_stats(user):
 
 @register.filter()
 def avatar(user):
-    if not hasattr(user, 'profile') or not user.profile.avatar:
-        return '/static/mog/images/avatar.jpg'
-    return user.profile.avatar.url
+    return api_utils.get_avatar_url_for_user(user)
 
 
 modes = {
