@@ -1,7 +1,6 @@
 venv/
 .vscode/
 emails/
-media/
 api/fixtures/*.json
 !api/fixtures/countries.json
 .idea/
@@ -12,8 +11,6 @@ api/fixtures/*.json
 *.save
 secrets.json
 settings.ini
-mog/static/admin/
-mog/static/debug_toolbar/
 categories.json
 confusables.json
 package-lock.json

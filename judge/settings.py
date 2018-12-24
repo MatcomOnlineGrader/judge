@@ -177,14 +177,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+STATIC_ROOT = config.get('others', 'STATIC_ROOT')
 
-if DEBUG:
-    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'mog/static'))
-    MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
-else:
-    STATIC_ROOT = config.get('others', 'STATIC_ROOT')
-    MEDIA_ROOT = config.get('others', 'MEDIA_ROOT')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = config.get('others', 'MEDIA_ROOT')
 
 LOGIN_URL = '/login/'
 
@@ -237,7 +233,9 @@ EMAIL_TIMEOUT = config.getint('email', 'EMAIL_TIMEOUT')
 
 
 # Activate debug toolbar
-if config.getboolean('debugging', 'DEBUG_TOOLBAR'):
+DEBUG_TOOLBAR = config.getboolean('debugging', 'DEBUG_TOOLBAR')
+
+if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS += [
         'debug_toolbar'
     ]
