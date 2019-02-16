@@ -1,31 +1,29 @@
 {% load i18n %}
 
-<div class="modal fade" id="edit-comment-{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="editComment{{ comment.id }}Label">
+<div class="modal fade" id="remove-comment-{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="removeComment{{ comment.id }}Label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="editComment{{ comment.id }}Label">
+                <h4 class="modal-title" id="removeComment{{ comment.id }}Label">
                     {% include 'mog/user/_link.html' with user=comment.user %}
                     <small>{% trans 'said' %}</small>
                 </h4>
             </div>
             <div class="modal-body">
-                <form id="edit-comment-{{ comment.id }}-form" action="{% url 'mog:comment_edit' comment.id %}" method="post">
+                <div class="form-group">
+                    {{ comment.body }}
+                </div>
+                <form id="remove-comment-{{ comment.id }}-form" action="{% url 'mog:comment_remove' comment.id %}" method="post">
                     {% csrf_token %}
-
-                    <div class="form-group">
-                        <label for="body" class="sr-only">{% trans 'Body' %}</label>
-                        <textarea id="body" name="body" class="form-control" rows="5">{{ comment.body }}</textarea>
-                    </div>
 
                     <div class="text-center">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             {% trans 'Cancel' %}
                         </button>
-                        <button type="submit" class="btn btn-primary">
-                            {% trans 'Edit' %}
+                        <button type="submit" class="btn btn-danger">
+                            {% trans 'Remove' %}
                         </button>
                     </div>
                 </form>

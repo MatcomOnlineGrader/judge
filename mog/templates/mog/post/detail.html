@@ -66,6 +66,14 @@
                             </a>
                             {% include 'mog/comment/_edit_comment.html' with comment=comment %}
                         {% endif %}
+
+                        {% if user|can_remove_comment:comment %}
+                            <a href="#" class="btn btn-link pull-right no-underline"
+                               data-toggle="modal" data-target="#remove-comment-{{ comment.id }}">
+                                <i class="glyphicon glyphicon-trash"></i> {% trans 'Remove comment' %}
+                            </a>
+                            {% include 'mog/comment/_remove_comment.html' with comment=comment %}
+                        {% endif %}
                     </div>
                 </div>
 
