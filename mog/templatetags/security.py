@@ -98,7 +98,12 @@ def can_see_tags(user):
 
 @register.filter()
 def can_edit_comment(user, comment):
-    return user_is_admin(user)
+    return comment.can_be_edited_by(user)
+
+
+@register.filter()
+def can_remove_comment(user, comment):
+    return comment.can_be_removed_by(user)
 
 
 @register.filter()

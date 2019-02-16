@@ -724,6 +724,9 @@ class Comment(models.Model):
     def can_be_edited_by(self, user):
         return user_is_admin(user)
 
+    def can_be_removed_by(self, user):
+        return user_is_admin(user)
+
 
 class ContestInstance(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, related_name='instances', on_delete=models.CASCADE)
