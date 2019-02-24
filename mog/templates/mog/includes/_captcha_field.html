@@ -1,0 +1,17 @@
+{% load filters %}
+{% load i18n %}
+
+<div class="form-group">
+    {% if field.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ field.errors }}
+        </div>
+    {% endif %}
+    <div class="captcha-wrapper">
+        {{ field|add_class:"form-control" }}
+        <a data-toggle="tooltip" href="#{{field.auto_id}}"
+            title="{% trans 'Type the characters you see in the image. This way we can trust you are not a robot :]' %}">
+            <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+    </div>
+</div>
