@@ -1,20 +1,26 @@
 {% load filters %}
 
 {% for field in form %}
-    <div class="form-group">
-        {% if field.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ field.errors }}
-            </div>
-        {% endif %}
-        {%  if field|is_checkbox %}
-            <div class="checkbox margin-left-25">
-                {{ field }}
+    {% if field.label == 'Captcha' %}
+        {# Hack to render captcha field #}
+        {% include 'mog/includes/_captcha_field.html' with field=field %}
+    {% else %}
+        {# All other fields #}
+        <div class="form-group">
+            {% if field.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ field.errors }}
+                </div>
+            {% endif %}
+            {%  if field|is_checkbox %}
+                <div class="checkbox margin-left-25">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
+                </div>
+            {% else %}
                 <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
-            </div>
-        {% else %}
-            <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
-            {{ field|add_class:"form-control" }}
-        {% endif %}
-    </div>
+                {{ field|add_class:"form-control" }}
+            {% endif %}
+        </div>
+    {% endif %}
 {% endfor %}

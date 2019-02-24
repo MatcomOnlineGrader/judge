@@ -19,11 +19,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from registration.backends.hmac.views import RegistrationView
 
-from mog.forms import MOGRegistrationForm
+from mog.forms import MOGRegistrationFormWithCaptcha
 
 urlpatterns = [
-    path(r'register/',
-        RegistrationView.as_view(form_class=MOGRegistrationForm), name='registration_register'),
+    path(r'captcha/', include('captcha.urls')),
+    path(
+        r'register/',
+        RegistrationView.as_view(form_class=MOGRegistrationFormWithCaptcha),
+        name='registration_register'
+    ),
     path(r'', include('registration.backends.hmac.urls')),
     path(r'', include('mog.urls')),
     path(r'slack/', include('slack.urls')),

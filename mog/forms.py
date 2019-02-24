@@ -1,5 +1,6 @@
 import json
 
+from captcha.fields import CaptchaField
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
@@ -99,6 +100,10 @@ class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEma
         RegistrationFormNoFreeEmail.clean_email(self)
         RegistrationFormUniqueEmail.clean_email(self)
         return self.cleaned_data['email']
+
+
+class MOGRegistrationFormWithCaptcha(MOGRegistrationForm):
+    captcha = CaptchaField()
 
 
 class ClarificationForm(forms.ModelForm):

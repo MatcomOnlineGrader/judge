@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'mog.apps.MogConfig',
     'frontend.apps.FrontendConfig',
     'social_django',
+    'captcha',
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
