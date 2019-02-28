@@ -69,6 +69,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'mog.apps.MogConfig',
+    'palantir.apps.PalantirConfig',
     'frontend.apps.FrontendConfig',
     'social_django',
     'captcha',
@@ -92,6 +93,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'palantir.middlewares.AccessLogMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = (
