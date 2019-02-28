@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-24 08:02-0500\n"
+"POT-Creation-Date: 2019-02-28 01:45-0500\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12,7 +12,7 @@ msgstr ""
 
 #: api/models.py:111
 msgid "Default group"
-msgstr ""
+msgstr "Grupo por defecto"
 
 #: api/models.py:486
 msgid "Code Editor Theme"
@@ -242,7 +242,7 @@ msgstr "Registro"
 #: mog/templates/mog/contest/_coming_contests.html:14
 #: mog/templates/mog/contest/_past_contests.html:14
 #: mog/templates/mog/contest/_running_contests.html:14
-#: mog/templates/mog/user/detail.html:20 mog/templates/mog/user/profile.html:50
+#: mog/templates/mog/user/detail.html:20 mog/templates/mog/user/profile.html:66
 msgid "Teams"
 msgstr "Equipos"
 
@@ -772,7 +772,7 @@ msgstr "Nombre"
 msgid "Add Members"
 msgstr "Agregar miembros"
 
-#: mog/templates/mog/user/_login.html:13 mog/templates/mog/user/profile.html:45
+#: mog/templates/mog/user/_login.html:13 mog/templates/mog/user/profile.html:61
 #: venv/lib/python3.5/site-packages/django/contrib/messages/apps.py:7
 msgid "Messages"
 msgstr "Mensajes"
@@ -835,15 +835,23 @@ msgstr "Para"
 msgid "No message sent!"
 msgstr "No se han enviado mensajes!"
 
-#: mog/templates/mog/user/profile.html:35
+#: mog/templates/mog/user/profile.html:21
+msgid "Active"
+msgstr "Activo"
+
+#: mog/templates/mog/user/profile.html:25
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: mog/templates/mog/user/profile.html:51
 msgid "Profile"
 msgstr "Perfil"
 
-#: mog/templates/mog/user/profile.html:40
+#: mog/templates/mog/user/profile.html:56
 msgid "Edit Profile"
 msgstr "Editar perfil"
 
-#: mog/templates/mog/user/profile.html:63
+#: mog/templates/mog/user/profile.html:79
 msgid "Send a message"
 msgstr "Enviar un mensaje"
 
