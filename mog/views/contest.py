@@ -1,3 +1,5 @@
+import csv
+
 from django.db.models.functions import Lower
 from django.urls import reverse
 
@@ -18,7 +20,6 @@ from mog.forms import ContestForm, ClarificationForm
 from mog.utils import user_is_admin, calculate_standing
 from mog.helpers import filter_submissions, get_paginator
 
-import csv
 from mog.templatetags.filters import format_penalty, format_minutes
 
 
@@ -92,7 +93,11 @@ def contest_standing(request, contest_id):
     ranking_groups = []
     for group in group_names:
         problems, instance_results = calculate_standing(
-            contest, show_virtual, user_instance, group
+            contest,
+            show_virtual,
+            user_instance,
+            group,
+            user_is_admin(request.user)
         )
         ranking_groups.append({
             'group': group,
