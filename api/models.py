@@ -397,6 +397,14 @@ class Post(models.Model):
         for comment in unseen_comments.all():
             comment.seen.add(user)
 
+    def can_be_commented_by(self, user):
+        """
+        A user can comment on a post if the user is active and has some
+        problem accepted (the number of points should be positive).
+        """
+        return user.is_authenticated and user.is_active and \
+            hasattr(user, 'profile') and user.profile.points > 0
+
     @property
     def sorted_comments(self):
         return self.comments.order_by('-date').all()

@@ -136,3 +136,8 @@ def can_create_clarification(contest, user):
     if user_is_admin(user):
         return True
     return user.is_authenticated and (contest.is_running and contest.real_registration(user))
+
+
+@register.filter()
+def can_comment_on_post(user, post):
+    return post.can_be_commented_by(user)

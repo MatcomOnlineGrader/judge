@@ -31,6 +31,8 @@ class PostDetailView(View):
     @method_decorator(login_required)
     def post(self, request, pk, slug, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
+        if not post.can_be_commented_by(request.user):
+            return HttpResponseForbidden()
         body = request.POST['body']
         if body:
             comment = Comment(user=request.user, post=post, body=body)

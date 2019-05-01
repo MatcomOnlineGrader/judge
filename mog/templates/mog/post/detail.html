@@ -83,20 +83,27 @@
 
         {% if user.is_authenticated %}
             <div class="col-md-12">
-                <form action="{% url 'mog:post' post.id post.slug %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="user" value="{{ user.id }}">
-                    <input type="hidden" name="post" value="{{ post.id }}">
-                    <div class="form-group">
-                        <label for="comment">
-                            <small class="uniform-text uniform-small">
-                                {% trans 'Add your comment here' %}
-                            </small>
-                        </label>
-                        <textarea id="comment" name="body" class="form-control" rows="10"></textarea>
+                {% if user|can_comment_on_post:post %}
+                    <form action="{% url 'mog:post' post.id post.slug %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="user" value="{{ user.id }}">
+                        <input type="hidden" name="post" value="{{ post.id }}">
+                        <div class="form-group">
+                            <label for="comment">
+                                <small class="uniform-text uniform-small">
+                                    {% trans 'Add your comment here' %}
+                                </small>
+                            </label>
+                            <textarea id="comment" name="body" class="form-control" rows="10"></textarea>
+                        </div>
+                        <input type="submit" value="{% trans 'Send' %}" class="btn btn-primary pull-right">
+                    </form>
+                {% else %}
+                    <div class="alert alert-danger secure info fade in" role="alert">
+                        <i class="glyphicon glyphicon-comment"></i>
+                        {% trans "You need to accept some problem to be able to comment." %}
                     </div>
-                    <input type="submit" value="{% trans 'Send' %}" class="btn btn-primary pull-right">
-                </form>
+                {% endif %}
             </div>
         {% endif %}
     </div>
