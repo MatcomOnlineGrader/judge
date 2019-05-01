@@ -1,14 +1,42 @@
 import os
+import string
 
 from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
 import pytz
 
-from api.models import Checker, Compiler, Contest, Result
+from api.models import Checker, Compiler, Contest, Post, Result, User, UserProfile
 
 
 class FixturedTestCase(TestCase):
+    def updateUserProfile(self, user, **kargs):
+        profile = user.profile
+        for attr, value in kargs.items():
+            setattr(profile, attr, value)
+        profile.save()
+        return user
+
+    def newUser(self, username, **kargs):
+        default = {
+            "username": username,
+            "email": username + "@host.com"
+        }
+        default.update(**kargs)
+        return User.objects.create(**default)
+
+    def newPost(self, user, **kargs):
+        default = {
+            "name": "Post name",
+            "body": "Post body",
+            "meta_description": "Meta description",
+            "meta_image": "http://example.com/image.png",
+            "user": user,
+            "show_in_main_page": False
+        }
+        default.update(**kargs)
+        return Post.objects.create(**default)
+
     def setUp(self):
         JANUARY_ONE_2018 = timezone.datetime(
             year=2018,
