@@ -196,6 +196,7 @@
                     <div class="col-md-3">
                         {% block left %}
                             <div class="row">
+                                {% comment %} User card showing stats {% endcomment %}
                                 {% if user.is_authenticated %}
                                     <div class="col-md-12">
                                         <table class="table table-bordered table-striped">
@@ -243,10 +244,12 @@
                                         </table>
                                     </div>
                                 {% endif %}
+                                {% comment %} Top rated users {% endcomment %}
                                 <div class="col-md-12">
                                     <small class="uniform-text uniform-medium">{% trans 'Top rated users' %}</small>
                                     {% include 'mog/user/_top_rated_users.html' %}
                                 </div>
+                                {% comment %} Recent posts {% endcomment %}
                                 <div class="col-md-12">
                                     <small class="uniform-text uniform-medium">{% trans 'Recent posts' %}</small>
                                     {% include 'mog/post/_recent_modified_posts.html' with posts=recent_modified_posts %}

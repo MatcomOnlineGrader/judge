@@ -3,17 +3,18 @@ from datetime import datetime
 from django.contrib import messages
 
 from api.models import *
+from api.lib import queries
 from mog.utils import get_special_day
 
 
 def common(request):
-    recent_modified_posts = Post.objects.order_by('-modification_date')\
-        .select_related('user').select_related('user__profile')
-    top_rated_profiles = UserProfile.sorted_by_ratings()\
-        .select_related('user')
+    # TODO(leandro): Think about this context processor and make sure
+    # we don't compute unnecessary data to be sent to the template if
+    # it will not be used at all. For instance, neither `top_rated_profiles`
+    # nor `recent_modified_posts` are used in the problem detailed view.
     context = {
-        'recent_modified_posts': recent_modified_posts[:10],
-        'top_rated_profiles': top_rated_profiles[:5]
+        'recent_modified_posts': queries.ten_most_recent_posts(),
+        'top_rated_profiles': queries.five_top_rated_profiles(),
     }
     next = request.GET.get('next')
     if next:
