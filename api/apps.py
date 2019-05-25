@@ -7,4 +7,6 @@ class ApiConfig(AppConfig):
     name = 'api'
 
     def ready(self):
+        from .signals.cache import clean_five_top_rated_profiles, \
+            clean_ten_most_recent_posts
         from .signals.main import create_profile_for_user
