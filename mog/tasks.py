@@ -4,10 +4,10 @@ from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from mog.decorators import async
+from mog.decorators import asynchronous
 
 
-@async
+@asynchronous
 def send_email(subject, message, recipients):
     """Send the same email to several recipients.   
     
