@@ -181,6 +181,11 @@ def register_instance(request, contest, user, team):
         messages.warning(request, _('Invalid user/team combination'), extra_tags='warning')
         return redirect(nxt or reverse('mog:contests'))
 
+    # Check that the team can be registered in the contest
+    if team and not contest.allow_teams:
+        messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
+
     # Check that every user can register for real
     if all(contest.can_register_for_real(u) for u in users):
         real, start_date = True, None
