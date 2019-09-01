@@ -11,7 +11,8 @@ class UserProfileAdmin(admin.ModelAdmin):
             return (
                 ('admin', 'Administrator'),
                 ('browser', 'Code Browser'),
-                ('admin|browser', 'Administrator or Code Browser')
+                ('observer', 'Observer'),
+                ('*', 'All roles')
             )
 
         def queryset(self, request, queryset):
@@ -19,8 +20,10 @@ class UserProfileAdmin(admin.ModelAdmin):
                 return queryset.filter(role='admin')
             elif self.value() == 'browser':
                 return queryset.filter(role='browser')
-            elif self.value() == 'admin|browser':
-                return queryset.filter(Q(role='admin') | Q(role='browser'))
+            elif self.value() == 'observer':
+                return queryset.filter(role='observer')
+            elif self.value() == '*':
+                return queryset.filter(Q(role='admin') | Q(role='browser') | Q(role='observer'))
 
     search_fields = ('user__username', )
     list_filter = (RoleFilter, )

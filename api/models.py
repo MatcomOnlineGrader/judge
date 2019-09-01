@@ -23,7 +23,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from mog.tasks import report_clarification
-from mog.utils import user_is_admin, user_is_browser
+from mog.utils import user_is_admin, user_is_browser, user_is_observer
 
 
 @deconstructible
@@ -469,6 +469,7 @@ class Compiler(models.Model):
 ROLE_CHOICES = [
     ('admin', 'Administrator'),
     ('browser', 'Code Browser'),
+    ('observer', 'Observer')
 ]
 
 THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile', 'ambiance-mobile'),
@@ -526,6 +527,10 @@ class UserProfile(models.Model):
     @property
     def is_admin(self):
         return self.role == 'admin'
+
+    @property
+    def is_observer(self):
+        return self.role == 'observer'
 
     @property
     def is_browser(self):
@@ -623,54 +628,52 @@ class Submission(models.Model):
     def can_show_judgment_details_to(self, user):
         """Determine whether an user can see judgment details of the submission.
         An user can see judgment details only if:
-        - The user is an administrator, or
-        - The submission is public or owned by `user` AND
-          The submission is a normal submission AND
-          There is not an instance or the instance is past.
+        - The user is an administrator, or the submission is visible and the user
+        is observer or
+        - does not belong to a running instance and the submission.status='normal' and (is visible and public...
+        or belongs to the user)
         """
-        if user_is_admin(user):
+        if user_is_admin(user) or (self.visible and user_is_observer(user)):
             return True
-        if (self.user == user or self.public) and (not self.instance or self.instance.is_past) and \
-                (self.status == 'normal'):
-            return True
+
+        if not self.instance or self.instance.is_past:
+            return self.status == 'normal' and ((user.is_authenticated and self.user == user)
+                                                or (self.visible and self.public))
         return False
 
     def can_show_details_to(self, user):
         """Determine whether an user can see details of the submission
         (result, time, memory, etc) or not. An user can see details only
         if:
-        - The user is an administrator, or
-        - The submission is a normal submission (other than frozen & death), or
-        - The submission is frozen but the user is the owner.
+         - The user is an administrator, or the submission is visible and the user
+        is observer or
+        - The submission is visible and the status is 'normal'
+        - The submission belongs to the user and is not death
         """
-        if user_is_admin(user) or (self.status == 'normal') or \
-                (self.user == user and self.status == 'frozen'):
+        if user_is_admin(user) or (self.visible and user_is_observer(user)):
             return True
-        return False
+
+        if self.status == 'normal' and self.visible:
+            return True
+
+        return user.is_authenticated and self.user == user and self.status != 'death'
 
     def can_show_source_to(self, user):
-        """Determine whether the current submission's has the
-        permissions to see the current submission's source code.
-
-        Parameters
-        ----------
-        user: User
-
-        Returns
-        -------
-        bool
-            True only if `user` has permissions to see the current
-            submission's source code. False otherwise.
+        """Determine whether the user has the permissions to see the
+        current submission's source code.  An user can see the source code only
+        if:
+         - The user is an administrator, or the submission is visible and the user
+        is observer or
+        - The submission is visible and public and does not belong to a running instance
+        - The submission belongs to the user
         """
-        if user.is_authenticated:
-            if self.user == user:
-                return True
-            profile = user.profile if hasattr(user, 'profile') else None
-            if profile:
-                return profile.is_admin or (
-                    self.visible and (self.public or profile.is_browser)
-                )
-        return False
+        if user_is_admin(user) or (self.visible and user_is_observer(user)):
+            return True
+
+        if self.visible and self.public and (not self.instance or self.instance.is_past):
+            return True
+
+        return user.is_authenticated and self.user == user
 
     def __str__(self):
         return str(self.id)
