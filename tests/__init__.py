@@ -1,4 +1,6 @@
+import datetime
 import os
+import random
 import string
 
 from django.conf import settings
@@ -6,7 +8,29 @@ from django.test import TestCase
 from django.utils import timezone
 import pytz
 
-from api.models import Checker, Compiler, Contest, Post, Result, User, UserProfile, Submission, ContestInstance, Problem
+from api.models import (
+    Checker,
+    Compiler,
+    Contest,
+    ContestInstance,
+    Post,
+    Problem,
+    Result,
+    Submission,
+    Team,
+    User,
+    UserProfile,
+)
+
+
+TEST_USER_PASSWORD = "XXXXX"
+
+
+def random_string(length: int) -> str:
+    result = ''
+    for i in range(length):
+        result += random.choice(string.ascii_lowercase)
+    return result
 
 
 class FixturedTestCase(TestCase):
@@ -23,7 +47,10 @@ class FixturedTestCase(TestCase):
             "email": username + "@host.com"
         }
         default.update(**kargs)
-        return User.objects.create(**default)
+        user = User.objects.create(**default)
+        user.set_password(TEST_USER_PASSWORD)
+        user.save()
+        return user
 
     def newPost(self, user, **kargs):
         default = {
@@ -56,6 +83,40 @@ class FixturedTestCase(TestCase):
         }
         default.update(**kargs)
         return Submission.objects.create(**default)
+
+    def newContest(self, **kwargs):
+        """
+        Create a contest that start in the future and has a duration of
+        5 hours.
+        """
+        NOW = timezone.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
+        start_date = NOW + datetime.timedelta(hours=4)
+        end_date = start_date + datetime.timedelta(hours=5)
+        default = {
+            "start_date": start_date,
+            "end_date": end_date,
+            "name": "My Contest",
+            "visible": True,
+            "closed": False,
+            "allow_teams": True,
+        }
+        default.update(**kwargs)
+        return Contest.objects.create(**default)
+
+    def newTeam(self, number_of_users, **kwargs):
+        """
+        Creates a new team with a given number of users.
+        """
+        default = {
+            "name": "Team name",
+            "description": "Team description",
+        }
+        default.update(**kwargs)
+        team = Team.objects.create(**default)
+        for k in range(number_of_users):
+            user = self.newUser(username=random_string(length=48))
+            team.profiles.add(user.profile)
+        return team
 
     def setUp(self):
         JANUARY_ONE_2018 = timezone.datetime(
