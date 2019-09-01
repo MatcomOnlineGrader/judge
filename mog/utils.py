@@ -66,6 +66,11 @@ def user_is_admin(user):
     return user.is_authenticated and hasattr(user, 'profile') and user.profile.is_admin
 
 
+def user_is_observer(user):
+    """return True iff logged user is observer"""
+    return user.is_authenticated and hasattr(user, 'profile') and user.profile.is_observer
+
+
 def user_rating(user):
     """return user rating"""
     return user.profile.rating if hasattr(user, 'profile') else 0

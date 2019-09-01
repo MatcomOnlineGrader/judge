@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.utils import timezone
 import pytz
 
-from api.models import Checker, Compiler, Contest, Post, Result, User, UserProfile
+from api.models import Checker, Compiler, Contest, Post, Result, User, UserProfile, Submission, ContestInstance, Problem
 
 
 class FixturedTestCase(TestCase):
@@ -37,6 +37,26 @@ class FixturedTestCase(TestCase):
         default.update(**kargs)
         return Post.objects.create(**default)
 
+    def newContestInstance(self, contest, user, **kargs):
+        default = {
+            "user": user,
+            "contest": contest,
+            "real": True,
+            "start_date": contest.start_date
+        }
+        default.update(**kargs)
+        return ContestInstance.objects.create(**default)
+
+    def newSubmission(self, instance, user, **kargs):
+        default = {
+            "user": user,
+            "instance": instance,
+            "date": instance.start_date + timezone.timedelta(hours=1),
+            "compiler": self.py2
+        }
+        default.update(**kargs)
+        return Submission.objects.create(**default)
+
     def setUp(self):
         JANUARY_ONE_2018 = timezone.datetime(
             year=2018,
@@ -44,6 +64,7 @@ class FixturedTestCase(TestCase):
             day=1,
             tzinfo=pytz.timezone(settings.TIME_ZONE)
         )
+        NOW = timezone.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
 
         # <contests>
         self.past_contest, _ = Contest.objects.get_or_create(
@@ -52,6 +73,49 @@ class FixturedTestCase(TestCase):
             visible=True,
             start_date=JANUARY_ONE_2018,
             end_date=JANUARY_ONE_2018 + timezone.timedelta(hours=4)
+        )
+
+        self.running_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 2',
+            code='DC2',
+            visible=True,
+            start_date=NOW - timezone.timedelta(hours=1),
+            end_date=NOW + timezone.timedelta(hours=3)
+        )
+
+        self.frozen_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 3',
+            code='DC3',
+            visible=True,
+            start_date=NOW - timezone.timedelta(hours=2),
+            end_date=NOW + timezone.timedelta(minutes=30),
+            frozen_time=45
+        )
+
+        self.death_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 4',
+            code='DC4',
+            visible=True,
+            start_date=NOW - timezone.timedelta(hours=2),
+            end_date=NOW + timezone.timedelta(minutes=10),
+            death_time=15
+        )
+
+        # <problems>
+        self.problem1, _ = Problem.objects.get_or_create(
+            title='A*B',
+            time_limit=0,
+            memory_limit=0,
+            position=1,
+            contest=self.past_contest
+        )
+
+        self.problem2, _ = Problem.objects.get_or_create(
+            title='A*B',
+            time_limit=0,
+            memory_limit=0,
+            position=1,
+            contest=self.running_contest
         )
 
         # <checkers>
