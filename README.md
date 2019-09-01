@@ -67,6 +67,9 @@ PROBLEMS_FOLDER: <str> [path to problems folder]
 [cache]
 BACKEND: <str> [redis, memcached, in-memory, etc]
 LOCATION: <str> [depends on the backend]
+
+[palantir]
+LOG_REQUESTS: <bool> [true if we want to store detailed request logs]
 ```
 
 **Postgres:**

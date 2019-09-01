@@ -93,8 +93,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
-    'palantir.middlewares.AccessLogMiddleware',
 ]
+
+
+if config.getboolean('palantir', 'LOG_REQUESTS'):
+    MIDDLEWARE.append('palantir.middlewares.AccessLogMiddleware')
+
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',
