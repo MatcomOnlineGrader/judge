@@ -113,7 +113,8 @@
                                             {% endif %}
 
                                             {% if instance.team %}
-                                                {% include 'mog/team/_link.html' with team=instance.team %}
+                                                {% include 'mog/team/_link.html' with team=instance.team render_team_description_only=instance.render_team_description_only %}
+
                                                 {% with institution=instance.team.institution %}
                                                     {% if institution %}
                                                         <small>{{ institution.name }}</small>

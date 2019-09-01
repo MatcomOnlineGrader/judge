@@ -31,7 +31,7 @@
                             </td>
                             <td>
                                 {% if team.description %}
-                                    {{ team.description }}
+                                    {{ team.description | linebreaks }}
                                 {% else %}
                                     <i>{% trans 'No description provided' %}</i>
                                 {% endif %}
