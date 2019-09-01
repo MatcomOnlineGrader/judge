@@ -61,7 +61,9 @@ class Team(models.Model):
         null=True, blank=True,
         on_delete=models.SET_NULL
     )
-    description = models.CharField(max_length=250, null=True)
+    description = models.TextField(null=True)
+    icpcid = models.CharField(max_length=64, null=True, blank=True,
+        verbose_name=_('ID that links this team to the ICPC, we get this value down from baylor'))
 
     def __str__(self):
         return '{0} ({1})'.format(
@@ -746,6 +748,8 @@ class ContestInstance(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
     group = models.CharField(max_length=64, null=True, blank=True, verbose_name=_('Group name'))
+    render_team_description_only = models.BooleanField(default=False,
+        verbose_name=_('If true, render the team without members and only displaying the description on hover'))
 
     def __str__(self):
         if self.team:

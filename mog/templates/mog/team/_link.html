@@ -1,10 +1,22 @@
-<div>
+{% if render_team_description_only %}
+    <div>
+        <a
+            href="#"
+            style="text-decoration:none; color: black;"
+            data-html="true"
+            data-toggle="tooltip"
+            title=""
+            data-placement="right"
+            data-original-title="{{team.description | linebreaks}}">
+                <strong>{{ team.name }}</strong>
+        </a>
+    </div>
+{% else %}
     <strong>{{ team.name }}</strong>
-</div>
-
-<div>
-    {% for profile in team.profiles.all %}
-        {% if forloop.counter > 1 %},{% endif %}
-        {% include 'mog/user/_link.html' with profile=profile %}
-    {% endfor %}
-</div>
+    <div>
+        {% for profile in team.profiles.all %}
+            {% if forloop.counter > 1 %},{% endif %}
+            {% include 'mog/user/_link.html' with profile=profile %}
+        {% endfor %}
+    </div>
+{% endif %}
