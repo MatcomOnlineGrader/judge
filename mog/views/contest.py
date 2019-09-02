@@ -1,4 +1,5 @@
 import csv
+import json
 
 from django.db.models.functions import Lower
 from django.urls import reverse
@@ -18,7 +19,7 @@ from django.conf import settings
 from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q, Submission
 from mog.forms import ContestForm, ClarificationForm
 from mog.utils import user_is_admin, calculate_standing
-from mog.helpers import filter_submissions, get_paginator
+from mog.helpers import filter_submissions, get_paginator, get_contest_json
 
 from mog.templatetags.filters import format_penalty, format_minutes
 
@@ -385,6 +386,23 @@ class ContestEditView(View):
 
 @login_required
 @require_http_methods(["POST"])
+def contest_saris(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not contest.can_show_saris_to(request.user):
+        return HttpResponseForbidden()
+
+    group = request.POST.get('group', None)
+
+    result = get_contest_json(contest, group)
+
+    return render(request, 'mog/contest/saris.html', {
+        'contest': contest, 'json': json.dumps(result)
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
 def rate_contest(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
@@ -504,27 +522,7 @@ def contest_json(request, contest_id):
         return HttpResponseForbidden()
     contest = get_object_or_404(Contest, pk=contest_id)
 
-    result = {"contestName": contest.name,
-              "freezeTimeMinutesFromStart": int(contest.duration.seconds / 60) - contest.frozen_time,
-              "problemLetters": [x.letter for x in contest.get_problems],
-              "contestants": [instance.team.name if instance.team is not None else instance.user.username
-                              for instance in contest.instances.all()]}
-
-    runs = []
-    append = runs.append
-
-    # TODO: See Next Line!!!
-    # for instance in contest.instances.filter(real=True):
-    for instance in contest.instances.all():
-        for submission in instance.submissions.filter(Q(result__penalty=True) | Q(result__name__iexact=u'Accepted')):
-            run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
-                   "problemLetter": submission.problem.letter,
-                   "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
-                   "success": submission.result.name == u'Accepted'}
-            append(run)
-
-    runs.sort(key=lambda r: r["timeMinutesFromStart"])
-    result["runs"] = runs
+    result = get_contest_json(contest, group=None)
 
     return JsonResponse(data=result)
 

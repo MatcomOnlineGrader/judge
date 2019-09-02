@@ -124,6 +124,9 @@ class Contest(models.Model):
         """
         return user_is_admin(user) or (self.visible and not self.is_coming)
 
+    def can_show_saris_to(self, user):
+        return user_is_admin(user) or (self.visible and user_is_observer(user))
+
     @property
     def relative_time(self):
         return timezone.now() - self.start_date

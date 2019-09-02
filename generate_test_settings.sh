@@ -25,8 +25,8 @@ DEFAULT_FROM_EMAIL: -
 EMAIL_TIMEOUT: 20
 
 [others]
-STATIC_ROOT: -
-MEDIA_ROOT: -
+STATIC_ROOT: /var/www/judge/static
+MEDIA_ROOT: /var/www/judge/media
 
 [grader]
 RESOURCES_FOLDER: -

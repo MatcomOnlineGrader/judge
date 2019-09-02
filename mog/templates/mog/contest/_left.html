@@ -135,6 +135,19 @@
                         </td>
                     </tr>
                 {% endif %}
+                {% if user|can_see_saris:contest %}
+                    <tr>
+                        <td>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#saris-{{ contest.id }}">
+                                        <i class="glyphicon glyphicon-star"></i> {% trans 'S4RiS' %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -164,6 +177,44 @@
                             {% csrf_token %}
                             <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'No' %}</button>
                             <button type="submit" class="btn btn-primary">{% trans 'Yes' %}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if user|can_see_saris:contest %}
+        <div class="modal fade" id="saris-{{ contest.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            {% trans 'Show Saris' %}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-justify">
+                            {% trans 'Select group to show' %}
+                        </p>
+                        <form action="{% url 'mog:contest_saris' contest.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="group"></label>
+                                <select id="group" name="group" class="form-control">
+                                    <option value="">-- All --</option>
+                                    {% for group in contest.group_names %}
+                                        {% if group %}
+                                            <option value="{{ group }}">{{ group }}</option>
+                                        {% endif%}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                                <button type="submit" class="btn btn-primary">{% trans 'Show' %}</button>
+                            </div>
                         </form>
                     </div>
                 </div>

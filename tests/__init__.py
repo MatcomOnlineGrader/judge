@@ -74,15 +74,27 @@ class FixturedTestCase(TestCase):
         default.update(**kargs)
         return ContestInstance.objects.create(**default)
 
-    def newSubmission(self, instance, user, **kargs):
+    def newSubmission(self, instance, user, minutes=60, **kargs):
         default = {
             "user": user,
             "instance": instance,
-            "date": instance.start_date + timezone.timedelta(hours=1),
+            "date": instance.start_date + timezone.timedelta(minutes=minutes),
             "compiler": self.py2
         }
         default.update(**kargs)
         return Submission.objects.create(**default)
+
+    def newProblem(self, title, contest, position, **kargs):
+        default = {
+            "title": title,
+            "position": position,
+            "contest": contest,
+            "time_limit": 0,
+            "memory_limit": 0,
+        }
+        default.update(**kargs)
+        problem,_ = Problem.objects.get_or_create(**default)
+        return problem
 
     def newContest(self, **kwargs):
         """
