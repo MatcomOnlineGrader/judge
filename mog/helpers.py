@@ -61,3 +61,27 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
         compiler = None
 
     return queryset.order_by('-pk'), query
+
+
+def get_contest_json(contest, group=None):
+    instances = contest.instances.filter(group=group) if group else contest.instances.all()
+
+    result = {"contestName": '%s(%s)' % (contest.name, group) if group else contest.name,
+              "freezeTimeMinutesFromStart": int(contest.duration.seconds / 60) - contest.frozen_time,
+              "problemLetters": [x.letter for x in contest.get_problems],
+              "contestants": [instance.team.name if instance.team is not None else instance.user.username
+                              for instance in instances]}
+
+    runs = []
+
+    for instance in instances:
+        for submission in instance.submissions.filter(Q(result__penalty=True) | Q(result__name__iexact=u'Accepted')):
+            run = {"contestant": instance.team.name if instance.team is not None else instance.user.username,
+                   "problemLetter": submission.problem.letter,
+                   "timeMinutesFromStart": int((submission.date - contest.start_date).seconds / 60),
+                   "success": submission.result.name == u'Accepted'}
+            runs.append(run)
+
+    runs.sort(key=lambda r: r["timeMinutesFromStart"])
+    result["runs"] = runs
+    return result

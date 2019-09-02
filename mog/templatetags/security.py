@@ -1,5 +1,5 @@
 from django import template
-from mog.utils import user_is_admin, user_is_browser
+from mog.utils import user_is_admin
 
 register = template.Library()
 
@@ -57,6 +57,11 @@ def can_create_problem(user):
 @register.filter()
 def can_edit_contest(user, contest):
     return user_is_admin(user)
+
+
+@register.filter()
+def can_see_saris(user, contest):
+    return contest.can_show_saris_to(user)
 
 
 @register.filter()
