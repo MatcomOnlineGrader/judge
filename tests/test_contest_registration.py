@@ -35,6 +35,8 @@ class ContestRegistrationTestCase(FixturedTestCase):
 
     TODO(leandro): Change the name of the endpoints to have <contest-id>
     right after contest/
+
+    TODO(leandro): Add coverage to test real vs virtual registration.
     """
 
     def _register_team_in_contest(self, team, contest) -> ContestInstance:
@@ -60,9 +62,7 @@ class ContestRegistrationTestCase(FixturedTestCase):
         self.client.post('/contest/register/{}'.format(contest.pk), data={
             "user": user.pk,
         })
-        return ContestInstance.objects.filter(
-            contest=contest, user=user
-        ).first()
+        return contest.registration(user)
 
     def test_register_user_success(self):
         user, contest = self.newUser(username="leandro"), \
@@ -88,16 +88,20 @@ class ContestRegistrationTestCase(FixturedTestCase):
         self.assertIsNotNone(user_ci)
         self.assertIsNone(team_ci)
 
-    def test_register_user_that_has_a_team_already_registered_fail(self):
-        # TODO(leandro): Fix this test :(
-        # team, contest = self.newTeam(number_of_users=3), \
-        #     self.newContest(code="contest")
-        # user = team.profiles.first().user
-        # team_ci = self._register_team_in_contest(team, contest)
-        # user_ci = self._register_user_in_contest(user, contest)
-        # self.assertIsNone(user_ci)
-        # self.assertIsNotNone(team_ci)
-        pass
+    def test_register_user_that_has_a_team_already_registered_reuse_the_same_instance(self):
+        """
+        Register a team and then, tries to register every member
+        individually. For each member, the same ContestInstance assigned
+        to the team should be reused.
+        """
+        team, contest = self.newTeam(number_of_users=3), \
+            self.newContest(code="contest")
+        team_ci = self._register_team_in_contest(team, contest)
+        self.assertIsNotNone(team_ci)
+        for profile in team.profiles.all():
+            user_ci = self._register_user_in_contest(profile.user, contest)
+            self.assertIsNotNone(user_ci)
+            self.assertEqual(user_ci.pk, team_ci.pk)
 
     def test_admin_endpoints_with_regular_user_in_request(self):
         team, contest = self.newTeam(number_of_users=3), \
