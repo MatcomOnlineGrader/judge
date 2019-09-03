@@ -105,6 +105,7 @@ class Contest(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     visible = models.BooleanField(default=False)
+    needs_unfreeze = models.BooleanField(default=True)
     frozen_time = models.IntegerField(verbose_name="Frozen time (minutes)", default=0)
     death_time = models.IntegerField(verbose_name="Death time (minutes)", default=0)
     closed = models.BooleanField(verbose_name="Closed registration", default=False)
@@ -211,11 +212,11 @@ class Contest(models.Model):
         competition if the following four conditions
         hold:
         1) User is authenticated.
-        2) Contest is already finished.
+        2) Contest is already finished and unfrozen.
         3) User is not admin neither code browser.
         4) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated or not self.is_past:
+        if not user.is_authenticated or not self.is_past or self.needs_unfreeze:
             return False
         if user_is_admin(user) or user_is_browser(user):
             return False

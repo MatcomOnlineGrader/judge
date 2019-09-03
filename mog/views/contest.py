@@ -52,6 +52,11 @@ def contest_problems(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     if not contest.can_be_seen_by(request.user):
         raise Http404()
+
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
     problems = contest.problems.order_by('position')
     return render(request, 'mog/contest/problems.html', {
         'contest': contest, 'problems': problems,
@@ -509,10 +514,18 @@ def unfreeze_contest(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     contest = get_object_or_404(Contest, pk=contest_id)
-    updated = Submission.objects.filter(Q(problem__contest=contest) & ~Q(status='normal'))\
-        .update(status='normal')
-    msg = '%s %d %s' % (_("Contest unfrozen successfully"), updated, _('submission(s) affected'))
-    messages.success(request, msg, extra_tags='success')
+
+    if contest.is_past:
+        updated = Submission.objects.filter(Q(problem__contest=contest) & ~Q(status='normal')) \
+            .update(status='normal')
+        contest.needs_unfreeze = False
+        contest.save()
+        msg = '%s %d %s' % (_("Contest unfrozen successfully"), updated, _('submission(s) affected'))
+        messages.success(request, msg, extra_tags='success')
+    else:
+        msg = _("Contest couldn't be unfrozen because it is coming or running!")
+        messages.warning(request, msg, extra_tags='warning')
+
     return redirect(reverse('mog:contest_problems', args=(contest.id,)))
 
 

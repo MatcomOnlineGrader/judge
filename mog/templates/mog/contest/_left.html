@@ -33,6 +33,8 @@
                                         {% else %}
                                             <h5>{% trans '(Virtual)' %}</h5>
                                         {% endif %}
+                                    {% elif instance.is_past and instance.contest.needs_unfreeze%}
+                                        <h5>{% trans 'Ended (Frozen)' %}</h5>
                                     {% elif instance.is_past %}
                                         <h5>{% trans 'Ended' %}</h5>
                                     {% elif instance.is_comming %}
@@ -49,6 +51,8 @@
                                         {% elif contest.is_frozen_time %}
                                             <h5>{% trans '(Frozen time)' %}</h5>
                                         {% endif %}
+                                    {% elif contest.is_past and contest.needs_unfreeze %}
+                                        <h5>{% trans 'Ended (Frozen)' %}</h5>
                                     {% elif contest.is_past %}
                                         <h5>{% trans 'Ended' %}</h5>
                                     {% elif contest.is_comming %}
