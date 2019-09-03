@@ -78,6 +78,10 @@ class Submit(View):
             msg = _(u'You cannot submit because you are not registered in the contest.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
+        if (not user_is_admin(request.user)) and problem.contest.needs_unfreeze:
+            msg = _(u'You cannot submit because the contest is still frozen.')
+            messages.info(request, msg, extra_tags='info')
+            return redirect('mog:contest_problems', problem.contest.id)
 
         # check if this submission was sent twice too quick
         previous = Submission.objects.filter(user=request.user)\

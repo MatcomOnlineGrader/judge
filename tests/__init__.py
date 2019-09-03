@@ -137,6 +137,7 @@ class FixturedTestCase(TestCase):
             day=1,
             tzinfo=pytz.timezone(settings.TIME_ZONE)
         )
+
         NOW = timezone.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
 
         # <contests>
@@ -145,7 +146,8 @@ class FixturedTestCase(TestCase):
             code='DC1',
             visible=True,
             start_date=JANUARY_ONE_2018,
-            end_date=JANUARY_ONE_2018 + timezone.timedelta(hours=4)
+            end_date=JANUARY_ONE_2018 + timezone.timedelta(hours=4),
+            needs_unfreeze=False
         )
 
         self.running_contest, _ = Contest.objects.get_or_create(
@@ -172,6 +174,22 @@ class FixturedTestCase(TestCase):
             start_date=NOW - timezone.timedelta(hours=2),
             end_date=NOW + timezone.timedelta(minutes=10),
             death_time=15
+        )
+
+        self.past_frozen_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 5',
+            code='DC5',
+            visible=True,
+            start_date=JANUARY_ONE_2018,
+            end_date=JANUARY_ONE_2018 + timezone.timedelta(hours=4)
+        )
+
+        self.coming_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 6',
+            code='DC6',
+            visible=True,
+            start_date=NOW + timezone.timedelta(hours=4),
+            end_date=NOW + timezone.timedelta(hours=8)
         )
 
         # <problems>
