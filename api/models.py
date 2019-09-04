@@ -229,13 +229,22 @@ class Contest(models.Model):
     def get_problems(self):
         return self.problems.order_by('position')
 
+    def death_time_from_date(self, date):
+        return self.end_date - timezone.timedelta(minutes=self.death_time) <= date <= self.end_date
+
     @property
     def is_death_time(self):
-        return self.end_date - timezone.timedelta(minutes=self.death_time) <= timezone.now() <= self.end_date
+        return self.death_time_from_date(timezone.now())
+
+    def frozen_time_from_date(self, date):
+        if self.death_time_from_date(date):
+            # Check we are not in death time
+            return False
+        return self.end_date - timezone.timedelta(minutes=self.frozen_time) <= date <= self.end_date
 
     @property
     def is_frozen_time(self):
-        return self.end_date - timezone.timedelta(minutes=self.frozen_time) <= timezone.now() <= self.end_date
+        return self.frozen_time_from_date(timezone.now())
 
     def visible_clarifications(self, user):
         if user_is_admin(user):
@@ -684,6 +693,26 @@ class Submission(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @property
+    def is_accepted(self):
+        return self.result.name == 'Accepted'
+
+    @property
+    def is_pending(self):
+        return self.result.name == 'Pending'
+
+    @property
+    def is_normal(self):
+        return self.status == 'normal'
+
+    @property
+    def is_frozen(self):
+        return self.status == 'frozen'
+
+    @property
+    def is_death(self):
+        return self.status == 'death'
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
@@ -759,6 +788,12 @@ class ContestInstance(models.Model):
         if self.team:
             return 'Team: ' + self.team.name
         return self.user.username
+
+    @property
+    def instance_start_date(self):
+        if self.real:
+            return self.contest.start_date
+        return self.start_date
 
     @property
     def end_date(self):

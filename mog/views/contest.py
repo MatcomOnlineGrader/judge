@@ -18,9 +18,9 @@ from django.conf import settings
 
 from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q, Submission
 from mog.forms import ContestForm, ClarificationForm
-from mog.utils import user_is_admin, calculate_standing
+from mog.utils import user_is_admin, user_can_bypass_frozen
+from mog.standing import calculate_standing
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
-
 from mog.templatetags.filters import format_penalty, format_minutes
 
 
@@ -103,7 +103,7 @@ def contest_standing(request, contest_id):
             show_virtual,
             user_instance,
             group,
-            user_is_admin(request.user)
+            user_can_bypass_frozen(request.user)
         )
         ranking_groups.append({
             'group': group,
