@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if user|is_admin %}
+    {% if user|can_edit_clarification:contest %}
         <!-- Modals -->
         {% for clarification in contest.clarifications.all %}
             <div class="modal fade" id="edit-clarification-{{ clarification.pk }}" tabindex="-1" role="dialog"
@@ -71,12 +71,12 @@
                     {% for clarification in clarifications %}
                         <tr>
                             <td class="text-center">
-                                {% if user|is_admin %}
+                                {% if user|can_edit_clarification:contest %}
                                     <a href="#" style="text-decoration: none" data-toggle="modal"
                                        data-target="#edit-clarification-{{ clarification.pk }}">
                                 {% endif %}
                                 {{ forloop.counter }}
-                                {% if user|is_admin %}
+                                {% if user|can_edit_clarification:contest %}
                                     <br>
                                     {% if clarification.public %}
                                         ({% trans 'public' %})
@@ -84,7 +84,7 @@
                                         ({% trans 'private' %})
                                     {% endif %}
                                 {% endif %}
-                                {% if user|is_admin %}
+                                {% if user|can_edit_clarification:contest %}
                                     </a>
                                 {% endif %}
                             </td>
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    {% if contest|can_create_clarification:user %}
+    {% if user|can_create_clarification:contest %}
         <div class="row">
             <div class="col-md-8">
                 <form action="{% url 'mog:clarification_create' %}" method="post">

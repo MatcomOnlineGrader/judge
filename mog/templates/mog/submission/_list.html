@@ -26,7 +26,7 @@
                             {% else %}
                                 {{ submission.id }}
                             {% endif %}
-                            {% if user|is_admin %}
+                            {% if user|can_rejudge:submission %}
                                 <form action="{% url 'mog:submission_rejudge' submission.id %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ submission.id }}">

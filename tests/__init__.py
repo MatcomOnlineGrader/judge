@@ -158,9 +158,25 @@ class FixturedTestCase(TestCase):
             end_date=NOW + timezone.timedelta(hours=3)
         )
 
-        self.frozen_contest, _ = Contest.objects.get_or_create(
+        self.coming_contest, _ = Contest.objects.get_or_create(
             name='Dummy Contest # 3',
             code='DC3',
+            visible=True,
+            start_date=NOW + timezone.timedelta(days=1),
+            end_date=NOW + timezone.timedelta(days=1, hours=4)
+        )
+
+        self.coming_hidden_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 4',
+            code='DC4',
+            visible=True,
+            start_date=NOW + timezone.timedelta(days=1),
+            end_date=NOW + timezone.timedelta(days=1, hours=4)
+        )
+
+        self.frozen_contest, _ = Contest.objects.get_or_create(
+            name='Dummy Contest # 5',
+            code='DC5',
             visible=True,
             start_date=NOW - timezone.timedelta(hours=2),
             end_date=NOW + timezone.timedelta(minutes=30),
@@ -168,8 +184,8 @@ class FixturedTestCase(TestCase):
         )
 
         self.death_contest, _ = Contest.objects.get_or_create(
-            name='Dummy Contest # 4',
-            code='DC4',
+            name='Dummy Contest # 6',
+            code='DC6',
             visible=True,
             start_date=NOW - timezone.timedelta(hours=2),
             end_date=NOW + timezone.timedelta(minutes=10),
@@ -177,16 +193,16 @@ class FixturedTestCase(TestCase):
         )
 
         self.past_frozen_contest, _ = Contest.objects.get_or_create(
-            name='Dummy Contest # 5',
-            code='DC5',
+            name='Dummy Contest # 7',
+            code='DC7',
             visible=True,
             start_date=JANUARY_ONE_2018,
             end_date=JANUARY_ONE_2018 + timezone.timedelta(hours=4)
         )
 
         self.coming_contest, _ = Contest.objects.get_or_create(
-            name='Dummy Contest # 6',
-            code='DC6',
+            name='Dummy Contest # 8',
+            code='DC8',
             visible=True,
             start_date=NOW + timezone.timedelta(hours=4),
             end_date=NOW + timezone.timedelta(hours=8)

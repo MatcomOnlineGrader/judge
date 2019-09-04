@@ -18,7 +18,7 @@
         {% for contest in coming_contests %}
             <tr>
                 <td>
-                    {% if user|is_admin %}
+                    {% if user|can_see_contest:contest%}
                         <a href="{% url 'mog:contest_problems' contest.id %}" class="no-underline">
                             {{ contest.name }}
                         </a>

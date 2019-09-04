@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from api.models import Submission, Compiler, Problem, Result
 from mog.helpers import filter_submissions, get_paginator
 
-from mog.utils import user_is_admin
+from mog.utils import user_is_admin, user_is_judge
 
 
 def submissions(request):
@@ -59,26 +59,33 @@ class Submit(View):
         problem = get_object_or_404(Problem, pk=problem)
         compiler = get_object_or_404(Compiler, pk=compiler)
         date = timezone.now()
-        if not user_is_admin(request.user) and not problem.contest.visible:
+
+        if not user_is_admin(request.user) and not user_is_judge(request.user) and not problem.contest.visible:
             raise Http404()
-        if not user_is_admin(request.user) and compiler not in problem.compilers.all():
+
+        if not user_is_admin(request.user) and not user_is_judge(request.user) and compiler not in problem.compilers.all():
             msg = _(u'Invalid language choice')
             messages.warning(request, msg, extra_tags='danger')
             return redirect('mog:submit', problem.id)
+
         if file is not None:
             source = file.read().decode('utf8')
+
         if not source:
             msg = _(u'Empty source code')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:submit', problem_id=problem.id)
+
         instance = problem.contest.registration(request.user)
         if instance and not instance.is_running_at(date):
             instance = None
-        if (not user_is_admin(request.user)) and (not instance) and problem.contest.is_running:
+
+        if not user_is_admin(request.user) and not user_is_judge(request.user) and (not instance) and problem.contest.is_running:
             msg = _(u'You cannot submit because you are not registered in the contest.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
-        if (not user_is_admin(request.user)) and problem.contest.needs_unfreeze:
+
+        if (not user_is_admin(request.user) and not user_is_judge(request.user)) and problem.contest.needs_unfreeze:
             msg = _(u'You cannot submit because the contest is still frozen.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
@@ -86,6 +93,7 @@ class Submit(View):
         # check if this submission was sent twice too quick
         previous = Submission.objects.filter(user=request.user)\
             .order_by('date').last()
+
         if previous and (date - previous.date).total_seconds() < 5:
             if (previous.problem == problem) and (previous.compiler == compiler) \
                     and (previous.source == source):
@@ -114,7 +122,7 @@ class Submit(View):
             date=date,
             status=status
         )
-        if user_is_admin(request.user):
+        if user_is_admin(request.user) or user_is_judge(request.user):
             submission.hidden = True
         submission.save()
         return redirect('mog:contest_submissions', problem.contest_id)
@@ -123,7 +131,7 @@ class Submit(View):
 @login_required
 @require_http_methods(["POST"])
 def rejudge(request, submission_id):
-    if not user_is_admin(request.user):
+    if not user_is_admin(request.user) and not user_is_judge(request.user):
         return HttpResponseForbidden()
     submission = get_object_or_404(Submission, pk=submission_id)
     submission.result = Result.objects.get(name__iexact='pending')

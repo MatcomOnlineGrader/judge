@@ -18,14 +18,14 @@ from django.conf import settings
 
 from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q, Submission
 from mog.forms import ContestForm, ClarificationForm
-from mog.utils import user_is_admin, user_can_bypass_frozen
+from mog.utils import user_is_admin, user_can_bypass_frozen, user_is_judge
 from mog.standing import calculate_standing
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.templatetags.filters import format_penalty, format_minutes
 
 
 def contests(request):
-    running, coming, past = Contest.get_all_contests(user_is_admin(request.user))
+    running, coming, past = Contest.get_all_contests(user_is_admin(request.user) or user_is_judge(request.user))
     return render(request, 'mog/contest/index.html', {
         'running_contests': running,
         'coming_contests': coming,

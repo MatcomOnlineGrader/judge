@@ -1,5 +1,5 @@
 from django import template
-from mog.utils import user_is_admin
+from mog.utils import user_is_admin, user_is_judge
 
 register = template.Library()
 
@@ -25,6 +25,11 @@ def can_see_details_of(user, submission):
 
 
 @register.filter()
+def can_rejudge(user, submission):
+    return submission.can_be_rejudged_by(user)
+
+
+@register.filter()
 def can_see_judgment_details_of(user, submission):
     return submission.can_show_judgment_details_to(user)
 
@@ -42,6 +47,11 @@ def can_see_profile_of(user1, user2):
 @register.filter()
 def can_edit_post(user, post):
     return user.is_authenticated and (user_is_admin(user) or user == post.user)
+
+
+@register.filter()
+def can_see_contest(user, contest):
+    return contest.can_be_seen_by(user)
 
 
 @register.filter()
@@ -112,7 +122,12 @@ def can_remove_comment(user, comment):
 
 
 @register.filter()
-def can_create_clarification(contest, user):
+def can_edit_clarification(user, contest):
+    return user_is_admin(user) or user_is_judge(user)
+
+
+@register.filter()
+def can_create_clarification(user, contest):
     """Determines whether an user can create a clarification
     or not in a contest. `user` can ask for clarification in
     `contest` if the following conditions met:
@@ -138,7 +153,7 @@ def can_create_clarification(contest, user):
         True only if `user` can ask for clarification in `contest`.
         False otherwise.
     """
-    if user_is_admin(user):
+    if user_is_admin(user) or user_is_judge(user):
         return True
     return user.is_authenticated and (contest.is_running and contest.real_registration(user))
 
