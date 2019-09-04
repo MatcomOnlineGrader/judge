@@ -6,7 +6,7 @@ const messages = {
   descriptionPlaceholder:
     "Send us the error you found and how to reproduce it step by step. " +
     "You can also send suggestions or anything else you want to share with us. " +
-    "Attach a screenshot to help us to understand you request"
+    "Attach a screenshot to help us understand your request."
 };
 
 export class ReporterModal extends React.Component<{}, {}> {
