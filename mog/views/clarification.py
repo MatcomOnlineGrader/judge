@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 
 from api.models import Contest, Clarification
 from mog.forms import ClarificationForm, ClarificationExtendedForm
-from mog.utils import user_is_admin
+from mog.utils import user_is_admin, user_is_judge
 
 
 @login_required
@@ -19,7 +19,7 @@ def clarification_create(request):
     if not contest.can_be_seen_by(request.user):
         raise Http404()
     error = None
-    if not user_is_admin(request.user):
+    if not user_is_admin(request.user) and not user_is_judge(request.user):
         if not contest.is_running:
             error = _(u'You cannot ask in a contest that is not running')
         elif not contest.real_registration(request.user):
@@ -55,7 +55,7 @@ def clarification_create(request):
 @login_required
 @require_http_methods(["POST"])
 def clarification_edit(request, clarification_id):
-    if not user_is_admin(request.user):
+    if not user_is_admin(request.user) and not user_is_judge(request.user):
         raise Http404()
     clarification = get_object_or_404(
         Clarification, pk=clarification_id

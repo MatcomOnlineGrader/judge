@@ -23,7 +23,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from mog.tasks import report_clarification
-from mog.utils import user_is_admin, user_is_browser, user_is_observer
+from mog.utils import user_is_admin, user_is_browser, user_is_observer, user_is_judge
 
 
 @deconstructible
@@ -123,10 +123,10 @@ class Contest(models.Model):
         > submissions
         > submit
         """
-        return user_is_admin(user) or (self.visible and not self.is_coming)
+        return user_is_admin(user) or user_is_judge(user) or (self.visible and not self.is_coming)
 
     def can_show_saris_to(self, user):
-        return user_is_admin(user) or (self.visible and user_is_observer(user))
+        return user_is_admin(user) or user_is_judge(user) or (self.visible and user_is_observer(user))
 
     @property
     def relative_time(self):
@@ -193,7 +193,7 @@ class Contest(models.Model):
         """
         if not user.is_authenticated or self.is_past or self.closed:
             return False
-        if user_is_admin(user) or user_is_browser(user):
+        if user_is_admin(user) or user_is_browser(user) or user_is_judge(user):
             return False
         return not self.registered_for_real(user)
 
@@ -218,7 +218,7 @@ class Contest(models.Model):
         """
         if not user.is_authenticated or not self.is_past or self.needs_unfreeze:
             return False
-        if user_is_admin(user) or user_is_browser(user):
+        if user_is_admin(user) or user_is_browser(user) or user_is_judge(user):
             return False
         return not self.registered_for_virtual(user)
 
@@ -247,7 +247,7 @@ class Contest(models.Model):
         return self.frozen_time_from_date(timezone.now())
 
     def visible_clarifications(self, user):
-        if user_is_admin(user):
+        if user_is_admin(user) or user_is_judge(user):
             return self.clarifications.order_by('-asked_date')
         if user.is_authenticated:
             return self.clarifications.filter(Q(public=True) | Q(sender=user))\
@@ -484,7 +484,8 @@ class Compiler(models.Model):
 ROLE_CHOICES = [
     ('admin', 'Administrator'),
     ('browser', 'Code Browser'),
-    ('observer', 'Observer')
+    ('observer', 'Observer'),
+    ('judge', 'Judge')
 ]
 
 THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile', 'ambiance-mobile'),
@@ -546,6 +547,10 @@ class UserProfile(models.Model):
     @property
     def is_observer(self):
         return self.role == 'observer'
+
+    @property
+    def is_judge(self):
+        return self.role == 'judge'
 
     @property
     def is_browser(self):
@@ -635,10 +640,13 @@ class Submission(models.Model):
     @staticmethod
     def visible_submissions(user):
         """Submissions to show in submission list"""
-        if user_is_admin(user):
+        if user_is_admin(user) or user_is_judge(user):
             return Submission.objects
         return Submission.objects \
             .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+
+    def can_be_rejudged_by(self, user):
+        return user_is_admin(user) or user_is_judge(user)
 
     def can_show_judgment_details_to(self, user):
         """Determine whether an user can see judgment details of the submission.
@@ -648,7 +656,7 @@ class Submission(models.Model):
         - does not belong to a running instance and the submission.status='normal' and (is visible and public...
         or belongs to the user)
         """
-        if user_is_admin(user) or (self.visible and user_is_observer(user)):
+        if user_is_admin(user) or user_is_judge(user) or (self.visible and user_is_observer(user)):
             return True
 
         if not self.instance or self.instance.is_past:
@@ -665,7 +673,7 @@ class Submission(models.Model):
         - The submission is visible and the status is 'normal'
         - The submission belongs to the user and is not death
         """
-        if user_is_admin(user) or (self.visible and user_is_observer(user)):
+        if user_is_admin(user) or user_is_judge(user) or (self.visible and user_is_observer(user)):
             return True
 
         if self.status == 'normal' and self.visible:
@@ -682,7 +690,7 @@ class Submission(models.Model):
         - The submission is visible and public and does not belong to a running instance
         - The submission belongs to the user
         """
-        if user_is_admin(user) or (self.visible and user_is_observer(user)):
+        if user_is_admin(user) or user_is_judge(user) or (self.visible and user_is_observer(user)):
             return True
 
         if self.visible and self.public and (not self.instance or self.instance.is_past):
