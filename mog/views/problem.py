@@ -9,8 +9,8 @@ from django.views.decorators.http import require_http_methods
 
 from api.models import Problem, Tag
 from mog.forms import ProblemForm
-from mog.utils import user_is_admin, get_tests, handle_tests, \
-    handle_remove_test, test_content, write_to_test, fix_problem_folder, user_is_judge
+from mog.utils import get_tests, handle_tests, handle_remove_test, test_content, write_to_test, fix_problem_folder
+from mog.gating import user_is_admin, user_is_judge
 
 
 @login_required

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
 from api.models import User, Team, Submission, Institution
-from mog.utils import user_is_admin
+from mog.gating import user_is_admin
 
 
 @login_required

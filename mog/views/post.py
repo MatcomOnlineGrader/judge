@@ -6,7 +6,7 @@ from django.views import View, generic
 
 from api.models import Post, Comment
 from mog.forms import PostForm
-from mog.utils import user_is_admin
+from mog.gating import user_is_admin
 
 
 class PostListView(generic.ListView):
