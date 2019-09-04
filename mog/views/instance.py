@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from api.models import ContestInstance
-from mog.utils import user_is_admin
+from mog.gating import user_is_admin
 
 
 @login_required

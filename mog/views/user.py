@@ -10,7 +10,7 @@ from django.views import View, generic
 
 from api.models import User, UserProfile, Division, Institution
 from mog.forms import UserProfileForm, UserForm
-from mog.utils import user_is_admin
+from mog.gating import user_is_admin
 
 
 class UserListView(generic.ListView):

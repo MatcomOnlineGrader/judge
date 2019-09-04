@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
 from api.models import Submission, Contest, Result, Compiler
-from mog.utils import user_is_admin
+from mog.gating import user_is_admin
 
 
 def get_paginator(query_set, rows_per_page, current_page=1):
