@@ -7,9 +7,10 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
-from api.models import Contest, Clarification
+from api.models import Contest, Clarification, Problem
 from mog.forms import ClarificationForm, ClarificationExtendedForm
 from mog.gating import user_is_admin, user_is_judge_in_contest
+from mog.webhooks import push_clarification_to_webhooks
 
 
 @login_required
@@ -37,12 +38,16 @@ def clarification_create(request):
                 'clarifications': contest.visible_clarifications(request.user),
                 'form': form
             })
-        Clarification.objects.create(
+
+        clarification = Clarification.objects.create(
             contest=contest,
             problem=form.cleaned_data['problem'],
             sender=request.user,
             question=form.cleaned_data['question']
         )
+
+        push_clarification_to_webhooks(clarification, create=True)
+
         messages.success(
             request, _(u'Request for clarification sent successfully.'
                        u' Reload this page to see the answer given to you.')
@@ -71,6 +76,9 @@ def clarification_edit(request, clarification_id):
         clarification.answered_date = timezone.now()
         clarification.seen.clear()
         clarification.save()
+
+        push_clarification_to_webhooks(clarification, create=False)
+
         messages.success(request, _(u'Clarification successfully edited'))
     else:
         messages.error(request, _(u'Unable to edit clarification'))
