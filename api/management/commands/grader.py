@@ -205,6 +205,7 @@ def grade_submission(submission, number_of_executions):
                         (invocation_verdict != 'IDLENESS_LIMIT_EXCEEDED'):
                     # force TLE when passed time exceed the problem time limit.
                     invocation_verdict = 'TIME_LIMIT_EXCEEDED'
+                    passed_time = min(passed_time, problem.time_limit * 1000)
 
                 if invocation_verdict != 'SUCCESS':
                     comment = result = {
