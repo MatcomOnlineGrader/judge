@@ -1,4 +1,9 @@
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import (
+    EmptyPage,
+    PageNotAnInteger,
+    Paginator,
+)
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from api.models import Post
@@ -26,3 +31,7 @@ def faq(request):
 
 def privacy(request):
     return render(request, 'mog/privacy.html')
+
+
+def health(request):
+    return HttpResponse("OK")

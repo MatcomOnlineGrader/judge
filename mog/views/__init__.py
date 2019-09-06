@@ -8,7 +8,7 @@ from .problem import remove_problem, problem, ProblemCreateView, ProblemEditView
 from .submission import submissions, submission, Submit, rejudge
 from .team import create_team, remove_team
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams
-from .views import index, faq, privacy
+from .views import index, faq, privacy, health
 from .message import send_message
 from .comment import edit_comment, remove_comment
 from .clarification import clarification_create, clarification_edit

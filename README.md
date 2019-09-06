@@ -42,6 +42,7 @@ DATABASE_USER: <str> [database user]
 DATABASE_PASS: <str> [database password]
 DATABASE_HOST: <str> [localhost | xxx.xxx.xxx.xxx | mydomain.com]
 DATABASE_PORT: <int> [5432 for PostgreSQL, 3306 for MySQL, etc]
+REPLICAS: <int> [use 0 here as default]
 
 [secrets]
 SECRET_KEY: <str> [random string]

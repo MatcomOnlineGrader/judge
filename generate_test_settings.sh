@@ -11,9 +11,13 @@ DATABASE_USER: postgres
 DATABASE_PASS: postgres
 DATABASE_HOST: postgres
 DATABASE_PORT: 5432
+REPLICAS: 0
 
 [secrets]
-SECRET_KEY: dhs7bvc2r*li%9jjf6^e25#y9du-rcj_5+=t9arf308p4)zpu!
+SECRET_KEY: super-secret-key
+
+[session]
+USE_REDIS: false
 
 [email]
 EMAIL_USE_TLS: true
