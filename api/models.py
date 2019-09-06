@@ -23,8 +23,12 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from mog.tasks import report_clarification
-from mog.gating import user_is_admin, user_is_browser, user_is_observer_in_contest, user_is_judge_in_contest, \
-    user_is_judge
+from mog.gating import (
+    get_all_contest_for_judge,
+    user_is_admin,
+    user_is_judge_in_contest,
+    user_is_observer_in_contest,
+)
 
 
 @deconstructible
@@ -195,8 +199,7 @@ class Contest(models.Model):
         """
         if not user.is_authenticated or self.is_past or self.closed:
             return False
-        if user_is_admin(user) or user_is_browser(user) or user_is_judge_in_contest(user, self) or \
-                user_is_observer_in_contest(user, self):
+        if user_is_admin(user) or user_is_judge_in_contest(user, self) or user_is_observer_in_contest(user, self):
             return False
         return not self.registered_for_real(user)
 
@@ -221,8 +224,7 @@ class Contest(models.Model):
         """
         if not user.is_authenticated or not self.is_past or self.needs_unfreeze:
             return False
-        if user_is_admin(user) or user_is_browser(user) or user_is_judge_in_contest(user, self) \
-                or user_is_observer_in_contest(user, self):
+        if user_is_admin(user) or user_is_judge_in_contest(user, self) or user_is_observer_in_contest(user, self):
             return False
         return not self.registered_for_virtual(user)
 
@@ -266,16 +268,22 @@ class Contest(models.Model):
             return clarifications.filter(~Q(pk__in=user.seen_clarifications.all())).count()
 
     @staticmethod
-    def get_visible_contests(admin=False):
-        return Contest.objects if admin else Contest.objects.filter(visible=True)
+    def get_all_contests(user):
+        if user_is_admin(user):
+            queryset = Contest.objects
+        else:
+            contest_ids = get_all_contest_for_judge(user)
+            if contest_ids:
+                queryset = Contest.objects.filter(Q(visible=True) | Q(id__in=contest_ids))
+            else:
+                queryset = Contest.objects.filter(Q(visible=True))
 
-    @staticmethod
-    def get_all_contests(admin=False):
         now = timezone.now()
-        contests = Contest.get_visible_contests(admin)
-        running = contests.filter(start_date__lte=now, end_date__gte=now).order_by('start_date')
-        coming = contests.filter(start_date__gt=now).order_by('start_date')
-        past = contests.filter(end_date__lt=now).order_by('-start_date')
+        running = queryset.filter(start_date__lte=now, end_date__gte=now).\
+            order_by('start_date')
+        coming = queryset.filter(start_date__gt=now).order_by('start_date')
+        past = queryset.filter(end_date__lt=now).order_by('-start_date')
+
         return running, coming, past
 
     def group_names(self):
@@ -642,14 +650,6 @@ class Submission(models.Model):
     def visible(self):
         return not self.hidden and (self.instance is None or self.instance.contest.visible)
 
-    @staticmethod
-    def visible_submissions(user):
-        """Submissions to show in submission list"""
-        if user_is_admin(user) or user_is_judge(user):
-            return Submission.objects
-        return Submission.objects \
-            .filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
-
     def can_be_rejudged_by(self, user):
         return user_is_admin(user) or user_is_judge_in_contest(user, self.problem.contest)
 
@@ -690,21 +690,26 @@ class Submission(models.Model):
 
     def can_show_source_to(self, user):
         """Determine whether the user has the permissions to see the
-        current submission's source code.  An user can see the source code only
-        if:
-         - The user is an administrator, or the submission is visible and the user
-        is observer or
-        - The submission is visible and public and does not belong to a running instance
-        - The submission belongs to the user
+        current submission's source code. An user can see the source
+        code only if:
+        - User is the author of the submission, or
+        - User is an administrator, or
+        - User is judge in the contest where the submission was sent, or
+        - User is observer in the contest and the submission is visible, or
+        - The submission is visible and public and does not belong to a
+        running instance (allow no-logged users).
         """
-        if user_is_admin(user) or user_is_judge_in_contest(user, self.problem.contest) \
-                or (self.visible and user_is_observer_in_contest(user, self.problem.contest)):
+        if self.user == user:
             return True
-
+        if user_is_admin(user):
+            return True
+        if user_is_judge_in_contest(user, self.problem.contest):
+            return True
+        if self.visible and user_is_observer_in_contest(user, self.problem.contest):
+            return True
         if self.visible and self.public and (not self.instance or self.instance.is_past):
             return True
-
-        return user.is_authenticated and self.user == user
+        return False
 
     def __str__(self):
         return str(self.id)

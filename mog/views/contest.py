@@ -4,28 +4,40 @@ import json
 from django.db.models.functions import Lower
 from django.urls import reverse
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import Http404, HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as trans
+from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.decorators.http import require_http_methods
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 
-from api.models import Contest, ContestInstance, Team, Result, Compiler, RatingChange, User, Q, Submission
+from api.models import (
+    Compiler,
+    Contest,
+    ContestInstance,
+    RatingChange,
+    Result,
+    Submission,
+    Team,
+    User,
+)
+
 from mog.forms import ContestForm, ClarificationForm
-from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest, user_is_judge
-from mog.standing import calculate_standing
+from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
+from mog.standing import calculate_standing
 from mog.templatetags.filters import format_penalty, format_minutes
 
 
 def contests(request):
-    running, coming, past = Contest.get_all_contests(user_is_admin(request.user) or user_is_judge(request.user))
+    running, coming, past = \
+        Contest.get_all_contests(request.user)
     return render(request, 'mog/contest/index.html', {
         'running_contests': running,
         'coming_contests': coming,

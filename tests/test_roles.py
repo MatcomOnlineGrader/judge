@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from mog.gating import grant_role_to_user_in_contest
 from mog.templatetags.security import can_create_clarification, can_edit_clarification
 from . import FixturedTestCase
 from mog.templatetags import security
@@ -11,6 +12,7 @@ class RoleObserverTestCase(FixturedTestCase):
         self.normal_user = self.newUser(username="user1", is_active=True)
         self.observer_user = self.newUser(username="user2", is_active=True)
         self.updateUserProfile(self.observer_user, role='observer')
+        grant_role_to_user_in_contest(self.observer_user, self.problem2.contest, 'observer')
 
         self.running_instance = self.newContestInstance(self.running_contest, self.observer_user)
         self.past_instance = self.newContestInstance(self.past_contest, self.observer_user)
@@ -48,6 +50,8 @@ class RoleJudgeTestCase(FixturedTestCase):
         self.judge = self.newUser(username="user2", is_active=True)
         self.updateUserProfile(self.judge, role='judge')
 
+        grant_role_to_user_in_contest(self.judge, self.problem2.contest, 'judge')
+
         self.running_instance = self.newContestInstance(self.running_contest, self.user)
         self.past_instance = self.newContestInstance(self.past_contest, self.user)
         self.frozen_instance = self.newContestInstance(self.frozen_contest, self.user)
@@ -84,5 +88,6 @@ class RoleJudgeTestCase(FixturedTestCase):
 
     def test_can_create_edit_clarifications(self):
         for contest in [self.past_contest, self.running_contest, self.frozen_contest, self.coming_hidden_contest]:
+            grant_role_to_user_in_contest(self.judge, contest, 'judge')
             self.assertTrue(can_edit_clarification(self.judge, contest))
             self.assertTrue(can_create_clarification(self.judge, contest))
