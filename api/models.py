@@ -2,6 +2,7 @@ import os
 import re
 import cgi
 import uuid
+import json
 
 from django.core.mail import send_mail
 from django.db.models import F
@@ -68,7 +69,7 @@ class Team(models.Model):
     )
     description = models.TextField(null=True)
     icpcid = models.CharField(max_length=64, null=True, blank=True,
-        verbose_name=_('ID that links this team to the ICPC, we get this value down from baylor'))
+                              verbose_name=_('ID that links this team to the ICPC, we get this value down from baylor'))
 
     def __str__(self):
         return '{0} ({1})'.format(
@@ -256,14 +257,14 @@ class Contest(models.Model):
         if user_is_admin(user) or user_is_judge_in_contest(user, self):
             return self.clarifications.order_by('-asked_date')
         if user.is_authenticated:
-            return self.clarifications.filter(Q(public=True) | Q(sender=user))\
+            return self.clarifications.filter(Q(public=True) | Q(sender=user)) \
                 .order_by('-asked_date')
-        return self.clarifications.filter(public=True)\
+        return self.clarifications.filter(public=True) \
             .order_by('-asked_date')
 
     def unseen_clarifications(self, user):
         if user.is_authenticated:
-            clarifications = self.clarifications if user_is_admin(user) else\
+            clarifications = self.clarifications if user_is_admin(user) else \
                 self.clarifications.filter(Q(public=True) | Q(sender=user))
             return clarifications.filter(~Q(pk__in=user.seen_clarifications.all())).count()
 
@@ -288,7 +289,7 @@ class Contest(models.Model):
 
     def group_names(self):
         return list(
-            self.instances.order_by(Lower('group'))\
+            self.instances.order_by(Lower('group')) \
                 .values_list('group', flat=True).distinct()
         )
 
@@ -305,6 +306,7 @@ class Problem(models.Model):
     hints = models.TextField(null=True, blank=True)
     time_limit = models.PositiveIntegerField(verbose_name='Time limit (s)')
     memory_limit = models.PositiveIntegerField(verbose_name='Memory limit (MB)')
+    multiple_limits = models.TextField(blank=True, verbose_name='JSON with memory & time limit per compiler')
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
     checker = models.ForeignKey(Checker, null=True, on_delete=models.SET_NULL)
     position = models.IntegerField()
@@ -326,6 +328,27 @@ class Problem(models.Model):
 
     def _accepted_submissions(self):
         return self._visible_submissions().filter(result__name__iexact='accepted', status='normal')
+
+    def _get_limits_json(self):
+        try:
+            limits = json.loads(self.multiple_limits)
+        except:
+            limits = None
+        return limits
+
+    def time_limit_for_compiler(self, compiler):
+        compiler_key = compiler.name
+        limits = self._get_limits_json()
+        if limits and compiler_key in limits and "Time" in limits[compiler_key]:
+            return limits[compiler_key]["Time"]
+        return self.time_limit
+
+    def memory_limit_for_compiler(self, compiler):
+        compiler_key = compiler.name
+        limits = self._get_limits_json()
+        if limits and compiler_key in limits and "Memory" in limits[compiler_key]:
+            return limits[compiler_key]["Memory"]
+        return self.memory_limit
 
     @staticmethod
     def get_visible_problems(admin=False):
@@ -377,23 +400,26 @@ class Problem(models.Model):
     """
 
     @property
-    def compilers_by_relevance(self):
-        def relevance(compiler):
+    def languages_by_relevance(self):
+        def relevance(language):
             return {
-                'csharp': 0,
-                'cpp': 1,
-                'python': 2,
-                'java': 3
-            }.get(compiler.language.lower(), 4)
-        return sorted(self.compilers.all(), key=relevance)
+                'c': 0, 'cpp': 1, 'c++': 2, 'java': 3, 'python': 4, 'python2': 5,
+                'python3': 6, 'kotlin': 7, 'csharp': 8, 'c#': 9,
+            }.get(language.lower(), 4)
+
+        return sorted(set([compiler.language for compiler in self.compilers.all()]), key=relevance)
 
     @property
     def first_compilers(self):
-        return ','.join([compiler.name for compiler in self.compilers_by_relevance[:2]])
+        languages = self.languages_by_relevance
+        return ', '.join(languages[:4]) + (', ...' if len(languages) > 4 else '')
 
     @property
     def compilers2str(self):
-        return '<br>'.join([compiler.name for compiler in self.compilers_by_relevance])
+        return '<br>'.join(['%s (%d s, %d mb)' % (compiler.name,
+                                                  self.time_limit_for_compiler(compiler),
+                                                  self.memory_limit_for_compiler(compiler))
+                            for compiler in self.compilers.all()])
 
     def __str__(self):
         return self.title
@@ -431,7 +457,7 @@ class Post(models.Model):
         problem accepted (the number of points should be positive).
         """
         return user.is_authenticated and user.is_active and \
-            hasattr(user, 'profile') and user.profile.points > 0
+               hasattr(user, 'profile') and user.profile.points > 0
 
     @property
     def sorted_comments(self):
@@ -571,8 +597,8 @@ class UserProfile(models.Model):
 
     @property
     def rating(self):
-        return RatingChange.objects.filter(profile=self)\
-            .aggregate(rating=Sum('rating')).get('rating') or 0
+        return RatingChange.objects.filter(profile=self) \
+                   .aggregate(rating=Sum('rating')).get('rating') or 0
 
     def get_ratings(self):
         data = []
@@ -591,7 +617,7 @@ class UserProfile(models.Model):
 
     @property
     def solved_problems(self):
-        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False, status='normal')\
+        return self.user.submissions.filter(result__name__iexact='accepted', hidden=False, status='normal') \
             .distinct('problem_id').count()
 
     @property
@@ -633,7 +659,8 @@ class Submission(models.Model):
     ]
 
     problem = models.ForeignKey(Problem, related_name='submissions', on_delete=models.CASCADE)
-    instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions', on_delete=models.SET_NULL)
+    instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions',
+                                 on_delete=models.SET_NULL)
     date = models.DateTimeField()
     execution_time = models.IntegerField(default=0)
     memory_used = models.BigIntegerField(default=0)
@@ -803,7 +830,8 @@ class ContestInstance(models.Model):
     real = models.BooleanField()
     group = models.CharField(max_length=64, null=True, blank=True, verbose_name=_('Group name'))
     render_team_description_only = models.BooleanField(default=False,
-        verbose_name=_('If true, render the team without members and only displaying the description on hover'))
+                                                       verbose_name=_(
+                                                           'If true, render the team without members and only displaying the description on hover'))
 
     def __str__(self):
         if self.team:
@@ -889,9 +917,9 @@ class ContestInstance(models.Model):
         if instance_bound:
             submissions = submissions\
                 .filter(
-                    (Q(instance__real=True) & Q(instance__contest__start_date__gte=(F('date') - instance_bound.relative_time)))
-                    | (Q(instance__real=False) & Q(instance__start_date__gte=(F('date') - instance_bound.relative_time)))
-                )
+                (Q(instance__real=True) & Q(instance__contest__start_date__gte=(F('date') - instance_bound.relative_time)))
+                | (Q(instance__real=False) & Q(instance__start_date__gte=(F('date') - instance_bound.relative_time)))
+            )
         return submissions
 
 

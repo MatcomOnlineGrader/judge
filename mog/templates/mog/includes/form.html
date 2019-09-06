@@ -17,6 +17,9 @@
                     {{ field }}
                     <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
                 </div>
+            {%  elif field.id_for_label == 'id_multiple_limits'%}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <input id="id_multiple_limits" name="multiple_limits" class="form-control" value="{{ field.value }}"/>
             {% else %}
                 <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
                 {{ field|add_class:"form-control" }}
