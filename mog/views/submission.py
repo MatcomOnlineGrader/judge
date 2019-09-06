@@ -87,7 +87,7 @@ class Submit(View):
             return redirect('mog:contest_problems', problem.contest.id)
 
         if (not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest)) \
-                and problem.contest.needs_unfreeze:
+                and problem.contest.needs_unfreeze and problem.contest.is_past:
             msg = _(u'You cannot submit because the contest is still frozen.')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:contest_problems', problem.contest.id)
