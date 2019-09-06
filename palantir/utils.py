@@ -13,9 +13,10 @@ from palantir.models import AccessLog
 
 BLACK_LISTED_PATHS_RE = [
     re.compile('^/admin'),
+    re.compile('^/favicon[.]ico$'),
+    re.compile('^/health'),
     re.compile('^/media'),
     re.compile('^/static'),
-    re.compile('^/favicon[.]ico$')
 ]
 
 BLACK_LISTED_IPS = [
