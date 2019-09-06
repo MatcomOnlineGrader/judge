@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'mog'
 urlpatterns = [
+    url(r'^health/$', views.health, name='health'),
     url(r'^faq/$', views.faq, name='faq'),
     url(r'^privacy/$', views.privacy, name='privacy'),
 

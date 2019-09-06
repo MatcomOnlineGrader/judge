@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=fito
+Group=www-data
+WorkingDirectory=/home/fito/judge
+ExecStart=/home/fito/judge/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          judge.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
