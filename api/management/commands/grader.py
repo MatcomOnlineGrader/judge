@@ -145,7 +145,7 @@ def grade_submission(submission, number_of_executions):
     problem = submission.problem
     checker = problem.checker
     compiler = submission.compiler
-
+    language = compiler.language.lower()
     # compile checker
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
 
@@ -155,15 +155,20 @@ def grade_submission(submission, number_of_executions):
         set_internal_error(submission, 'internal error compiling checker')
         return
 
-    if compiler.language.lower() == 'java':
+    time_limit = problem.time_limit_for_compiler(compiler)
+    memory_limit = problem.memory_limit_for_compiler(compiler)
+
+    if language == 'java':
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx256M -DMOG=true Main'\
-              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit)
-    elif compiler.language.lower() in ['python', 'javascript']:
+              % (RUNEXE_PATH, time_limit, memory_limit)
+    elif language in ['python', 'javascript', 'python2', 'python3']:
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s' \
-              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, compiler.path, compiler.arguments.format('%d.%s' % (submission.id, compiler.file_extension)))
+              % (RUNEXE_PATH, time_limit, memory_limit, compiler.path,
+                 compiler.arguments.format('%d.%s' % (submission.id, compiler.file_extension)))
     else:
         cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" %s' \
-              % (RUNEXE_PATH, problem.time_limit, problem.memory_limit, '%d.%s' % (submission.id, compiler.exec_extension))
+              % (RUNEXE_PATH, time_limit, memory_limit, '%d.%s' %
+                 (submission.id, compiler.exec_extension))
 
     i_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'inputs')
     o_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), 'outputs')
@@ -201,11 +206,11 @@ def grade_submission(submission, number_of_executions):
                 consumed_memory = int(get_tag_value(xml, 'consumedMemory'))
                 comment = get_tag_value(xml, 'comment') or '<blank>'
 
-                if passed_time > problem.time_limit * 1000 and\
+                if passed_time > time_limit * 1000 and\
                         (invocation_verdict != 'IDLENESS_LIMIT_EXCEEDED'):
                     # force TLE when passed time exceed the problem time limit.
                     invocation_verdict = 'TIME_LIMIT_EXCEEDED'
-                    passed_time = min(passed_time, problem.time_limit * 1000)
+                    passed_time = min(passed_time, time_limit * 1000)
 
                 if invocation_verdict != 'SUCCESS':
                     comment = result = {

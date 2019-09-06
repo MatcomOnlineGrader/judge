@@ -39,12 +39,10 @@
             {% endif %}
 
             <div class="col-md-12">
-                <h5>{% trans 'Time limit' %}: {{ problem.time_limit }} {% trans 'second' %}{{ problem.time_limit|pluralize }}</h5>
-                <h5>{% trans 'Memory limit' %}: {{ problem.memory_limit }} {% trans 'megabyte' %}{{ problem.memory_limit|pluralize }}</h5>
-                <h5>{% trans 'Languages' %}: {{ problem.first_compilers }}
-                    {% if problem.compilers.all|length > 2 %}
-                        <a href="#" data-html="true" data-toggle="tooltip" title="{{ problem.compilers2str }}" data-placement="right">...</a>
-                    {% endif %}
+                <h5><b>{% trans 'Time limit' %}:</b> {{ problem.time_limit }} {% trans 'second' %}{{ problem.time_limit|pluralize }}</h5>
+                <h5><b>{% trans 'Memory limit' %}:</b> {{  problem.memory_limit }} {% trans 'megabyte' %}{{ problem.memory_limit|pluralize }}</h5>
+                <h5><b>{% trans 'Languages' %}:</b> {{ problem.first_compilers }}
+                    <a href="#" data-html="true" data-toggle="tooltip" title="{{ problem.compilers2str }}" data-placement="right">(details)</a>
                 </h5>
             </div>
 
