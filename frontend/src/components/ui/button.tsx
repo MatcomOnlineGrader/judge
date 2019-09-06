@@ -4,7 +4,7 @@ interface ButtonProps {
   ariaLabel?: string;
   onClick?: (e: any) => void;
   primary?: boolean;
-  type?: string;
+  type?: "button" | "submit";
   data?: { [key: string]: any };
   className?: string;
 }
