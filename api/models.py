@@ -306,6 +306,7 @@ class Problem(models.Model):
     contest = models.ForeignKey(Contest, related_name='problems', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
+    samples = models.TextField(null=True, blank=True, verbose_name='Sample inputs/outputs')
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
