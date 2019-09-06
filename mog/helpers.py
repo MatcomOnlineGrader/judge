@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
 from api.models import Submission, Contest, Result, Compiler
-from mog.gating import user_is_admin
+from mog.gating import user_is_admin, get_all_contest_for_judge
 
 
 def get_paginator(query_set, rows_per_page, current_page=1):
@@ -17,9 +17,28 @@ def get_paginator(query_set, rows_per_page, current_page=1):
 
 
 def filter_submissions(user_who_request, problem=None, contest=None, username=None, result=None, compiler=None, **kwargs):
-    query = {}
-    queryset = Submission.visible_submissions(user_who_request)
+    # The following section is the base line to further filtering of
+    # submissions. Here, we select visible submissions only for
+    # `user_who_request`.
+    #
+    # 1. If the user is an admin, there is nothing to filter. Admins
+    # can see any submission.
+    # 2. If the user is not admin, the idea is that they allways see
+    # visible submissions ONLY (!hidden). However, judges are special
+    # roles that can see hidden submissions of contest they have
+    # granted access to. Thus, we should check for contests where the
+    # user has role `judge` and include any submission of those
+    # contests to the list (potentially hidden submissions).
+    if user_is_admin(user_who_request):
+        queryset = Submission.objects
+    else:
+        contest_ids = get_all_contest_for_judge(user_who_request)
+        if contest_ids:
+            queryset = Submission.objects.filter(Q(hidden=False) | (Q(hidden=True) & Q(problem__contest__in=contest_ids)))
+        else:
+            queryset = Submission.objects.filter(Q(hidden=False))
 
+    query = {}
     if problem:
         queryset = queryset.filter(problem__title__contains=problem)
         query['problem'] = problem  # no encode needed

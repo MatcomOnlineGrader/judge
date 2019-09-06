@@ -9,8 +9,15 @@ from django.views.decorators.http import require_http_methods
 
 from api.models import Problem, Tag
 from mog.forms import ProblemForm
-from mog.samples import get_tests, handle_tests, handle_remove_test, test_content, write_to_test, fix_problem_folder
-from mog.gating import user_is_admin, user_is_judge
+from mog.gating import user_is_admin
+from mog.samples import (
+    fix_problem_folder,
+    get_tests,
+    handle_remove_test,
+    handle_tests,
+    test_content,
+    write_to_test,
+)
 
 
 @login_required
@@ -203,14 +210,14 @@ class ProblemListView(generic.ListView):
         tag = Tag.objects.filter(name=tag).first()
 
         if tag:
-            problems = tag.get_visible_problems(user_is_admin(self.request.user) or user_is_judge(self.request.user))
+            problems = tag.get_visible_problems(user_is_admin(self.request.user))
         else:
-            problems = Problem.get_visible_problems(user_is_admin(self.request.user) or user_is_judge(self.request.user))
+            problems = Problem.get_visible_problems(user_is_admin(self.request.user))
 
         if q:
             problems = problems.filter(title__icontains=q)
 
-        if not user_is_admin(self.request.user) and not user_is_judge(self.request.user):
+        if not user_is_admin(self.request.user):
             problems = problems.filter(contest__start_date__lte=timezone.now())
 
         return problems.order_by('-contest__start_date', 'position')

@@ -78,4 +78,3 @@ class SarisTestCase(FixturedTestCase):
                 password=TEST_USER_PASSWORD,
             )
             response = self.client.post('/contest/saris/{}'.format(self.past_contest.pk), {})
-            print(response.status_code, 200)
