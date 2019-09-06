@@ -59,7 +59,7 @@ sudo mkdir /var/www/judge/static
 PYTHON=$(which python)
 sudo $PYTHON manage.py collectstatic --noinput
 
-sudo chmod -R 664 /var/www/judge/media
+sudo chmod -R 764 /var/www/judge/media
 sudo chown -R www-data /var/www/judge/media
 sudo chgrp -R www-data /var/www/judge/media
 
