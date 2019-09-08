@@ -2,9 +2,15 @@
 {% load filters %}
 
 {% with aurl=user|avatar %}
-    {% if aurl %}
-        <img src="{{ aurl }}" alt="{{ user.username }}" class="img-responsive img-thumbnail" />
-    {% else %}
-        <img src="{% static 'mog/images/avatar.jpg' %}" alt="{{ user.username }}" class="img-responsive img-thumbnail" />
-    {% endif %}
+    <img
+        {% if aurl %}
+            src="{{ aurl }}"
+        {% else %}
+            src="{% static 'mog/images/avatar.jpg' %}"
+        {% endif %}
+        alt="{{ user.username }}"
+        class="img-responsive img-thumbnail"
+        onerror="this.onerror=null; this.src='{% static 'mog/images/avatar.jpg' %}'"
+        width="{{width}}"
+    />
 {% endwith %}
