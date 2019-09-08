@@ -79,6 +79,10 @@ textarea {
   width: 70px;
 }
 
+.standing-row-selected {
+  background-color: #d9edf7;
+}
+
 .standings .user {
   min-width: 50px;
   max-width: 100px;

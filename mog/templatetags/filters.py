@@ -233,10 +233,17 @@ def first_problem(contest):
 
 @register.filter()
 def get_instance(user, contest):
-    try:
-        return user.instances.get(contest=contest)
-    except:
-        return None
+    return contest.registration(user)
+
+
+@register.filter()
+def has_solved_problem(instance, problem):
+    return instance and instance.has_solved_problem(problem)
+
+
+@register.filter()
+def has_failed_problem(instance, problem):
+    return instance and instance.has_failed_problem(problem)
 
 
 # Remove following filters

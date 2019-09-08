@@ -96,7 +96,7 @@ def contest_standing(request, contest_id):
 
     user_instance = None
     if request.user.is_authenticated:
-        user_instance = contest.instances.filter(user=request.user).first()
+        user_instance = contest.registration(request.user)
     show_virtual = request.GET.get('show_virtual') == 'on'
 
     group_in_ranking = request.GET.get('group', None)
