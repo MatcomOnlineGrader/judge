@@ -8,8 +8,9 @@ from django.views import View, generic
 from django.views.decorators.http import require_http_methods
 
 from api.models import Problem, Tag
+from judge import settings
 from mog.forms import ProblemForm
-from mog.gating import user_is_admin
+from mog.gating import user_is_admin, user_is_judge_in_contest
 from mog.samples import (
     fix_problem_folder,
     get_tests,
@@ -56,11 +57,14 @@ def remove_test(request, problem_id):
 class TestEditView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
+        problem = get_object_or_404(Problem, pk=problem_id)
+
+        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest):
             return HttpResponseForbidden()
+
         folder = request.GET.get('folder')
         test = request.GET.get('test')
-        problem = get_object_or_404(Problem, pk=problem_id)
+
         content = test_content(problem, folder, test)
         if not content:
             raise Http404()
@@ -97,9 +101,14 @@ def problem(request, problem_id, slug):
 class ProblemTestsView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            return HttpResponseForbidden()
         problem = get_object_or_404(Problem, pk=problem_id)
+
+        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest):
+            return HttpResponseForbidden()
+
+        if settings.DATA_SERVER_URL:
+            return redirect(settings.DATA_SERVER_URL + request.path)
+
         return render(request, 'mog/problem/tests.html', {
             'problem': problem,
             'sample_inputs': get_tests(problem, 'sample inputs'),

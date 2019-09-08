@@ -64,6 +64,11 @@ DEBUG = config.getboolean('debugging', 'DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+# REDIRECT: If the server is nor running in the server where the problem's data is
+# stored -> redirect to that server when modifying test cases
+
+DATA_SERVER_URL = config.get('redirect', 'DATA_SERVER_URL', fallback=None)
+
 # Application definition
 
 INSTALLED_APPS = [
