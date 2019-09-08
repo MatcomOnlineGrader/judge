@@ -267,8 +267,15 @@ class FixturedTestCase(TestCase):
         self.wrong_answer, _ = Result.objects.get_or_create(
             name='Wrong Answer',
             color='red',
+            penalty=True
+        )
+
+        self.compilation_error, _ = Result.objects.get_or_create(
+            name='Compilation Error',
+            color='blue',
             penalty=False
         )
+
 
         # <compilers>
         self.py2, _ = Compiler.objects.get_or_create(

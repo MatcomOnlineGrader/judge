@@ -912,15 +912,14 @@ class ContestInstance(models.Model):
             return self.contest.death_time
         return 0
 
-    def get_submissions(self, problem, instance_bound=None):
-        submissions = self.submissions.filter(problem=problem)
-        if instance_bound:
-            submissions = submissions\
-                .filter(
-                (Q(instance__real=True) & Q(instance__contest__start_date__gte=(F('date') - instance_bound.relative_time)))
-                | (Q(instance__real=False) & Q(instance__start_date__gte=(F('date') - instance_bound.relative_time)))
-            )
-        return submissions
+    def submissions_for_problem(self, problem):
+        return self.submissions.filter(problem=problem)
+
+    def has_solved_problem(self, problem):
+        return self.submissions_for_problem(problem).filter(result__name__iexact='accepted', status='normal').count() > 0
+
+    def has_failed_problem(self, problem):
+        return self.submissions_for_problem(problem).filter(result__penalty=True, status='normal').count() > 0
 
 
 class Clarification(models.Model):

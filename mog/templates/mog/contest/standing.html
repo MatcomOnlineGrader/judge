@@ -104,7 +104,11 @@
                     <tbody>
                         {% for instance_result in ranking.instance_results %}
                             {% with instance=instance_result.instance %}
-                                <tr class="standing-row">
+                                {% if user_instance == instance %}
+                                    <tr class="standing-row standing-row-selected">
+                                {% else %}
+                                    <tr class="standing-row">
+                                {% endif %}
                                     <td class="text-center">{{ instance_result.rank }}</td>
                                     <td>
                                         <div style="min-height: 45px;">

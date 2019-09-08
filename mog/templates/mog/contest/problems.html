@@ -93,11 +93,24 @@
                         </thead>
                         <tbody>
                         {% for problem in problems %}
-                            {# TODO: Add problem solved here & balloons #}
-                            <tr class="">
-                                <td class="text-center">
-                                    <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.letter }}</a>
-                                </td>
+                            {% with instance=user|get_instance:contest%}
+                                {% if instance|has_solved_problem:problem %}
+                                    <tr class="success">
+                                {% elif instance|has_failed_problem:problem %}
+                                    <tr class="danger">
+                                {% else %}
+                                    <tr class="">
+                                {% endif %}
+                            {% endwith %}
+                                <th class="text-center cell-medium">
+                                    <a href="{% url 'mog:problem' problem.id problem.slug %}"
+                                       {% if problem.balloon and problem.balloon.0 == '#' %}
+                                           style="padding: 10px; color: {{ problem.letter_color }}; background: no-repeat center/25px url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 17.5 20.2&quot;><path fill=&quot; {{ problem.balloon|urlencode }} &quot; d=&quot;M17.5 8.3c0 6-8.7 11.8-8.7 11.8S0 14.3 0 8.3C0 3.7 3.9 0 8.7 0S17.5 3.7 17.5 8.3z&quot;/></svg>');"
+                                       {% endif %}
+                                    >
+                                        {{ problem.letter }}
+                                    </a>
+                                </th>
                                 <td>
                                     <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.title }}</a>
                                 </td>
