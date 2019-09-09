@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load security %}
+{% load filters %}
 
 <table class="table table-bordered">
     <thead>
@@ -69,7 +70,7 @@
                     <td class="text-center">
                         <small>
                             {% if show_details %}
-                                {{ submission.memory_used }}
+                                {{ submission.memory_used|format_memory }}
                             {% else %}
                                 -----
                             {% endif %}
