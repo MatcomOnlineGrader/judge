@@ -5,7 +5,7 @@ from django import forms
 
 from api.models import Division, Result
 import api.utils as api_utils
-
+import humanize
 
 register = template.Library()
 
@@ -224,6 +224,11 @@ def result_by_name(name):
             results[result.name.lower()] = result.id
         cache.set('results', results)
     return results.get(name)
+
+
+@register.filter()
+def format_memory(memory):
+    return humanize.naturalsize(memory)
 
 
 @register.filter()
