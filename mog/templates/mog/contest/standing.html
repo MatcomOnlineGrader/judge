@@ -51,10 +51,19 @@
                 {% if user_instance.is_running %}
                     <h5 class="title">
                         {{ user_instance.relative_time|format_seconds }} / -{{ user_instance.remaining_time|format_seconds }}
+                        {% if contest.is_death_time %}
+                            {% trans '(Death time)' %}
+                        {% elif contest.is_frozen_time %}
+                            {% trans '(Frozen time)' %}
+                        {% endif %}
                     </h5>
                     {% if not user_instance.real %}
                         <h5>(virtual)</h5>
                     {% endif %}
+                {% elif contest.is_past and contest.needs_unfreeze %}
+                    <h5>{% trans 'Ended (Frozen)' %}</h5>
+                {% elif contest.is_past %}
+                    <h5>{% trans 'Ended' %}</h5>
                 {% endif %}
             {% else %}
                 {% if contest.is_running %}
@@ -62,9 +71,19 @@
                         <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ contest.relative_time|format_seconds }}</span>
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ contest.remaining_time|format_seconds }}</span>
+                        {% if contest.is_death_time %}
+                            {% trans '(Death time)' %}
+                        {% elif contest.is_frozen_time %}
+                            {% trans '(Frozen time)' %}
+                        {% endif %}
                     </h5>
+                {% elif contest.is_past and contest.needs_unfreeze %}
+                    <h5>{% trans 'Ended (Frozen)' %}</h5>
+                {% elif contest.is_past %}
+                    <h5>{% trans 'Ended' %}</h5>
                 {% endif %}
             {% endif %}
+
         </div>
 
         {% for ranking in ranking_groups %}
