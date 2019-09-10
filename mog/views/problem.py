@@ -156,6 +156,7 @@ class ProblemCreateView(View):
             hints=data['hints'],
             time_limit=data['time_limit'],
             memory_limit=data['memory_limit'],
+            multiple_limits=data['multiple_limits'],
             checker=data['checker'],
             position=data['position'],
             balloon=data['balloon'],
@@ -184,12 +185,12 @@ class ProblemEditView(View):
         if not user_is_admin(request.user):
             HttpResponseForbidden()
         form = ProblemForm(request.POST)
+        problem = get_object_or_404(Problem, pk=problem_id)
         if not form.is_valid():
             return render(request, 'mog/problem/edit.html', {
-                'form': form
+                'form': form, 'problem': problem,
             })
         data = form.cleaned_data
-        problem = get_object_or_404(Problem, pk=problem_id)
         problem.title = data['title']
         problem.body = data['body']
         problem.input = data['input']
@@ -197,6 +198,7 @@ class ProblemEditView(View):
         problem.hints = data['hints']
         problem.time_limit = data['time_limit']
         problem.memory_limit = data['memory_limit']
+        problem.multiple_limits = data['multiple_limits']
         problem.checker = data['checker']
         problem.position = data['position']
         problem.balloon = data['balloon']

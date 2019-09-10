@@ -141,7 +141,7 @@
         this.initializeSummernote = function(isAdmin) {
             if (!($().summernote))
                 return;
-            var sns = $('form textarea');
+            var sns = $('form textarea:not(#id_multiple_limits)');
             sns.each(function () {
                 $(this).summernote({
                     height: $(this).attr('data-height') || 200,

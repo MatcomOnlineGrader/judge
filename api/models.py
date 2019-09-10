@@ -332,7 +332,7 @@ class Problem(models.Model):
 
     def _get_limits_json(self):
         try:
-            limits = json.loads(self.multiple_limits)
+            limits = json.loads(self.multiple_limits.strip())
         except:
             limits = None
         return limits

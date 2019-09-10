@@ -91,6 +91,20 @@ class ProblemForm(forms.ModelForm):
                   'memory_limit', 'multiple_limits', 'checker', 'position', 'balloon', 'letter_color',
                   'contest', 'tags', 'compilers']
 
+    def clean_multiple_limits(self):
+        def json_is_correct(content):
+            if len(content.strip()) == 0:
+                return True
+            try:
+                json.loads(content)
+            except:
+                return False
+            return True
+        limits = self.cleaned_data.get('multiple_limits')
+        if not json_is_correct(limits):
+            raise forms.ValidationError('The JSON does not have a correct format')
+        return limits
+
 
 class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
     """https://github.com/ivolo/disposable-email-domains/blob/master/index.json"""
