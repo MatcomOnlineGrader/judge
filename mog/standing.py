@@ -296,8 +296,7 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
 
     submissions = Submission.objects.select_related('result').filter(
         instance__contest__id=contest.id,
-        hidden=False,
-        date__lte=contest.end_date,
+        hidden=False
     )
 
     if not virtual:

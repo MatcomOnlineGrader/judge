@@ -247,6 +247,11 @@ def has_solved_problem(instance, problem):
 
 
 @register.filter()
+def total_solved_relevant_for_instance(problem, instance):
+    return problem.total_solved_relevant_for_instance(instance)
+
+
+@register.filter()
 def has_failed_problem(instance, problem):
     return instance and instance.has_failed_problem(problem)
 

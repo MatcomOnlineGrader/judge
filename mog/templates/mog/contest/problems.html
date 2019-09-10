@@ -101,7 +101,7 @@
                                 {% else %}
                                     <tr class="">
                                 {% endif %}
-                            {% endwith %}
+
                                 <th class="text-center cell-medium">
                                     <a href="{% url 'mog:problem' problem.id problem.slug %}"
                                        {% if problem.balloon and problem.balloon.0 == '#' %}
@@ -116,13 +116,14 @@
                                 </td>
                                 {# TODO: Check wheter the property below has a link in MOG! #}
                                 <td class="text-center">
-                                    {{ problem.solved_in_real }}
+                                    {{ problem|total_solved_relevant_for_instance:instance}}
                                 </td>
                                 <td class="text-center">
                                     <a href="{% url 'mog:submit' problem.id %}"><i
                                             class="glyphicon glyphicon-envelope"></i></a>
                                 </td>
                             </tr>
+                            {% endwith %}
                         {% empty %}
                             <tr>
                                 <td colspan="5">{% trans 'No problems included yet!' %}</td>

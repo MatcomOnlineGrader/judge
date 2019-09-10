@@ -53,6 +53,7 @@ def contest_clarifications(request, contest_id):
     if request.user.is_authenticated:
         for clarification in clarifications:
             clarification.seen.add(request.user)
+            clarification.seen.add(request.user)
     return render(request, 'mog/contest/clarifications.html', {
         'contest': contest,
         'clarifications': clarifications,
@@ -97,10 +98,19 @@ def contest_standing(request, contest_id):
     user_instance = None
     if request.user.is_authenticated:
         user_instance = contest.registration(request.user)
-    show_virtual = request.GET.get('show_virtual') == 'on'
+
+    if user_instance and user_instance.is_running:
+        show_virtual = not user_instance.real
+        show_virtual_checkbox = False
+    else:
+        show_virtual = request.GET.get('show_virtual') == 'on'
+        show_virtual_checkbox = True
 
     group_in_ranking = request.GET.get('group', None)
-    if group_in_ranking == '<all>':
+    if not group_in_ranking and user_instance and not user_instance.real:
+        # by default in virtual participation show all teams in one group
+        group_names = [None]
+    elif group_in_ranking == '<all>':
         group_names = (contest.group_names() or [None])
     elif group_in_ranking == '<one>':
         group_names = [None]
@@ -131,7 +141,8 @@ def contest_standing(request, contest_id):
         'show_virtual': show_virtual,
         'user_instance': user_instance,
         'group_names': contest.group_names(),
-        'group_in_ranking': group_in_ranking
+        'group_in_ranking': group_in_ranking,
+        'show_virtual_checkbox': show_virtual_checkbox
     })
 
 

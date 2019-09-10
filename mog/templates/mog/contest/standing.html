@@ -231,13 +231,16 @@
                 {% endif %}
 
                 <!-- Show Virtual -->
-                <div>
-                    <input id="show_virtual" type="checkbox" name="show_virtual"
-                           onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
-                    <label for="show_virtual">
-                        {% trans 'Show virtual participation' %} (~)
-                    </label>
-                </div>
+                {% if show_virtual_checkbox %}
+                    <div>
+                        <input id="show_virtual" type="checkbox" name="show_virtual"
+                               onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
+
+                        <label for="show_virtual">
+                            {% trans 'Show virtual participation' %} (~)
+                        </label>
+                    </div>
+                {% endif %}
             </form>
         </div>
     </div>
