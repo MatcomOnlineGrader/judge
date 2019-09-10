@@ -32,7 +32,7 @@ from mog.forms import ContestForm, ClarificationForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.standing import calculate_standing
-from mog.templatetags.filters import format_penalty, format_minutes
+from mog.templatetags.filters import format_minutes
 
 
 def contests(request):
@@ -602,7 +602,7 @@ def contest_csv(request, contest_id):
 
         append(row, name)
         append(row, instance_result.solved)
-        append(row, format_penalty(instance_result.penalty))
+        append(row, instance_result.penalty)
 
         for problem_result in instance_result.problem_results:
             cell = ''

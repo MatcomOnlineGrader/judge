@@ -220,7 +220,7 @@ class CalculateStandingCase(FixturedTestCase):
 
             self.assertIsInstance(rank_entry_new.solved, int)
             self.assertIsInstance(rank_entry_new.rank, int)
-            self.assertIsInstance(rank_entry_new.penalty, float)
+            self.assertIsInstance(rank_entry_new.penalty, int)
             self.assertIsInstance(rank_entry_new.participant, ContestInstance)
 
             if debug:

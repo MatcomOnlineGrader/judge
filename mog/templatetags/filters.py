@@ -208,14 +208,6 @@ def format_minutes(delta):
 
 
 @register.filter()
-def format_penalty(penalty):
-    d, h, m, s = unpack_seconds(int(penalty * 60))
-    if d > 0:
-        return '%d:%02d:%02d:%02d' % (d, h, m, s)
-    return '%02d:%02d:%02d' % (h, m, s)
-
-
-@register.filter()
 def result_by_name(name):
     results = cache.get('results')
     if results is None:

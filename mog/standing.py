@@ -106,7 +106,7 @@ class ProblemResultNew(object):
             self.accepted = True
 
             self._participant_result.solved += 1
-            self._participant_result.penalty += self.acc_delta.total_seconds() / 60 + 20 * self.attempts
+            self._participant_result.penalty += int(self.acc_delta.total_seconds()) // 60 + 20 * self.attempts
             self._participant_result.attempts += self.attempts
             self._participant_result.last_accepted_delta = self.acc_delta.total_seconds()
 
@@ -134,7 +134,7 @@ class ParticipantResult(object):
         # problem. If the submission is in death time it will not be reflected here.
         self.solved = 0
         # Penalty accumulated so far. Only counts penalty of accepted problems.
-        self.penalty = 0.
+        self.penalty = 0
         # Sum of total invalid attempts done before accepting each problem.
         self.attempts = 0
         # Position in the ranking.
