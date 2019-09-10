@@ -3,6 +3,7 @@ import re
 import cgi
 import uuid
 import json
+from datetime import datetime
 
 from django.core.mail import send_mail
 from django.db.models import F
@@ -388,10 +389,24 @@ class Problem(models.Model):
         """Return number of contestant whom solved this problem"""
         return self._accepted_submissions().distinct('user_id').count()
 
-    @property
-    def solved_in_real(self):
-        """Return number of contestants whom solved this problem in a real contest"""
-        return self._accepted_submissions().filter(instance__real=True).distinct('user_id').count()
+    def total_solved_relevant_for_instance(self, instance):
+
+        if instance and not instance.real and instance.is_running:
+            """Return number of contestants whom solved this problem in a real contest including virtual 
+            participations"""
+
+            real_count = self._accepted_submissions()\
+                .filter(instance__real=True,date__lte=self.contest.start_date + instance.relative_time)\
+                .distinct('instance_id').count()
+
+            virtual_count = self._accepted_submissions()\
+                .filter(instance__real=False, date__lte=F('instance__start_date') + instance.relative_time)\
+                .distinct('instance_id').count()
+
+            return real_count + virtual_count
+        else:
+            """Return number of contestants whom solved this problem in a real contest"""
+            return self._accepted_submissions().filter(instance__real=True).distinct('instance_id').count()
 
     """
     @property

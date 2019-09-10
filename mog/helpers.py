@@ -83,7 +83,7 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
 
 
 def get_contest_json(contest, group=None):
-    instances = contest.instances.filter(group=group) if group else contest.instances.all()
+    instances = contest.instances.filter(group=group, real=True) if group else contest.instances.filter(real=True)
 
     result = {"contestName": '%s(%s)' % (contest.name, group) if group else contest.name,
               "freezeTimeMinutesFromStart": int(contest.duration.seconds / 60) - contest.frozen_time,
