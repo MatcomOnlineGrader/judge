@@ -304,3 +304,12 @@ class FixturedTestCase(TestCase):
             file_extension='cpp',
             exec_extension='exe',
         )
+
+        # attach compilers to problems
+        self.problem1.compilers.add(self.cpp)
+        self.problem1.compilers.add(self.py2)
+        self.problem1.compilers.add(self.py3)
+
+        self.problem2.compilers.add(self.cpp)
+        self.problem2.compilers.add(self.py2)
+        self.problem2.compilers.add(self.py3)
