@@ -131,6 +131,14 @@ class Submit(View):
         if user_is_admin(request.user) or user_is_judge_in_contest(request.user, problem.contest):
             submission.hidden = True
         submission.save()
+
+        # Set default compiler after a submission
+        if hasattr(request.user, 'profile'):
+            profile = request.user.profile
+            if profile.compiler_id != compiler.id:
+                profile.compiler = compiler
+                profile.save()
+
         return redirect('mog:contest_submissions', problem.contest_id)
 
 
