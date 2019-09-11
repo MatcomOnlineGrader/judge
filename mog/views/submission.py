@@ -46,6 +46,10 @@ class Submit(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
         problem = get_object_or_404(Problem, pk=problem_id)
+
+        if not problem.contest.can_be_seen_by(request.user):
+            raise Http404()
+
         return render(request, 'mog/submit/submit.html', {
             'problem': problem, 'compilers': Compiler.objects.order_by('id'),
         })
