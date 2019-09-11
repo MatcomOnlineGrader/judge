@@ -15,6 +15,9 @@ sudo apt install python3-pip \
     curl \
     gettext <<< yes
 
+# Add fito to www-data group
+sudo usermod -a -G www-data fito
+
 # Creating a Python Virtual Environment for your Project
 sudo -H pip3 install --upgrade pip
 sudo -H pip3 install virtualenv
@@ -59,14 +62,13 @@ sudo mkdir /var/www/judge/static
 PYTHON=$(which python)
 sudo $PYTHON manage.py collectstatic --noinput
 
-sudo chmod -R 764 /var/www/judge/media
+sudo chmod -R 774 /var/www/judge/media
 sudo chown -R www-data /var/www/judge/media
 sudo chgrp -R www-data /var/www/judge/media
 
 sudo chmod -R 544 /var/www/judge/static
 sudo chown -R www-data /var/www/judge/static
 sudo chgrp -R www-data /var/www/judge/static
-
 
 # Generate translation file(s)
 python manage.py compilemessages
