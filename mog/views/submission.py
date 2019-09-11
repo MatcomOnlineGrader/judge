@@ -64,6 +64,9 @@ class Submit(View):
         compiler = get_object_or_404(Compiler, pk=compiler)
         date = timezone.now()
 
+        if not problem.contest.can_be_seen_by(request.user):
+           raise Http404()
+
         if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest) and not problem.contest.visible:
             raise Http404()
 
