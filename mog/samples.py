@@ -45,6 +45,7 @@ def get_tests(problem, folder):
 
 def handle_tests(problem, files, folder):
     """copy files into an specified problem folder"""
+    fix_problem_folder(problem)
     if folder in ['inputs', 'outputs']:
         path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder)
         if not os.path.exists(path) or not os.path.isdir(path):
