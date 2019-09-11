@@ -127,7 +127,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'mog.context_processor.common',
                 'mog.context_processor.special_day',
-                'mog.context_processor.incomplete_profile',
                 'django.template.context_processors.media',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
