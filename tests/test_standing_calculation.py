@@ -296,7 +296,7 @@ class CalculateStandingCase(FixturedTestCase):
         self.full_compare(contest, participants)
 
 
-    def test_frozen_simple_ac(self):
+    def test_frozen_simple_invalid(self):
         """
         Invalid on frozen time.
         """

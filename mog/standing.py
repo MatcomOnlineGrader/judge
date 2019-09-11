@@ -191,18 +191,10 @@ def calculate_standing_old(contest, virtual=False, viewer_instance=None, group=N
                     # 2) The user is looking at another row. In this case he/she will
                     #    be able to see only normal submissions for this row. Pending
                     #    submissions will be frozen & death submissions.
-                    if viewer_instance == instance:
-                        # case1
-                        pending_submissions = instance.submissions\
-                            .filter(Q(problem=problem) & Q(hidden=False) & Q(status='death')).count()
-                        submissions = instance.submissions\
-                            .filter(Q(problem=problem) & Q(hidden=False) & (Q(status='normal') | Q(status='frozen')))
-                    else:
-                        # case2
-                        pending_submissions = instance.submissions\
-                            .filter(Q(problem=problem) & Q(hidden=False) & ~Q(status='normal')).count()
-                        submissions = instance.submissions\
-                            .filter(Q(problem=problem) & Q(hidden=False) & Q(status='normal'))
+                    pending_submissions = instance.submissions\
+                        .filter(Q(problem=problem) & Q(hidden=False) & ~Q(status='normal')).count()
+                    submissions = instance.submissions\
+                        .filter(Q(problem=problem) & Q(hidden=False) & Q(status='normal'))
                 else:
                     # if the instance is virtual, then it will simulate the contest,
                     # the number of pending submissions will be 0 because here frozen/death
@@ -352,41 +344,18 @@ def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=N
         if bypass_frozen:
             return +1
 
-        if viewer_instance:
-            if not viewer_instance.real:
-                delta = submission.date - submission.instance.instance_start_date
-                if delta > viewer_instance_relative_time:
-                    # For virtual participants don't show submissions that haven't
-                    # passed according to its relative time in the contest.
-                    return -1
+        if viewer_instance and not viewer_instance.real:
+            delta = submission.date - submission.instance.instance_start_date
+            if delta > viewer_instance_relative_time:
+                # For virtual participants don't show submissions that haven't
+                # passed according to its relative time in the contest.
+                return -1
 
-            # Two cases may follow:
-            # 1) The user is looking at their row. In this case they will
-            #    be able to see all their submissions except death
-            #    submissions (frozen & normal). Pending submissions will
-            #    be death submissions.
-            # 2) The user is looking at another row. In this case they will
-            #    be able to see only normal submissions for this row. Pending
-            #    submissions will be frozen & death submissions.
-
-            if submission.is_normal:
-                return +1
-
-            elif submission.is_death:
-                return 0
-
-            elif submission.is_frozen:
-                if submission.instance == viewer_instance:
-                    return +1
-                else:
-                    return 0
+        # In the standing only normal submissions can bee seen.
+        if submission.is_normal:
+            return +1
         else:
-            # This is a guest (user not participating in the contest or not logged)
-            # They can't see any submission in frozen time.
-            if submission.is_normal:
-                return +1
-            else:
-                return 0
+            return 0
 
     problem_mapping = {
         problem.id : ix for (ix, problem) in enumerate(problems)
