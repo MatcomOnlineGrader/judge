@@ -45,7 +45,6 @@
 {% block main %}
     <div class="row">
         <div class="col-md-12 text-center">
-            <h1 class="title">{% trans 'Standing'  %}</h1>
             <h3 class="title"><a href="{% url 'mog:contest_problems' contest.pk %}">{{ contest.name }}</a></h3>
             {% if user_instance %}
                 {% if user_instance.is_running %}

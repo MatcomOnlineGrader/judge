@@ -31,11 +31,15 @@
                         </p>
                         {% include 'mog/contest/_register.html' with contest=contest %}
                     {% elif user|registered_for_real:contest %}
+                        {% if contest.closed %}
+                            <p class="margin-bottom-0">→ {% trans 'You are registered' %}</p>
+                        {% else %}
                         <p class="margin-bottom-0">
                             → <a class="btn btn-link margin-0 padding-0" href="#" data-toggle="modal"
                                  data-target="#unregister-{{ contest.id }}">{% trans 'Unregister' %}</a>
                         </p>
                         {% include 'mog/contest/_unregister.html' with contest=contest %}
+                        {% endif%}
                     {% endif %}
                 </td>
                 <td class="text-center">{{ contest.duration|format_seconds }}</td>

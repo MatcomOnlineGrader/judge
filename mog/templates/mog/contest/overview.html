@@ -1,0 +1,118 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load filters %}
+{% load i18n %}
+{% load security %}
+
+{% block title %}{{ contest.name }} | {% trans 'Overview' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest overview_active='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+            <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">
+                        {% trans 'Contest overview' %}
+                        {% include 'mog/contest/_actions.html' with contest=contest%}
+                    </h3>
+                </div>
+                <div class="col-md-12">
+                    <div class="well bckg-white">
+                        {% if contest.description %}
+                            <p>{{ contest.description|safe }}</p>
+                        {% else %}
+                            <p> This contest has no description</p>
+                        {% endif %}
+                        <hr/>
+                        <h4>Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-bordered table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Start date' %}
+                                            </th>
+                                            <td>
+                                                {{ contest.start_date}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'End date' %}
+                                            </th>
+                                            <td>
+                                                {{ contest.end_date}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Frozen time' %}
+                                            </th>
+                                            <td>
+                                                {{ contest.frozen_time}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Death time' %}
+                                            </th>
+                                            <td>
+                                                {{ contest.death_time}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Teams' %}
+                                            </th>
+                                            <td>
+                                                {% if contest.allow_teams %}
+                                                    {% trans 'Yes' %}
+                                                {% else %}
+                                                    {% trans 'No' %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Rated' %}
+                                            </th>
+                                            <td>
+                                                {% if contest.rated %}
+                                                    {% trans 'Yes' %}
+                                                {% else %}
+                                                    {% trans 'No' %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                {% trans 'Registration' %}
+                                            </th>
+                                            <td>
+                                                {% if contest.closed %}
+                                                    {% trans 'Close' %}
+                                                {% else %}
+                                                    {% trans 'Open' %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% include 'mog/includes/mathjax' %}
+{% endblock %}

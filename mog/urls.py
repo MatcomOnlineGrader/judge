@@ -49,6 +49,7 @@ urlpatterns = [
         name='contest_remove_registration'),
 
     url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
+    url(r'^contest/overview/(?P<contest_id>[0-9]+)$', views.contest_overview, name='contest_overview'),
     url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
     url(r'^contest/saris/(?P<contest_id>[0-9]+)$', views.contest_saris, name='contest_saris'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),

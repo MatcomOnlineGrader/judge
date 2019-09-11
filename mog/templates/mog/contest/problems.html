@@ -13,71 +13,12 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">
                         {% trans 'Problems' %}
-                        {% if contest.rated %}
-                            (<small>{% trans 'Rated' %}</small>)
-                        {% else %}
-                            (<small>{% trans 'Unrated' %}</small>)
-                        {% endif %}
-                        {% if user|can_edit_contest:contest %}
-                            <div class="dropdown pull-right">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="true">
-                                    {% trans 'Actions' %}
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <li>
-                                        <form id="rate_contest_form" action="{% url 'mog:rate_contest' contest.id %}"
-                                              method="post">
-                                            {% csrf_token %}
-                                        </form>
-                                        <a href="javascript:;" onclick="$('#rate_contest_form').submit();">Rate
-                                            contest</a>
-                                    </li>
-                                    <li>
-                                        <form id="force_rate_contest_form"
-                                              action="{% url 'mog:rate_contest' contest.id %}"
-                                              method="post">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="force_rate" value="on"/>
-                                        </form>
-                                        <a href="javascript:;" onclick="$('#force_rate_contest_form').submit();">Force
-                                            rate
-                                            contest</a>
-                                    </li>
-                                    <li>
-                                        <form id="unrate_contest_form"
-                                              action="{% url 'mog:unrate_contest' contest.id %}"
-                                              method="post">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="force_rate" value="on"/>
-                                        </form>
-                                        <a href="javascript:;" onclick="$('#unrate_contest_form').submit();">Unrate
-                                            contest</a>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li>
-                                        <form id="unfreeze_contest_form" action="{% url 'mog:contest_unfreeze' contest.id %}" method="post">
-                                            {% csrf_token %}
-                                        </form>
-                                        <a href="javascript:" onclick="$('#unfreeze_contest_form').submit();">
-                                            {% trans 'Unfreeze contest' %}
-                                        </a>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li>
-                                        <a href="{% url 'mog:contest_json' contest.id %}">Get JSON</a>
-                                    </li>
-                                    <li><a href="{% url 'mog:contest_csv' contest.id %}">Get CSV</a></li>
-                                </ul>
-                            </div>
-                        {% endif %}
+                        {% include 'mog/contest/_actions.html' with contest=contest%}
                     </h3>
                 </div>
 
@@ -132,22 +73,7 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="col-md-12">
-                    {% if contest.description %}
-                        <div class="col-md-12">
-                            <h3 class="uniform-text uniform-big">{% trans 'Description' %}</h3>
-                            <div class="well bckg-white">
-                                <p>{{ contest.description|safe }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block scripts %}
-    {% include 'mog/includes/mathjax' %}
 {% endblock %}
