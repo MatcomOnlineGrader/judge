@@ -29,7 +29,7 @@ from api.models import (
 )
 
 from mog.forms import ContestForm, ClarificationForm
-from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest
+from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.standing import calculate_standing
 from mog.templatetags.filters import format_minutes
@@ -49,10 +49,15 @@ def contest_clarifications(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     if not contest.can_be_seen_by(request.user):
         raise Http404()
+
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
     clarifications = contest.visible_clarifications(request.user)
+
     if request.user.is_authenticated:
         for clarification in clarifications:
-            clarification.seen.add(request.user)
             clarification.seen.add(request.user)
     return render(request, 'mog/contest/clarifications.html', {
         'contest': contest,
@@ -61,10 +66,26 @@ def contest_clarifications(request, contest_id):
     })
 
 
+def contest_overview(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not contest.overview_can_be_seen_by(request.user):
+        raise Http404()
+
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
+    return render(request, 'mog/contest/overview.html', {
+        'contest': contest,
+    })
+
+
 def contest_problems(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
+
     if not contest.can_be_seen_by(request.user):
-        raise Http404()
+        return redirect(reverse('mog:contest_overview', args=(contest.pk, )))
 
     if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
@@ -79,8 +100,14 @@ def contest_problems(request, contest_id):
 @login_required
 def contest_registration(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
+
     if not user_is_admin(request.user):
         raise Http404()
+
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
         'instances': contest.instances.order_by(Lower('group')),
@@ -221,7 +248,7 @@ def register_instance(request, contest, user, team):
     elif all(contest.can_register_for_virtual(u) for u in users):
         real, start_date = False, timezone.now()
     else:
-        msg = _('Registration cannot be accomplished')
+        msg = _('Registration cannot be accomplished, some of the team members cannot participate')
         messages.error(request, msg, extra_tags='danger')
         return redirect(nxt or reverse('mog:contests'))
 
@@ -303,6 +330,16 @@ def remove_instance(request, instance):
         messages.warning(request, msg, extra_tags='warning')
         return redirect(nxt or reverse('mog:contests'))
 
+    if instance.contest.closed:
+        msg = _('Cannot remove registration because the contest is closed.')
+        messages.warning(request, msg, extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
+
+    if instance.contest.closed:
+        msg = _('Cannot remove registration because the contest is closed.')
+        messages.warning(request, msg, extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
+
     user = request.user
 
     if not user_is_admin(user):
@@ -380,9 +417,11 @@ class ContestCreateView(View):
 class ContestEditView(View):
     @method_decorator(login_required)
     def get(self, request, contest_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            return HttpResponseForbidden()
         contest = get_object_or_404(Contest, pk=contest_id)
+
+        if not user_is_admin(request.user) and not user_is_judge_in_contest(contest):
+            return HttpResponseForbidden()
+
         return render(request, 'mog/contest/edit.html', {
             'form': ContestForm(instance=contest), 'contest': contest,
         })

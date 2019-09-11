@@ -18,13 +18,9 @@
         {% for contest in coming_contests %}
             <tr>
                 <td>
-                    {% if user|can_see_contest:contest%}
-                        <a href="{% url 'mog:contest_problems' contest.id %}" class="no-underline">
-                            {{ contest.name }}
-                        </a>
-                    {% else %}
+                    <a href="{% url 'mog:contest_problems' contest.id %}" class="no-underline">
                         {{ contest.name }}
-                    {% endif %}
+                    </a>
 
                     {% if not contest.visible %}
                         {% trans '( Hidden )' %}
@@ -37,11 +33,15 @@
                         </p>
                         {% include 'mog/contest/_register.html' with contest=contest %}
                     {% elif user|registered_for_real:contest %}
-                        <p class="margin-bottom-0">
-                            → <a class="btn btn-link margin-0 padding-0" href="#" data-toggle="modal"
-                                 data-target="#unregister-{{ contest.id }}">{% trans 'Unregister' %}</a>
-                        </p>
-                        {% include 'mog/contest/_unregister.html' with contest=contest %}
+                        {% if contest.closed %}
+                            <p class="margin-bottom-0">→ {% trans 'You are registered in this contest' %}</p>
+                        {% else %}
+                            <p class="margin-bottom-0">
+                                → <a class="btn btn-link margin-0 padding-0" href="#" data-toggle="modal"
+                                     data-target="#unregister-{{ contest.id }}">{% trans 'Unregister' %}</a>
+                            </p>
+                            {% include 'mog/contest/_unregister.html' with contest=contest %}
+                        {% endif%}
                     {% endif %}
                 </td>
                 <td class="text-center">{{ contest.duration|format_minutes }}</td>

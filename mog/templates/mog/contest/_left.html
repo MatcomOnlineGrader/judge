@@ -66,52 +66,96 @@
                 <tr>
                     <td>
                         <ul class="nav nav-pills nav-stacked">
-                            <li class="{{ problems_active }}">
-                                <a href="{% url 'mog:contest_problems' contest.id %}">
-                                    <i class="glyphicon glyphicon-list-alt"></i> {% trans 'Problems' %}
+                            <li class="{{ overview_active }}">
+                                <a href="{% url 'mog:contest_overview' contest.id %}">
+                                    <i class="glyphicon glyphicon-info-sign"></i> {% trans 'Overview' %}
                                 </a>
                             </li>
-                            <li class="{{ standings_active }}">
-                                <a href="{% url 'mog:contest_standing' contest.id %}?group=<all>">
-                                    <i class="glyphicon glyphicon-signal"></i> {% trans 'Standing' %}
-                                </a>
-                            </li>
-                            <li class="{{ submissions_active }}">
-                                <a href="{% url 'mog:contest_submissions' contest.id %}">
-                                    <i class="glyphicon glyphicon-road"></i> {% trans 'Submissions' %}
-                                </a>
-                            </li>
-                            <li class="{{ submit_active }}">
-                                {% if problem %}
-                                    <a href="{% url 'mog:submit' problem.id %}">
-                                        <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                            {% if user|can_see_contest:contest %}
+                                <li class="{{ problems_active }}">
+                                    <a href="{% url 'mog:contest_problems' contest.id %}">
+                                        <i class="glyphicon glyphicon-list-alt"></i> {% trans 'Problems' %}
                                     </a>
-                                {% else %}
-                                    {% with problem=contest|first_problem %}
-                                        {% if problem %}
-                                            <a href="{% url 'mog:submit' problem.id %}">
-                                                <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
-                                            </a>
-                                        {% else %}
-                                            <a href="#">
-                                                <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
-                                            </a>
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endif %}
-                            </li>
-                            <li class="{{ clarifications_active }}">
-                                <a href="{% url 'mog:contest_clarifications' contest.id %}">
-                                    <i class="glyphicon glyphicon-question-sign"></i> {% trans 'Clarifications' %}
-                                    {% if user.is_authenticated %}
-                                        {% with uc=user|unseen_clarifications:contest %}
-                                            {% if uc %}
-                                                <span class="badge pull-right">{{ uc }}</span>
+                                </li>
+                                <li class="{{ standings_active }}">
+                                    <a href="{% url 'mog:contest_standing' contest.id %}?group=<all>">
+                                        <i class="glyphicon glyphicon-signal"></i> {% trans 'Standing' %}
+                                    </a>
+                                </li>
+                                <li class="{{ submissions_active }}">
+                                    <a href="{% url 'mog:contest_submissions' contest.id %}">
+                                        <i class="glyphicon glyphicon-road"></i> {% trans 'Submissions' %}
+                                    </a>
+                                </li>
+                                <li class="{{ submit_active }}">
+                                    {% if problem %}
+                                        <a href="{% url 'mog:submit' problem.id %}">
+                                            <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                                        </a>
+                                    {% else %}
+                                        {% with problem=contest|first_problem %}
+                                            {% if problem %}
+                                                <a href="{% url 'mog:submit' problem.id %}">
+                                                    <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                                                </a>
+                                            {% else %}
+                                                <a href="#">
+                                                    <i class="glyphicon glyphicon-envelope"></i> {% trans 'Submit' %}
+                                                </a>
                                             {% endif %}
                                         {% endwith %}
                                     {% endif %}
+                                </li>
+                                <li class="{{ clarifications_active }}">
+                                    <a href="{% url 'mog:contest_clarifications' contest.id %}">
+                                        <i class="glyphicon glyphicon-question-sign"></i> {% trans 'Clarifications' %}
+                                        {% if user.is_authenticated %}
+                                            {% with uc=user|unseen_clarifications:contest %}
+                                                {% if uc %}
+                                                    <span class="badge pull-right">{{ uc }}</span>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if user|can_register_for_real:contest%}
+                            <li>
+                                <a class="" href="#" data-toggle="modal" data-target="#register-{{ contest.id }}">
+                                    <i class="glyphicon glyphicon-log-in"></i> {% trans 'Register' %}
                                 </a>
+                                {% include 'mog/contest/_register.html' with contest=contest %}
                             </li>
+                            {% elif user|registered_for_real:contest%}
+                            <li>
+                            {% if contest.closed %}
+                                {% if contest.is_coming %}
+                                    <br/>
+                                    <p class="margin-bottom-0">→ {% trans 'You are registered' %}</p>
+                                    <br/>
+                                {% endif %}
+                            {% else %}
+                                <a class="" href="#" data-toggle="modal" data-target="#unregister-{{ contest.id }}">
+                                    <i class="glyphicon glyphicon-log-out"></i> {% trans 'Unregister' %}
+                                </a>
+                                {% include 'mog/contest/_unregister.html' with contest=contest %}
+                            {% endif %}
+                            </li>
+                            {% elif user|can_register_for_virtual:contest %}
+                            <li>
+                                <a class="" href="#" data-toggle="modal" data-target="#register-{{ contest.id }}">
+                                    <i class="glyphicon glyphicon-log-in"></i> {% trans 'Virtual participation' %}
+                                </a>
+                                {% include 'mog/contest/_register.html' with contest=contest %}
+                            </li>
+                            {% elif  user|registered_for_virtual:contest%}
+                            <li>
+                                <a class="" href="#" data-toggle="modal" data-target="#unregister-{{ contest.id }}">
+                                    <i class="glyphicon glyphicon-log-out"></i> {% trans 'Remove virtual participation' %}
+                                </a>
+                                {% include 'mog/contest/_unregister.html' with contest=contest %}
+                            </li>
+                            {% endif %}
                         </ul>
                     </td>
                 </tr>
@@ -119,22 +163,26 @@
                     <tr>
                         <td>
                             <ul class="nav nav-pills nav-stacked">
+                                {% if user|can_edit_registration:contest %}
                                 <li class="{{ registration_active }}">
                                     <a href="{% url 'mog:contest_registration' contest.id %}">
                                         <i class="glyphicon glyphicon-check"></i> {% trans 'Registration' %}
                                     </a>
                                 </li>
+                                {% endif %}
 
                                 <li class="{{ edit_active }}">
                                     <a href="{% url 'mog:contest_edit' contest.id %}">
                                         <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit contest' %}
                                     </a>
                                 </li>
+                                {% if user|can_remove_contest:contest %}
                                 <li>
                                     <a href="#" data-toggle="modal" data-target="#remove-contest-{{ contest.id }}">
                                         <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove Contest' %}
                                     </a>
                                 </li>
+                                {% endif %}
                             </ul>
                         </td>
                     </tr>
@@ -156,7 +204,7 @@
         </table>
     </div>
 
-    {% if user|can_edit_contest:contest %}
+    {% if user|can_remove_contest:contest %}
         <div class="modal fade" id="remove-contest-{{ contest.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">

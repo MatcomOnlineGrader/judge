@@ -132,6 +132,12 @@ class Contest(models.Model):
         """
         return user_is_admin(user) or user_is_judge_in_contest(user, self) or (self.visible and not self.is_coming)
 
+    def overview_can_be_seen_by(self, user):
+        return self.visible or user_is_admin(user) or user_is_judge_in_contest(user, self)
+
+    def can_be_edited_by(self, user):
+        return user_is_admin(user) or user_is_judge_in_contest(user, self)
+
     def can_show_saris_to(self, user):
         return user_is_admin(user) or user_is_judge_in_contest(user, self) or (self.visible and
                                                                                user_is_observer_in_contest(user, self))

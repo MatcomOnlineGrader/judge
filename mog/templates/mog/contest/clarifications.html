@@ -53,6 +53,7 @@
         <div class="col-md-12">
             <h3 class="title margin-bottom-20">
                 {% trans 'Clarifications' %}
+                {% include 'mog/contest/_actions.html' with contest=contest%}
             </h3>
         </div>
 
@@ -61,8 +62,8 @@
                 <thead>
                     <tr>
                         <th class="col-sm-1 text-center">#</th>
-                        <th class="col-sm-1 text-center">{% trans 'Who?' %}</th>
-                        <th class="col-sm-2 text-center">{% trans 'When?' %}</th>
+                        <th class="col-sm-2 text-center">{% trans 'Who?' %}</th>
+                        <th class="col-sm-1 text-center">{% trans 'When?' %}</th>
                         <th class="col-sm-4 text-center">{% trans 'Question' %}</th>
                         <th class="col-sm-4 text-center">{% trans 'Answer' %}</th>
                     </tr>
