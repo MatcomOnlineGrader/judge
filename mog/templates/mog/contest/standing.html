@@ -49,7 +49,9 @@
             {% if user_instance %}
                 {% if user_instance.is_running %}
                     <h5 class="title">
-                        {{ user_instance.relative_time|format_seconds }} / -{{ user_instance.remaining_time|format_seconds }}
+                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ user_instance.relative_time|format_seconds }}</span>
+                        /
+                        -<span class="time-update" data-enabled="on" data-delta="-1">{{ user_instance.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}
                             {% trans '(Death time)' %}
                         {% elif contest.is_frozen_time %}
