@@ -72,8 +72,8 @@ def remove_team(request, team_id):
         messages.success(request, 'Remove Team: Permission denied!', extra_tags='danger')
         return redirect('mog:index')
 
-    if Submission.objects.filter(instance__team=team).count() > 0:
-        msg = 'Team "%s" cannot be removed because it has submissions!' % team.name
+    if team.instances.count() > 0:
+        msg = 'Team "%s" cannot be removed because it is registered in a contest!' % team.name
         messages.success(request, msg, extra_tags='warning')
     else:
         team.delete()
