@@ -5,6 +5,10 @@
 {% load i18n %}
 {% load security %}
 
+{% block styles %}
+    <link href="{% static 'mog/plugins/flipclock/css/flipclock.css' %}" rel="stylesheet"/>
+{% endblock %}
+
 {% block title %}{{ contest.name }} | {% trans 'Overview' %}{% endblock %}
 
 {% block left %}
@@ -28,8 +32,21 @@
                         {% else %}
                             <p> This contest has no description</p>
                         {% endif %}
+
+                        {% if contest.is_coming %}
+                            <hr/>
+                            <h4>Starts in:</h4>
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <br>
+                                    <div class="clock"></div>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         <hr/>
-                        <h4>Details</h4>
+
+                        <h4>Details:</h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <table class="table table-bordered table-striped">
@@ -96,7 +113,7 @@
                                             </th>
                                             <td>
                                                 {% if contest.closed %}
-                                                    {% trans 'Close' %}
+                                                    {% trans 'Closed' %}
                                                 {% else %}
                                                     {% trans 'Open' %}
                                                 {% endif %}
@@ -115,4 +132,19 @@
 
 {% block scripts %}
     {% include 'mog/includes/mathjax' %}
+    {% if contest.is_coming %}
+        <script type="text/javascript" src="{% static 'mog/plugins/flipclock/js/flipclock.min.js' %}"></script>
+        <script type="text/javascript">
+            var clock = $('.clock').FlipClock({{ contest.seconds_until_start }}, {
+                clockFace: 'DailyCounter',
+                countdown: true,
+                callbacks: {
+		        	stop: function() {
+		        		window.location.href="{% url 'mog:contest_problems' contest.id %}";
+		        	}
+		        }
+            });
+
+        </script>
+    {% endif %}
 {% endblock %}
