@@ -419,7 +419,8 @@ class ContestEditView(View):
     def get(self, request, contest_id, *args, **kwargs):
         contest = get_object_or_404(Contest, pk=contest_id)
 
-        if not user_is_admin(request.user) and not user_is_judge_in_contest(contest):
+        if not user_is_admin(request.user) and \
+            not user_is_judge_in_contest(request.user, contest):
             return HttpResponseForbidden()
 
         return render(request, 'mog/contest/edit.html', {
@@ -428,9 +429,12 @@ class ContestEditView(View):
 
     @method_decorator(login_required)
     def post(self, request, contest_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            return HttpResponseForbidden()
         contest = get_object_or_404(Contest, pk=contest_id)
+
+        if not user_is_admin(request.user) and \
+            not user_is_judge_in_contest(request.user, contest):
+            return HttpResponseForbidden()
+
         form = ContestForm(request.POST, instance=contest)
         if not form.is_valid():
             return render(request, 'mog/contest/edit.html', {
