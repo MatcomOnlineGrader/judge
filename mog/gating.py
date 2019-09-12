@@ -51,6 +51,14 @@ def get_all_contest_for_judge(user):
 def get_all_contest_for_observer(user):
     return __get_all_contest_for_role(user, 'observer')
 
+
+def is_admin_or_judge_for_contest(user, contest):
+    return user_is_admin(user) or user_is_judge_in_contest(user, contest)
+
+
+def is_admin_or_judge_for_problem(user, problem):
+    return is_admin_or_judge_for_contest(user, problem.contest)
+
 #-----------------------------------------------------------------------
 # Bellow there are "private" functions only that shouldn't be used
 # directly outside this file. Use those functions defined above that
