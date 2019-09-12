@@ -10,7 +10,7 @@ from django.views.decorators.http import require_http_methods
 from api.models import Problem, Tag
 from judge import settings
 from mog.forms import ProblemForm
-from mog.gating import user_is_admin, user_is_judge_in_contest
+from mog.gating import is_admin_or_judge_for_problem, user_is_admin
 from mog.samples import (
     fix_problem_folder,
     get_tests,
@@ -23,10 +23,10 @@ from mog.samples import (
 
 @login_required
 @require_http_methods(["POST"])
-def remove_problem(request, problem_id):
-    if not user_is_admin(request.user):
-        return HttpResponseForbidden()
+def remove_problem(request, problem_id):        
     problem = get_object_or_404(Problem, pk=problem_id)
+    if not is_admin_or_judge_for_problem(request.user, problem):
+        return HttpResponseForbidden()
     problem.delete()
     msg = u'Problem "{0}" removed successfully!'.format(problem.title)
     messages.success(request, msg, extra_tags='success')
@@ -36,9 +36,9 @@ def remove_problem(request, problem_id):
 @login_required
 @require_http_methods(["POST"])
 def remove_test(request, problem_id):
-    if not user_is_admin(request.user):
-        return HttpResponseForbidden()
     problem = get_object_or_404(Problem, pk=problem_id)
+    if not is_admin_or_judge_for_problem(request.user, problem):
+        return HttpResponseForbidden()
     folder, test = request.POST.get('folder'),\
                    request.POST.get('test')
     if folder not in ['inputs', 'outputs', 'sample inputs', 'sample outputs']:
@@ -58,13 +58,10 @@ class TestEditView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
         problem = get_object_or_404(Problem, pk=problem_id)
-
-        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest):
+        if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
-
         folder = request.GET.get('folder')
         test = request.GET.get('test')
-
         content = test_content(problem, folder, test)
         if not content:
             raise Http404()
@@ -74,11 +71,11 @@ class TestEditView(View):
 
     @method_decorator(login_required)
     def post(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
+        problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
         folder = request.POST.get('folder')
         test = request.POST.get('test')
-        problem = get_object_or_404(Problem, pk=problem_id)
         content = request.POST.get('content', '')
         write_to_test(problem, folder, test, content)
         return redirect('mog:problem_tests', problem_id=problem.id)
@@ -102,13 +99,10 @@ class ProblemTestsView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
         problem = get_object_or_404(Problem, pk=problem_id)
-
-        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest):
+        if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
-
         if settings.DATA_SERVER_URL:
             return redirect(settings.DATA_SERVER_URL + request.path)
-
         return render(request, 'mog/problem/tests.html', {
             'problem': problem,
             'sample_inputs': get_tests(problem, 'sample inputs'),
@@ -119,9 +113,9 @@ class ProblemTestsView(View):
 
     @method_decorator(login_required)
     def post(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            return HttpResponseForbidden()
         problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
+            return HttpResponseForbidden()
         handle_tests(problem, request.FILES.getlist('sample_inputs'), 'sample inputs')
         handle_tests(problem, request.FILES.getlist('sample_outputs'), 'sample outputs')
         handle_tests(problem, request.FILES.getlist('inputs'), 'inputs')
@@ -130,6 +124,11 @@ class ProblemTestsView(View):
 
 
 class ProblemCreateView(View):
+    """
+    TODO(leandro): Make this endpoint "inside" a contest instead. That
+    way, we can check permissions for judges and other roles that can
+    add problems to allowed contests.
+    """
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         if not user_is_admin(request.user):
@@ -173,19 +172,19 @@ class ProblemCreateView(View):
 class ProblemEditView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            return HttpResponseForbidden()
         problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
+            return HttpResponseForbidden()
         return render(request, 'mog/problem/edit.html', {
             'form': ProblemForm(instance=problem), 'problem': problem,
         })
 
     @method_decorator(login_required)
     def post(self, request, problem_id, *args, **kwargs):
-        if not user_is_admin(request.user):
-            HttpResponseForbidden()
-        form = ProblemForm(request.POST)
         problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
+            return HttpResponseForbidden()
+        form = ProblemForm(request.POST)
         if not form.is_valid():
             return render(request, 'mog/problem/edit.html', {
                 'form': form, 'problem': problem,

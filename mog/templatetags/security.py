@@ -1,5 +1,10 @@
 from django import template
-from mog.gating import user_is_admin, user_is_judge_in_contest
+from mog.gating import (
+    is_admin_or_judge_for_problem,
+    user_is_admin,
+    user_is_judge_in_contest,
+)
+
 
 register = template.Library()
 
@@ -86,7 +91,7 @@ def can_see_saris(user, contest):
 
 @register.filter()
 def can_edit_problem(user, problem):
-    return user_is_admin(user)
+    return is_admin_or_judge_for_problem(user, problem)
 
 
 @register.filter()
