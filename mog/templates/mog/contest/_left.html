@@ -24,6 +24,13 @@
                                             <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
                                                  aria-valuemax="100" style="width: {{ instance.percent }}%;"></div>
                                         </div>
+
+                                        <h5 class="title">
+                                            <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ instance.relative_time|format_seconds }}</span>
+                                            /
+                                            -<span class="time-update" data-enabled="on" data-delta="-1">{{ instance.remaining_time|format_seconds }}</span>
+                                        </h5>
+
                                         {% if instance.real %}
                                             {% if instance.is_death_time %}
                                                 <h5>{% trans '(Death time)' %}</h5>
@@ -46,6 +53,13 @@
                                             <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
                                                  aria-valuemax="100" style="width: {{ contest.percent }}%;"></div>
                                         </div>
+
+                                        <h5 class="title">
+                                            <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ contest.relative_time|format_seconds }}</span>
+                                            /
+                                            -<span class="time-update" data-enabled="on" data-delta="-1">{{ contest.remaining_time|format_seconds }}</span>
+                                        </h5>
+
                                         {% if contest.is_death_time %}
                                             <h5>{% trans '(Death time)' %}</h5>
                                         {% elif contest.is_frozen_time %}
