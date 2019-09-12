@@ -143,6 +143,10 @@ class Contest(models.Model):
                                                                                user_is_observer_in_contest(user, self))
 
     @property
+    def seconds_until_start(self):
+        return max((self.start_date - timezone.now()).total_seconds(), 1)
+
+    @property
     def relative_time(self):
         return timezone.now() - self.start_date
 
