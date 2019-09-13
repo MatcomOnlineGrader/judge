@@ -230,9 +230,8 @@ def grade_submission(submission, number_of_executions):
                     comment = (out or err)
                     if rc != 0:
                         result = 'wrong answer'
-                if result != 'memory limit exceeded':
-                    # keep running the same test while TLE
-                    break
+                if result not in ['time limit exceeded', 'idleness limit exceeded']:
+                    break  # abort retry of the test if is not time related
             maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)
             judgement_details += 'Case#%d [%d bytes][%d ms]: %s\n' % (
