@@ -21,9 +21,15 @@
             {% if user|can_edit_problem:problem %}
                 <div class="col-md-8 col-md-offset-2">
                     <div class="col-md-4">
-                        <a href="#" data-toggle="modal" data-target="#remove-problem-{{ problem.id }}" class="no-underline">
-                            <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove problem' %}
-                        </a>
+                        {% if user|is_admin %}
+                            <a href="#" data-toggle="modal" data-target="#remove-problem-{{ problem.id }}" class="no-underline">
+                                <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove problem' %}
+                            </a>
+                        {% else %}
+                            <a href="#" class="no-underline disabled">
+                                <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove problem' %}
+                            </a>
+                        {% endif %}
                     </div>
                     <div class="col-md-4">
                         <a href="{% url 'mog:problem_tests' problem.id %}" target="_blank" class="no-underline">
@@ -109,7 +115,7 @@
         {% endif %}
     </div>
 
-    {% if user|can_edit_problem:problem %}
+    {% if user|is_admin %}
         <div class="modal fade" id="remove-problem-{{ problem.id }}" tabindex="-1" role="dialog"
              aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
