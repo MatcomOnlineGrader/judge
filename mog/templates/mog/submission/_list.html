@@ -17,7 +17,11 @@
     </thead>
     <tbody>
         {% for submission in submissions %}
-            <tr>
+            {% if user == submission.user %}
+                <tr class="info">
+            {% else %}
+                <tr>
+            {% endif %}
             {% with show_source=user|can_see_code_of:submission %}
                 {% with show_details=user|can_see_details_of:submission %}
                     <td class="text-center">

@@ -126,7 +126,10 @@ def contest_standing(request, contest_id):
     if request.user.is_authenticated:
         user_instance = contest.registration(request.user)
 
-    if user_instance and user_instance.is_running:
+    if contest.is_running:
+        show_virtual = False
+        show_virtual_checkbox = False
+    elif user_instance and user_instance.is_running:
         show_virtual = not user_instance.real
         show_virtual_checkbox = False
     else:
@@ -162,6 +165,15 @@ def contest_standing(request, contest_id):
             'penalty': sum(ir.penalty for ir in instance_results),
             'instances': len(instance_results)
         })
+
+        def key(group):
+            if user_instance and group['group'] == user_instance.group:
+                return -1e9, 0
+            if group['group'] == contest.group:
+                return 1e6, 0
+            return -group['solved'], group['penalty']
+        ranking_groups = sorted(ranking_groups, key=key)
+
     return render(request, 'mog/contest/standing.html', {
         'contest': contest,
         'ranking_groups': ranking_groups,
