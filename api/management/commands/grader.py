@@ -206,11 +206,8 @@ def grade_submission(submission, number_of_executions):
                 consumed_memory = int(get_tag_value(xml, 'consumedMemory'))
                 comment = get_tag_value(xml, 'comment') or '<blank>'
 
-                if passed_time > time_limit * 1000 and\
-                        (invocation_verdict != 'IDLENESS_LIMIT_EXCEEDED'):
-                    # force TLE when passed time exceed the problem time limit.
-                    invocation_verdict = 'TIME_LIMIT_EXCEEDED'
-                    passed_time = min(passed_time, time_limit * 1000)
+                execution_time = processor_user_mode_time
+                execution_time = min(execution_time, time_limit * 1000)
 
                 if invocation_verdict != 'SUCCESS':
                     comment = result = {
@@ -236,10 +233,10 @@ def grade_submission(submission, number_of_executions):
                 if result != 'memory limit exceeded':
                     # keep running the same test while TLE
                     break
-            maximum_execution_time = max(maximum_execution_time, passed_time)
+            maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)
             judgement_details += 'Case#%d [%d bytes][%d ms]: %s\n' % (
-                current_test, consumed_memory, passed_time, comment
+                current_test, consumed_memory, execution_time, comment
             )
         except:
             result = 'internal error'
