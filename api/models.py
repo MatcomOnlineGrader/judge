@@ -136,7 +136,7 @@ class Contest(models.Model):
         return self.visible or user_is_admin(user) or user_is_judge_in_contest(user, self)
 
     def can_be_edited_by(self, user):
-        return user_is_admin(user) or user_is_judge_in_contest(user, self)
+        return user_is_admin(user)
 
     def can_show_saris_to(self, user):
         return user_is_admin(user) or user_is_judge_in_contest(user, self) or (self.visible and

@@ -25,7 +25,7 @@ from mog.samples import (
 @require_http_methods(["POST"])
 def remove_problem(request, problem_id):        
     problem = get_object_or_404(Problem, pk=problem_id)
-    if not is_admin_or_judge_for_problem(request.user, problem):
+    if not user_is_admin(request.user):
         return HttpResponseForbidden()
     problem.delete()
     msg = u'Problem "{0}" removed successfully!'.format(problem.title)

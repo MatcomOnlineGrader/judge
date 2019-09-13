@@ -126,6 +126,11 @@ textarea {
   margin-bottom: 10px;
 }
 
+a.disabled {
+  color: gray;
+  pointer-events: none;
+}
+
 .alert-problem-first {
   background-color: #b9d4ac;
   color: #39703a;
