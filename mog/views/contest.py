@@ -27,6 +27,7 @@ from api.models import (
     Team,
     User,
 )
+from mog.decorators import public_actions_required
 
 from mog.forms import ContestForm, ClarificationForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
@@ -286,6 +287,7 @@ def register_instance(request, contest, user, team):
     return redirect(nxt or reverse('mog:contest_problems', args=(contest.pk, )))
 
 
+@public_actions_required
 @login_required
 @require_http_methods(["POST"])
 def contest_register(request, contest_id):
@@ -378,6 +380,7 @@ def contest_remove_instance(request, instance_id):
     return remove_instance(request, instance)
 
 
+@public_actions_required
 @login_required
 @require_http_methods(["POST"])
 def contest_remove_registration(request, contest_id):

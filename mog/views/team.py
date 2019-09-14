@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
 from api.models import User, Team, Submission, Institution
+from mog.decorators import public_actions_required
 from mog.gating import user_is_admin
 
 
+@public_actions_required
 @login_required
 @require_http_methods(["POST"])
 def create_team(request):
@@ -56,6 +58,7 @@ def create_team(request):
     return redirect('mog:user_teams', user_id=main_user.id)
 
 
+@public_actions_required
 @login_required
 @require_http_methods(["POST"])
 def remove_team(request, team_id):

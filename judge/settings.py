@@ -49,6 +49,10 @@ def get_array_from_config(configuration, section, option, target=str):
     return result
 
 
+# Store messages in the session. The choice by default doesn't work well when redirecting
+# after a POST request
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -282,6 +286,9 @@ EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config.get('email', 'DEFAULT_FROM_EMAIL')
 EMAIL_TIMEOUT = config.getint('email', 'EMAIL_TIMEOUT')
+
+# Flags
+BLOCK_PUBLIC_ACTIONS = config.getboolean('flags', 'BLOCK_PUBLIC_ACTIONS', fallback=False)
 
 
 # Activate debug toolbar
