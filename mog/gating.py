@@ -58,8 +58,19 @@ def is_admin_or_judge_for_contest(user, contest):
     return user_is_admin(user) or user_is_judge_in_contest(user, contest)
 
 
+def is_admin_or_judge_or_observer_for_contest(user, contest):
+    return user_is_admin(user) or user_is_judge_in_contest(user, contest) or user_is_observer_in_contest(user, contest)
+
+
 def is_admin_or_judge_for_problem(user, problem):
     return is_admin_or_judge_for_contest(user, problem.contest)
+
+
+def contest_actions_are_blocked_for_user(contest, user):
+    if public_actions_blocked() and not contest.is_running \
+            and not is_admin_or_judge_or_observer_for_contest(user, contest):
+        return True
+    return False
 
 
 def public_actions_blocked():

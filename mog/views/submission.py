@@ -14,7 +14,12 @@ from django.utils.translation import ugettext_lazy as _
 from api.models import Submission, Compiler, Problem, Result
 from mog.helpers import filter_submissions, get_paginator
 
-from mog.gating import user_is_admin, user_is_judge_in_contest
+from mog.gating import (
+    user_is_admin,
+    user_is_judge_in_contest,
+    public_actions_blocked,
+    is_admin_or_judge_for_contest,
+    contest_actions_are_blocked_for_user)
 
 
 def submissions(request):
@@ -35,8 +40,14 @@ def submissions(request):
 
 def submission(request, submission_id):
     submission = get_object_or_404(Submission, pk=submission_id)
+
     if not submission.can_show_source_to(request.user):
         raise Http404()
+
+    if contest_actions_are_blocked_for_user(submission.problem.contest, request.user):
+        messages.warning(request, 'This action is currently blocked!', extra_tags='warning secure')
+        return redirect('mog:submissions')
+
     return render(request, 'mog/submission/detail.html', {
         'submission': submission,
     })
@@ -49,6 +60,11 @@ class Submit(View):
 
         if not problem.contest.can_be_seen_by(request.user):
             raise Http404()
+
+        if contest_actions_are_blocked_for_user(problem.contest, request.user):
+            messages.warning(request, 'This action is currently blocked! You can submit only in a running contest',
+                             extra_tags='warning secure')
+            return redirect('mog:problem', problem_id=problem_id, slug=problem.slug, permanent=True)
 
         return render(request, 'mog/submit/submit.html', {
             'problem': problem, 'compilers': Compiler.objects.order_by('id'),
@@ -67,8 +83,14 @@ class Submit(View):
         if not problem.contest.can_be_seen_by(request.user):
            raise Http404()
 
-        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest) and not problem.contest.visible:
+        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest) \
+                and not problem.contest.visible:
             raise Http404()
+
+        if contest_actions_are_blocked_for_user(problem.contest, request.user):
+            messages.warning(request, 'This action is currently blocked! You can submit only in a running contest',
+                             extra_tags='warning secure')
+            return redirect('mog:problem', problem_id=problem_id, slug=problem.slug, permanent=True)
 
         if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, problem.contest) and compiler not in problem.compilers.all():
             msg = _(u'Invalid language choice')
