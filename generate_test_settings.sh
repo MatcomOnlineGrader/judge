@@ -5,6 +5,9 @@ settings=$(cat <<-END
 DEBUG: false
 DEBUG_TOOLBAR: false
 
+[flags]
+BLOCK_PUBLIC_ACTIONS: false
+
 [database]
 DATABASE_NAME: default
 DATABASE_USER: postgres

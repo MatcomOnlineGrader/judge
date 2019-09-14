@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views import View, generic
 
 from api.models import Post, Comment
+from mog.decorators import public_actions_required
 from mog.forms import PostForm
 from mog.gating import user_is_admin
 
@@ -28,6 +29,7 @@ class PostDetailView(View):
             'post': post,
         })
 
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def post(self, request, pk, slug, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
@@ -43,12 +45,14 @@ class PostDetailView(View):
 
 
 class PostCreateView(View):
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         return render(request, 'mog/post/create.html', {
             'form': PostForm()
         })
 
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         form = PostForm(request.POST)
@@ -72,7 +76,7 @@ class PostCreateView(View):
 
 
 class EditPostView(View):
-
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def get(self, request, post_id, *args, **kwargs):
         post = get_object_or_404(Post, pk=post_id)
@@ -82,6 +86,7 @@ class EditPostView(View):
             'form': PostForm(instance=post), 'post': post,
         })
 
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def post(self, request, post_id, *args, **kwargs):
         post = get_object_or_404(Post, pk=post_id)

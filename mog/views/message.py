@@ -5,8 +5,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
 from api.models import Message
+from mog.decorators import public_actions_required
 
 
+@public_actions_required
 @login_required
 @require_http_methods(["POST"])
 def send_message(request, user_id):

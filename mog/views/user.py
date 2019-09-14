@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views import View, generic
 
 from api.models import User, UserProfile, Division, Institution
+from mog.decorators import public_actions_required
 from mog.forms import UserProfileForm, UserForm
 from mog.gating import user_is_admin
 
@@ -74,6 +75,7 @@ def users_json(request):
 
 
 class UserEditView(View):
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def get(self, request, user_id, *args, **kwargs):
         user = get_object_or_404(User, pk=user_id)
@@ -84,6 +86,7 @@ class UserEditView(View):
             'profile_form': UserProfileForm(instance=user.profile),
         })
 
+    @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def post(self, request, user_id, *args, **kwargs):
         user = get_object_or_404(User, pk=user_id)
@@ -104,6 +107,7 @@ class UserEditView(View):
         return redirect('mog:user', user_id=user.pk)
 
 
+@public_actions_required
 @login_required
 def user_messages(request, user_id):
     user = get_object_or_404(User, pk=user_id)

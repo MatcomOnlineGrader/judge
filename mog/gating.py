@@ -1,6 +1,8 @@
 #-----------------------------------------------------------------------
 # Legacy permissions based on user only
 #-----------------------------------------------------------------------
+from judge import settings
+
 
 def user_is_admin(user):
     """return True iff logged user is administrator"""
@@ -58,6 +60,10 @@ def is_admin_or_judge_for_contest(user, contest):
 
 def is_admin_or_judge_for_problem(user, problem):
     return is_admin_or_judge_for_contest(user, problem.contest)
+
+
+def public_actions_blocked():
+    return settings.BLOCK_PUBLIC_ACTIONS
 
 #-----------------------------------------------------------------------
 # Bellow there are "private" functions only that shouldn't be used
