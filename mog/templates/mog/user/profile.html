@@ -15,19 +15,6 @@
                         <small>
                             {{ user_in_profile.first_name }} {{ user_in_profile.last_name }}
                         </small>
-                        {% if user|is_admin %}
-                            <span style="font-size: 14px;">
-                                {% if user_in_profile.is_active %}
-                                    <a data-toggle="tooltip" href="#" title="" data-placement="right" data-original-title="{% trans 'Active' %}">
-                                        <span class="glyphicon glyphicon-ok-sign text-success"></span>
-                                    </a>
-                                {% else %}
-                                    <a data-toggle="tooltip" href="#" title="" data-placement="right" data-original-title="{% trans 'Inactive' %}">
-                                        <span class="glyphicon glyphicon-remove-sign text-danger"></span>
-                                    </a>
-                                {% endif %}
-                            </div>
-                        {% endif %}
                     </h1>
 
                     {% with institution=user_in_profile.profile.institution %}
