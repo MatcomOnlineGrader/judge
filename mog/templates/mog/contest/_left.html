@@ -264,7 +264,7 @@
                         <p class="text-justify">
                             {% trans 'Select group to show' %}
                         </p>
-                        <form action="{% url 'mog:contest_saris' contest.id %}" method="post">
+                        <form action="{% url 'mog:contest_saris' contest.id %}" method="post" target="_blank">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="group"></label>
