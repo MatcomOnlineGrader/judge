@@ -30,24 +30,28 @@
             <div class="row">
                 <div class="col-md-9">
                     <div class="row">
-                        {% if user|can_edit_profile:user_in_profile %}
-                            <div class="col-md-12 margin-bottom-10">
+                        {% if user|can_see_tabs_in_user_profile:user_in_profile %}
+                            <div id="user-profile-tabs" class="col-md-12 margin-bottom-10">
                                 <ul class="nav nav-pills nav-justified">
                                     <li class="{% block _detail %}{% endblock %}">
                                         <a href="{% url 'mog:user' user_in_profile.id %}">
                                             {% trans 'Profile' %}
                                         </a>
                                     </li>
-                                    <li class="{% block _edition %}{% endblock %}">
-                                        <a href="{% url 'mog:user_edit' user_in_profile.id %}">
-                                            {% trans 'Edit Profile' %}
-                                        </a>
-                                    </li>
-                                    <li class="{% block _messages %}{% endblock %}">
-                                        <a href="{% url 'mog:user_messages' user_in_profile.id %}">
-                                            {% trans 'Messages' %}
-                                        </a>
-                                    </li>
+
+                                    {% if user == user_in_profile %}
+                                        <li class="{% block _edition %}{% endblock %}">
+                                            <a href="{% url 'mog:user_edit' user_in_profile.id %}">
+                                                {% trans 'Edit Profile' %}
+                                            </a>
+                                        </li>
+                                        <li class="{% block _messages %}{% endblock %}">
+                                            <a href="{% url 'mog:user_messages' user_in_profile.id %}">
+                                                {% trans 'Messages' %}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
                                     <li class="{% block _teams %}{% endblock %}">
                                         <a href="{% url 'mog:user_teams' user_in_profile.id %}">
                                             {% trans 'Teams' %}

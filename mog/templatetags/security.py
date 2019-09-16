@@ -115,8 +115,18 @@ def registered_for_virtual(user, contest):
 
 
 @register.filter()
-def can_edit_profile(user, user2):
-    return user.is_authenticated and (user.profile.is_admin or user == user2)
+def can_see_tabs_in_user_profile(viewer, user_in_profile):
+    """
+    Return True iff the user who is viewing the profile can also see
+    the following tabs: Profile, Edit Profile, Messages, Teams. Be able
+    to see a tab doesn't grant access by default. For instance, admins
+    can see all tabs for any user but cannot access to "Edit Profile"
+    nor "Messages" to avoid any security leak (e.g, emails, private
+    messages, etc).
+    """
+    if not viewer.is_authenticated:
+        return False
+    return viewer == user_in_profile or viewer.profile.is_admin
 
 
 @register.filter()
