@@ -26,6 +26,7 @@
                         <thead>
                         <tr>
                             <th class="text-center cell-medium">{% trans "User/Team" %}</th>
+                            <th class="text-center cell-medium">{% trans "Description only" %}</th>
                             <th class="text-center cell-medium">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
@@ -39,6 +40,13 @@
                                     {% else %}
                                         {% include 'mog/user/_link.html' with user=instance.user %}
                                     {% endif %}
+                                </td>
+                                <td>
+                                <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST">
+                                    <input id="render_team_description_only" type="checkbox" name="render_team_description_only"
+                                           onclick="$(this).closest('form').submit();"
+                                           {% if instance.render_team_description_only %}checked="checked"{% endif %}>
+                                </form>
                                 </td>
                                 <td>
                                     <select class="select2" style="width: 100%;"

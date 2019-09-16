@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -49,3 +50,19 @@ def instance_edit_group(request, instance_pk):
     return JsonResponse(data={
         'success': True
     })
+
+
+@login_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def instance_edit_render_description(request, instance_pk):
+    """Set flag render_team_description_only"""
+    if not user_is_admin(request.user):
+        raise Http404()
+
+    instance = get_object_or_404(ContestInstance, pk=instance_pk)
+    check = request.POST.get('render_team_description_only', '') == 'on'
+    instance.render_team_description_only = check
+    instance.save()
+
+    return redirect('mog:contest_registration', contest_id=instance.contest_id)
