@@ -41,6 +41,13 @@ class FixturedTestCase(TestCase):
         profile.save()
         return user
 
+    def login(self, user):
+        """Log user in using self.client"""
+        self.client.login(
+            username=user.username,
+            password=TEST_USER_PASSWORD
+        )
+
     def newUser(self, username, **kargs):
         default = {
             "username": username,
@@ -51,6 +58,10 @@ class FixturedTestCase(TestCase):
         user.set_password(TEST_USER_PASSWORD)
         user.save()
         return user
+
+    def newAdmin(self, username, **kargs):
+        admin = self.newUser(username=username, **kargs)
+        return self.updateUserProfile(admin, role="admin")
 
     def newPost(self, user, **kargs):
         default = {

@@ -79,7 +79,7 @@ class UserEditView(View):
     @method_decorator(login_required)
     def get(self, request, user_id, *args, **kwargs):
         user = get_object_or_404(User, pk=user_id)
-        if not user_is_admin(request.user) and request.user != user:
+        if request.user != user:
             return HttpResponseForbidden()
         return render(request, 'mog/user/edit.html', {
             'user_in_profile': user, 'user_form': UserForm(instance=user),
@@ -90,7 +90,7 @@ class UserEditView(View):
     @method_decorator(login_required)
     def post(self, request, user_id, *args, **kwargs):
         user = get_object_or_404(User, pk=user_id)
-        if not user_is_admin(request.user) and request.user != user:
+        if request.user != user:
             return redirect('mog:index')
         user_form, profile_form = UserForm(request.POST, instance=user),\
             UserProfileForm(request.POST, request.FILES, instance=user.profile)
@@ -111,7 +111,7 @@ class UserEditView(View):
 @login_required
 def user_messages(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    if not user_is_admin(request.user) and request.user != user:
+    if request.user != user:
         return HttpResponseForbidden()
     user.messages_received.update(saw=True)
     return render(request, 'mog/user/messages.html', {
