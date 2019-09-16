@@ -128,6 +128,6 @@ def user_teams(request, user_id):
         return HttpResponseForbidden()
     return render(request, 'mog/user/teams.html', {
         'user_in_profile': user_in_profile,
-        'teams': user_in_profile.profile.teams.all(),
+        'teams': user_in_profile.profile.teams.all().order_by('pk'),
         'institutions': Institution.objects.order_by('name')
     })

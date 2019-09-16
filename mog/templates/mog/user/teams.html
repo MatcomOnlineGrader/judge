@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load filters %}
+{% load security %}
 {% load i18n %}
 
 {% block _teams %}active{% endblock %}
@@ -44,9 +45,16 @@
                                 </ul>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-link" data-toggle="modal"
-                                   data-target="#remove-team-{{ team.id }}">{% trans 'Remove' %}</a>
+                                <a href="#" class="btn btn-link" data-toggle="modal" data-target="#remove-team-{{ team.id }}">
+                                    <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove' %}
+                                </a>
                                 {% include 'mog/user/_remove_team.html' with team=team %}
+                                {% if user|is_admin %}
+                                    <a href="#" class="btn btn-link" data-toggle="modal" data-target="#edit-team-{{ team.id }}">
+                                        <i class="glyphicon glyphicon-edit"></i> {% trans 'Edit' %}
+                                    </a>
+                                    {% include 'mog/user/_edit_team.html' with team=team %}
+                                {% endif %}
                             </td>
                         </tr>
                     {% empty %}

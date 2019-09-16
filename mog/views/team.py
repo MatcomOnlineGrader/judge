@@ -11,6 +11,43 @@ from mog.gating import user_is_admin
 @public_actions_required
 @login_required
 @require_http_methods(["POST"])
+def edit_team(request, team_id):
+
+    team = get_object_or_404(Team, pk=team_id)
+
+    if not user_is_admin(request.user):
+        messages.warning(request, 'Edit Team: Permission denied!', extra_tags='warning')
+        return redirect('mog:index')
+
+    name = request.POST.get('name', '').strip()
+    next = request.POST.get('next', '/').strip()
+    description = request.POST.get('description', '').strip()
+
+    institution = None
+
+    try:
+        if request.POST.get('institution'):
+            institution = Institution.objects.get(pk=request.POST.get('institution'))
+    except:
+        messages.warning(request, 'Edit Team: Invalid institution!', extra_tags='warning')
+        redirect(next)
+
+    if len(name) == 0:
+        messages.warning(request, 'Edit Team: Name cannot be empty!', extra_tags='warning')
+        return redirect(next)
+
+    team.name = name
+    team.description = description
+    team.institution = institution
+    team.save()
+
+    messages.success(request, 'Team "%s" edited successfully!' % name, extra_tags='success')
+    return redirect(next)
+
+
+@public_actions_required
+@login_required
+@require_http_methods(["POST"])
 def create_team(request):
     main_user = request.POST.get('main_user')
     name = request.POST.get('name', '').strip()

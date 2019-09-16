@@ -6,7 +6,7 @@ from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemCreateView, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, TestEditView
 from .submission import submissions, submission, Submit, rejudge
-from .team import create_team, remove_team
+from .team import create_team, remove_team, edit_team
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams
 from .views import index, faq, privacy, health
 from .message import send_message
