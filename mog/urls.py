@@ -14,6 +14,8 @@ urlpatterns = [
         name='api_instance_group_list'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/group/$', views.instance_edit_group,
         name='api_instance_edit_group'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description,
+        name='api_instance_edit_render_description'),
 
     url(r'^message/send/(?P<user_id>[0-9]+)$', views.send_message, name='send_message'),
 
