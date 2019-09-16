@@ -21,6 +21,7 @@ urlpatterns = [
 
     url(r'^team/create$', views.create_team, name='create_team'),
     url(r'^team/remove/(?P<team_id>[0-9]+)$', views.remove_team, name='remove_team'),
+    url(r'^team/edit/(?P<team_id>[0-9]+)$', views.edit_team, name='edit_team'),
 
     url(r'^comment/(?P<comment_id>[0-9]+)/edit/$', views.edit_comment, name='comment_edit'),
     url(r'^comment/(?P<comment_id>[0-9]+)/remove/$', views.remove_comment, name='comment_remove'),
