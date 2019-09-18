@@ -401,3 +401,12 @@ if config.getboolean('session', 'USE_REDIS'):
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+
+# Settings for the testing environment
+IS_TESTING_ENVIRONMENT = config.getboolean('testing', 'TESTING', fallback=False)
+
+if IS_TESTING_ENVIRONMENT:
+    for k in CACHES:
+        CACHES[k] = {
+            'BACKEND' : 'django.core.cache.backends.dummy.DummyCache',
+        }

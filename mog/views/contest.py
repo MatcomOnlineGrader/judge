@@ -17,6 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.decorators.http import require_http_methods
 
+from api.lib.queries import calculate_standing
 from api.models import (
     Compiler,
     Contest,
@@ -32,7 +33,6 @@ from mog.decorators import public_actions_required
 from mog.forms import ContestForm, ClarificationForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
-from mog.standing import calculate_standing
 from mog.templatetags.filters import format_minutes
 
 

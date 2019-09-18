@@ -5,6 +5,9 @@ settings=$(cat <<-END
 DEBUG: false
 DEBUG_TOOLBAR: false
 
+[testing]
+TESTING: true
+
 [flags]
 BLOCK_PUBLIC_ACTIONS: false
 
