@@ -297,10 +297,10 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
     if group:
         submissions = submissions.filter(instance__group=group)
 
-    submissions = submissions.order_by('date')
+    submissions = list(submissions.order_by('date'))
 
     # Participants
-    participants = contest.instances.all()
+    participants = contest.instances.select_related('team__institution', 'user__profile__institution').all()
 
     if not virtual:
         participants = participants.filter(real=True)
@@ -309,9 +309,10 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
         participants = participants.filter(group=group)
 
     # Problems
-    problems = contest.problems.order_by('position')
+    problems = list(contest.problems.order_by('position'))
+    participants = list(participants)
 
-    return list(submissions), list(participants), list(problems)
+    return submissions, participants, problems
 
 
 def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False):
@@ -434,7 +435,3 @@ def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=N
                 participants_result[i].rank = i + 1
 
     return problems, participants_result
-
-
-def calculate_standing(contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False):
-    return calculate_standing_new(contest, virtual, viewer_instance, group, bypass_frozen)
