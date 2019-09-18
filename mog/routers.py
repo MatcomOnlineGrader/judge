@@ -10,7 +10,8 @@ current_request = threading.local()
 def get_database_for_request(request):
     if request.method == 'GET' and 'needs_master' not in request.COOKIES:
         # GET requests shouldn't modify the database (hopefully)
-        return 'replica%d' % random.randint(1, settings.NUMBER_OF_REPLICAS)
+        n = random.randint(0, settings.NUMBER_OF_REPLICAS)
+        return 'replica%d' % n if n else 'default'
     else:
         # Requests other than GET might modify the database. In
         # those cases, lets the default database handle the entire
