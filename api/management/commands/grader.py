@@ -285,7 +285,7 @@ class Command(BaseCommand):
         colorama.init()
         while True:
             for submission in Submission.objects.select_related('compiler', 'problem')\
-                    .filter(result__name__iexact='pending'):
+                    .filter(result__name__iexact='pending').order_by('id'):
                 if submission.id % number_of_graders == grader_index:
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
