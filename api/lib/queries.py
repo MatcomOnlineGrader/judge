@@ -19,16 +19,17 @@ should describe the following sections:
 from django.core.cache import cache
 
 from api.lib import constants
-from api.models import Post, UserProfile
+from api.models import Post, UserProfile, ContestPermission
 
 
-def cache_result(key):
+def cache_result(key, timeout=3600):
     def outer(func):
         def inner(*args, **kwargs):
-            val = cache.get(key)
+            custom_key = key + '-'.join([str(x) for x in args])
+            val = cache.get(custom_key)
             if val is None:
                 val = func(*args, **kwargs)
-                cache.set(key, val, 3600)
+                cache.set(custom_key, val, timeout)
             return val
         return inner
     return outer
@@ -93,3 +94,35 @@ def ten_most_recent_posts():
     posts = Post.objects.order_by('-modification_date').select_related('user')\
         .select_related('user__profile')[:10]
     return list(posts)
+
+
+@cache_result(key=constants.USER_CONTESTS, timeout=constants.USER_CONTESTS_TIMEOUT)
+def get_all_contest_for_role(user_id, role):
+    """
+    This function returns the list of contests that user was granted
+    role of type `role`. The ContestPermission table stores permission
+    roles incrementally where the latest row for (user, contest, role)
+    contains the `granted` value that is the one that confers privileges
+    to the contest.
+
+    Parameters
+    ----------
+    user_id: User,
+        User we are looking
+    role: str,
+        Currently, this is limited to "judge"|"observer" only but might
+        be expanded in the future.
+
+    Returns
+    -------
+    List[int],
+        List of contest ids that `user` has the role of `role`.
+    shouldn't be modified too often.
+    """
+
+    permissions = ContestPermission.objects.filter(user_id=user_id, role=role).order_by('-pk')
+    contests = {}
+    for permission in permissions:
+        if permission.contest_id not in contests:
+            contests[permission.contest_id] = permission.granted
+    return list([contest_id for contest_id, granted in contests.items() if granted]) + [-1]
