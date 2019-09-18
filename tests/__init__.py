@@ -8,6 +8,7 @@ from django.test import TestCase
 from django.utils import timezone
 import pytz
 
+from api.lib import constants
 from api.models import (
     Checker,
     Compiler,
@@ -142,6 +143,8 @@ class FixturedTestCase(TestCase):
         return team
 
     def setUp(self):
+        constants.USER_CONTESTS_TIMEOUT = 0
+
         JANUARY_ONE_2018 = timezone.datetime(
             year=2018,
             month=1,

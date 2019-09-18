@@ -82,6 +82,7 @@ def public_actions_blocked():
 # calls into the private ones.
 #-----------------------------------------------------------------------
 
+
 def __user_has_role_in_contest(user, contest, role):
     contest_id = contest if type(contest) is int else contest.pk
     return contest_id in __get_all_contest_for_role(user, role)
@@ -107,23 +108,9 @@ def __get_all_contest_for_role(user, role):
     -------
     List[int],
         List of contest ids that `user` has the role of `role`.
-
-    TODO(leandro): Add a cache here since the contest permission list
-    shouldn't be modified too often.
     """
-    # TODO(leandro): Remove circular dependency :(
-    from api.models import ContestPermission
-    if not user or not user.is_authenticated:
-        return []
-    permissions = ContestPermission.objects.\
-        filter(user=user, role=role).order_by('-pk')
-    contests = {}
-    for permission in permissions:
-        if permission.contest_id not in contests:
-            contests[permission.contest_id] = permission.granted
-    return [
-        contest_id for contest_id,granted in contests.items() if granted
-    ]
+    from api.lib.queries import get_all_contest_for_role
+    return get_all_contest_for_role(user.id, role)
 
 
 def __add_user_role_to_contest(user, contest, role, granted):
