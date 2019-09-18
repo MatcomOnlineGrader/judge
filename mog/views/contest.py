@@ -193,8 +193,12 @@ def contest_submissions(request, contest_id):
         raise Http404()
     submission_list, query = filter_submissions(
         request.user,
-        problem=request.GET.get('problem'), contest=contest.id, username=request.GET.get('username'),
-        result=request.GET.get('result'), compiler=request.GET.get('compiler')
+        problem=request.GET.get('problem'),
+        problem_exact=True,
+        contest=contest.id,
+        username=request.GET.get('username'),
+        result=request.GET.get('result'),
+        compiler=request.GET.get('compiler')
     )
     submissions = get_paginator(submission_list, 30, request.GET.get('page'))
     return render(request, 'mog/contest/submissions.html', {

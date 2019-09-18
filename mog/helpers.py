@@ -16,7 +16,8 @@ def get_paginator(query_set, rows_per_page, current_page=1):
     return items
 
 
-def filter_submissions(user_who_request, problem=None, contest=None, username=None, result=None, compiler=None, **kwargs):
+def filter_submissions(user_who_request, problem=None, contest=None, username=None, result=None, compiler=None,
+                       problem_exact=False, **kwargs):
     # The following section is the base line to further filtering of
     # submissions. Here, we select visible submissions only for
     # `user_who_request`.
@@ -40,7 +41,10 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
 
     query = {}
     if problem:
-        queryset = queryset.filter(problem__title__contains=problem)
+        if problem_exact:
+            queryset = queryset.filter(problem__title=problem)
+        else:
+            queryset = queryset.filter(problem__title__contains=problem)
         query['problem'] = problem  # no encode needed
 
     try:
