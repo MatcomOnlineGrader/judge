@@ -1,6 +1,6 @@
 ﻿/**
  Main JavaScript library for S4RiS StanD.
- Version: 1.9.1 (Fixing problem of wrong calculation last success submission during freeze time)
+ Version: 1.9.1 - Presenter Mod.
  Author: Oleg "OSt" Strekalovsky.
  */
 
@@ -755,11 +755,11 @@ $('document').ready(function () {
             standings.setCurFrameRow(frameSize - 1);
             setCurrentRow(standings.getCurRow());
             document.onkeydown = function (e) {
-                if (e.which == 78) { // process "Next Step". Key "N".
+                if (e.which == 34) { // process "Next Step". "Next button" on presenter or "Page Down" on keyboard
                     standings.goNext();
-                } else if (e.which == 70) { // process "Fast Next Step". Key "F".
+                } else if (e.which == 33) { // process "Fast Next Step". "Back button" on presenter or "Page Up" on keyboard.
                     standings.goFFNext();
-                } else if (e.which == 66) { // move current row down. Key "B".
+                } else if (e.which == 66) { // move current row down. Key "B" on keyboard.
                     standings.goBack();
                 }
             };
