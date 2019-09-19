@@ -17,6 +17,3 @@ package-lock.json
 node_modules/
 frontend/static/frontend/dist/*
 !frontend/static/frontend/dist/.gitkeep
-*.txt
-Contest.tab
-*.tab

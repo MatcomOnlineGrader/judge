@@ -162,9 +162,9 @@ class Command(BaseCommand):
 
     def get_description_of_team(self, team):
         result = ''
+        result += self.persons[team.coach_id] + '[c]' + '\n'
         for member_id in team.members_id:
             result += self.persons[member_id] + '\n'
-        result += self.persons[team.coach_id] + '[c]' + '\n'
         return result
 
     def create_user(self, username, password, institution):
