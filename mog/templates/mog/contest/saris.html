@@ -10,8 +10,29 @@
       <script src="{% static 'saris/scripts/jquery.xml2json.js' %}"></script>
       <script src="{% static 'saris/scripts/ejudge.convertor.js' %}"></script>
       <script src="{% static 'saris/scripts/l18n.js' %}"></script>
-      <script src="{% static 'saris/scripts/main.js' %}"></script>
+      <script src="{% static 'saris/scripts/main.js' %}?v=2.0"></script>
 
+       <style type="text/css">
+            #menu {
+                position: fixed;
+                right: 0;
+                top: 50%;
+                width: 8em;
+                margin: -2.5em 0 0 0;
+                z-index: 5;
+                background: hsla(224, 74%, 88%, 0.53);
+                color: rgba(68, 88, 117, 0.65);
+                font-weight: bold;
+                font-size: small;
+                text-align: left;
+                {#border: solid hsla(80, 90%, 40%, 0.5);#}
+                border-right: none;
+                padding: 0.5em 0.5em 0.5em 2.5em;
+                {#box-shadow: 0 1px 3px black;#}
+                {#border-radius: 3em 0.5em 0.5em 3em;#}
+            }
+            #menu a { color: inherit }
+        </style>
 
       <meta http-equiv=Content-Type content="text/html; charset=windows-1251">
       <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
@@ -53,8 +74,8 @@
                </select>
                <h2><script>document.write(L18n.autoTranslate("chooseDefrostingOrder"))</script></h2>
                <select class="select-defrosting-order">
-                  <option selected value="alphabeticProblemOrder"><script>document.write(L18n.autoTranslate("alphabeticProblemOrder"))</script></option>
-                  <option value="increasingLastSubmitTime"><script>document.write(L18n.autoTranslate("increasingLastSubmitTime"))</script></option>
+                  <option value="alphabeticProblemOrder"><script>document.write(L18n.autoTranslate("alphabeticProblemOrder"))</script></option>
+                  <option selected value="increasingLastSubmitTime"><script>document.write(L18n.autoTranslate("increasingLastSubmitTime"))</script></option>
                </select>
                <h2><script>document.write(L18n.autoTranslate("insertLog"))</script></h2>
                <div>
@@ -88,5 +109,9 @@
            </div>
          </div>
       </div>
+      <ul id=menu style="position: fixed; right: 0; top: 90%; width: 10em; margin-top: -3.5em;">
+          <li><b>Fast:</b> "Next button" or "Page Down"</li>
+          <li><b>Slow:</b> "Back button" or "Page Up"</li>
+      </ul>
    </body>
 </html>
