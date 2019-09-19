@@ -24,12 +24,6 @@
                                     aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="editClarificationLabel">
                                 {% trans 'Edit Clarification' %}
-                                (
-                                <small>
-                                    {% trans 'Asked by' %}
-                                    {% include 'mog/user/_link.html' with user=clarification.sender %}
-                                </small>
-                                )
                             </h4>
                         </div>
                         <div class="modal-body">
@@ -62,7 +56,6 @@
                 <thead>
                     <tr>
                         <th class="col-sm-1 text-center">#</th>
-                        <th class="col-sm-2 text-center">{% trans 'Who?' %}</th>
                         <th class="col-sm-1 text-center">{% trans 'When?' %}</th>
                         <th class="col-sm-4 text-center">{% trans 'Question' %}</th>
                         <th class="col-sm-4 text-center">{% trans 'Answer' %}</th>
@@ -88,9 +81,6 @@
                                 {% if user|can_edit_clarification:contest %}
                                     </a>
                                 {% endif %}
-                            </td>
-                            <td class="text-center">
-                                {% include 'mog/user/_link.html' with user=clarification.sender %}
                             </td>
                             <td class="text-center">
                                 {{ clarification.asked_date | naturaltime }}
