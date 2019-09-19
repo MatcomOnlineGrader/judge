@@ -59,7 +59,11 @@ def is_admin_or_judge_for_contest(user, contest):
 
 
 def is_admin_or_judge_or_observer_for_contest(user, contest):
-    return user_is_admin(user) or user_is_judge_in_contest(user, contest) or user_is_observer_in_contest(user, contest)
+    if user_is_admin(user):
+        return True
+    if contest and (user_is_judge_in_contest(user, contest) or user_is_observer_in_contest(user, contest)):
+        return True
+    return False
 
 
 def is_admin_or_judge_for_problem(user, problem):

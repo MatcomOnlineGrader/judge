@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
 from api.models import Submission, Contest, Result, Compiler
-from mog.gating import user_is_admin, get_all_contest_for_judge
+from mog.gating import user_is_admin, get_all_contest_for_judge, is_admin_or_judge_or_observer_for_contest
 
 
 def get_paginator(query_set, rows_per_page, current_page=1):
@@ -60,18 +60,15 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
 
     try:
         result = Result.objects.get(pk=result)
-        if result.name.lower() == 'pending':
-            queryset = queryset.filter(Q(result=result) | Q(status='frozen') | Q(status='death'))
-        else:
-            if user_who_request.is_authenticated:
-                if user_is_admin(user_who_request):
-                    queryset = queryset.filter(result=result)
-                else:
-                    queryset = queryset.filter(
-                        Q(result=result) & (Q(status='normal') | (Q(user=user_who_request) & Q(status='frozen')))
-                    )
+        if user_who_request.is_authenticated:
+            if is_admin_or_judge_or_observer_for_contest(user_who_request, contest):
+                queryset = queryset.filter(result=result)
             else:
-                queryset = queryset.filter(result=result, status='normal')
+                queryset = queryset.filter(
+                    Q(result=result) & (Q(status='normal') | (Q(user=user_who_request) & Q(status='frozen')))
+                )
+        else:
+            queryset = queryset.filter(result=result, status='normal')
         query['result'] = str(result.pk)  # encode back
     except (Result.DoesNotExist, ValueError):
         result = None
