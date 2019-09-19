@@ -58,11 +58,6 @@ def push_clarification_to_webhooks(clarification, create):
 
     fields = []
 
-    fields.append({
-        'name' : 'Question by:',
-        'value' : clarification.sender.username,
-    })
-
     if clarification.answer:
         fields.append({
             'name' : 'Answer by:',
