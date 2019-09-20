@@ -198,7 +198,7 @@ class Contest(models.Model):
     def registered_for_virtual(self, user):
         return self.virtual_registration(user) is not None
 
-    def can_register_for_real(self, user):
+    def can_register_for_real(self, user, bypass_closed=False):
         """
         User can register in contest for real
         competition if the following five conditions
@@ -208,7 +208,7 @@ class Contest(models.Model):
         3) User is not admin neither code browser neither observer neither judge.
         4) User is not registered (individually or in a team).
         """
-        if self.is_past or self.closed:
+        if self.is_past or (self.closed and not bypass_closed):
             return False
         if user_is_admin(user) or user_is_judge_in_contest(user, self) or user_is_observer_in_contest(user, self):
             return False
