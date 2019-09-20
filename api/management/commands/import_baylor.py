@@ -216,9 +216,12 @@ class Command(BaseCommand):
 
         teams = sorted(self.teams.values(), key=key)
 
-        for instance in contest.instances.all():
-            if instance.submissions.all().count() == 0:
-                instance.delete()
+        # remove existing instances only if the remove flag is active
+        # (this will prevent removing already registered guest teams)
+        if remove_teams:
+            for instance in contest.instances.all():
+                if instance.submissions.all().count() == 0:
+                    instance.delete()
 
         id = 1
 
