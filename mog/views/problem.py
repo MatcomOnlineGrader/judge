@@ -17,7 +17,6 @@ from mog.samples import (
     handle_remove_test,
     handle_tests,
     test_content,
-    write_to_test,
 )
 
 
@@ -54,31 +53,19 @@ def remove_test(request, problem_id):
     return redirect('mog:problem_tests', problem_id=problem.id)
 
 
-class TestEditView(View):
-    @method_decorator(login_required)
-    def get(self, request, problem_id, *args, **kwargs):
-        problem = get_object_or_404(Problem, pk=problem_id)
-        if not is_admin_or_judge_for_problem(request.user, problem):
-            return HttpResponseForbidden()
-        folder = request.GET.get('folder')
-        test = request.GET.get('test')
-        content = test_content(problem, folder, test)
-        if not content:
-            raise Http404()
-        return render(request, 'mog/test/edit.html', {
-            'folder': folder, 'test': test, 'problem': problem, 'content': content
-        })
-
-    @method_decorator(login_required)
-    def post(self, request, problem_id, *args, **kwargs):
-        problem = get_object_or_404(Problem, pk=problem_id)
-        if not is_admin_or_judge_for_problem(request.user, problem):
-            return HttpResponseForbidden()
-        folder = request.POST.get('folder')
-        test = request.POST.get('test')
-        content = request.POST.get('content', '')
-        write_to_test(problem, folder, test, content)
-        return redirect('mog:problem_tests', problem_id=problem.id)
+@login_required
+def view_test(request, problem_id):
+    problem = get_object_or_404(Problem, pk=problem_id)
+    if not is_admin_or_judge_for_problem(request.user, problem):
+        return HttpResponseForbidden()
+    folder = request.GET.get('folder')
+    test = request.GET.get('test')
+    content = test_content(problem, folder, test)
+    if not content:
+        raise Http404()
+    return render(request, 'mog/test/view.html', {
+        'folder': folder, 'test': test, 'problem': problem, 'content': content
+    })
 
 
 def problem(request, problem_id, slug):

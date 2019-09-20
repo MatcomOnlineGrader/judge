@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^post/create$', views.PostCreateView.as_view(), name='post_create'),
     url(r'^post/(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', views.PostDetailView.as_view(), name='post'),
 
-    url(r'^problem/test/(?P<problem_id>[0-9]+)/edit$', views.TestEditView.as_view(), name='edit_test'),
+    url(r'^problem/test/(?P<problem_id>[0-9]+)/view$', views.view_test, name='view_test'),
     url(r'^problem/test/(?P<problem_id>[0-9]+)/remove$', views.remove_test, name='remove_test'),
     url(r'^problem/test/(?P<problem_id>[0-9]+)/list$', views.ProblemTestsView.as_view(), name='problem_tests'),
     url(r'^problem/create$', views.ProblemCreateView.as_view(), name='problem_create'),

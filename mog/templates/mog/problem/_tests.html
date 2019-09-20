@@ -2,9 +2,8 @@
     <tbody>
         {% for test in tests %}
             <tr>
-                <td>{{ test }}</td>
-                <td class="text-center">
-                    <a href="{% url 'mog:edit_test' problem.id %}?folder={{ folder }}&test={{ test }}" class="btn btn-link">Edit</a>
+                <td>
+                    <a target="_blank" href="{% url 'mog:view_test' problem.id %}?folder={{ folder }}&test={{ test }}" class="btn btn-link">{{ test }}</a>
                 </td>
                 <td class="text-center">
                     <a href="#" class="btn btn-link remove-test" data-test="{{ test }}" data-folder="{{ folder }}">Remove</a>
