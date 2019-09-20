@@ -364,17 +364,12 @@ def remove_instance(request, instance):
         messages.warning(request, msg, extra_tags='warning')
         return redirect(nxt or reverse('mog:contests'))
 
-    if instance.contest.closed:
-        msg = _('Cannot remove registration because the contest is closed.')
-        messages.warning(request, msg, extra_tags='warning')
-        return redirect(nxt or reverse('mog:contests'))
-
-    if instance.contest.closed:
-        msg = _('Cannot remove registration because the contest is closed.')
-        messages.warning(request, msg, extra_tags='warning')
-        return redirect(nxt or reverse('mog:contests'))
-
     user = request.user
+
+    if instance.contest.closed and not user_is_admin(user):
+        msg = _('Cannot remove registration because the contest is closed.')
+        messages.warning(request, msg, extra_tags='warning')
+        return redirect(nxt or reverse('mog:contests'))
 
     if not user_is_admin(user):
         if instance.user != user and (instance.team and user.profile not in instance.team.profiles.all()):
