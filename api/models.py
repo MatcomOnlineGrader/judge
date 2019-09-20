@@ -139,7 +139,7 @@ class Contest(models.Model):
         return user_is_admin(user)
 
     def can_show_saris_to(self, user):
-        return user_is_admin(user) or user_is_judge_in_contest(user, self) or (self.visible and
+        return user_is_admin(user) or user_is_judge_in_contest(user, self) or (self.visible and not self.is_coming and
                                                                                user_is_observer_in_contest(user, self))
 
     @property
