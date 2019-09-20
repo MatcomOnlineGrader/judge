@@ -238,6 +238,7 @@ def remove_contest(request, contest_id):
     return redirect('mog:contests')
 
 
+@login_required
 def register_instance(request, contest, user, team):
     """User in request is registering user/team"""
 

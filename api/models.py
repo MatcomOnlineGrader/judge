@@ -203,13 +203,12 @@ class Contest(models.Model):
         User can register in contest for real
         competition if the following five conditions
         hold:
-        1) User is authenticated
-        2) Contest is coming or running.
-        3) Contest is open for registration.
-        4) User is not admin neither code browser neither observer neither judge.
-        5) User is not registered (individually or in a team).
+        1) Contest is coming or running.
+        2) Contest is open for registration.
+        3) User is not admin neither code browser neither observer neither judge.
+        4) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated or self.is_past or self.closed:
+        if self.is_past or self.closed:
             return False
         if user_is_admin(user) or user_is_judge_in_contest(user, self) or user_is_observer_in_contest(user, self):
             return False
@@ -229,12 +228,11 @@ class Contest(models.Model):
         User can register in contest for virtual
         competition if the following four conditions
         hold:
-        1) User is authenticated.
-        2) Contest is already finished and unfrozen.
-        3) User is not admin neither code browser.
-        4) User is not registered (individually or in a team).
+        1) Contest is already finished and unfrozen.
+        2) User is not admin neither code browser.
+        3) User is not registered (individually or in a team).
         """
-        if not user.is_authenticated or not self.is_past or self.needs_unfreeze:
+        if not self.is_past or self.needs_unfreeze:
             return False
         if user_is_admin(user) or user_is_judge_in_contest(user, self) or user_is_observer_in_contest(user, self):
             return False
