@@ -1,0 +1,32 @@
+{% extends 'mog/base.html' %}
+
+{% load security %}
+{% load filters %}
+
+{% block title %}{{ problem.title }} | {{ folder }} / {{ test }}{% endblock %}
+
+{% block styles  %}
+    <style>
+        #content {
+            font-size: 16px;
+            font-family: "Courier New", courier, monospace;
+            background-color: #eeeeee;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center">
+                <h3 class="title">
+                    <a href="{% url 'mog:problem' problem.id problem.slug %}">{{ problem.title }}</a>
+                </h3>
+                <h5>{{ folder }} / {{ test }}</h5>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <textarea readonly id="content" name="content" class="form-control" rows="20">{{ content }}</textarea>
+        </div>
+    </div>
+{% endblock %}

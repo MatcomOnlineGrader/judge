@@ -5,7 +5,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     team_submissions
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemCreateView, ProblemEditView, \
-    ProblemListView, ProblemTestsView, remove_test, TestEditView
+    ProblemListView, ProblemTestsView, remove_test, view_test
 from .submission import submissions, submission, Submit, rejudge
 from .team import create_team, remove_team, edit_team
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams

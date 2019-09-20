@@ -98,7 +98,7 @@ def test_content(problem, folder, test):
         path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder, test)
         if os.path.exists(path):
             with open(path, 'r') as f:
-                content = ''.join(f.readlines())
+                content = f.read()
             return content
 
     if folder in ['sample inputs', 'sample outputs']:
@@ -110,23 +110,6 @@ def test_content(problem, folder, test):
         return samples_json[test_name][ext]
 
     return None
-
-
-def write_to_test(problem, folder, test, content):
-    if folder in ['inputs', 'outputs']:
-        if handle_remove_test(problem, folder, test):
-            path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder, test)
-            with open(path, 'w') as f:
-                f.write(content)
-
-    if folder in ['sample inputs', 'sample outputs']:
-        samples_json = parse_samples_json(problem.samples)
-        ext = get_extension(folder)
-        test_name = test.split('.')[0]
-        if test_name in samples_json:
-            samples_json[test_name][ext] = content
-            problem.samples = json.dumps(samples_json)
-            problem.save()
 
 
 def fix_problem_folder(problem):
