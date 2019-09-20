@@ -210,6 +210,22 @@ def contest_submissions(request, contest_id):
     })
 
 
+@require_http_methods(["GET"])
+def team_submissions(request, contest_id, team_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+    team = get_object_or_404(Team, pk=team_id)
+
+    if not contest.can_be_seen_by(request.user):
+        raise Http404()
+
+    profile = team.profiles.first()
+
+    if not profile:
+        raise Http404()
+
+    return redirect(reverse('mog:contest_submissions', args=(contest_id,))+'?username='+profile.user.username)
+
+
 @login_required
 @require_http_methods(["POST"])
 def remove_contest(request, contest_id):
