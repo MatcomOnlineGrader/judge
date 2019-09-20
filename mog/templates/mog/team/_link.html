@@ -1,7 +1,8 @@
 {% if render_team_description_only %}
     <div>
         <a
-            href="#"
+            href="{% url 'mog:team_submissions' contest.id team.id %}"
+            target="_blank"
             style="text-decoration:none; color: black;"
             data-html="true"
             data-toggle="tooltip"
