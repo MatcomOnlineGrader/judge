@@ -1,13 +1,17 @@
 import datetime
 
+from django import forms
+from django import template
+from django.conf import settings
 from django.core.cache import cache
 from django.utils.safestring import mark_safe
-from django import template
-from django import forms
+
+import humanize
+import pytz
 
 from api.models import Division, Result
 import api.utils as api_utils
-import humanize
+
 
 register = template.Library()
 
@@ -35,6 +39,7 @@ def put_into_array(obj):
 
 @register.filter()
 def date_url(date):
+    date = date.astimezone(pytz.timezone(settings.TIME_ZONE))
     return 'https://www.timeanddate.com/worldclock/fixedtime.html?day={}&month={}&year={}&hour={}&min={}&sec={}&p1=99'\
         .format(date.day, date.month, date.year, date.hour, date.minute, date.second)
 
