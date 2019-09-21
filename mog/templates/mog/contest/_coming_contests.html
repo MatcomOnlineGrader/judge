@@ -45,7 +45,9 @@
                     {% endif %}
                 </td>
                 <td class="text-center">{{ contest.duration|format_minutes }}</td>
-                <td class="text-center">{{ contest.start_date }}</td>
+                <td>
+                    <a target="_blank" href="{{ contest.start_date|date_url }}">{{ contest.start_date }}</a>
+                </td>
                 <td class="text-center">
                     {% if contest.closed %}
                         {% trans 'Closed' %}
