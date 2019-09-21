@@ -439,7 +439,7 @@ class Problem(models.Model):
 
     @property
     def compilers2str(self):
-        return '<br>'.join(['%s (%d s, %d mb)' % (compiler.name,
+        return '<br>'.join(['%s (%d s, %d MiB)' % (compiler.name,
                                                   self.time_limit_for_compiler(compiler),
                                                   self.memory_limit_for_compiler(compiler))
                             for compiler in self.compilers.all()])
