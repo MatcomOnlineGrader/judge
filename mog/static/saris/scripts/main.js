@@ -755,7 +755,11 @@ $('document').ready(function () {
             standings.setCurFrameRow(frameSize - 1);
             setCurrentRow(standings.getCurRow());
             document.onkeydown = function (e) {
-                if (e.which == 34) { // process "Next Step". "Next button" on presenter or "Page Down" on keyboard
+                if (e.which == 78) { // process "Next Step". Key "N".
+                    standings.goNext();
+                } else if (e.which == 70) { // process "Fast Next Step". Key "F".
+                    standings.goFFNext();
+                } else if (e.which == 34) { // process "Next Step". "Next button" on presenter or "Page Down" on keyboard
                     standings.goNext();
                 } else if (e.which == 33) { // process "Fast Next Step". "Back button" on presenter or "Page Up" on keyboard.
                     standings.goFFNext();
