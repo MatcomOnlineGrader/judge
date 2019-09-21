@@ -56,7 +56,7 @@
                                                 {% trans 'Start date' %}
                                             </th>
                                             <td>
-                                                {{ contest.start_date}}
+                                                <a target="_blank" href="{{ contest.start_date|date_url }}">{{ contest.start_date }}</a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -64,7 +64,7 @@
                                                 {% trans 'End date' %}
                                             </th>
                                             <td>
-                                                {{ contest.end_date}}
+                                                <a target="_blank" href="{{ contest.end_date|date_url }}">{{ contest.end_date }}</a>
                                             </td>
                                         </tr>
                                         <tr>
