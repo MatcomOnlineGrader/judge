@@ -233,7 +233,7 @@ def result_by_name(name):
 
 @register.filter()
 def format_memory(memory):
-    return humanize.naturalsize(memory)
+    return humanize.naturalsize(memory, binary=True)
 
 
 @register.filter()
