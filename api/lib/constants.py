@@ -4,5 +4,5 @@ CACHE_KEY_TEN_MOST_RECENT_POSTS = 'api/lib/ten_most_recent_posts'
 CACHE_KEY_USER_CONTESTS = 'api/lib/user_contests'
 CACHE_KEY_STANDING = 'api/lib/standing'
 
-STANDING_TIMEOUT = 30
+STANDING_TIMEOUT = 10
 USER_CONTESTS_TIMEOUT = 300
