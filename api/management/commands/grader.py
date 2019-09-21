@@ -209,6 +209,9 @@ def grade_submission(submission, number_of_executions):
                 execution_time = processor_user_mode_time
                 execution_time = min(execution_time, time_limit * 1000)
 
+                if invocation_verdict in ['TIME_LIMIT_EXCEEDED', 'IDLENESS_LIMIT_EXCEEDED']:
+                    execution_time = time_limit * 1000
+
                 if invocation_verdict != 'SUCCESS':
                     comment = result = {
                         'SECURITY_VIOLATION': 'runtime error',
