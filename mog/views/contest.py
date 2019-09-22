@@ -33,6 +33,7 @@ from mog.decorators import public_actions_required
 from mog.forms import ContestForm, ClarificationForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
+from mog.statistics import get_contest_stats
 from mog.templatetags.filters import format_minutes
 
 
@@ -626,14 +627,14 @@ def unfreeze_contest(request, contest_id):
 
 
 @login_required
-def contest_json(request, contest_id):
+def contest_stats(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
+
     contest = get_object_or_404(Contest, pk=contest_id)
+    result = get_contest_stats(contest)
 
-    result = get_contest_json(contest, group=None)
-
-    return JsonResponse(data=result)
+    return JsonResponse(data=result, safe=False)
 
 
 @login_required
