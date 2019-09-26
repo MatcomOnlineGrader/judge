@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h3 class="title">Frequently Asked Questions</h3>
+            <h2 class="title">Frequently Asked Questions</h2>
         </div>
 
         <div class="col-md-12">
@@ -16,16 +16,18 @@
                 The system supports the following programming languages:
             </p>
             <ol>
-                <li><strong>C</strong> – GNU GCC 5.1.0</li>
-                <li><strong>C++</strong> – GNU G++ 5.1.0</li>
-                <li><strong>C++11</strong> – GNU G++11 5.1.0</li>
-                <li><strong>C#</strong> – MS C# .NET 4.7.2053</li>
-                <li><strong>Java</strong> – Java 1.8.0_131</li>
+                <li><strong>C</strong> – GNU GCC 5.1.0 / 7.3.0</li>
+                <li><strong>C++</strong> – GNU G++ 5.1.0 / 7.3.0</li>
+                <li><strong>C++11</strong> – GNU G++11 5.1.0 / 7.3.0</li>
+                <li><strong>C++17</strong> – GNU G++17 7.3.0</li>
+                <li><strong>C#</strong> – MS C# .NET 4.7</li>
+                <li><strong>Java</strong> – Java 1.8</li>
                 <li><strong>JavaScript</strong> – JavaScript v8 4.8.0</li>
                 <li><strong>Pascal</strong> – Free Pascal 2.6.4</li>
                 <li><strong>Python 2.7</strong> – Python 2.7.13</li>
                 <li><strong>Python 3.5</strong> – Python 3.5.3</li>
                 <li><strong>Haskell</strong> – Haskell GHC 8.0.2</li>
+                <li><strong>Kotlin</strong> – Kotlin 1.3.50</li>
                 <li><strong>Tiger</strong> – <a href="http://matcomgrader.com/media/faq/tiger.pdf">tiger.pdf</a> (<small>101.8 kB</small>)</li>
             </ol>
             <h5><u>Special notes about Java</u></h5>
@@ -112,6 +114,8 @@
             <small class="uniform-text">Python3</small>
             <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py3.txt' %}"></textarea>
 
+            <small class="uniform-text">Kotlin</small>
+            <textarea class="code" data-mode="text/x-kotlin" data-url="{% static 'mog/aplusb/aplusb.kt.txt' %}"></textarea>
             {# Looks like FSharp? #}
             <small class="uniform-text">Tiger</small>
             <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.tig.txt' %}"></textarea>
