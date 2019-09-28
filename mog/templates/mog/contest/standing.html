@@ -205,16 +205,17 @@
                                                     (~)
                                                 {% endif %}
                                                 {% if institution %}
-                                                    <img alt="" src="{{ institution.country.flag }}" width="25px"/>
+                                                    <img alt="" src="{{ institution.country.flag }}" width="20px"/>
                                                 {% endif %}
                                                 {% if instance.team %}
                                                     {% include 'mog/team/_link.html' with contest=contest team=instance.team render_team_description_only=instance.render_team_description_only %}
                                                 {% else %}
                                                     {% include 'mog/user/_link.html' with user=instance.user %}
-                                                    <br>
                                                 {% endif %}
                                                 {% if institution %}
-                                                    <small>{{ institution.name }}</small>
+                                                    <div>
+                                                        <small>{{ institution.name }}</small>
+                                                    </div>
                                                 {% endif %}
                                             </div>
                                         {% endwith %}

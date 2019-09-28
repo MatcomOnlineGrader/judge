@@ -1,17 +1,15 @@
 {% if render_team_description_only %}
-    <div>
-        <a
-            href="{% url 'mog:team_submissions' contest.id team.id %}"
-            target="_blank"
-            style="text-decoration:none; color: black;"
-            data-html="true"
-            data-toggle="tooltip"
-            title=""
-            data-placement="right"
-            data-original-title="{{team.description | linebreaks}}">
-                <strong>{{ team.name }}</strong>
-        </a>
-    </div>
+    <a
+        href="{% url 'mog:team_submissions' contest.id team.id %}"
+        target="_blank"
+        style="text-decoration:none; color: black;"
+        data-html="true"
+        data-toggle="tooltip"
+        title=""
+        data-placement="right"
+        data-original-title="{{team.description | linebreaks}}">
+            <strong>{{ team.name }}</strong>
+    </a>
 {% else %}
     <strong>{{ team.name }}</strong>
     <div>
