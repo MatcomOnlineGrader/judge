@@ -251,7 +251,7 @@ def register_instance(request, contest, user, team):
             # contest is hidden.
             raise Http404()
 
-        if contest.closed:
+        if contest.closed and not contest.is_past:
             # Admins are the only ones that can register user when
             # registration is closed.
             msg = _(u'Registration is closed for contest "{0}"'.format(contest.name))
