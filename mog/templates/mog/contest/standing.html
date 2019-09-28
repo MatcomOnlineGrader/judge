@@ -90,6 +90,7 @@
         <br/>
         <br/>
         <br/>
+        <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <div class="row">
@@ -138,11 +139,23 @@
                             </select>
                         </div>
                     {% endif %}
+                    <!-- Show Virtual -->
+                    {% if show_virtual_checkbox %}
+                        <div class="">
+                            <input id="show_virtual" type="checkbox" name="show_virtual"
+                                   onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
+
+                            <label for="show_virtual">
+                                {% trans 'Show virtual participation' %} (~)
+                            </label>
+                        </div>
+                    {% endif %}
                 </form>
             </div>
         </div>
-
+        </div>
         {% for ranking in ranking_groups %}
+            <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered">
                     <thead>
@@ -261,46 +274,8 @@
                     </tbody>
                 </table>
             </div>
-        {% endfor %}
-
-         <div class="col-md-12">
-            <div class="pull-left">
-                <form action="{% url 'mog:contest_standing' contest.pk %}" method="GET">
-                    <!-- Group -->
-                    {% if group_names|length > 1 %}
-                        <div>
-                            <label for="group sr-only">
-                                {% trans 'Group' %}
-                            </label>
-
-                            <select id="group" name="group" onchange="$(this).closest('form').submit();">
-                                <option value="<all>" {% if group_in_ranking == '<all>' %}selected{% endif %}>{% trans 'Show all groups' %}</option>
-                                <option value="<one>" {% if group_in_ranking == '<one>' %}selected{% endif %}>{% trans 'Show all in one group' %}</option>
-                                {% for name in group_names %}
-                                    {% if name %}
-                                        <option value="{{ name }}" {% if name == group_in_ranking %}selected{% endif %}>
-                                            - {{ name }}
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    {% endif %}
-
-                    <!-- Show Virtual -->
-                    {% if show_virtual_checkbox %}
-                        <div class="">
-                            <input id="show_virtual" type="checkbox" name="show_virtual"
-                                   onclick="$(this).closest('form').submit();" {% if show_virtual %}checked="checked"{% endif %}>
-
-                            <label for="show_virtual">
-                                {% trans 'Show virtual participation' %} (~)
-                            </label>
-                        </div>
-                    {% endif %}
-                </form>
             </div>
-        </div>
+        {% endfor %}
 
     </div>
 {% endblock %}
