@@ -862,6 +862,14 @@ class ContestInstance(models.Model):
         return self.user.username
 
     @property
+    def institution(self):
+        if self.team:
+            return self.team.institution
+        if self.user:
+            return self.user.profile.institution
+        return None
+    
+    @property
     def instance_start_date(self):
         if self.real:
             return self.contest.start_date
