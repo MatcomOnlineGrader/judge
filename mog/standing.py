@@ -144,7 +144,7 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
     submissions = list(submissions.order_by('date'))
 
     # Participants
-    participants = contest.instances.select_related('team__institution', 'user__profile__institution').all()
+    participants = contest.instances.select_related('team__institution__country', 'user__profile__institution__country').all()
 
     if not virtual:
         participants = participants.filter(real=True)
