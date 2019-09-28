@@ -192,6 +192,11 @@ def grade_submission(submission, number_of_executions):
 
             current_test += 1
             for _ in range(number_of_executions):
+                # NOTE: Setting result to accepted here is needed in
+                # case we retry after a TLE/ILE judgment. As a follow
+                # up, we need to revisit the logic of this section and
+                # refactor to make it more readable.
+                result = 'accepted'
                 _, out, err = get_exitcode_stdout_stderr(
                     cmd=cmd.format(**{'input-file': input_file, 'output-file': 'output.txt'}),
                     cwd=submission_folder
