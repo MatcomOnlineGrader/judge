@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.db import transaction, DatabaseError
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
@@ -170,10 +171,19 @@ class Submit(View):
 @login_required
 @require_http_methods(["POST"])
 def rejudge(request, submission_id):
-    submission = get_object_or_404(Submission, pk=submission_id)
-    if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, submission.problem.contest):
-        return HttpResponseForbidden()
-    submission.result = Result.objects.get(name__iexact='pending')
-    submission.save()
+    with transaction.atomic():
+        # this call will wait until the submission is not locked (prevent conflicts)
+        submission = get_object_or_404(Submission.objects.select_for_update(), pk=submission_id)
+
+        if not user_is_admin(request.user) and not user_is_judge_in_contest(request.user, submission.problem.contest):
+            return HttpResponseForbidden()
+
+        if submission.result.name in ['Running', 'Compiling', 'Pending']:
+            msg = _(u'Cannot rejudge submission: It is currently in grading process.')
+            messages.info(request, msg, extra_tags='warning')
+        else:
+            submission.result = Result.objects.get(name__iexact='pending')
+            submission.save()
+
     # TODO: Find a better way to redirect to previous page.
     return redirect(request.META.get('HTTP_REFERER', '/'))
