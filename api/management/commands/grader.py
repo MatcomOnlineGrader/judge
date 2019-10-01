@@ -9,6 +9,7 @@ import colorama
 
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
+from django.db import DatabaseError, transaction
 
 from api.models import Submission, Result
 from .__utils import get_exitcode_stdout_stderr
@@ -264,6 +265,19 @@ def grade_submission(submission, number_of_executions):
     )
 
 
+def set_pending(submission_id, sleep=5, trials=100):
+    success = False
+    while not success and trials > 0:
+        try:
+            submission = Submission.objects.get(pk=submission_id)
+            submission.result = Result.objects.get(name__iexact='pending')
+            success = True
+        except DatabaseError:
+            success = False
+            trials -= 1
+            time.sleep(sleep)
+
+
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
@@ -292,9 +306,26 @@ class Command(BaseCommand):
         # store compilers
         colorama.init()
         while True:
-            for submission in Submission.objects.select_related('compiler', 'problem')\
-                    .filter(result__name__iexact='pending').order_by('id'):
-                if submission.id % number_of_graders == grader_index:
+            submission = None
+            try:
+                # this block takes the first available pending submission and change its status to Compiling
+                # this will be an atomic transaction and the select_for_update method will block the submission for
+                # other graders
+                with transaction.atomic():
+                    # if the next line returns a submission no other process can modify it until this block is finished
+                    # nowait=True means that if we try to get a pending submission that is blocked by another process
+                    # we don't want to wait for it, because this submission wont be pending anymore
+                    # if the submission is blocked the no_wait=True will make the method to raise an exception
+                    # this exception will be captured bellow... if the submission is null nothing will happen and
+                    # we will continue to the next pending submission
+                    submission = Submission.objects.select_for_update(nowait=True)\
+                        .select_related('compiler', 'problem')\
+                        .filter(result__name__iexact='pending').order_by('id').first()
+                    if submission:
+                        submission.result = Result.objects.get(name__iexact='compiling')
+                        submission.save()
+
+                if submission:
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
                         if compile_submission(submission):
@@ -302,4 +333,11 @@ class Command(BaseCommand):
                     else:
                         set_internal_error(submission, 'internal error, problem not ready')
                     remove_submission_folder(submission)
-            time.sleep(sleep)
+                else:
+                    # we only wait if there was no submission to grade
+                    time.sleep(sleep)
+
+            except DatabaseError as e:
+                # TODO: Add logging
+                if submission:
+                    set_pending(submission.id)
