@@ -211,6 +211,8 @@ class ProblemListView(generic.ListView):
         else:
             problems = Problem.get_visible_problems(user_is_admin(self.request.user))
 
+        problems = problems.select_related('contest')
+
         if q:
             problems = problems.filter(title__icontains=q)
 

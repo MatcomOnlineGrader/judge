@@ -35,7 +35,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="cell-small center">{% trans 'Code' %}</th>
+                        <th class="cell-small center">{% trans 'Contest' %}</th>
                         <th>{% trans 'Title' %}</th>
                         <th class="cell-small center">{% trans 'Points' %}</th>
                         <th class="cell-small center"><i class="glyphicon glyphicon-user"></i></th>
@@ -58,13 +58,13 @@
                         {% endwith %}
 
                         <td>
-                            <a href="{% url 'mog:problem' problem.id problem.slug %}" class="no-underline">
-                                {{ problem.code }}
+                            <a data-toggle="tooltip" href="{% url 'mog:contest_problems' problem.contest_id %}" class="no-underline" title="{{ problem.contest.name }}">
+                                {{ problem.contest.code }}
                             </a>
                         </td>
                         <td>
                             <a href="{% url 'mog:problem' problem.id problem.slug %}" class="no-underline">
-                                {{ problem.title }}
+                                {{ problem.letter }} - {{ problem.title }}
                             </a>
                             {% if not problem.contest.visible %}
                                 (Hidden)
