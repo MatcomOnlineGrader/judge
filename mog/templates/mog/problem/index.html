@@ -38,10 +38,10 @@
                         <th class="cell-small center">{% trans 'Contest' %}</th>
                         <th>{% trans 'Title' %}</th>
                         <th class="cell-small center">{% trans 'Points' %}</th>
-                        <th class="cell-small center"><i class="glyphicon glyphicon-user"></i></th>
-                        <th class="cell-small center">{% trans 'ACC' %}</th>
-                        <th class="cell-small center">{% trans 'SUB' %}</th>
-                        <th class="cell-medium center">{% trans '% ACC' %}</th>
+                        <th class="cell-medium center">
+                            <i class="glyphicon glyphicon-ok"></i>
+                            <i data-toggle="tooltip" class="glyphicon glyphicon-user" title="Number of users that have solved the problem"></i>
+                        </th>
                     </tr>
                 </thead>
 
@@ -80,20 +80,7 @@
                             {% endif %}
                         </td>
                         <td class="text-center">{{ problem.points }}</td>
-                        <td>
-                            <div class="center">{{ problem.user_submitted }}</div>
-                        </td>
-                        {% with acc=problem.accepted_submissions tot=problem.total_submissions %}
-                            <td>
-                                <div class="center">{{ acc }}</div>
-                            </td>
-                            <td>
-                                <div class="center">{{ tot }}</div>
-                            </td>
-                            <td>
-                                <div class="center">{{ acc|percent:tot }}%</div>
-                            </td>
-                        {% endwith %}
+                        <td class="text-center"> {{ problem.unique_users_solved }} </td>
                         </tr>
                     {% empty %}
                         <tr>
