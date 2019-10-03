@@ -201,8 +201,10 @@ class ProblemListView(generic.ListView):
     template_name = 'mog/problem/index.html'
 
     def get_queryset(self):
-        q, tag = self.request.GET.get('q'),\
-                 self.request.GET.get('tag')
+        q, tag, sort_name, sort_mode = self.request.GET.get('q'),\
+                                       self.request.GET.get('tag'),\
+                                       self.request.GET.get('sort'),\
+                                       self.request.GET.get('mode')
 
         tag = Tag.objects.filter(name=tag).first()
 
@@ -216,10 +218,25 @@ class ProblemListView(generic.ListView):
         if q:
             problems = problems.filter(title__icontains=q)
 
+        sort_name = sort_name if sort_name in ['points'] else None
+
+        order_by = []
+
+        if sort_name:
+            if sort_mode == 'asc':
+                order_by.append(sort_name)
+            elif sort_mode == 'desc':
+                order_by.append('-' + sort_name)
+
+        order_by.append('-contest__start_date')
+        order_by.append('position')
+
+        problems = problems.order_by(*order_by)
+
         if not user_is_admin(self.request.user):
             problems = problems.filter(contest__start_date__lte=timezone.now())
 
-        return problems.order_by('-contest__start_date', 'position')
+        return problems
 
     def get_context_data(self, **kwargs):
         context = super(ProblemListView, self).get_context_data(**kwargs)
@@ -228,5 +245,13 @@ class ProblemListView(generic.ListView):
             query['q'] = self.request.GET['q']
         if 'tag' in self.request.GET:
             query['tag'] = self.request.GET['tag']
+
+        sort = self.request.GET['sort'] if 'sort' in self.request.GET else None
+        mode = self.request.GET['mode'] if 'mode' in self.request.GET else None
+
+        if sort in ['points'] and mode in ['asc', 'desc']:
+            query['sort'] = sort
+            query['mode'] = mode
+
         context['query'] = query
         return context

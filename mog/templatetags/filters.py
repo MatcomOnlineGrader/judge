@@ -1,4 +1,5 @@
 import datetime
+import urllib
 
 from django import forms
 from django import template
@@ -239,6 +240,25 @@ def format_memory(memory):
 @register.filter()
 def first_problem(contest):
     return contest.problems.order_by('position').first()
+
+
+@register.filter()
+def add_sort_query(query, sort_key):
+    new_query = {}
+    for key in query:
+        new_query[key] = query[key]
+
+    new_query['sort'] = sort_key
+    if 'sort' not in query or query['sort'] != sort_key:
+        new_query['mode'] = 'asc'
+    else:
+        if query['mode'] == 'desc':
+            new_query['mode'] = 'asc'
+        else:
+            new_query['mode'] = 'desc'
+
+    new_query = dict((k, v.encode('utf8')) for k, v in new_query.items())
+    return '?' + urllib.parse.urlencode(dict(new_query))
 
 
 @register.filter()

@@ -37,7 +37,17 @@
                     <tr>
                         <th class="cell-small center">{% trans 'Contest' %}</th>
                         <th>{% trans 'Title' %}</th>
-                        <th class="cell-small center">{% trans 'Points' %}</th>
+                        <th class="cell-adjust-to-content center">
+                            <a href="{{ query|add_sort_query:'points' }}" class="no-underline ">
+                                {% if query.sort == 'points' and query.mode == 'asc'%}
+                                    <i class="glyphicon glyphicon-arrow-up"></i> {% trans 'Points' %}
+                                {% elif query.sort == 'points' and query.mode == 'desc'%}
+                                    <i class="glyphicon glyphicon-arrow-down"></i> {% trans 'Points' %}
+                                {% else %}
+                                    <i class="glyphicon glyphicon-sort"></i> {% trans 'Points' %}
+                                {% endif %}
+                            </a>
+                        </th>
                         <th class="cell-medium center">
                             <i class="glyphicon glyphicon-ok"></i>
                             <i data-toggle="tooltip" class="glyphicon glyphicon-user" title="Number of users that have solved the problem"></i>
