@@ -9,7 +9,7 @@ import colorama
 
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
-from django.db import DatabaseError, transaction
+from django.db import DatabaseError, transaction, close_old_connections
 
 from api.models import Submission, Result
 from .__utils import get_exitcode_stdout_stderr
@@ -34,19 +34,22 @@ def set_compilation_error(submission, judgement_details=None):
     update_submission(submission, 0, 0, 'compilation error', judgement_details)
 
 
-def onerror(func, path, exc_info):
-    try:
-        os.chmod(path, stat.S_IWUSR)
-        func(path)
-    except:
-        pass
+def on_remove_error(func, path, exc_info):
+    os.chmod(path, stat.S_IWUSR)
+    func(path)
 
 
 def remove_submission_folder(submission):
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
     if os.path.exists(submission_folder):
-        shutil.rmtree(submission_folder, onerror=onerror)
-    return submission_folder
+        try:
+            shutil.rmtree(submission_folder, onerror=on_remove_error)
+            return submission_folder
+        except PermissionError as e:
+            # TODO: Add logging here
+            raise
+    else:
+        return submission_folder
 
 
 def create_submission_folder(submission):
@@ -227,6 +230,8 @@ def grade_submission(submission, number_of_executions):
                         'CRASH': 'internal error',
                         'FAIL': 'internal error'
                     }[invocation_verdict]
+                    if invocation_verdict in ['CRASH', 'FAIL']:
+                        comment = 'internal error, executing submission'
                 elif exit_code != 0:
                     comment = result = 'runtime error'
                 else:
@@ -269,10 +274,13 @@ def set_pending(submission_id, sleep=5, trials=100):
     success = False
     while not success and trials > 0:
         try:
-            submission = Submission.objects.get(pk=submission_id)
-            submission.result = Result.objects.get(name__iexact='pending')
+            with transaction.atomic():
+                submission = Submission.objects.get(pk=submission_id)
+                submission.result = Result.objects.get(name__iexact='pending')
+                submission.save()
             success = True
-        except DatabaseError:
+        except DatabaseError as e:
+            # TODO: Add logging
             success = False
             trials -= 1
             time.sleep(sleep)
@@ -284,23 +292,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--sleep', type=int, default='5', help='Number of seconds to sleep between grade submissions.')
-        parser.add_argument('--number_of_graders', type=int, default='1', help='Number of graders running concurrently.')
-        parser.add_argument('--grader_index', type=int, default='0', help='Grader index in the range [0, number_of_graders).')
         parser.add_argument('--number_of_executions', type=int, default='2',
                             help='Number of executions to prevent TLE')
 
     def handle(self, *args, **options):
-        sleep, number_of_graders, grader_index = options.get('sleep'),\
-                                                 options.get('number_of_graders'),\
-                                                 options.get('grader_index')
+        sleep = options.get('sleep')
         number_of_executions = options.get('number_of_executions')
         # validate input
         if sleep <= 0:
             raise CommandError('sleep argument must to be positive')
-        if number_of_graders <= 0:
-            raise CommandError('number_of_graders argument must to be positive')
-        if not (0 <= grader_index < number_of_graders):
-            raise CommandError('grader_index argument must to be in the range [0, %d)' % number_of_graders)
         if number_of_executions < 1:
             raise CommandError('number_of_executions must to be a positive integer')
         # store compilers
@@ -326,6 +326,7 @@ class Command(BaseCommand):
                         submission.save()
 
                 if submission:
+                    # ready to grade the new submission
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
                         if compile_submission(submission):
@@ -336,8 +337,12 @@ class Command(BaseCommand):
                 else:
                     # we only wait if there was no submission to grade
                     time.sleep(sleep)
-
             except DatabaseError as e:
+                # Grading failed, database error caught here
+                # Possible reasons:
+                # 1) The connection to the database was interrupted or could not be established
+                # 2) Raise condition in a trigger in the database (TODO: Fix this raise condition)
                 # TODO: Add logging
+                close_old_connections()
                 if submission:
                     set_pending(submission.id)
