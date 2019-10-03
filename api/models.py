@@ -393,7 +393,7 @@ class Problem(models.Model):
         return self._visible_submissions().count()
 
     @property
-    def solved(self):
+    def unique_users_solved(self):
         """Return number of contestant whom solved this problem"""
         return self._accepted_submissions().distinct('user_id').count()
 
