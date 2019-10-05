@@ -100,19 +100,6 @@ def compile_submission(submission):
             cmd='"%s" %s' % (compiler.path, compiler.arguments.format(src_file, exe_file)),
             cwd=submission_folder
         )
-        # java: The contestant can use a name other than Main for the entry class
-        #       only if there is a single class in the file. In other case, we
-        #       cannot figure out what the name of the entry class is.
-        if compiler.language.lower() == 'java':
-            files = [name for name in os.listdir(submission_folder) if name.endswith('.class')]
-            if len(files) == 1 and files[0] != exe_file:
-                os.rename(
-                    os.path.join(submission, files[0]),
-                    os.path.join(submission_folder, exe_file)
-                )
-            elif not out and not err:
-                err = "Please, name your entry class Main when " \
-                      "you are using Java compiler."
         if os.path.exists(os.path.join(submission_folder, exe_file)):
             return True
         details = ''
