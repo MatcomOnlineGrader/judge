@@ -12,7 +12,7 @@ from django.core.management import BaseCommand, CommandError
 from django.db import DatabaseError, transaction, close_old_connections
 
 from api.models import Submission, Result
-from .__utils import get_exitcode_stdout_stderr
+from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 
 
 RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, 'runexe.exe')
@@ -220,7 +220,9 @@ def grade_submission(submission, number_of_executions):
                     if invocation_verdict in ['CRASH', 'FAIL']:
                         comment = 'internal error, executing submission'
                 elif exit_code != 0:
-                    comment = result = 'runtime error'
+                    result = 'runtime error'
+                    compressed_error = compress_output_lines(err)
+                    comment = ('runtime error\n\n' + compressed_error).strip()
                 else:
                     rc, out, err = get_exitcode_stdout_stderr(
                         cmd=checker_command % (input_file, 'output.txt', answer_file),
