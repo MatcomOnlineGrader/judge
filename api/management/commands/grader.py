@@ -35,21 +35,18 @@ def set_compilation_error(submission, judgement_details=None):
 
 
 def on_remove_error(func, path, exc_info):
-    os.chmod(path, stat.S_IWUSR)
-    func(path)
+    try:
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    except:
+        pass
 
 
 def remove_submission_folder(submission):
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
     if os.path.exists(submission_folder):
-        try:
-            shutil.rmtree(submission_folder, onerror=on_remove_error)
-            return submission_folder
-        except PermissionError as e:
-            # TODO: Add logging here
-            raise
-    else:
-        return submission_folder
+        shutil.rmtree(submission_folder, onerror=on_remove_error)
+    return submission_folder
 
 
 def create_submission_folder(submission):
