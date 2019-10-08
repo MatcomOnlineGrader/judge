@@ -688,3 +688,46 @@ def contest_csv(request, contest_id):
         writerow(row)
 
     return response
+
+
+@login_required
+def contest_baylor(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    problems, instance_results = calculate_standing(contest, False, None)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(contest.name)
+
+    writer = csv.writer(response)
+
+    header = ['teamId',
+              'rank',
+              'medalCitation',
+              'problemsSolved',
+              'totalTime',
+              'lastProblemTime',
+              'siteCitation',
+              'citation']
+    writer.writerow(header)
+
+    rank = 1
+    for instance_result in instance_results:
+        instance = instance_result.instance
+        if not instance.team or not instance.team.icpcid or instance.group == contest.group:
+            continue
+
+        row = [instance.team.icpcid,
+               rank,
+               '',
+               instance_result.solved,
+               instance_result.penalty,
+               int(instance_result.last_accepted_delta)//60,
+               instance.group,
+               '']
+        rank += 1
+        writer.writerow(row)
+
+    return response
