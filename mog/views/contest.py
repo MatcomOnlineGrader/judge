@@ -713,11 +713,16 @@ def contest_baylor(request, contest_id):
               'citation']
     writer.writerow(header)
 
-    rank = 1
+    rank = 0
+    last_rank = 0
     for instance_result in instance_results:
         instance = instance_result.instance
         if not instance.team or not instance.team.icpcid or instance.group == contest.group:
             continue
+
+        if instance_result.rank != last_rank:
+            rank += 1
+        last_rank = instance_result.rank
 
         row = [instance.team.icpcid,
                rank,
@@ -726,8 +731,8 @@ def contest_baylor(request, contest_id):
                instance_result.penalty,
                int(instance_result.last_accepted_delta)//60,
                instance.group,
-               '']
-        rank += 1
+               'Rank %d' % rank]
+
         writer.writerow(row)
 
     return response
