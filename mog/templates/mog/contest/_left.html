@@ -133,6 +133,13 @@
                                     </a>
                                 </li>
                             {% endif %}
+                            {% if contest.rated and contest.is_past%}
+                                <li class="{{ rating_active }}">
+                                    <a href="{% url 'mog:contest_ratings' contest.id %}">
+                                        <i class="glyphicon glyphicon-sort"></i> {% trans 'Rating changes' %}
+                                    </a>
+                                </li>
+                            {% endif %}
                             {% if user|can_register_for_real:contest%}
                             <li>
                                 <a class="" href="#" data-toggle="modal" data-target="#register-{{ contest.id }}">
@@ -184,7 +191,6 @@
                                     </a>
                                 </li>
                                 {% endif %}
-
                                 <li class="{{ edit_active }}">
                                     <a href="{% url 'mog:contest_edit' contest.id %}">
                                         <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit contest' %}
