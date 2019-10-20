@@ -526,6 +526,15 @@ class RatingChange(models.Model):
     rank = models.IntegerField()
     nick = models.CharField(max_length=20)
 
+    @property
+    def new_rating(self):
+        return RatingChange.objects.filter(profile=self.profile, contest__end_date__lte=self.contest.end_date) \
+                   .aggregate(rating=Sum('rating')).get('rating') or 0
+
+    @property
+    def old_rating(self):
+        return self.new_rating - self.rating
+
 
 class Compiler(models.Model):
     language = models.CharField(max_length=20)

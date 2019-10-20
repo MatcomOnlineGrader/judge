@@ -1,0 +1,63 @@
+{% extends 'mog/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ contest.name }} | {% trans 'Rating changes' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest rating_active='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">{% trans 'Rating changes' %}</h3>
+                </div>
+
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th class="text-center cell-medium">{% trans "User" %}</th>
+                            <th class="text-center cell-medium">{% trans "Rank" %}</th>
+                            <th class="text-center cell-small">{% trans "Old rating" %}</th>
+                            <th class="text-center cell-small">{% trans "New rating" %}</th>
+                            <th class="text-center cell-small">{% trans "Change" %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for change in rating_changes %}
+                            <tr class="text-center">
+                                <td>
+                                    {% include 'mog/user/_link.html' with user=change.profile.user%}
+                                </td>
+                                <td>
+                                    {{ change.rank}}
+                                </td>
+                                <td>
+                                    {{ change.old_rating }}
+                                </td>
+                                <td>
+                                    {{ change.new_rating }}
+                                </td>
+                                {% if change.rating > 0 %}
+                                    <td class="text-success">
+                                        <b>+{{ change.rating}}</b>
+                                    </td>
+                                {% else %}
+                                    <td class="text-danger">
+                                        <b>{{ change.rating}}</b>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

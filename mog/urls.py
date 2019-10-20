@@ -68,6 +68,7 @@ urlpatterns = [
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
     url(r'^contest/(?P<contest_id>[0-9]+)/unfreeze/$', views.unfreeze_contest, name='contest_unfreeze'),
     url(r'^contest/stats/(?P<contest_id>[0-9]+)$', views.contest_stats, name='contest_stats'),
+    url(r'^contest/ratings/(?P<contest_id>[0-9]+)$', views.contest_rating_changes, name='contest_ratings'),
     url(r'^contest/csv/(?P<contest_id>[0-9]+)$', views.contest_csv, name='contest_csv'),
     url(r'^contest/export/baylor/(?P<contest_id>[0-9]+)$', views.contest_baylor, name='contest_baylor'),
 

@@ -212,6 +212,19 @@ def contest_submissions(request, contest_id):
 
 
 @require_http_methods(["GET"])
+def contest_rating_changes(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not contest.is_past or not contest.rated:
+        raise Http404()
+
+    return render(request, 'mog/contest/rating_changes.html', {
+        'contest': contest,
+        'rating_changes': contest.rating_changes.all().order_by('rank')
+    })
+
+
+@require_http_methods(["GET"])
 def team_submissions(request, contest_id, team_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     team = get_object_or_404(Team, pk=team_id)
