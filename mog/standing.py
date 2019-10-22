@@ -98,6 +98,8 @@ class ParticipantResult(object):
         self.penalty = 0
         # Sum of total invalid attempts done before accepting each problem.
         self.attempts = 0
+        # Total number of submissions (not including Compilation Error and Internal Error)
+        self.submissions_count = 0
         # Position in the ranking.
         self.rank = 1
         # Time of the last accepted problem.
@@ -109,10 +111,12 @@ class ParticipantResult(object):
 
         self._problem_mapping = problem_mapping
 
-
     def add_submission(self, submission, info):
         problem_id = self._problem_mapping.get(submission.problem_id)
         self.problem_results[problem_id].add_submission(submission, info)
+
+        if submission.result.penalty or submission.result.name == 'Accepted':
+            self.submissions_count += 1
 
     @property
     def instance(self):

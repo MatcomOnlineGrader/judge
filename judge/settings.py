@@ -257,13 +257,12 @@ ACCOUNT_ACTIVATION_DAYS = 7
 SITE_ID = 1
 
 # Value used to assign initial rating when user has not previous
-# rated contest. This value can be changed depending of division
-# thresholds.
+# rated contest. This value can be changed to shift the ratings.
 BASE_RATING = 1300
 
-# Rating changes are not allowed beyond MAX_RATING_DELTA. If this
-# happens, then the increase/decrease rating is truncated.
-MAX_RATING_DELTA = 150
+# Max rating value a user can have. This is a high upper-bound. It will
+# take many competitions until a user can get even close to this rating
+MAX_RATING = 8000
 
 # Place to store problem test-cases ( secret location )
 PROBLEMS_FOLDER = config.get('grader', 'PROBLEMS_FOLDER')

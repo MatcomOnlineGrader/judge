@@ -523,13 +523,14 @@ class RatingChange(models.Model):
     profile = models.ForeignKey('UserProfile', related_name='ratings', on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, related_name='rating_changes', on_delete=models.CASCADE)
     rating = models.IntegerField()
+    seed = models.FloatField(default=0)
     rank = models.IntegerField()
     nick = models.CharField(max_length=20)
 
     @property
     def new_rating(self):
         return RatingChange.objects.filter(profile=self.profile, contest__end_date__lte=self.contest.end_date) \
-                   .aggregate(rating=Sum('rating')).get('rating') or 0
+                   .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
 
     @property
     def old_rating(self):
@@ -629,12 +630,19 @@ class UserProfile(models.Model):
 
     @property
     def rating(self):
-        return RatingChange.objects.filter(profile=self) \
-                   .aggregate(rating=Sum('rating')).get('rating') or 0
+        if self.has_rating:
+            return RatingChange.objects.filter(profile=self) \
+                   .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
+        else:
+            return 0
+
+    @property
+    def has_rating(self):
+        return self.rating_changes.count() > 0
 
     def get_ratings(self):
         data = []
-        cumul = 0
+        cumul = settings.BASE_RATING
         for rc in self.ratings.all().select_related('contest').order_by('contest__start_date'):
             cumul += rc.rating
             data.append(
@@ -662,7 +670,7 @@ class UserProfile(models.Model):
 
     @staticmethod
     def sorted_by_ratings():
-        return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(0))). \
+        return UserProfile.objects.annotate(rating_value=Coalesce(Sum('ratings__rating'), Value(-settings.BASE_RATING))). \
             order_by('-rating_value', '-points', 'pk').select_related('user')
 
     def __str__(self):

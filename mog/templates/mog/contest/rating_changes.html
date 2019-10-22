@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load static %}
+{% load filters %}
 
 {% block title %}{{ contest.name }} | {% trans 'Rating changes' %}{% endblock %}
 
@@ -23,6 +24,7 @@
                         <tr>
                             <th class="text-center cell-medium">{% trans "User" %}</th>
                             <th class="text-center cell-medium">{% trans "Rank" %}</th>
+                            <th class="text-center cell-medium">{% trans "Expected" %}</th>
                             <th class="text-center cell-small">{% trans "Old rating" %}</th>
                             <th class="text-center cell-small">{% trans "New rating" %}</th>
                             <th class="text-center cell-small">{% trans "Change" %}</th>
@@ -36,6 +38,9 @@
                                 </td>
                                 <td>
                                     {{ change.rank}}
+                                </td>
+                                <td>
+                                    {{ change.seed | format_float}}
                                 </td>
                                 <td>
                                     {{ change.old_rating }}

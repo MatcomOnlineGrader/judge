@@ -33,6 +33,7 @@ from mog.decorators import public_actions_required
 from mog.forms import ContestForm, ClarificationForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
+from mog.ratings import get_rating_deltas, check_rating_deltas, set_ratings
 from mog.statistics import get_contest_stats
 from mog.templatetags.filters import format_minutes
 
@@ -521,79 +522,33 @@ def contest_saris(request, contest_id):
 def rate_contest(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
+
     contest = get_object_or_404(Contest, pk=contest_id)
     next = request.POST.get('next') or reverse('mog:contest_problems', args=(contest.id,))
     force_rate = request.POST.get('force_rate', False)
+
     if contest.allow_teams:
         msg = _("This contest cannot be rated because it's open for teams.")
         messages.warning(request, msg, extra_tags='warning')
         return redirect(next)
+
     if not force_rate and contest.rated:
         msg = _("This contest have ben rated. If you want rate again, then force the operation.")
         messages.info(request, msg, extra_tags='info')
         return redirect(next)
+
     if RatingChange.objects \
             .filter(contest__rated=True, contest__start_date__gt=contest.start_date).count() > 0:
         msg = _("This contest cannot be rated because it's before a rated contest.")
         messages.success(request, msg, extra_tags='warning')
         return redirect(next)
 
-    # remove previous rating changes
-    contest.rating_changes.all().delete()
-
-    # only instances with some problem solved will be rated
-    __, instance_results = calculate_standing(contest)
-
-    # remove instances that make not attempts in real contest
-    # allow them participate virtually. keep users  with some
-    # attempts.
-    for ir in instance_results:
-        if ir.attempts() == 0:
-            ir.instance.delete()
-
-    instance_results = [
-        ir for ir in instance_results if ir.solved > 0
-        ]
-
-    ratings, before = [], []
-    for ir in instance_results:
-        profile = ir.instance.user.profile
-        if profile.rating_changes.count() > 0:
-            before.append(True)
-            ratings.append(profile.rating)
-        else:
-            before.append(False)
-            ratings.append(settings.BASE_RATING)
-
-    expected = [0.5] * len(ratings)
-
-    # TODO: review this three constants 10, 400, 32 (?)
-    n = len(ratings)
-    for i in range(n):
-        for j in range(n):
-            expected[i] += 1 / (1 + 10 ** ((ratings[i] - ratings[j]) / 400.0))
-
-    for i in range(n):
-        ir = instance_results[i]
-        rating_delta = int(32 * (expected[i] - ir.rank))
-        if rating_delta < -settings.MAX_RATING_DELTA:
-            rating_delta = -settings.MAX_RATING_DELTA
-        if rating_delta > +settings.MAX_RATING_DELTA:
-            rating_delta = +settings.MAX_RATING_DELTA
-        if not before[i]:
-            rating_delta += ratings[i]
-        RatingChange.objects.create(
-            profile=ir.instance.user.profile,
-            contest=contest,
-            rating=rating_delta,
-            rank=ir.rank
-        )
-
-    contest.rated = True
-    contest.save()
-
-    msg = _("This contest have been rated successfully")
-    messages.success(request, msg, extra_tags='success')
+    if set_ratings(contest):
+        msg = _("This contest has been rated successfully")
+        messages.success(request, msg, extra_tags='success')
+    else:
+        msg = _("The rating-changes results are not consistent")
+        messages.info(request, msg, extra_tags='info')
 
     return redirect(next)
 
