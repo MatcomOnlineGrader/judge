@@ -238,6 +238,11 @@ def format_memory(memory):
 
 
 @register.filter()
+def format_float(seed, ndigits=4):
+    return str(round(seed, ndigits=ndigits))
+
+
+@register.filter()
 def first_problem(contest):
     return contest.problems.order_by('position').first()
 
