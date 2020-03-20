@@ -22,6 +22,12 @@
                     </h3>
                 </div>
 
+                {% if can_create_problem %}
+                    <a href="{% url 'mog:contest_create_problem' contest.id %}" class="btn btn-link pull-left no-underline">
+                        <i class="glyphicon glyphicon-pencil"></i> {% trans 'Create problem' %}
+                    </a>
+                {% endif %}
+
                 <div class="col-md-12">
                     <table class="table table-bordered">
                         <thead>

@@ -65,11 +65,6 @@ def can_create_contest(user):
 
 
 @register.filter()
-def can_create_problem(user):
-    return user_is_admin(user)
-
-
-@register.filter()
 def can_edit_contest(user, contest):
     return contest.can_be_edited_by(user)
 

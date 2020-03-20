@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View, generic
 from django.views.decorators.http import require_http_methods
 
-from api.models import Problem, Tag
+from api.models import Contest, Problem, Tag
 from judge import settings
 from mog.forms import ProblemForm
 from mog.gating import is_admin_or_judge_for_problem, user_is_admin
@@ -17,6 +17,10 @@ from mog.samples import (
     handle_remove_test,
     handle_tests,
     test_content,
+)
+from mog.model_helpers.contest import (
+    can_create_problem_in_contest,
+    get_all_contests_a_user_can_create_problems_in,
 )
 
 
@@ -110,60 +114,25 @@ class ProblemTestsView(View):
         return redirect('mog:problem_tests', problem_id=problem.id)
 
 
-class ProblemCreateView(View):
-    """
-    TODO(leandro): Make this endpoint "inside" a contest instead. That
-    way, we can check permissions for judges and other roles that can
-    add problems to allowed contests.
-    """
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        if not user_is_admin(request.user):
-            HttpResponseForbidden()
-        return render(request, 'mog/problem/create.html', {
-            'form': ProblemForm()
-        })
-
-    @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
-        if not user_is_admin(request.user):
-            HttpResponseForbidden()
-        form = ProblemForm(request.POST)
-        if not form.is_valid():
-            return render(request, 'mog/problem/create.html', {
-                'form': form
-            })
-        data = form.cleaned_data
-        problem = Problem(
-            title=data['title'],
-            body=data['body'],
-            input=data['input'],
-            output=data['output'],
-            hints=data['hints'],
-            time_limit=data['time_limit'],
-            memory_limit=data['memory_limit'],
-            multiple_limits=data['multiple_limits'],
-            checker=data['checker'],
-            position=data['position'],
-            balloon=data['balloon'],
-            letter_color=data['letter_color'],
-            contest=data['contest'],
-        )
-        problem.save()
-        problem.tags.set(data['tags'])
-        problem.compilers.set(data['compilers'])
-        fix_problem_folder(problem)
-        return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
-
-
 class ProblemEditView(View):
     @method_decorator(login_required)
     def get(self, request, problem_id, *args, **kwargs):
         problem = get_object_or_404(Problem, pk=problem_id)
         if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
+
+        # NOTE(leandro): Get all contest ids that the current user has
+        # access. Use a trick to convert to queryset from the contest
+        # ids list that will be used in the form as choices for the
+        # contest field.
+        contest_ids = get_all_contests_a_user_can_create_problems_in(request.user)
+        contests_queryset = Contest.objects.filter(pk__in=contest_ids)
+
+        form = ProblemForm(instance=problem)
+        form.fields['contest'].queryset = contests_queryset
+
         return render(request, 'mog/problem/edit.html', {
-            'form': ProblemForm(instance=problem), 'problem': problem,
+            'form': form, 'problem': problem,
         })
 
     @method_decorator(login_required)
@@ -171,12 +140,17 @@ class ProblemEditView(View):
         problem = get_object_or_404(Problem, pk=problem_id)
         if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
+
         form = ProblemForm(request.POST)
         if not form.is_valid():
             return render(request, 'mog/problem/edit.html', {
                 'form': form, 'problem': problem,
             })
+
         data = form.cleaned_data
+        if not can_create_problem_in_contest(request.user, data['contest']):
+            return HttpResponseForbidden()
+
         problem.title = data['title']
         problem.body = data['body']
         problem.input = data['input']
@@ -193,6 +167,7 @@ class ProblemEditView(View):
         problem.tags.set(data['tags'])
         problem.compilers.set(data['compilers'])
         problem.save()
+
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
 
 

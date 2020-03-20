@@ -84,12 +84,30 @@ class ContestForm(forms.ModelForm):
                 self.add_error('death_time', _('Death time must be less or equal than contest duration'))
 
 
-class ProblemForm(forms.ModelForm):
+PROBLEM_FIELDS_WITHOUT_CONTEST = [
+    'title',
+    'body',
+    'input',
+    'output',
+    'hints',
+    'time_limit',
+    'memory_limit',
+    'multiple_limits',
+    'checker',
+    'position',
+    'balloon',
+    'letter_color',
+    'tags',
+    'compilers'
+]
+
+
+class ProblemInContestForm(forms.ModelForm):
+    """Used to create a new problem when a contest is specified and no
+    need to add an input for it."""
     class Meta:
         model = Problem
-        fields = ['title', 'body', 'input', 'output', 'hints', 'time_limit',
-                  'memory_limit', 'multiple_limits', 'checker', 'position', 'balloon', 'letter_color',
-                  'contest', 'tags', 'compilers']
+        fields = PROBLEM_FIELDS_WITHOUT_CONTEST
 
     def clean_multiple_limits(self):
         def json_is_correct(content):
@@ -104,6 +122,19 @@ class ProblemForm(forms.ModelForm):
         if not json_is_correct(limits):
             raise forms.ValidationError('The JSON does not have a correct format')
         return limits
+
+
+PROBLEM_FIELDS_WITH_CONTEST = PROBLEM_FIELDS_WITHOUT_CONTEST \
+    + ['contest']
+
+
+class ProblemForm(ProblemInContestForm):
+    """Contains all field needed to edit a Problem, this form includes
+    the contest field that can be changed only in the modify problem
+    view."""
+    class Meta:
+        model = Problem
+        fields = PROBLEM_FIELDS_WITH_CONTEST
 
 
 class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
