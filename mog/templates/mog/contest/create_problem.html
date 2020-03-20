@@ -1,17 +1,24 @@
 {% extends 'mog/base.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block title %}Create problem{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest %}
+{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            <h3 class="title">Create problem</h3>
+            <h3 class="title">{% trans 'Create problem' %}
+                <small><i>{{ contest.name }}</i></small>
+            </h3>
         </div>
 
         <div class="col-md-12">
-            <form action="{% url 'mog:problem_create' %}" method="post">
+            <form action="{% url 'mog:contest_create_problem' contest.id %}" method="post">
                 {% csrf_token %}
                 {% include 'mog/includes/form.html' with form=form %}
                 <div class="row">

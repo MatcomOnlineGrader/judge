@@ -22,6 +22,7 @@ from api.models import (
     Compiler,
     Contest,
     ContestInstance,
+    Problem,
     RatingChange,
     Result,
     Submission,
@@ -30,12 +31,14 @@ from api.models import (
 )
 from mog.decorators import public_actions_required
 
-from mog.forms import ContestForm, ClarificationForm
+from mog.forms import ContestForm, ClarificationForm, ProblemInContestForm
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.ratings import get_rating_deltas, check_rating_deltas, set_ratings
 from mog.statistics import get_contest_stats
 from mog.templatetags.filters import format_minutes
+from mog.model_helpers.contest import can_create_problem_in_contest
+from mog.samples import fix_problem_folder
 
 
 def contests(request):
@@ -85,18 +88,20 @@ def contest_overview(request, contest_id):
 
 
 def contest_problems(request, contest_id):
-    contest = get_object_or_404(Contest, pk=contest_id)
+    contest, user = get_object_or_404(Contest, pk=contest_id), \
+        request.user
 
-    if not contest.can_be_seen_by(request.user):
+    if not contest.can_be_seen_by(user):
         return redirect(reverse('mog:contest_overview', args=(contest.pk, )))
 
-    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+    if user_is_admin(user) and contest.needs_unfreeze and contest.is_past:
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
         messages.warning(request, msg, extra_tags='warning secure')
 
-    problems = contest.problems.order_by('position')
     return render(request, 'mog/contest/problems.html', {
-        'contest': contest, 'problems': problems,
+        'contest': contest,
+        'problems': contest.problems.order_by('position'),
+        'can_create_problem': can_create_problem_in_contest(user, contest)
     })
 
 
@@ -704,3 +709,46 @@ def contest_baylor(request, contest_id):
         writer.writerow(row)
 
     return response
+
+
+class CreateProblemInContestView(View):
+    @method_decorator(login_required)
+    def get(self, request, contest_id, *args, **kwargs):
+        contest = get_object_or_404(Contest, pk=contest_id)
+        if not can_create_problem_in_contest(request.user, contest):
+            raise Http404()
+        return render(request, 'mog/contest/create_problem.html', {
+            'form': ProblemInContestForm(), 'contest': contest
+        })
+
+    @method_decorator(login_required)
+    def post(self, request, contest_id, *args, **kwargs):
+        contest = get_object_or_404(Contest, pk=contest_id)
+        if not can_create_problem_in_contest(request.user, contest):
+            raise Http404()
+        form = ProblemInContestForm(request.POST)
+        if not form.is_valid():
+            return render(request, 'mog/contest/create_problem.html', {
+                'form': form, 'contest': contest
+            })
+        data = form.cleaned_data
+        problem = Problem(
+            title=data['title'],
+            body=data['body'],
+            input=data['input'],
+            output=data['output'],
+            hints=data['hints'],
+            time_limit=data['time_limit'],
+            memory_limit=data['memory_limit'],
+            multiple_limits=data['multiple_limits'],
+            checker=data['checker'],
+            position=data['position'],
+            balloon=data['balloon'],
+            letter_color=data['letter_color'],
+            contest=contest,
+        )
+        problem.save()
+        problem.tags.set(data['tags'])
+        problem.compilers.set(data['compilers'])
+        fix_problem_folder(problem)
+        return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)

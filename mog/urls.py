@@ -34,7 +34,6 @@ urlpatterns = [
     url(r'^problem/test/(?P<problem_id>[0-9]+)/view$', views.view_test, name='view_test'),
     url(r'^problem/test/(?P<problem_id>[0-9]+)/remove$', views.remove_test, name='remove_test'),
     url(r'^problem/test/(?P<problem_id>[0-9]+)/list$', views.ProblemTestsView.as_view(), name='problem_tests'),
-    url(r'^problem/create$', views.ProblemCreateView.as_view(), name='problem_create'),
     url(r'^problem/remove/(?P<problem_id>[0-9]+)$', views.remove_problem, name='problem_remove'),
     url(r'^problem/edit/(?P<problem_id>[0-9]+)$', views.ProblemEditView.as_view(), name='problem_edit'),
     url(r'^problem/(?P<problem_id>[0-9]+)/(?P<slug>[-\w]+)/$', views.problem, name='problem'),
@@ -52,6 +51,7 @@ urlpatterns = [
         name='contest_remove_registration'),
 
     url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
+    url(r'^contest/(?P<contest_id>[0-9]+)/create_problem$', views.CreateProblemInContestView.as_view(), name='contest_create_problem'),
     url(r'^contest/overview/(?P<contest_id>[0-9]+)$', views.contest_overview, name='contest_overview'),
     url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
     url(r'^contest/saris/(?P<contest_id>[0-9]+)$', views.contest_saris, name='contest_saris'),

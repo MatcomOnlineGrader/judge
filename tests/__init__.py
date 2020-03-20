@@ -47,6 +47,7 @@ class FixturedTestCase(TestCase):
             username=user.username,
             password=TEST_USER_PASSWORD
         )
+        return user
 
     def newUser(self, username, **kargs):
         default = {
@@ -58,6 +59,10 @@ class FixturedTestCase(TestCase):
         user.set_password(TEST_USER_PASSWORD)
         user.save()
         return user
+
+    def newLoggedUser(self, username, **kwargs):
+        user = self.newUser(username, **kwargs)
+        return self.login(user)
 
     def newAdmin(self, username, **kargs):
         admin = self.newUser(username=username, **kargs)
