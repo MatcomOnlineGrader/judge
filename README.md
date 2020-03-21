@@ -6,26 +6,11 @@ Matcom Online Grader
 [![](mog/static/mog/images/logo.png )](mog/static/mog/images/logo.png)
 
 **Softwares**
+
 - Postgres-9.5.*
 - Python3
-    - Install `pip`
-    - Install `virtualenv`
-
-**requirements.txt**
-
-    beautifulsoup4==4.5.1
-    colorama==0.3.9
-    confusable-homoglyphs==2.0.2
-    Django==2.0
-    django-debug-toolbar==1.9.1
-    django-registration==2.3
-    html5lib==0.999999999
-    Pillow==5.0.0
-    psycopg2==2.6.2
-    pytz==2017.3
-    six==1.10.0
-    sqlparse==0.2.4
-    webencodings==0.5.1
+  - Install `pip`
+  - Install `virtualenv`
 
 **Secret file:**
 
@@ -73,9 +58,16 @@ LOCATION: <str> [depends on the backend]
 LOG_REQUESTS: <bool> [true if we want to store detailed request logs]
 ```
 
+You can use the following script to generate the settings:
+
+```bash
+./generate_test_settings.sh
+```
+
 **Postgres:**
 
 Execute `psql` and run:
+
 ```
 postgres=# CREATE USER [DATABASE_USER] PASSWORD '[DATABASE_PASS]';
 postgres=# CREATE DATABASE [DATABASE_NAME] OWNER [DATABASE_USER];
@@ -86,29 +78,45 @@ postgres=# ALTER USER [DATABASE_USER] CREATEDB;
 **Run some python scripts:**
 
 Create and activate a virtual environment (optional):
-```
-- virtualenv venv
-- venv\Scripts\activate     # Windows
-- source venv/bin/activate  # Linux
-```
 
+- `virtualenv venv`
+- `venv\Scripts\activate`     # Windows
+- `source venv/bin/activate`  # Linux
 
 Install pip requirements:
+
 ```
 (venv) - pip install -r requirements.txt
 ```
 
 Migrate tables into the database:
+
 ```
 (venv) - python manage.py migrate
 ```
 
 Create the compiled file used by django to manage translation:
+
 ```
 (venv) - python manage.py compilemessages -l es
 ```
 
 Copy static files to the folder specified by the `STATIC_ROOT` variable in django settings:
+
 ```
 (venv) - python manage.py collectstatic
+```
+
+Generate some data to start developing (using) the platform:
+**WARNING**: Only do this to run the platform in development mode locally.
+
+```
+export MOG_LOCAL_DEV=1
+(venv) - python manage.py populate_local_dev -d
+```
+
+Launch the grader using:
+
+```
+(venv) - python manage.py runserver
 ```

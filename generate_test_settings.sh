@@ -2,7 +2,7 @@
 
 settings=$(cat <<-END
 [debugging]
-DEBUG: false
+DEBUG: true
 DEBUG_TOOLBAR: false
 
 [testing]
@@ -35,13 +35,13 @@ DEFAULT_FROM_EMAIL: -
 EMAIL_TIMEOUT: 20
 
 [others]
-STATIC_ROOT: /var/www/judge/static
-MEDIA_ROOT: /var/www/judge/media
+STATIC_ROOT: $HOME/.judge/www/static
+MEDIA_ROOT: $HOME/.judge/www/media
 
 [grader]
-RESOURCES_FOLDER: -
-SANDBOX_FOLDER: -
-PROBLEMS_FOLDER: -
+RESOURCES_FOLDER: $HOME/.judge/resources
+SANDBOX_FOLDER: $HOME/.judge/sandbox
+PROBLEMS_FOLDER: $HOME/.judge/problems
 
 [cache]
 BACKEND: django.core.cache.backends.locmem.LocMemCache
