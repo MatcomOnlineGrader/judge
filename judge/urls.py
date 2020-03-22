@@ -30,7 +30,6 @@ urlpatterns = [
     ),
     path(r'', include('registration.backends.hmac.urls')),
     path(r'', include('mog.urls')),
-    path(r'slack/', include('slack.urls')),
     path(r'social/', include('social_django.urls', namespace='social')),
     path(r'admin/', admin.site.urls),
     path(r'i18n/', include('django.conf.urls.i18n')),
