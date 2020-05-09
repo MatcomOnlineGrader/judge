@@ -99,7 +99,8 @@ class Checker(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     source = models.TextField()
-    backend = models.CharField(max_length=32, choices=BACKEND_CHOICES, default='testlib.h')
+    backend = models.CharField(
+        max_length=32, choices=BACKEND_CHOICES, default='testlib.h')
 
     def __str__(self):
         return self.name
@@ -113,12 +114,17 @@ class Contest(models.Model):
     end_date = models.DateTimeField()
     visible = models.BooleanField(default=False)
     needs_unfreeze = models.BooleanField(default=True)
-    frozen_time = models.IntegerField(verbose_name="Frozen time (minutes)", default=0)
-    death_time = models.IntegerField(verbose_name="Death time (minutes)", default=0)
-    closed = models.BooleanField(verbose_name="Closed registration", default=False)
-    allow_teams = models.BooleanField(verbose_name="Allow teams", default=False)
+    frozen_time = models.IntegerField(
+        verbose_name="Frozen time (minutes)", default=0)
+    death_time = models.IntegerField(
+        verbose_name="Death time (minutes)", default=0)
+    closed = models.BooleanField(
+        verbose_name="Closed registration", default=False)
+    allow_teams = models.BooleanField(
+        verbose_name="Allow teams", default=False)
     rated = models.BooleanField(default=False)
-    group = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Default group'))
+    group = models.CharField(max_length=64, blank=True,
+                             null=True, verbose_name=_('Default group'))
 
     def __str__(self):
         return self.name
@@ -284,7 +290,8 @@ class Contest(models.Model):
         else:
             contest_ids = get_all_contest_for_judge(user)
             if contest_ids:
-                queryset = Contest.objects.filter(Q(visible=True) | Q(id__in=contest_ids))
+                queryset = Contest.objects.filter(
+                    Q(visible=True) | Q(id__in=contest_ids))
             else:
                 queryset = Contest.objects.filter(Q(visible=True))
 
@@ -298,7 +305,7 @@ class Contest(models.Model):
 
     def group_names(self):
         return list(
-            self.instances.order_by(Lower('group')) \
+            self.instances.order_by(Lower('group'))
                 .values_list('group', flat=True).distinct()
         )
 
@@ -314,18 +321,24 @@ class Problem(models.Model):
     output = models.TextField(blank=True)
     hints = models.TextField(null=True, blank=True)
     time_limit = models.PositiveIntegerField(verbose_name='Time limit (s)')
-    memory_limit = models.PositiveIntegerField(verbose_name='Memory limit (MB)')
-    multiple_limits = models.TextField(blank=True, verbose_name='JSON with memory & time limit per compiler')
+    memory_limit = models.PositiveIntegerField(
+        verbose_name='Memory limit (MB)')
+    multiple_limits = models.TextField(
+        blank=True, verbose_name='JSON with memory & time limit per compiler')
     tags = models.ManyToManyField(Tag, related_name='problems', blank=True)
     checker = models.ForeignKey(Checker, null=True, on_delete=models.SET_NULL)
     position = models.IntegerField()
     points = models.IntegerField(default=10)
-    balloon = models.CharField(verbose_name="Balloon color", max_length=50, null=True, blank=True)
-    letter_color = models.CharField(max_length=20, choices=LETTER_COLOR_CHOICES, default='#ffffff')
-    contest = models.ForeignKey(Contest, related_name='problems', on_delete=models.CASCADE)
+    balloon = models.CharField(
+        verbose_name="Balloon color", max_length=50, null=True, blank=True)
+    letter_color = models.CharField(
+        max_length=20, choices=LETTER_COLOR_CHOICES, default='#ffffff')
+    contest = models.ForeignKey(
+        Contest, related_name='problems', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
-    samples = models.TextField(null=True, blank=True, verbose_name='Sample inputs/outputs')
+    samples = models.TextField(
+        null=True, blank=True, verbose_name='Sample inputs/outputs')
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -333,7 +346,8 @@ class Problem(models.Model):
 
     def _visible_submissions(self):
         return self.submissions. \
-            filter(Q(hidden=False) & (Q(instance=None) | Q(instance__contest__visible=True)))
+            filter(Q(hidden=False) & (Q(instance=None) |
+                                      Q(instance__contest__visible=True)))
 
     def _accepted_submissions(self):
         return self._visible_submissions().filter(result__name__iexact='accepted', status='normal')
@@ -400,11 +414,11 @@ class Problem(models.Model):
     def total_solved_relevant_for_instance(self, instance):
 
         if instance and not instance.real and instance.is_running:
-            """Return number of contestants whom solved this problem in a real contest including virtual 
+            """Return number of contestants whom solved this problem in a real contest including virtual
             participations"""
 
             real_count = self._accepted_submissions()\
-                .filter(instance__real=True,date__lte=self.contest.start_date + instance.relative_time)\
+                .filter(instance__real=True, date__lte=self.contest.start_date + instance.relative_time)\
                 .distinct('instance_id').count()
 
             virtual_count = self._accepted_submissions()\
@@ -440,8 +454,9 @@ class Problem(models.Model):
     @property
     def compilers2str(self):
         return '<br>'.join(['%s (%d s, %d MiB)' % (compiler.name,
-                                                  self.time_limit_for_compiler(compiler),
-                                                  self.memory_limit_for_compiler(compiler))
+                                                   self.time_limit_for_compiler(
+                                                       compiler),
+                                                   self.memory_limit_for_compiler(compiler))
                             for compiler in self.compilers.all()])
 
     def __str__(self):
@@ -470,7 +485,8 @@ class Post(models.Model):
         return Comment.objects.filter(Q(post=self), ~Q(pk__in=user.seen_comments.all())).count()
 
     def update_seen_comments(self, user):
-        unseen_comments = Comment.objects.filter(Q(post=self), ~Q(pk__in=user.seen_comments.all()))
+        unseen_comments = Comment.objects.filter(
+            Q(post=self), ~Q(pk__in=user.seen_comments.all()))
         for comment in unseen_comments.all():
             comment.seen.add(user)
 
@@ -480,7 +496,7 @@ class Post(models.Model):
         problem accepted (the number of points should be positive).
         """
         return user.is_authenticated and user.is_active and \
-               hasattr(user, 'profile') and user.profile.points > 0
+            hasattr(user, 'profile') and user.profile.points > 0
 
     @property
     def sorted_comments(self):
@@ -491,8 +507,10 @@ class Post(models.Model):
 
 
 class Message(models.Model):
-    source = models.ForeignKey(User, related_name='messages_sent', on_delete=models.CASCADE)
-    target = models.ForeignKey(User, related_name='messages_received', on_delete=models.CASCADE)
+    source = models.ForeignKey(
+        User, related_name='messages_sent', on_delete=models.CASCADE)
+    target = models.ForeignKey(
+        User, related_name='messages_received', on_delete=models.CASCADE)
     subject = models.CharField(max_length=250)
     body = models.TextField()
     date = models.DateTimeField(auto_now=True)
@@ -520,8 +538,10 @@ class Institution(models.Model):
 
 
 class RatingChange(models.Model):
-    profile = models.ForeignKey('UserProfile', related_name='ratings', on_delete=models.CASCADE)
-    contest = models.ForeignKey(Contest, related_name='rating_changes', on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        'UserProfile', related_name='ratings', on_delete=models.CASCADE)
+    contest = models.ForeignKey(
+        Contest, related_name='rating_changes', on_delete=models.CASCADE)
     rating = models.IntegerField()
     seed = models.FloatField(default=0)
     rank = models.IntegerField()
@@ -530,7 +550,7 @@ class RatingChange(models.Model):
     @property
     def new_rating(self):
         return RatingChange.objects.filter(profile=self.profile, contest__end_date__lte=self.contest.end_date) \
-                   .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
+            .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
 
     @property
     def old_rating(self):
@@ -561,33 +581,53 @@ ROLE_CHOICES = [
 ]
 
 THEME_CHOICES = [('hopscotch', 'hopscotch'), ('ttcn', 'ttcn'), ('ambiance-mobile', 'ambiance-mobile'),
-                 ('paraiso-light', 'paraiso-light'), ('icecoder', 'icecoder'), ('zenburn', 'zenburn'),
-                 ('erlang-dark', 'erlang-dark'), ('seti', 'seti'), ('midnight', 'midnight'),
-                 ('tomorrow-night-bright', 'tomorrow-night-bright'), ('panda-syntax', 'panda-syntax'),
-                 ('bespin', 'bespin'), ('ambiance', 'ambiance'), ('neo', 'neo'), ('solarized', 'solarized'),
-                 ('base16-light', 'base16-light'), ('vibrant-ink', 'vibrant-ink'), ('abcdef', 'abcdef'),
-                 ('yeti', 'yeti'), ('mbo', 'mbo'), ('xq-light', 'xq-light'), ('twilight', 'twilight'),
-                 ('rubyblue', 'rubyblue'), ('base16-dark', 'base16-dark'), ('neat', 'neat'),
-                 ('dracula', 'dracula'), ('cobalt', 'cobalt'), ('lesser-dark', 'lesser-dark'),
-                 ('3024-night', '3024-night'), ('pastel-on-dark', 'pastel-on-dark'), ('liquibyte', 'liquibyte'),
-                 ('colorforth', 'colorforth'), ('blackboard', 'blackboard'), ('monokai', 'monokai'),
-                 ('xq-dark', 'xq-dark'), ('elegant', 'elegant'), ('3024-day', '3024-day'), ('night', 'night'),
-                 ('mdn-like', 'mdn-like'), ('tomorrow-night-eighties', 'tomorrow-night-eighties'),
-                 ('isotope', 'isotope'), ('material', 'material'), ('eclipse', 'eclipse'),
+                 ('paraiso-light', 'paraiso-light'), ('icecoder',
+                                                      'icecoder'), ('zenburn', 'zenburn'),
+                 ('erlang-dark', 'erlang-dark'), ('seti',
+                                                  'seti'), ('midnight', 'midnight'),
+                 ('tomorrow-night-bright',
+                  'tomorrow-night-bright'), ('panda-syntax', 'panda-syntax'),
+                 ('bespin', 'bespin'), ('ambiance', 'ambiance'), ('neo',
+                                                                  'neo'), ('solarized', 'solarized'),
+                 ('base16-light', 'base16-light'), ('vibrant-ink',
+                                                    'vibrant-ink'), ('abcdef', 'abcdef'),
+                 ('yeti', 'yeti'), ('mbo', 'mbo'), ('xq-light',
+                                                    'xq-light'), ('twilight', 'twilight'),
+                 ('rubyblue', 'rubyblue'), ('base16-dark',
+                                            'base16-dark'), ('neat', 'neat'),
+                 ('dracula', 'dracula'), ('cobalt',
+                                          'cobalt'), ('lesser-dark', 'lesser-dark'),
+                 ('3024-night', '3024-night'), ('pastel-on-dark',
+                                                'pastel-on-dark'), ('liquibyte', 'liquibyte'),
+                 ('colorforth', 'colorforth'), ('blackboard',
+                                                'blackboard'), ('monokai', 'monokai'),
+                 ('xq-dark', 'xq-dark'), ('elegant',
+                                          'elegant'), ('3024-day', '3024-day'), ('night', 'night'),
+                 ('mdn-like', 'mdn-like'), ('tomorrow-night-eighties',
+                                            'tomorrow-night-eighties'),
+                 ('isotope', 'isotope'), ('material',
+                                          'material'), ('eclipse', 'eclipse'),
                  ('paraiso-dark', 'paraiso-dark'), ('railscasts', 'railscasts'), ('the-matrix', 'the-matrix')]
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, null=True, blank=True, choices=ROLE_CHOICES)
-    theme = models.CharField(max_length=25, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
-    avatar = models.ImageField(upload_to=UUIDImageName('user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
+    user = models.OneToOneField(
+        User, related_name='profile', primary_key=True, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, null=True,
+                            blank=True, choices=ROLE_CHOICES)
+    theme = models.CharField(
+        max_length=25, null=True, choices=THEME_CHOICES, verbose_name=_('Code Editor Theme'))
+    avatar = models.ImageField(upload_to=UUIDImageName(
+        'user/avatar'), null=True, blank=True, verbose_name=_('Avatar'))
     show_tags = models.BooleanField(default=True, verbose_name=_('Show tags'))
-    institution = models.ForeignKey(Institution, null=True, verbose_name=_('Institution'), on_delete=models.SET_NULL)
+    institution = models.ForeignKey(Institution, null=True, verbose_name=_(
+        'Institution'), on_delete=models.SET_NULL)
     teams = models.ManyToManyField(Team, blank=True, related_name='profiles')
     rating_changes = models.ManyToManyField(Contest, through='RatingChange')
-    compiler = models.ForeignKey(Compiler, null=True, verbose_name=_('Compiler'), on_delete=models.SET_NULL)
-    points = models.PositiveIntegerField(verbose_name=_('Points'), null=False, default=0)
+    compiler = models.ForeignKey(Compiler, null=True, verbose_name=_(
+        'Compiler'), on_delete=models.SET_NULL)
+    points = models.PositiveIntegerField(
+        verbose_name=_('Points'), null=False, default=0)
     email_notifications = models.BooleanField(
         verbose_name=_('Send email notifications'), default=True
     )
@@ -601,7 +641,8 @@ class UserProfile(models.Model):
         if self.old_avatar_path != self.avatar.name:
             try:
                 if self.old_avatar_path:
-                    os.remove(os.path.join(settings.MEDIA_ROOT, self.old_avatar_path))
+                    os.remove(os.path.join(
+                        settings.MEDIA_ROOT, self.old_avatar_path))
             except:
                 pass
             try:
@@ -632,7 +673,7 @@ class UserProfile(models.Model):
     def rating(self):
         if self.has_rating:
             return RatingChange.objects.filter(profile=self) \
-                   .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
+                .aggregate(rating=Sum('rating')).get('rating') + settings.BASE_RATING
         else:
             return 0
 
@@ -698,20 +739,23 @@ class Submission(models.Model):
         ('death', 'death')
     ]
 
-    problem = models.ForeignKey(Problem, related_name='submissions', on_delete=models.CASCADE)
+    problem = models.ForeignKey(
+        Problem, related_name='submissions', on_delete=models.CASCADE)
     instance = models.ForeignKey('ContestInstance', null=True, blank=True, related_name='submissions',
                                  on_delete=models.SET_NULL)
     date = models.DateTimeField()
     execution_time = models.IntegerField(default=0)
     memory_used = models.BigIntegerField(default=0)
     source = models.TextField()
-    user = models.ForeignKey(User, related_name='submissions', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name='submissions', on_delete=models.CASCADE)
     result = models.ForeignKey(Result, on_delete=models.CASCADE)
     compiler = models.ForeignKey(Compiler, on_delete=models.CASCADE)
     public = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     judgement_details = models.TextField(null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='normal')
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default='normal')
 
     @property
     def visible(self):
@@ -803,8 +847,10 @@ class Submission(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        Post, related_name='comments', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     html = models.TextField(default='')
@@ -829,7 +875,8 @@ class Comment(models.Model):
                 try:
                     user = User.objects.get(username=username)
                     users.add(user)
-                    url = render_to_string('mog/user/_link.html', {'user': user}).strip()
+                    url = render_to_string(
+                        'mog/user/_link.html', {'user': user}).strip()
                     self.html += ' ' + url
                 except:
                     self.html += cgi.escape(self.body[s:e], quote=True)
@@ -838,7 +885,8 @@ class Comment(models.Model):
             # notify users about this comment
             for user in users:
                 send_mail(
-                    '{0} has mentioned you in a comment'.format(self.user.username),
+                    '{0} has mentioned you in a comment'.format(
+                        self.user.username),
                     message='<NO TEXT>',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email],
@@ -863,12 +911,16 @@ class Comment(models.Model):
 
 
 class ContestInstance(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, related_name='instances', on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, null=True, blank=True, related_name='instances', on_delete=models.CASCADE)
-    contest = models.ForeignKey(Contest, related_name='instances', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True,
+                             related_name='instances', on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, null=True, blank=True,
+                             related_name='instances', on_delete=models.CASCADE)
+    contest = models.ForeignKey(
+        Contest, related_name='instances', on_delete=models.CASCADE)
     start_date = models.DateTimeField(null=True, blank=True)
     real = models.BooleanField()
-    group = models.CharField(max_length=64, null=True, blank=True, verbose_name=_('Group name'))
+    group = models.CharField(max_length=64, null=True,
+                             blank=True, verbose_name=_('Group name'))
     render_team_description_only = models.BooleanField(default=False,
                                                        verbose_name=_(
                                                            'If true, render the team without members and only displaying the description on hover'))
@@ -885,7 +937,7 @@ class ContestInstance(models.Model):
         if self.user:
             return self.user.profile.institution
         return None
-    
+
     @property
     def instance_start_date(self):
         if self.real:
@@ -1062,6 +1114,7 @@ class ContestPermission(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-    role = models.CharField(max_length=16, null=True, blank=True, choices=CONTEST_ROLE_CHOICES)
+    role = models.CharField(max_length=16, null=True,
+                            blank=True, choices=CONTEST_ROLE_CHOICES)
     granted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True)

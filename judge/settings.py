@@ -276,6 +276,10 @@ SANDBOX_FOLDER = config.get('grader', 'SANDBOX_FOLDER')
 # - testlib4j.jar
 RESOURCES_FOLDER = config.get('grader', 'RESOURCES_FOLDER')
 
+# Grader id
+GRADER_ID = config.get('grader', 'GRADER_ID')
+
+
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = config.getboolean('email', 'EMAIL_USE_TLS')
@@ -287,7 +291,8 @@ DEFAULT_FROM_EMAIL = config.get('email', 'DEFAULT_FROM_EMAIL')
 EMAIL_TIMEOUT = config.getint('email', 'EMAIL_TIMEOUT')
 
 # Flags
-BLOCK_PUBLIC_ACTIONS = config.getboolean('flags', 'BLOCK_PUBLIC_ACTIONS', fallback=False)
+BLOCK_PUBLIC_ACTIONS = config.getboolean(
+    'flags', 'BLOCK_PUBLIC_ACTIONS', fallback=False)
 
 
 # Activate debug toolbar
@@ -306,7 +311,8 @@ if DEBUG and DEBUG_TOOLBAR:
 
 # --> facebook
 SOCIAL_AUTH_FACEBOOK_KEY = config.get('social', 'SOCIAL_AUTH_FACEBOOK_KEY')
-SOCIAL_AUTH_FACEBOOK_SECRET = config.get('social', 'SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SECRET = config.get(
+    'social', 'SOCIAL_AUTH_FACEBOOK_SECRET')
 SOCIAL_AUTH_FACEBOOK_SCOPE = get_array_from_config(
     configuration=config,
     section='social',
@@ -327,8 +333,10 @@ SOCIAL_AUTH_GITHUB_SCOPE = get_array_from_config(
 )
 
 # --> google
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get('social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get('social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get(
+    'social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get(
+    'social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = get_array_from_config(
     configuration=config,
     section='social',
@@ -402,10 +410,11 @@ if config.getboolean('session', 'USE_REDIS'):
     }
 
 # Settings for the testing environment
-IS_TESTING_ENVIRONMENT = config.getboolean('testing', 'TESTING', fallback=False)
+IS_TESTING_ENVIRONMENT = config.getboolean(
+    'testing', 'TESTING', fallback=False)
 
 if IS_TESTING_ENVIRONMENT:
     for k in CACHES:
         CACHES[k] = {
-            'BACKEND' : 'django.core.cache.backends.dummy.DummyCache',
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
