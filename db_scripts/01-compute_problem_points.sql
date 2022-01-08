@@ -27,4 +27,4 @@ END;
 $function$;
 
 ALTER FUNCTION PUBLIC.compute_problem_points(INTEGER)
-    OWNER TO postgres;
+    OWNER TO ${USERNAME};

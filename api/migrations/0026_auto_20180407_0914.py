@@ -9,7 +9,8 @@ def sql_migrations():
     folder = os.path.join(os.path.join(settings.BASE_DIR, 'db_scripts'))
     for name in sorted(os.listdir(folder)):
         with open(os.path.join(folder, name), 'r') as file:
-            yield migrations.RunSQL(''.join(file.readlines()))
+            sql = ''.join(file.readlines()).replace('${USERNAME}', settings.DEFAULT_DATABASE['USER'])
+            yield migrations.RunSQL(sql)
 
 
 class Migration(migrations.Migration):
