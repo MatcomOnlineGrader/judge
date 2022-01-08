@@ -24,4 +24,4 @@ END;
 $function$;
 
 ALTER FUNCTION PUBLIC.compute_user_points(INTEGER)
-    OWNER TO postgres;
+    OWNER TO ${USERNAME};
