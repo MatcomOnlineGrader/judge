@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:11.5
+    environment:
+      - POSTGRES_DB=judge
+      - POSTGRES_USER=judge
+      - POSTGRES_PASSWORD=uhdtas
+    volumes:
+      - pg-database:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  api:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - django-media:/var/www/judge/media
+      - judge-problems:/problems
+    ports:
+      - '8000:8000'
+    depends_on:
+      - database
+  grader:
+    build: .
+    command: python manage.py grader --number_of_executions 1
+    volumes:
+      - .:/code
+      - judge-problems:/problems
+
+volumes:
+  django-media:
+  pg-database:
+  judge-problems:
