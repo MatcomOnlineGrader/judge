@@ -22,4 +22,4 @@ END;
 $BODY$;
 
 ALTER FUNCTION public.update_submission()
-    OWNER TO postgres;
+    OWNER TO ${USERNAME};
