@@ -339,6 +339,7 @@ class Problem(models.Model):
     compilers = models.ManyToManyField('Compiler')
     samples = models.TextField(
         null=True, blank=True, verbose_name='Sample inputs/outputs')
+    is_html = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
