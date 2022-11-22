@@ -203,6 +203,13 @@
                                     </a>
                                 </li>
                                 {% endif %}
+                                {% if user|can_manage_baylor:contest %}
+                                <li class="{{ manage_baylor_active }}">
+                                    <a href="{% url 'mog:manage_baylor' contest.id %}">
+                                        <i class="glyphicon glyphicon-cog"></i> {% trans 'Manage Contest Baylor' %}
+                                    </a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </td>
                     </tr>

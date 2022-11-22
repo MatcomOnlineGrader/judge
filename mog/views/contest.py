@@ -1,5 +1,6 @@
 import csv
 import json
+import zipfile
 
 from django.db.models.functions import Lower
 from django.urls import reverse
@@ -42,6 +43,9 @@ from mog.samples import fix_problem_folder
 
 from django.utils.timesince import timesince
 from mog.templatetags.filters import rating_color, user_color
+from mog.import_baylor import ProcessImportBaylor
+from mog.forms import ImportBaylorForm, ExportBaylorForm
+from mog.templatetags.security import can_manage_baylor
 
 def contests(request):
     running, coming, past = \
@@ -105,6 +109,127 @@ def contest_problems(request, contest_id):
         'problems': contest.problems.order_by('position'),
         'can_create_problem': can_create_problem_in_contest(user, contest)
     })
+
+
+manage_baylor_url = 'mog/contest/manage_baylor.html'
+
+class ManageBaylorView(View):
+    @method_decorator(login_required)
+    def get(self, request, contest_id, *args, **kwargs):
+        contest = get_object_or_404(Contest, pk=contest_id)
+
+        if not can_manage_baylor(request.user, contest):
+            return HttpResponseForbidden()
+        
+        if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+            msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+            messages.warning(request, msg, extra_tags='warning secure')
+
+        return render(request, manage_baylor_url, {
+            'contest': contest,
+            'form_import': ImportBaylorForm(),
+            'form_export': ExportBaylorForm(contest=contest)
+        })
+
+    @method_decorator(login_required)
+    def post(self, request, contest_id, *args, **kwargs):
+        contest = get_object_or_404(Contest, pk=contest_id)
+
+        if not can_manage_baylor(request.user, contest):
+            return HttpResponseForbidden()
+
+        if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+            msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+            messages.warning(request, msg, extra_tags='warning secure')
+
+        form_import = ImportBaylorForm(request.POST, request.FILES)
+        form_export = ExportBaylorForm(contest=contest, data=request.POST)
+
+        zip_baylor = None
+        prefix_baylor = None
+        select_pending_teams_baylor = False
+        remove_teams_baylor = False
+
+        site_citation_selected = None
+
+        if form_import.is_valid():
+            data = form_import.cleaned_data
+            zip_baylor = data['zip_baylor']
+            prefix_baylor = data['prefix_baylor']
+            select_pending_teams_baylor = data['select_pending_teams_baylor']
+            remove_teams_baylor = data['remove_teams_baylor']
+
+            if zip_baylor and prefix_baylor:
+                # try:
+                with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
+                    process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor, remove_teams_baylor)
+                    result = process_baylor_file.handle()
+                    messages.success(request, result, extra_tags='success')
+                    zip_passwords = process_baylor_file.generate_zip_password(contest.name)
+                    response = HttpResponse(zip_passwords, content_type='application/zip')
+                    response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+                    return response
+                # except Exception as e:
+                #     msg = _('Error reading file from baylor: ' + str(e))
+                #     messages.error(request, msg, extra_tags='danger')
+        
+        elif form_export.is_valid():
+            data = form_export.cleaned_data
+            site_citation_selected = data['site_citation']
+            response = get_baylor_csv(contest, site_citation_selected)
+            return response
+
+        return render(request, manage_baylor_url, { 
+            'contest': contest,
+            'form_import': ImportBaylorForm(),
+            'form_export': form_export
+        })
+
+
+def get_baylor_csv(contest, site_citation):
+    
+    problems, instance_results = calculate_standing(contest, False, None)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="standings_{0}.csv"'.format(contest.name)
+
+    writer = csv.writer(response)
+
+    header = ['teamId',
+            'rank',
+            'medalCitation',
+            'problemsSolved',
+            'totalTime',
+            'lastProblemTime',
+            'siteCitation',
+            'citation']
+    writer.writerow(header)
+
+    rank = 0
+    last_rank = 0
+    for instance_result in instance_results:
+        instance = instance_result.instance
+        if not instance.team or not instance.team.icpcid or instance.group == contest.group:
+            continue
+        if instance.group not in site_citation:
+            continue
+
+        if instance_result.rank != last_rank:
+            rank += 1
+        last_rank = instance_result.rank
+
+        row = [instance.team.icpcid,
+            rank,
+            '',
+            instance_result.solved,
+            instance_result.penalty,
+            int(instance_result.last_accepted_delta)//60,
+            instance.group,
+            'Rank %d' % rank]
+
+        writer.writerow(row)
+
+    return response
 
 
 @login_required
