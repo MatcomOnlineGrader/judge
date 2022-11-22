@@ -64,6 +64,7 @@ urlpatterns = [
     url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
     url(r'^contest/edit/(?P<contest_id>[0-9]+)$', views.ContestEditView.as_view(), name='contest_edit'),
     url(r'^contest/remove/(?P<contest_id>[0-9]+)$', views.remove_contest, name='contest_remove'),
+    url(r'^contest/manage/baylor/(?P<contest_id>[0-9]+)$', views.ManageBaylorView.as_view(), name='manage_baylor'),
     url(r'^contest/(?P<contest_id>[0-9]+)/team/(?P<team_id>[0-9]+)/submissions$', views.team_submissions, name='team_submissions'),
     url(r'^contest/create$', views.ContestCreateView.as_view(), name='contest_create'),
     url(r'^contests/$', views.contests, name='contests'),
