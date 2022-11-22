@@ -162,9 +162,19 @@ class ManageBaylorView(View):
             if zip_baylor and prefix_baylor:
                 try:
                     with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
+<<<<<<< HEAD
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
+=======
+                        process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor, remove_teams_baylor)
+                        result = process_baylor_file.handle()
+                        messages.success(request, result, extra_tags='success')
+                        zip_passwords = process_baylor_file.generate_zip_password(contest.name)
+                        response = HttpResponse(zip_passwords, content_type='application/zip')
+                        response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+                        return response
+>>>>>>> e4a779e6 (wrap import baylor in a try catch block to)
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
                     messages.error(request, msg, extra_tags='danger')
