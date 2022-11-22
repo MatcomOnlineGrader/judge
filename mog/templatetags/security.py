@@ -78,6 +78,10 @@ def can_remove_contest(user, contest):
 def can_edit_registration(user, contest):
     return user_is_admin(user)
 
+@register.filter()
+def can_manage_baylor(user, contest):
+    return user_is_admin(user)
+
 
 @register.filter()
 def can_see_saris(user, contest):

@@ -172,6 +172,16 @@ def is_checkbox(field):
 
 
 @register.filter()
+def is_institution_selection_multiple(field):
+    return type(field.field) is forms.fields.MultipleChoiceField and type(field.field.widget) is forms.widgets.CheckboxSelectMultiple and field.label == 'Institutions to Export'
+
+
+@register.filter()
+def has_not_institution(field): 
+    return field.field is not None and not field.field.choices
+
+
+@register.filter()
 def to(lo, hi):
     return range(lo, hi + 1)
 
