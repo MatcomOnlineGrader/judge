@@ -176,7 +176,15 @@ class ManageBaylorView(View):
             response['Set-Cookie'] = 'fileDownload=true; Path=/'
             return response
 
+<<<<<<< HEAD
         return redirect('mog:manage_baylor', contest_id=contest.id)
+=======
+        return render(request, 'mog/contest/manage_baylor.html', { 
+            'contest': contest,
+            'form_import': ImportBaylorForm(),
+            'form_export': form_export
+        })
+>>>>>>> 0beeb722 (removing the route variable by string literal instead)
 
 
 def get_baylor_csv(contest, site_citation):
