@@ -111,8 +111,6 @@ def contest_problems(request, contest_id):
     })
 
 
-manage_baylor_url = 'mog/contest/manage_baylor.html'
-
 class ManageBaylorView(View):
     @method_decorator(login_required)
     def get(self, request, contest_id, *args, **kwargs):
@@ -125,7 +123,7 @@ class ManageBaylorView(View):
             msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
             messages.warning(request, msg, extra_tags='warning secure')
 
-        return render(request, manage_baylor_url, {
+        return render(request, 'mog/contest/manage_baylor.html', {
             'contest': contest,
             'form_import': ImportBaylorForm(),
             'form_export': ExportBaylorForm(contest=contest)
@@ -179,7 +177,7 @@ class ManageBaylorView(View):
             response = get_baylor_csv(contest, site_citation_selected)
             return response
 
-        return render(request, manage_baylor_url, { 
+        return render(request, 'mog/contest/manage_baylor.html', { 
             'contest': contest,
             'form_import': ImportBaylorForm(),
             'form_export': form_export
