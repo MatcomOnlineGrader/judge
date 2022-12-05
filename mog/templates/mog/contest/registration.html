@@ -6,146 +6,185 @@
 {% block title %}{{ contest.name }} | {% trans 'Registration' %}{% endblock %}
 
 {% block styles %}
-    <link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet" />
+<link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input.css' %}" rel="stylesheet" />
+<link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input-facebook.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block left %}
-    {% include 'mog/contest/_left.html' with contest=contest registration_active='active' %}
+{% include 'mog/contest/_left.html' with contest=contest registration_active='active' %}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="title margin-bottom-20">{% trans 'Registration' %}</h3>
-                </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="title margin-bottom-20">{% trans 'Registration' %}</h3>
+            </div>
 
-                <div class="col-md-12">
-                    <table class="table table-bordered table-striped">
-                        <thead>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
                             <th class="text-center cell-medium">{% trans "User/Team" %}</th>
                             <th class="text-center cell-medium">{% trans "Description only" %}</th>
                             <th class="text-center cell-medium">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         {% for instance in instances %}
-                            <tr class="text-center">
-                                <td>
-                                    {% if instance.team %}
-                                        {% include 'mog/team/_link.html' with team=instance.team %}
-                                    {% else %}
-                                        {% include 'mog/user/_link.html' with user=instance.user %}
-                                    {% endif %}
-                                </td>
-                                <td>
+                        <tr class="text-center">
+                            <td>
+                                {% if instance.team %}
+                                {% include 'mog/team/_link.html' with team=instance.team %}
+                                {% else %}
+                                {% include 'mog/user/_link.html' with user=instance.user %}
+                                {% endif %}
+                            </td>
+                            <td>
                                 <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST">
                                     <input id="render_team_description_only" type="checkbox" name="render_team_description_only"
-                                           onclick="$(this).closest('form').submit();"
-                                           {% if instance.render_team_description_only %}checked="checked"{% endif %}>
+                                        onclick="$(this).closest('form').submit();" {% if instance.render_team_description_only %}checked="checked" {% endif %}>
                                 </form>
-                                </td>
-                                <td>
-                                    <select class="select2" style="width: 100%;"
-                                            data-url-edit="{% url "mog:api_instance_edit_group" instance.pk %}">
-                                        <option value="{{ instance.group|default_if_none:'' }}">
-                                            {{ instance.group|default_if_none:'-----' }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next"
-                                               value="{% url 'mog:contest_registration' contest.id %}"/>
-                                        <input type="submit" class="btn btn-sm btn-default"
-                                               value="{% trans 'Unregister' %}"/>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
-                    <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                        <div class="form-group">
-                            <label for="user" class="sr-only">User</label>
-                            <select id="user" name="user" class="form-control">
-                                {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.username }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
-                    </form>
-                </div>
-
-                {% if contest.allow_teams %}
-                    <div class="col-md-6">
-                        <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
-                        <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                            <div class="form-group">
-                                <label for="team" class="sr-only">Team</label>
-                                <select id="team" name="team" class="form-control">
-                                    {% for team in teams %}
-                                        <option value="{{ team.id }}">{{ team }}</option>
-                                    {% endfor %}
+                            </td>
+                            <td>
+                                <select class="select2" style="width: 100%;" data-url-edit="{% url " mog:api_instance_edit_group" instance.pk %}">
+                                    <option value="{{ instance.group|default_if_none:'' }}">
+                                        {{ instance.group|default_if_none:'-----' }}
+                                    </option>
                                 </select>
-                            </div>
-                            <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
-                        </form>
-                    </div>
-                {% endif %}
-
+                            </td>
+                            <td>
+                                <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}" />
+                                    <input type="submit" class="btn btn-sm btn-default" value="{% trans 'Unregister' %}" />
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
+                <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}" />
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="user">{% trans 'User' %}</label>
+                            <input id="user" name="user" class="form-control">
+                        </div>
+                        <!-- <label for="user" class="sr-only">User</label>
+                        <select id="user" name="user" class="form-control">
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select> -->
+                    </div>
+                    <input type="submit" value="{% trans 'Register' %}" class="form-control" />
+                </form>
+            </div>
+
+            {% if contest.allow_teams %}
+            <div class="col-md-6">
+                <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
+                <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}" />
+
+                    <div class="form-group">
+                        <label for="team" class="sr-only">Team</label>
+                        <select id="team" name="team" class="form-control">
+                            {% for team in teams %}
+                            <option value="{{ team.id }}">{{ team }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit" value="{% trans 'Register' %}" class="form-control" />
+                </form>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'mog/plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static 'mog/plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static 'mog/plugins/jquery.tokeninput/js/jquery.tokeninput.min.js' %}" type="text/javascript"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('.select2').select2({
-                tags: true,
-                closeOnSelect: true,
-                ajax: {
-                    url: "{% url 'mog:api_instance_group_list' %}",
-                    dataType: 'json',
-                    processResults: function (response, params) {
-                        return {
-                            results: response.data.map(function (group) {
-                                return {
-                                    id: group, text: group
-                                }
-                            })
-                        }
+<script>
+    $(document).ready(function () {
+        $('.select2').select2({
+            tags: true,
+            closeOnSelect: true,
+            ajax: {
+                url: "{% url 'mog:api_instance_group_list' %}",
+                dataType: 'json',
+                processResults: function (response, params) {
+                    return {
+                        results: response.data.map(function (group) {
+                            return {
+                                id: group, text: group
+                            }
+                        })
                     }
                 }
-            }).on("select2:select", function(e) {
-                $.post($(e.target).data('url-edit'), {group: $(e.target).val()})
-                    .done(function(response) {
-                        if (!response.success)
-                            alert(response.message);
-                    })
-                    .fail(function() {
-                        alert('some error ocurrs!');
-                    })
-            });
+            }
+        }).on("select2:select", function (e) {
+            $.post($(e.target).data('url-edit'), { group: $(e.target).val() })
+                .done(function (response) {
+                    if (!response.success)
+                        alert(response.message);
+                })
+                .fail(function () {
+                    alert('some error ocurrs!');
+                })
         });
-    </script>
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#user').tokenInput('{% url "mog:users_json" %}', {
+            theme: 'facebook',
+            noResultsText: 'No user found!',
+            searchingText: 'Searching...',
+            deleteText: "&#x2603;",
+            propertyToSearch: "username",
+            preventDuplicates: true,
+            zindex: 11001,
+            resultsFormatter: function (item) {
+                var html = [
+                    '<li>',
+                    '    <img src="' + item.url + '" height="25px" width="25px" />',
+                    '    <div style="display: inline-block; padding-left: 10px;">',
+                    '        <div>',
+                    '            <div class="username">',
+                    '                ' + item.username,
+                    '            </div>',
+                    '            <div class="full_name">',
+                    '                ' + item.first_name + ' ' + item.last_name,
+                    '            </div>',
+                    '        </div>',
+                    '    </div>',
+                    '</li>'
+                ];
+                return html.join('');
+            },
+            tokenFormatter: function (item) {
+                return '<li><p>' + item.username + '</p></li>';
+            }
+        });
+    });
+</script>
 {% endblock %}
