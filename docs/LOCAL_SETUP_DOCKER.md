@@ -21,7 +21,7 @@ python manage.py migrate
 Following execute for create super user.
 
 ```bash
-python manage createsuperuser
+python manage.py createsuperuser
 ```
 
 Restart the containers executing:
