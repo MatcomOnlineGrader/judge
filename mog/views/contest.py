@@ -163,16 +163,21 @@ class ManageBaylorView(View):
                 try:
                     with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
 <<<<<<< HEAD
+<<<<<<< HEAD
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
 =======
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor, remove_teams_baylor)
+=======
+                        process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
+>>>>>>> f1a14d82 (- remove_teams option is removed from import baylor, now you can remove teams from registration team endpoints)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
                         zip_passwords = process_baylor_file.generate_zip_password(contest.name)
                         response = HttpResponse(zip_passwords, content_type='application/zip')
                         response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+                        response['Set-Cookie'] = 'fileDownload=true; Path=/'
                         return response
 >>>>>>> e4a779e6 (wrap import baylor in a try catch block to)
                 except Exception as e:
@@ -192,7 +197,7 @@ class ManageBaylorView(View):
         return render(request, 'mog/contest/manage_baylor.html', { 
             'contest': contest,
             'form_import': ImportBaylorForm(),
-            'form_export': form_export
+            'form_export': ExportBaylorForm(contest=contest)
         })
 >>>>>>> 0beeb722 (removing the route variable by string literal instead)
 

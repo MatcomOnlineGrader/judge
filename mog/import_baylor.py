@@ -251,11 +251,20 @@ class ProcessImportBaylor:
                     mog_team = Team.objects.create(name=team.name, icpcid=team.id)
                     mog_user.profile.teams.add(mog_team)
 
+<<<<<<< HEAD
                 password = generate_secret_password(mog_user.id)
+=======
+>>>>>>> f1a14d82 (- remove_teams option is removed from import baylor, now you can remove teams from registration team endpoints)
                 mog_user.set_password(password)
                 mog_user.save()
                 self.register_team(contest, team=mog_team, user=mog_user, site=self.groups[team.site_id])
 
+<<<<<<< HEAD
+=======
+                group_teams[team.site_id].append((team_id, password, team))
+                group_teams_dict[team_id] = (team_id, password, team)
+
+>>>>>>> f1a14d82 (- remove_teams option is removed from import baylor, now you can remove teams from registration team endpoints)
                 mog_team.description = self.get_description_of_team(team)
                 mog_team.institution = self.institutions[team.institution_id]
                 mog_team.save()
