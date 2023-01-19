@@ -144,7 +144,6 @@ class ManageBaylorView(View):
         zip_baylor = None
         prefix_baylor = None
         select_pending_teams_baylor = False
-        remove_teams_baylor = False
 
         site_citation_selected = None
 
@@ -153,17 +152,17 @@ class ManageBaylorView(View):
             zip_baylor = data['zip_baylor']
             prefix_baylor = data['prefix_baylor']
             select_pending_teams_baylor = data['select_pending_teams_baylor']
-            remove_teams_baylor = data['remove_teams_baylor']
 
             if zip_baylor and prefix_baylor:
                 try:
                     with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
-                        process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor, remove_teams_baylor)
+                        process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
                         zip_passwords = process_baylor_file.generate_zip_password(contest.name)
                         response = HttpResponse(zip_passwords, content_type='application/zip')
                         response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+                        response['Set-Cookie'] = 'fileDownload=true; Path=/'
                         return response
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
@@ -173,12 +172,13 @@ class ManageBaylorView(View):
             data = form_export.cleaned_data
             site_citation_selected = data['site_citation']
             response = get_baylor_csv(contest, site_citation_selected)
+            response['Set-Cookie'] = 'fileDownload=true; Path=/'
             return response
 
         return render(request, 'mog/contest/manage_baylor.html', { 
             'contest': contest,
             'form_import': ImportBaylorForm(),
-            'form_export': form_export
+            'form_export': ExportBaylorForm(contest=contest)
         })
 
 
