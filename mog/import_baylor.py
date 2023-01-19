@@ -52,9 +52,8 @@ class ProcessImportBaylor:
     contest_id: Contest where the teams should be registered
     prefix: Prefix to add to each team's account
     select_pending_teams: Whether create or not pending teams (default: False)
-    remove_teams: Set this arguments if the existing teams should be removed (default: False)
     """
-    def __init__(self, zip_ref, contest_id, prefix, select_pending_teams = False, remove_teams = False):
+    def __init__(self, zip_ref, contest_id, prefix, select_pending_teams = False):
         self.institutions = {}
         self.baylor_institutions = {}
         self.persons = {}
@@ -63,7 +62,6 @@ class ProcessImportBaylor:
         self.prefix = prefix
         self.contest_id = contest_id
         self.select_pending_teams = select_pending_teams
-        self.remove_teams = remove_teams
         
         self.zip_ref = zip_ref
         self.school_file = None
@@ -250,13 +248,6 @@ class ProcessImportBaylor:
 
         teams = sorted(self.teams.values(), key=key)
 
-        # remove existing instances only if the remove flag is active
-        # (this will prevent removing already registered guest teams)
-        if self.remove_teams:
-            for instance in contest.instances.all():
-                if instance.submissions.all().count() == 0:
-                    instance.delete()
-
         id = 1
 
         group_teams = {}
@@ -271,29 +262,23 @@ class ProcessImportBaylor:
                 mog_user = User.objects.filter(username=team_id).select_related('profile').first()
                 password = random_password()
 
-                if self.remove_teams:
-                    if mog_team:
-                        mog_team.delete()
-                    if mog_user:
-                        mog_user.delete()
-                else:
-                    if not mog_user:
-                        mog_user = self.create_user(team_id, password, self.institutions[team.institution_id])
-                    if not mog_team:
-                        mog_team = Team.objects.create(name=team.name, icpcid=team.id)
-                        mog_user.profile.teams.add(mog_team)
+                if not mog_user:
+                    mog_user = self.create_user(team_id, password, self.institutions[team.institution_id])
+                if not mog_team:
+                    mog_team = Team.objects.create(name=team.name, icpcid=team.id)
+                    mog_user.profile.teams.add(mog_team)
 
-                    mog_user.set_password(password)
-                    mog_user.save()
-                    self.register_team(contest, team=mog_team, user=mog_user, site=self.groups[team.site_id])
+                mog_user.set_password(password)
+                mog_user.save()
+                self.register_team(contest, team=mog_team, user=mog_user, site=self.groups[team.site_id])
 
-                    group_teams[team.site_id].append((team_id, password, team))
-                    group_teams_dict[team_id] = (team_id, password, team)
+                group_teams[team.site_id].append((team_id, password, team))
+                group_teams_dict[team_id] = (team_id, password, team)
 
-                    mog_team.description = self.get_description_of_team(team)
-                    mog_team.institution = self.institutions[team.institution_id]
-                    mog_team.save()
-                    id += 1
+                mog_team.description = self.get_description_of_team(team)
+                mog_team.institution = self.institutions[team.institution_id]
+                mog_team.save()
+                id += 1
         msg = 'Registered %d teams in \'%s\' contest' % (id-1, contest.name) 
         print(msg)
 
