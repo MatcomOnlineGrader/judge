@@ -66,4 +66,8 @@ def generate_secret_password(user_id):
     """
     Generate password
     """
+<<<<<<< HEAD
     return sha256( (settings.PASSWORD_GENERATOR_SECRET_KEY + str(user_id)).encode() ).hexdigest()[:10]
+=======
+    return sha256( (constants.DJANGO_SECRET + str(user_id)).encode() ).hexdigest()[:10]
+>>>>>>> ba781aa3 (generate password)
