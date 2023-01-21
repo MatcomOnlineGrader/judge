@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load security %}
 
-{% block title %}{{ contest.name }} | {% trans 'Manage Contest Baylor' %}{% endblock %}
+{% block title %}{{ contest.name }} | {% trans 'Manage Contest' %}{% endblock %}
 
 {% block left %}
     {% include 'mog/contest/_left.html' with contest=contest manage_baylor_active='active' %}
@@ -17,41 +17,99 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">
-                        {% trans 'Manage Contest Baylor' %}
+                        {% trans 'Manage Contest' %}
                         {% include 'mog/contest/_actions.html' with contest=contest%}
                     </h3>
                 </div>
-
-                <div class="col-sm-12 col-lg-6">
-                    <div class="well bckg-white">
-                        <h5 class="well-title">Import Baylor</h5>
-                        <form action="{% url 'mog:manage_baylor' contest.id %}" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% include 'mog/includes/form.html' with form=form_import %}
-                            <div class="row">
-                                <div class="col-md-4 col-md-offset-8">
-                                    <button class="btn btn-primary btn-block" type="submit">Import</button>
-                                </div>
+                {% block loading %}
+                    <div class="col-md-12">
+                        {% include 'mog/contest/_loading.html' %}
+                    </div>
+                {% endblock %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Import Baylor</h5>
+                                    <form action="{% url 'mog:manage_baylor' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_import %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Import Baylor</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Export Baylor</h5>
+                                <form action="{% url 'mog:manage_baylor' contest.id %}" method="post">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_export %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Export CSV</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-lg-6">
-                    <div class="well bckg-white">
-                        <h5 class="well-title">Export Baylor</h5>
-                        <form action="{% url 'mog:manage_baylor' contest.id %}" method="post">
-                            {% csrf_token %}
-                            {% include 'mog/includes/form.html' with form=form_export %}
-                            <div class="row">
-                                <div class="col-md-4 col-md-offset-8">
-                                    <button class="btn btn-primary btn-block" type="submit">Export CSV</button>
-                                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Import Guest</h5>
+                                <small class="form-help-text margin-bottom-15">The CSV file must have the next columns:</br> Institución representada, Nombre del equipo, Nombre coach/representante, and C1/C2/C3- Nombre completo</small>
+                                <form action="{% url 'mog:manage_csv_guest' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_csv_guest %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Import Guest</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Import Preuniversity</h5>
+                                <small class="form-help-text margin-bottom-15">The CSV file must have the next columns:</br> Institución representada, Nombre del equipo, Nombre coach/representante, and C1/C2/C3- Nombre completo</small>
+                                <form action="{% url 'mog:manage_csv_epc' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_csv_epc %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Import EPC</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
+                <div class="col-md-12">
+                    <div class="margin-bottom-20">
+                        <a href={% url 'mog:manage_team_password' contest.id %} class="btn btn-default btn-block">Get all Team's Passwords</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.show-loading-after-submit').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    $('#loading-on-submit').css('display', 'block');
+                });
+            })
+        });
+    </script>
 {% endblock %}
