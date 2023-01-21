@@ -118,9 +118,7 @@ def contest_registration(request, contest_id):
 
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': contest.instances.order_by(Lower('group')),
-        'users': User.objects.all().order_by('username'),
-        'teams': Team.objects.all().order_by('name')
+        'instances': contest.instances.order_by(Lower('group'))
     })
 
 
@@ -329,6 +327,40 @@ def register_instance(request, contest, user, team):
     return redirect(nxt or reverse('mog:contest_problems', args=(contest.pk, )))
 
 
+@login_required
+def register_multiple_users(request, contest, user_list):
+    nxt = request.POST.get('next')
+    for user in user_list:
+        ContestInstance.objects.create(
+            contest=contest,
+            user=user,
+            real=True,
+            group=contest.group
+        )
+    msg = _('Successfully registered ' + str(len(user_list)) + ' new user')
+    messages.success(request, msg, extra_tags='success')
+    return redirect(nxt or reverse('mog:contest_registration', args=(contest.pk, )))
+
+
+@login_required
+def register_multiple_teams(request, contest, team_list):
+    nxt = request.POST.get('next')
+    for team in team_list:
+        # Check that the team can be registered in the contest
+        if not contest.allow_teams:
+            messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
+            return redirect(nxt or reverse('mog:contests'))
+        ContestInstance.objects.create(
+            contest=contest,
+            team=team,
+            real=True,
+            group=contest.group
+        )
+    msg = _('Successfully registered ' + str(len(team_list)) + ' new team')
+    messages.success(request, msg, extra_tags='success')
+    return redirect(nxt or reverse('mog:contest_registration', args=(contest.pk, )))
+
+
 @public_actions_required
 @login_required
 @require_http_methods(["POST"])
@@ -360,6 +392,27 @@ def contest_register_user(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
+def contest_register_multiple_users(request, contest_id):
+    """Administrative tool: Register users in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    
+    members = request.POST.get('user-members', '').split(',')
+    users = []
+
+    try:
+        for member in members:
+            users.append(get_object_or_404(User, pk=int(member)))
+        users = set(users)
+        contest = get_object_or_404(Contest, pk=contest_id)
+    except (ValueError, TypeError):
+        messages.error(request, 'Register users: Invalid data!', extra_tags='danger')
+
+    return register_multiple_users(request, contest, users)
+
+
+@login_required
+@require_http_methods(["POST"])
 def contest_register_team(request, contest_id):
     """Administrative tool: Register team in contest"""
     if not user_is_admin(request.user):
@@ -371,6 +424,28 @@ def contest_register_team(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     team = get_object_or_404(Team, pk=team_id)
     return register_instance(request, contest, None, team)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_register_multiple_teams(request, contest_id):
+    """Administrative tool: Register teams in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    
+    members = request.POST.get('team-members', '').split(',')
+    teams = []
+    print(members)
+
+    try:
+        for member in members:
+            teams.append(get_object_or_404(Team, pk=int(member)))
+        teams = set(teams)
+        contest = get_object_or_404(Contest, pk=contest_id)
+    except (ValueError, TypeError):
+        messages.error(request, 'Register teams: Invalid data!', extra_tags='danger')
+
+    return register_multiple_teams(request, contest, teams)
 
 
 def remove_instance(request, instance):
