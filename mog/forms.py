@@ -202,8 +202,21 @@ class UserFeedbackForm(forms.ModelForm):
 class ImportBaylorForm(forms.Form):
     zip_baylor = forms.FileField(label = 'Upload file',
         help_text = 'Load the ZIP file from Baylor. The file must have the .tab files (School.tab, Site.tab, Team.tab, Person.tab, and TeamPerson.tab).')
-    prefix_baylor = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each team\'s account')
-    select_pending_teams_baylor = forms.BooleanField(required = False, label = 'Select pending teams')
+    prefix_baylor = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each team\'s account. Example: 2021CFQ')
+    select_pending_teams_baylor = forms.BooleanField(required = False, label = 'Include pending teams')
+
+
+class ImportGuestTeamsForm(forms.Form):
+    csv_teams = forms.FileField(label = 'Upload file',
+        help_text = 'Load the Guest Teams csv file.')
+    prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each guest team\'s account. Consider using a different one every time. Example: 2021CFQGUEST')
+
+
+class ImportEPCTeamsForm(forms.Form):
+    csv_teams = forms.FileField(label = 'Upload file',
+        help_text = 'Load the Preuniversity Teams csv file.')
+    prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each preuniversity team\'s account. Consider using a different one every time. Example: 2021CFQECP')
+
 
 class ExportBaylorForm(forms.Form):
     site_citation = forms.MultipleChoiceField(label = 'Institutions to Export', widget = forms.CheckboxSelectMultiple, required = False)

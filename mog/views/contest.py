@@ -42,8 +42,10 @@ from mog.model_helpers.contest import can_create_problem_in_contest
 from mog.samples import fix_problem_folder
 
 from mog.import_baylor import ProcessImportBaylor
-from mog.forms import ImportBaylorForm, ExportBaylorForm
+from mog.import_team import ProcessImportTeam
+from mog.forms import ImportBaylorForm, ExportBaylorForm, ImportGuestTeamsForm, ImportEPCTeamsForm
 from mog.templatetags.security import can_manage_baylor
+from mog.team_password import ZipTeamPassword
 
 def contests(request):
     running, coming, past = \
@@ -124,7 +126,9 @@ class ManageBaylorView(View):
         return render(request, 'mog/contest/manage_baylor.html', {
             'contest': contest,
             'form_import': ImportBaylorForm(),
-            'form_export': ExportBaylorForm(contest=contest)
+            'form_export': ExportBaylorForm(contest=contest),
+            'form_csv_guest': ImportGuestTeamsForm(),
+            'form_csv_epc': ImportEPCTeamsForm()
         })
 
     @method_decorator(login_required)
@@ -159,11 +163,6 @@ class ManageBaylorView(View):
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
-                        zip_passwords = process_baylor_file.generate_zip_password(contest.name)
-                        response = HttpResponse(zip_passwords, content_type='application/zip')
-                        response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
-                        response['Set-Cookie'] = 'fileDownload=true; Path=/'
-                        return response
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
                     messages.error(request, msg, extra_tags='danger')
@@ -175,11 +174,7 @@ class ManageBaylorView(View):
             response['Set-Cookie'] = 'fileDownload=true; Path=/'
             return response
 
-        return render(request, 'mog/contest/manage_baylor.html', { 
-            'contest': contest,
-            'form_import': ImportBaylorForm(),
-            'form_export': ExportBaylorForm(contest=contest)
-        })
+        return redirect('mog:manage_baylor', contest_id=contest.id)
 
 
 def get_baylor_csv(contest, site_citation):
@@ -225,6 +220,84 @@ def get_baylor_csv(contest, site_citation):
 
         writer.writerow(row)
 
+    return response
+
+
+@login_required
+@require_http_methods(["POST"])
+def manage_csv_guest(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_baylor(request.user, contest):
+        return HttpResponseForbidden()
+
+    form_csv_guest = ImportGuestTeamsForm(request.POST, request.FILES)
+    csv_teams = None
+    prefix_team = None
+
+    if form_csv_guest.is_valid():
+        data = form_csv_guest.cleaned_data
+        csv_teams = data['csv_teams']
+        prefix_team = data['prefix_team']
+
+        if csv_teams and prefix_team:
+            try:
+                csv_ref = csv_teams.read().decode('utf-8').splitlines()
+                process_guest_team = ProcessImportTeam(csv_ref, contest_id, prefix_team, 'Guest_Teams')
+                result = process_guest_team.handle()
+                messages.success(request, result, extra_tags='success')
+            except Exception as e:
+                msg = _('Error reading CSV Guest Teams file: ' + str(e))
+                messages.error(request, msg, extra_tags='danger')
+
+    return redirect('mog:manage_baylor', contest_id=contest.id)
+
+
+@login_required
+@require_http_methods(["POST"])
+def manage_csv_epc(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_baylor(request.user, contest):
+        return HttpResponseForbidden()
+    
+    print(request.POST, request.FILES)
+    
+    form_csv_epc = ImportEPCTeamsForm(request.POST, request.FILES)
+    csv_teams = None
+    prefix_team = None
+    
+    if form_csv_epc.is_valid():
+        data = form_csv_epc.cleaned_data
+        csv_teams = data['csv_teams']
+        prefix_team = data['prefix_team']
+
+        if csv_teams and prefix_team:
+            try:
+                csv_ref = csv_teams.read().decode('utf-8').splitlines()
+                process_epc_team = ProcessImportTeam(csv_ref, contest_id, prefix_team, 'Preuniversity_Teams')
+                result = process_epc_team.handle()
+                messages.success(request, result, extra_tags='success')
+            except Exception as e:
+                msg = _('Error reading CSV Preuniversity Teams file: ' + str(e))
+                messages.error(request, msg, extra_tags='danger')
+
+    return redirect('mog:manage_baylor', contest_id=contest.id)
+
+
+@login_required
+@require_http_methods(["GET"])
+def manage_team_password(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_baylor(request.user, contest):
+        return HttpResponseForbidden()
+    
+    zip_team_password = ZipTeamPassword(contest)
+    zip_passwords = zip_team_password.generate_zip_team_password()
+    response = HttpResponse(zip_passwords, content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+    response['Set-Cookie'] = 'fileDownload=true; Path=/'
     return response
 
 
