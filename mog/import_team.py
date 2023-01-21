@@ -169,6 +169,7 @@ class ProcessImportTeam:
         self.import_team_members()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         id = 1
 
         with transaction.atomic():
@@ -181,6 +182,12 @@ class ProcessImportTeam:
         with transaction.atomic():
             for team in teams:
 >>>>>>> cd4d321a (separate the logic between import user and export password)
+=======
+        id = 1
+
+        with transaction.atomic():
+            for team in self.teams:
+>>>>>>> 988ec0f3 (remove sort between teams on csv)
                 team_id = '%s%03d' % (self.prefix, id)
                 mog_team = Team.objects.filter(icpcid=team_id).first()
                 mog_user = User.objects.filter(username=team_id).select_related('profile').first()
