@@ -168,12 +168,10 @@ class ProcessImportTeam:
         self.import_institutions()
         self.import_team_members()
 
-        teams = sorted(self.teams, key=lambda x: (x.institution, x.team))
-
         id = 1
 
         with transaction.atomic():
-            for team in teams:
+            for team in self.teams:
                 team_id = '%s%03d' % (self.prefix, id)
                 mog_team = Team.objects.filter(icpcid=team_id).first()
                 mog_user = User.objects.filter(username=team_id).select_related('profile').first()
