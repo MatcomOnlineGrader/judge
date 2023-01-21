@@ -21,6 +21,7 @@ REPLICAS: 0
 
 [secrets]
 SECRET_KEY: super-secret-key
+PASSWORD_GENERATOR_SECRET_KEY: password-generator-secret-key
 
 [session]
 USE_REDIS: false
