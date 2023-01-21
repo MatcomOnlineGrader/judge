@@ -1,7 +1,3 @@
-import io
-import random
-import zipfile
-
 from django.contrib import messages
 from django.core.management import BaseCommand
 from django.db import transaction
@@ -14,13 +10,9 @@ from api.models import (
     User,
     ContestInstance
 )
+from mog.utils import generate_secret_password
 
 from io import TextIOWrapper
-
-def random_password(length=8):
-    s = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    p = "".join(random.sample(s, length))
-    return p
 
 
 class BaylorTeam:
@@ -70,10 +62,6 @@ class ProcessImportBaylor:
         self.team_file = None
         self.team_person_file = None
 
-        self.not_formated_password_output = ''
-        self.all_password_output = ''
-        self.institution_password_output = {}
-        self.site_password_output = {}
 
     def import_institutions(self):
         print('Importing institutions')
@@ -250,17 +238,12 @@ class ProcessImportBaylor:
 
         id = 1
 
-        group_teams = {}
-        for site_id in self.groups.keys():
-            group_teams[site_id] = []
-        group_teams_dict = {}
-
         with transaction.atomic():
             for team in teams:
                 team_id = '%s%03d' % (self.prefix, id)
                 mog_team = Team.objects.filter(icpcid=team.id).first()
                 mog_user = User.objects.filter(username=team_id).select_related('profile').first()
-                password = random_password()
+                password = ''
 
                 if not mog_user:
                     mog_user = self.create_user(team_id, password, self.institutions[team.institution_id])
@@ -268,12 +251,10 @@ class ProcessImportBaylor:
                     mog_team = Team.objects.create(name=team.name, icpcid=team.id)
                     mog_user.profile.teams.add(mog_team)
 
+                password = generate_secret_password(mog_user.id)
                 mog_user.set_password(password)
                 mog_user.save()
                 self.register_team(contest, team=mog_team, user=mog_user, site=self.groups[team.site_id])
-
-                group_teams[team.site_id].append((team_id, password, team))
-                group_teams_dict[team_id] = (team_id, password, team)
 
                 mog_team.description = self.get_description_of_team(team)
                 mog_team.institution = self.institutions[team.institution_id]
@@ -282,84 +263,8 @@ class ProcessImportBaylor:
         msg = 'Registered %d teams in \'%s\' contest' % (id-1, contest.name) 
         print(msg)
 
-        self.generate_passwords(group_teams)
-
-        def key_username(team):
-            return team[0]
-
-        group_teams_sorted = sorted(group_teams_dict.values(), key=key_username)
-        
-        self.generate_not_format_passwords(group_teams_sorted)
-        
         return msg
 
-    def generate_passwords(self, group_teams):
-        all_password_output = ''
-        site_password_output = ''
-        institution_password_output = ''
-        current_institution = ''
-        current_group_site = ''
-        
-        for site_id in self.groups.keys():
-            
-            if site_password_output:
-                # append site_password_output to all_password_output
-                all_password_output = all_password_output + site_password_output
-                self.site_password_output[current_group_site] = site_password_output
-                # clear site_password_output
-                site_password_output = ''
-
-            current_group_site = self.groups[site_id]
-
-            all_password_output = all_password_output + str(current_group_site) + str('\n') + \
-                str('=' * 100) + str('\n')
-            teams = group_teams[site_id]
-
-            for team_id, password, team in teams:
-
-                if team.institution_name != current_institution:
-                    if institution_password_output:
-                        institution_password_output = institution_password_output + str('\n')
-                        # append institution_password_output to site_password_output
-                        site_password_output = site_password_output + institution_password_output
-                        self.institution_password_output[current_institution] = institution_password_output
-                        # clear institution_password_output
-                        institution_password_output = ''
-
-                    current_institution = team.institution_name
-
-                    institution_password_output = institution_password_output + str(current_institution) + str('\n') + \
-                        str('-' * 100) + str('\n')
-
-                institution_password_output = institution_password_output + \
-                    str('user: %s  ||  password: %s  ||  team: %s  ||  institution: %s  ||  team_status: %s\n' % \
-                    (team_id, password, team.name, team.institution_short_name, team.status))
-                institution_password_output = institution_password_output + str('-' * 100) + str('\n')
-            
-            if institution_password_output:
-                institution_password_output = institution_password_output + str('\n')
-                # append institution_password_output to site_password_output
-                site_password_output = site_password_output + institution_password_output
-                self.institution_password_output[current_institution] = institution_password_output
-                # clear institution_password_output
-                institution_password_output = ''
-        
-        if site_password_output:
-            # append site_password_output to all_password_output
-            all_password_output = all_password_output + site_password_output
-            self.site_password_output[current_group_site] = site_password_output
-            # clear site_password_output
-            site_password_output = ''
-
-        self.all_password_output = all_password_output
-
-    def generate_not_format_passwords(self, group_teams_sorted):
-        not_formated_password_output = ''
-        for team_id, password, team in group_teams_sorted:
-            not_formated_password_output = not_formated_password_output + str('%s||%s||%s||%s||%s||%s||%s\n' % \
-                (team_id, password, team.name, team.country, team.institution_short_name, self.groups[team.site_id], team.status))
-            
-        self.not_formated_password_output = not_formated_password_output
 
     def load_files(self):
         for infofile in self.zip_ref.infolist():
@@ -376,14 +281,3 @@ class ProcessImportBaylor:
         if not self.school_file or not self.site_file or not self.person_file \
             or not self.team_file or not self.team_person_file:
             raise Exception("Some files are missing from the loaded file.")
-
-    def generate_zip_password(self, contest_name) -> bytes:
-        content = io.BytesIO()
-        with zipfile.ZipFile(content, 'w') as zipObj:
-            zipObj.writestr(str('passwords_%s/allsites.txt' % contest_name), self.all_password_output)
-            zipObj.writestr(str('passwords_%s/allteams.txt' % contest_name), self.not_formated_password_output)
-            for site_password in self.site_password_output:
-                zipObj.writestr(str('passwords_%s/sites/%s.txt' % (contest_name, site_password)), self.site_password_output[site_password])
-            for institution_password in self.institution_password_output:
-                zipObj.writestr(str('passwords_%s/institutions/%s.txt' % (contest_name, institution_password)), self.institution_password_output[institution_password])
-        return content.getvalue()
