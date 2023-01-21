@@ -167,6 +167,7 @@ class ManageBaylorView(View):
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
+<<<<<<< HEAD
 =======
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor, remove_teams_baylor)
 =======
@@ -180,6 +181,8 @@ class ManageBaylorView(View):
                         response['Set-Cookie'] = 'fileDownload=true; Path=/'
                         return response
 >>>>>>> e4a779e6 (wrap import baylor in a try catch block to)
+=======
+>>>>>>> cd4d321a (separate the logic between import user and export password)
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
                     messages.error(request, msg, extra_tags='danger')
@@ -192,6 +195,7 @@ class ManageBaylorView(View):
             return response
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         return redirect('mog:manage_baylor', contest_id=contest.id)
 =======
         return render(request, 'mog/contest/manage_baylor.html', { 
@@ -200,6 +204,9 @@ class ManageBaylorView(View):
             'form_export': ExportBaylorForm(contest=contest)
         })
 >>>>>>> 0beeb722 (removing the route variable by string literal instead)
+=======
+        return redirect('mog:manage_baylor', contest_id=contest.id)
+>>>>>>> cd4d321a (separate the logic between import user and export password)
 
 
 def get_baylor_csv(contest, site_citation):
