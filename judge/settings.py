@@ -66,6 +66,9 @@ SECRET_KEY = config.get('secrets', 'SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.getboolean('debugging', 'DEBUG')
 
+# SECURITY WARNING: used to generate default password for a team, keep the secret key secure!
+PASSWORD_GENERATOR_SECRET_KEY = config.get('secrets', 'PASSWORD_GENERATOR_SECRET_KEY')
+
 ALLOWED_HOSTS = ['*']
 
 # REDIRECT: If the server is nor running in the server where the problem's data is
