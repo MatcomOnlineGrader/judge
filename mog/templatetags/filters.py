@@ -310,3 +310,8 @@ def type_(obj):
 @register.filter()
 def explore_dict(obj):
     return '\n'.join(str((k, v)) for k, v in obj.items())
+
+
+@register.filter()
+def get_item(dictionary, key):
+    return dictionary.get(key)

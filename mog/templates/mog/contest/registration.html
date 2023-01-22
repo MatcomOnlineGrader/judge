@@ -7,6 +7,8 @@
 
 {% block styles %}
     <link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input-facebook.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block left %}
@@ -36,8 +38,10 @@
                             <tr class="text-center">
                                 <td>
                                     {% if instance.team %}
+                                        {% include 'mog/team/_login_status.html' with team=instance.team.name team_lastlogin=team_lastlogin %}
                                         {% include 'mog/team/_link.html' with team=instance.team %}
                                     {% else %}
+                                        {% include 'mog/user/_login_status.html' with username=instance.user.username team_lastlogin=team_lastlogin %}
                                         {% include 'mog/user/_link.html' with user=instance.user %}
                                     {% endif %}
                                 </td>
@@ -76,16 +80,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
-                    <form action="{% url 'mog:contest_register_user' contest.id %}" method="post" class="well">
+                    <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="well">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <div class="form-group">
-                            <label for="user" class="sr-only">User</label>
-                            <select id="user" name="user" class="form-control">
-                                {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.username }}</option>
-                                {% endfor %}
-                            </select>
+                            <label for="user-members" class="sr-only">{% trans 'Users' %}</label>
+                            <input id="user-members" name="user-members" class="form-control">
                         </div>
                         <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
                     </form>
@@ -94,16 +94,12 @@
                 {% if contest.allow_teams %}
                     <div class="col-md-6">
                         <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
-                        <form action="{% url 'mog:contest_register_team' contest.id %}" method="post" class="well">
+                        <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="well">
                             {% csrf_token %}
                             <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                             <div class="form-group">
-                                <label for="team" class="sr-only">Team</label>
-                                <select id="team" name="team" class="form-control">
-                                    {% for team in teams %}
-                                        <option value="{{ team.id }}">{{ team }}</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="team-members" class="sr-only">{% trans 'Teams' %}</label>
+                                <input id="team-members" name="team-members" class="form-control">
                             </div>
                             <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
                         </form>
@@ -145,6 +141,75 @@
                     .fail(function() {
                         alert('some error ocurrs!');
                     })
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="{% static 'mog/plugins/jquery.tokeninput/js/jquery.tokeninput.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#user-members').tokenInput('{% url "mog:users_json" %}', {
+                theme: 'facebook',
+                noResultsText: 'No user found!',
+                searchingText: 'Searching...',
+                deleteText: "&#x2603;",
+                propertyToSearch: "username",
+                preventDuplicates: true,
+                zindex: 11001,
+                resultsFormatter: function(item){
+                    var html = [
+                            '<li>',
+                            '    <img src="' + item.url + '" height="25px" width="25px" />',
+                            '    <div style="display: inline-block; padding-left: 10px;">',
+                            '        <div>',
+                            '            <div class="username">',
+                            '                ' + item.username,
+                            '            </div>',
+                            '            <div class="full_name">',
+                            '                ' + item.first_name + ' ' + item.last_name,
+                            '            </div>',
+                            '        </div>',
+                            '    </div>',
+                            '</li>'
+                    ];
+                    return html.join('');
+                },
+                tokenFormatter: function(item) {
+                    return '<li><p>' + item.username + '</p></li>';
+                }
+            });
+            $('#team-members').tokenInput('{% url "mog:teams_json" %}', {
+                theme: 'facebook',
+                noResultsText: 'No team found!',
+                searchingText: 'Searching...',
+                deleteText: "&#x2603;",
+                propertyToSearch: "name",
+                preventDuplicates: true,
+                zindex: 11001,
+                resultsFormatter: function(item){
+                    var html = [
+                            '<li>',
+                            '    <div style="display: inline-block; padding-left: 10px;">',
+                            '        <div>',
+                            '            <div class="user">',
+                            '                ' + item.name,
+                            '            </div>',
+                            '            <div class="description">',
+                            '                ' + item.description,
+                            '            </div>',
+                            '            <div class="institution">',
+                            '                ' + item.institution + ' (' + item.country + ')',
+                            '            </div>',
+                            '        </div>',
+                            '    </div>',
+                            '</li>'
+                    ];
+                    return html.join('');
+                },
+                tokenFormatter: function(item) {
+                    return '<li><p>' + item.name + '</p></li>';
+                }
             });
         });
     </script>

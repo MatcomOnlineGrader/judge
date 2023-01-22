@@ -1,3 +1,5 @@
+from django.db.models import Q
+from django.http import JsonResponse
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -121,3 +123,31 @@ def remove_team(request, team_id):
         messages.success(request, msg, extra_tags='success')
 
     return redirect('mog:user_teams', user_id=main_user.id)
+
+
+@require_http_methods(["GET"])
+def teams_json(request):
+    q = request.GET.get('q', '')
+    teams = Team.objects.filter(
+        Q(name__icontains=q) | Q(description__icontains=q) | Q(institution__name__icontains=q)
+    )
+    data = [{
+        'id': team.id,
+        'name': team.name,
+        'description': team.description,
+        'institution': team.institution.name if team.institution else '',
+        'country': team.institution.country.name if team.institution and team.institution.country else ''
+    } for team in teams[:10]]
+
+    if 'callback' in request.GET:
+        # Allow cross domain requests
+        # TODO: Drop this!!!
+        import json
+        from django.http import HttpResponse
+        callback = request.GET['callback']
+        return HttpResponse('{0}({1})'.format(callback, json.dumps(data)), content_type='application/javascript')
+
+    return JsonResponse(
+        data=data,
+        safe=False
+    )

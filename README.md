@@ -1,20 +1,19 @@
-Matcom Online Grader
-===================
+# Matcom Online Grader
 
 **MOG** is an online judge for the contestants of the ACM-ICPC of the Faculty of Mathematics and Computer Science of the University of Havana
 
-[![](mog/static/mog/images/logo.png )](mog/static/mog/images/logo.png)
+[![](mog/static/mog/images/logo.png)](mog/static/mog/images/logo.png)
 
 **Softwares**
 
-- Postgres-9.5.*
+- Postgres-9.5.\*
 - Python3
   - Install `pip`
   - Install `virtualenv`
 
 **Secret file:**
 
-Create a file named __settings.ini__ at the root of the project with the following content:
+Create a file named **settings.ini** at the root of the project with the following content:
 
 ```
 [debugging]
@@ -82,8 +81,8 @@ postgres=# ALTER USER [DATABASE_USER] CREATEDB;
 Create and activate a virtual environment (optional):
 
 - `virtualenv venv`
-- `venv\Scripts\activate`     # Windows
-- `source venv/bin/activate`  # Linux
+- `venv\Scripts\activate` # Windows
+- `source venv/bin/activate` # Linux
 
 Install pip requirements:
 
@@ -122,3 +121,7 @@ Launch the grader using:
 ```
 (venv) - python manage.py runserver
 ```
+
+## Local set up using Docker
+
+Click [here](./docs/LOCAL_SETUP_DOCKER.md) to see instalattion instructions with Docker

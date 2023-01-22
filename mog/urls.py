@@ -19,6 +19,8 @@ urlpatterns = [
 
     url(r'^message/send/(?P<user_id>[0-9]+)$', views.send_message, name='send_message'),
 
+    url(r'^teams/json$', views.teams_json, name='teams_json'),
+
     url(r'^team/create$', views.create_team, name='create_team'),
     url(r'^team/remove/(?P<team_id>[0-9]+)$', views.remove_team, name='remove_team'),
     url(r'^team/edit/(?P<team_id>[0-9]+)$', views.edit_team, name='edit_team'),
@@ -44,6 +46,8 @@ urlpatterns = [
 
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
     url(r'^contest/register/user/(?P<contest_id>[0-9]+)$', views.contest_register_user, name='contest_register_user'),
+    url(r'^contest/register/multipleuser/(?P<contest_id>[0-9]+)$', views.contest_register_multiple_users, name='contest_register_multiple_users'),
+    url(r'^contest/register/multipleteam/(?P<contest_id>[0-9]+)$', views.contest_register_multiple_teams, name='contest_register_multiple_teams'),
     url(r'^contest/register/team/(?P<contest_id>[0-9]+)$', views.contest_register_team, name='contest_register_team'),
     url(r'^contest/remove/instance/(?P<instance_id>[0-9]+)$', views.contest_remove_instance,
         name='contest_remove_instance'),
