@@ -542,40 +542,6 @@ def register_instance(request, contest, user, team):
     return redirect(nxt or reverse('mog:contest_problems', args=(contest.pk, )))
 
 
-@login_required
-def register_multiple_users(request, contest, user_list):
-    nxt = request.POST.get('next')
-    for user in user_list:
-        ContestInstance.objects.create(
-            contest=contest,
-            user=user,
-            real=True,
-            group=contest.group
-        )
-    msg = _('Successfully registered ' + str(len(user_list)) + ' new user')
-    messages.success(request, msg, extra_tags='success')
-    return redirect(nxt or reverse('mog:contest_registration', args=(contest.pk, )))
-
-
-@login_required
-def register_multiple_teams(request, contest, team_list):
-    nxt = request.POST.get('next')
-    for team in team_list:
-        # Check that the team can be registered in the contest
-        if not contest.allow_teams:
-            messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
-            return redirect(nxt or reverse('mog:contests'))
-        ContestInstance.objects.create(
-            contest=contest,
-            team=team,
-            real=True,
-            group=contest.group
-        )
-    msg = _('Successfully registered ' + str(len(team_list)) + ' new team')
-    messages.success(request, msg, extra_tags='success')
-    return redirect(nxt or reverse('mog:contest_registration', args=(contest.pk, )))
-
-
 @public_actions_required
 @login_required
 @require_http_methods(["POST"])
