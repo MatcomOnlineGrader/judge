@@ -435,7 +435,6 @@ def contest_register_multiple_teams(request, contest_id):
     
     members = request.POST.get('team-members', '').split(',')
     teams = []
-    print(members)
 
     try:
         for member in members:
