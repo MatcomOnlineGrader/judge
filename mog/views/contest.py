@@ -681,9 +681,12 @@ def contest_register_multiple_teams(request, contest_id):
     members = request.POST.get('team-members', '').split(',')
     teams = []
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     print(members)
 >>>>>>> f2219bb2 (register user/team list is loaded asyncs and have more search criteria)
+=======
+>>>>>>> 3f0c8966 (remove print)
 
     try:
         for member in members:
