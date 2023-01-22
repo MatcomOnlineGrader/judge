@@ -37,6 +37,14 @@
                         {% for instance in instances %}
                             <tr class="text-center">
                                 <td>
+                                    {% if instance.team and instance.user %}
+                                        {% if instance.user.last_login is None %}
+                                            <i class="glyphicon glyphicon-warning-sign not-logged"></i>
+                                        {% else %}
+                                            <i title="Last login: {{ instance.user.last_login|timesince  }}" class="glyphicon glyphicon-flash logged"></i>
+                                        {% endif %}
+                                    {% endif %}
+
                                     {% if instance.team %}
                                         {% include 'mog/team/_login_status.html' with team=instance.team.name team_lastlogin=team_lastlogin %}
                                         {% include 'mog/team/_link.html' with team=instance.team %}
