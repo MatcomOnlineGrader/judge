@@ -37,7 +37,19 @@
                         <tbody>
                         {% for instance in instances %}
                             <tr class="text-center">
+<<<<<<< HEAD
                                 <td class="instance-info" data-instance-pk="{{ instance.pk }}">
+=======
+                                <td>
+                                    {% if instance.team and instance.user %}
+                                        {% if instance.user.last_login is None %}
+                                            <i class="glyphicon glyphicon-warning-sign not-logged"></i>
+                                        {% else %}
+                                            <i title="Last login: {{ instance.user.last_login|timesince  }}" class="glyphicon glyphicon-flash logged"></i>
+                                        {% endif %}
+                                    {% endif %}
+
+>>>>>>> 3ac7477f (set for every team last loggin state)
                                     {% if instance.team %}
                                         <strong>{{ instance.team.name }}</strong>
                                     {% else %}
