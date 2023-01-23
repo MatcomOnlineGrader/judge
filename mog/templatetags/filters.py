@@ -313,5 +313,14 @@ def explore_dict(obj):
 
 
 @register.filter()
-def get_item(dictionary, key):
-    return dictionary.get(key)
+def get_last_login(instance):
+    last_login = None
+    if instance.team:
+        for profile in instance.team.profiles.all():
+            if last_login is None:
+                last_login = profile.user.last_login
+            elif profile.user.last_login is not None:
+                last_login = max(last_login, profile.user.last_login)
+    elif instance.user:
+        last_login = instance.user.last_login
+    return last_login

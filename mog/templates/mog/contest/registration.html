@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load static %}
+{% load filters %}
 
 {% block title %}{{ contest.name }} | {% trans 'Registration' %}{% endblock %}
 
@@ -37,11 +38,10 @@
                         {% for instance in instances %}
                             <tr class="text-center">
                                 <td>
+                                    {% include 'mog/contest/_login_status.html' with last_login=instance|get_last_login %}
                                     {% if instance.team %}
-                                        {% include 'mog/team/_login_status.html' with team=instance.team.name team_lastlogin=team_lastlogin %}
                                         {% include 'mog/team/_link.html' with team=instance.team %}
                                     {% else %}
-                                        {% include 'mog/user/_login_status.html' with username=instance.user.username team_lastlogin=team_lastlogin %}
                                         {% include 'mog/user/_link.html' with user=instance.user %}
                                     {% endif %}
                                 </td>
