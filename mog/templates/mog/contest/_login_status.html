@@ -1,0 +1,5 @@
+{% if last_login is None %}
+    <i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>
+{% else %}
+    <i title="Last login: {{ last_login|timesince }}" class="glyphicon glyphicon-flash logged"></i>
+{% endif %}
