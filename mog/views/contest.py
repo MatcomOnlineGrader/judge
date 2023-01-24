@@ -116,11 +116,28 @@ def contest_registration(request, contest_id):
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
         messages.warning(request, msg, extra_tags='warning secure')
 
+    instances = contest.instances.order_by(Lower('group'))
+    team_lastlogin = {}
+    user_lastlogin = {}
+
+    for instance in instances:
+        if instance.team:
+            last_login = None
+            for profile in instance.team.profiles.all():
+                if last_login is None:
+                    last_login = profile.user.last_login
+                elif profile.user.last_login is not None:
+                    last_login = max(last_login, profile.user.last_login)
+            team_lastlogin[instance.team.name] = last_login
+        elif instance.user:
+            last_login = instance.user.last_login
+            user_lastlogin[instance.user.username] = last_login
+
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': contest.instances.order_by(Lower('group')),
-        'users': User.objects.all().order_by('username'),
-        'teams': Team.objects.all().order_by('name')
+        'instances': instances,
+        'team_lastlogin': team_lastlogin,
+        'user_lastlogin': user_lastlogin
     })
 
 
@@ -360,6 +377,37 @@ def contest_register_user(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
+def contest_register_multiple_users(request, contest_id):
+    """Administrative tool: Register users in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    
+    members = request.POST.get('user-members', '').split(',')
+    users = []
+
+    try:
+        for member in members:
+            users.append(get_object_or_404(User, pk=int(member)))
+        users = set(users)
+        contest = get_object_or_404(Contest, pk=contest_id)
+        for user in users:
+            ContestInstance.objects.create(
+                contest=contest,
+                user=user,
+                real=True,
+                group=contest.group
+            )
+        msg = _('Successfully registered ' + str(len(users)) + ' new user')
+        messages.success(request, msg, extra_tags='success')
+        
+    except (ValueError, TypeError):
+        messages.error(request, 'Register users: Invalid data!', extra_tags='danger')
+
+    return redirect(reverse('mog:contest_registration', args=(contest.pk, )))
+
+
+@login_required
+@require_http_methods(["POST"])
 def contest_register_team(request, contest_id):
     """Administrative tool: Register team in contest"""
     if not user_is_admin(request.user):
@@ -371,6 +419,41 @@ def contest_register_team(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     team = get_object_or_404(Team, pk=team_id)
     return register_instance(request, contest, None, team)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_register_multiple_teams(request, contest_id):
+    """Administrative tool: Register teams in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    
+    members = request.POST.get('team-members', '').split(',')
+    teams = []
+
+    try:
+        for member in members:
+            teams.append(get_object_or_404(Team, pk=int(member)))
+        teams = set(teams)
+        contest = get_object_or_404(Contest, pk=contest_id)
+        for team in teams:
+            # Check that the team can be registered in the contest
+            if not contest.allow_teams:
+                messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
+                return redirect(reverse('mog:contests'))
+            ContestInstance.objects.create(
+                contest=contest,
+                team=team,
+                real=True,
+                group=contest.group
+            )
+        msg = _('Successfully registered ' + str(len(teams)) + ' new team')
+        messages.success(request, msg, extra_tags='success')
+        
+    except (ValueError, TypeError):
+        messages.error(request, 'Register teams: Invalid data!', extra_tags='danger')
+
+    return redirect(reverse('mog:contest_registration', args=(contest.pk, )))
 
 
 def remove_instance(request, instance):
