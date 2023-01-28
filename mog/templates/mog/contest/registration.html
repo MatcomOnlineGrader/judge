@@ -76,11 +76,16 @@
                 </div>
             </div>
         </div>
+        {% block loading %}
+            <div class="col-md-12">
+                {% include 'mog/contest/_loading.html' %}
+            </div>
+        {% endblock %}
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-6">
                     <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
-                    <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="well">
+                    <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="well show-loading-after-submit">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <div class="form-group">
@@ -94,7 +99,7 @@
                 {% if contest.allow_teams %}
                     <div class="col-md-6">
                         <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
-                        <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="well">
+                        <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="well show-loading-after-submit">
                             {% csrf_token %}
                             <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                             <div class="form-group">
@@ -211,6 +216,16 @@
                     return '<li><p>' + item.name + '</p></li>';
                 }
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.show-loading-after-submit').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    $('#loading-on-submit').css('display', 'block');
+                });
+            })
         });
     </script>
 {% endblock %}

@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models.aggregates import Sum
 from django.db.models import Q
 from django.http import Http404, HttpResponseForbidden, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -28,7 +29,7 @@ from api.models import (
     Result,
     Submission,
     Team,
-    User,
+    User
 )
 from mog.decorators import public_actions_required
 
@@ -46,6 +47,16 @@ from mog.import_team import ProcessImportTeam
 from mog.forms import ImportBaylorForm, ExportBaylorForm, ImportGuestTeamsForm, ImportEPCTeamsForm
 from mog.templatetags.security import can_manage_baylor
 from mog.team_password import ZipTeamPassword
+
+from typing import Dict
+
+from mog.views.__models import (
+    _Instance,
+    _User,
+    _Team,
+    _UserProfile,
+    _TeamProfiles
+)
 
 def contests(request):
     running, coming, past = \
@@ -310,9 +321,58 @@ def contest_registration(request, contest_id):
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
         messages.warning(request, msg, extra_tags='warning secure')
 
+    instance_values = contest.instances.annotate(team__profiles__ratings=Sum('team__profiles__ratings__rating') + settings.BASE_RATING).values_list(
+        'pk', 'id', 'group', 'render_team_description_only',
+        'user', 'user__profile__ratings', 'user__username', 'user__last_login',
+        'team', 'team__name', 'team__profiles__user', 'team__profiles__ratings', 'team__profiles__user__username', 'team__profiles__user__last_login',
+        named=True
+    )
+
+    instance_map: Dict[int, _Instance] = {}
+    for instance in instance_values:
+        instance_pk = instance.pk
+        if instance_pk not in instance_map:
+            instance_map[instance_pk] = _Instance()
+        instance_map[instance_pk].pk = instance.pk
+        instance_map[instance_pk].id = instance.id
+        instance_map[instance_pk].group = instance.group
+        instance_map[instance_pk].render_team_description_only = instance.render_team_description_only
+        if instance.user:
+            user = _User()
+            user.pk = instance.user
+            user.id = instance.user
+            user.username = instance.user__username
+            user.last_login = instance.user__last_login
+            instance_map[instance_pk].user = user
+            user_profile = _UserProfile()
+            user_profile.rating = instance.user__profile__ratings
+            instance_map[instance_pk].user.profile = user_profile
+        if instance.team:
+            if not instance_map[instance_pk].team:
+                instance_map[instance_pk].team = _Team()
+                instance_map[instance_pk].team.id = instance.team
+                instance_map[instance_pk].team.name = instance.team__name
+            if not instance_map[instance_pk].team.profiles:
+                instance_map[instance_pk].team.profiles = _TeamProfiles()
+            user_profile = _UserProfile()
+            user = _User()
+            user.pk = instance.team__profiles__user
+            user.id = instance.team__profiles__user
+            user.username = instance.team__profiles__user__username
+            user.last_login = instance.team__profiles__user__last_login
+            user_profile.user = user
+            user_profile.rating = instance.team__profiles__ratings
+            instance_map[instance_pk].team.profiles.append(user_profile)
+
+    instances = []
+    for value in instance_map.values():
+        instances.append(value)
+
+    instances.sort(key = lambda x: (x.group is None, x.group, x.pk))
+
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': contest.instances.order_by(Lower('group'))
+        'instances': instances
     })
 
 
