@@ -261,8 +261,6 @@ def manage_csv_epc(request, contest_id):
     if not can_manage_baylor(request.user, contest):
         return HttpResponseForbidden()
     
-    print(request.POST, request.FILES)
-    
     form_csv_epc = ImportEPCTeamsForm(request.POST, request.FILES)
     csv_teams = None
     prefix_team = None
