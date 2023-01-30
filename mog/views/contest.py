@@ -116,28 +116,9 @@ def contest_registration(request, contest_id):
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
         messages.warning(request, msg, extra_tags='warning secure')
 
-    instances = contest.instances.order_by(Lower('group'))
-    team_lastlogin = {}
-    user_lastlogin = {}
-
-    for instance in instances:
-        if instance.team:
-            last_login = None
-            for profile in instance.team.profiles.all():
-                if last_login is None:
-                    last_login = profile.user.last_login
-                elif profile.user.last_login is not None:
-                    last_login = max(last_login, profile.user.last_login)
-            team_lastlogin[instance.team.name] = last_login
-        elif instance.user:
-            last_login = instance.user.last_login
-            user_lastlogin[instance.user.username] = last_login
-
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': instances,
-        'team_lastlogin': team_lastlogin,
-        'user_lastlogin': user_lastlogin
+        'instances': contest.instances.order_by(Lower('group'))
     })
 
 

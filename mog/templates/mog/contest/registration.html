@@ -38,10 +38,11 @@
                             <tr class="text-center">
                                 <td>
                                     {% if instance.team %}
-                                        {% include 'mog/team/_login_status.html' with team=instance.team.name team_lastlogin=team_lastlogin %}
-                                        {% include 'mog/team/_link.html' with team=instance.team %}
+                                        <div class="info-team" data-url-info-team="{% url 'mog:info_team' instance.team.id %}">
+                                            <strong>{{ instance.team.name }}</strong>
+                                        </div>
                                     {% else %}
-                                        {% include 'mog/user/_login_status.html' with username=instance.user.username team_lastlogin=team_lastlogin %}
+                                        {% include 'mog/contest/_login_status.html' with last_login=instance.user.last_login %}
                                         {% include 'mog/user/_link.html' with user=instance.user %}
                                     {% endif %}
                                 </td>
@@ -212,5 +213,29 @@
                 }
             });
         });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.info-team').each(function() {
+                $.ajax({
+                    type: "GET",
+                    url: $(this).data('url-info-team'),
+                    context: this,
+                    success: function (response) {
+                        const data = response.data
+                        let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>'
+                        if(data.last_login)
+                            last_login = '<i title="Last login: ' + data.last_login + '" class="glyphicon glyphicon-flash logged"></i>'
+                        $(this).prepend(last_login)
+                        const profiles = []
+                        for(const profile of data.profiles) {
+                            profiles.push('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>')
+                        }
+                        $(this).append('<div>' + profiles.join(' , ') + '<div>')
+                    }
+                })
+            })
+        })
     </script>
 {% endblock %}

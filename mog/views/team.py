@@ -1,14 +1,16 @@
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
-from api.models import User, Team, Submission, Institution
+from api.models import User, Team, Submission, Institution, UserProfile
 from mog.decorators import public_actions_required
 from mog.gating import user_is_admin
 
+from django.utils.timesince import timesince
+from mog.templatetags.filters import rating_color
 
 @public_actions_required
 @login_required
@@ -151,3 +153,32 @@ def teams_json(request):
         data=data,
         safe=False
     )
+
+
+@login_required
+@require_http_methods(["GET"])
+def info_team(request, team_id):
+    if not user_is_admin(request.user):
+        raise Http404()
+    team = get_object_or_404(Team, id=team_id)
+    last_login = None
+    list_profiles = []
+    for profile in team.profiles.all():
+        list_profiles.append({
+            'id': profile.user.id,
+            'username': profile.user.username,
+            'rating_color': rating_color(profile.rating)
+        })
+        l = profile.user.last_login
+        if last_login is None:
+            last_login = l
+        elif l is not None:
+            last_login = max(last_login, l)
+    return JsonResponse(data={
+        'success': True,
+        'data': {
+            'team': team.name,
+            'last_login': timesince(last_login) if last_login else None,
+            'profiles': list_profiles
+        }
+    })
