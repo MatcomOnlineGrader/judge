@@ -5,14 +5,4 @@ CACHE_KEY_USER_CONTESTS = 'api/lib/user_contests'
 CACHE_KEY_STANDING = 'api/lib/standing'
 
 STANDING_TIMEOUT = 10
-<<<<<<< HEAD
-<<<<<<< HEAD
 USER_CONTESTS_TIMEOUT = 300
-=======
-USER_CONTESTS_TIMEOUT = 300
-
-DJANGO_SECRET = 'Fqy9VVvc9n5PGJ6uBJKCS8jeYFkMwhg1cDUU9'
->>>>>>> ba781aa3 (generate password)
-=======
-USER_CONTESTS_TIMEOUT = 300
->>>>>>> 57599b09 (remove django-secret-key and create one in the secret.ini file)

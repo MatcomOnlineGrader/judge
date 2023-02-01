@@ -165,11 +165,6 @@ class ManageBaylorView(View):
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
                         result = process_baylor_file.handle()
                         messages.success(request, result, extra_tags='success')
-                        zip_passwords = process_baylor_file.generate_zip_password(contest.name)
-                        response = HttpResponse(zip_passwords, content_type='application/zip')
-                        response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
-                        response['Set-Cookie'] = 'fileDownload=true; Path=/'
-                        return response
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
                     messages.error(request, msg, extra_tags='danger')

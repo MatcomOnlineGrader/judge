@@ -13,6 +13,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
 >>>>>>> cd4d321a (separate the logic between import user and export password)
 =======
     contest_register_team, contest_register_user, unfreeze_contest, contest_stats, contest_csv, contest_baylor, \
+    ManageBaylorView, manage_csv_guest, manage_csv_epc, manage_team_password, \
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
     contest_register_multiple_users, contest_register_multiple_teams
 >>>>>>> f2219bb2 (register user/team list is loaded asyncs and have more search criteria)
