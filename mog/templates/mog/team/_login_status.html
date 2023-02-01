@@ -1,7 +1,0 @@
-{% load filters %}
-
-{% if team_lastlogin|get_item:team is None %}
-    <i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>
-{% else %}
-    <i title="Last login: {{ team_lastlogin|get_item:team|timesince }}" class="glyphicon glyphicon-flash logged"></i>
-{% endif %}

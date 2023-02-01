@@ -36,13 +36,13 @@
                         <tbody>
                         {% for instance in instances %}
                             <tr class="text-center">
-                                <td>
+                                <td class="instance-info" data-instance-pk="{{ instance.pk }}">
                                     {% if instance.team %}
-                                        {% include 'mog/team/_login_status.html' with team=instance.team.name team_lastlogin=team_lastlogin %}
-                                        {% include 'mog/team/_link.html' with team=instance.team %}
+                                        <strong>{{ instance.team.name }}</strong>
                                     {% else %}
-                                        {% include 'mog/user/_login_status.html' with username=instance.user.username team_lastlogin=team_lastlogin %}
-                                        {% include 'mog/user/_link.html' with user=instance.user %}
+                                        <strong>
+                                            <a class="user" style="color: black;">{{ instance.user.username }}</a>
+                                        </strong>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -209,6 +209,42 @@
                 },
                 tokenFormatter: function(item) {
                     return '<li><p>' + item.name + '</p></li>';
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'mog:contest_instances_info' contest.pk %}",
+                context: this,
+                success: function (response) {
+                    const data = response.data;
+                    $('.instance-info').each(function() {
+                        const instance_pk = $(this).data('instance-pk');
+                        instance = data[instance_pk];
+                        const {team, user} = instance;
+                        let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>';
+                        if(team) {
+                            if(team.last_login)
+                                last_login = '<i title="Last login: ' + team.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
+                            $(this).prepend(last_login);
+                            const profiles = [];
+                            for(const profile of team.profiles) {
+                                profiles.push('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>');
+                            }
+                            $(this).append('<div>' + profiles.join(' , ') + '<div>');
+                        }
+                        else {
+                            if(user.last_login)
+                                last_login = '<i title="Last login: ' + user.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
+                            $(this).prepend(last_login);
+                            const $user = $(this).find('.user')
+                            $user.css("color", user.rating_color).attr("href", "/user/" + user.id);
+                        }
+                    });
                 }
             });
         });
