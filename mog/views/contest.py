@@ -40,6 +40,8 @@ from mog.templatetags.filters import format_minutes
 from mog.model_helpers.contest import can_create_problem_in_contest
 from mog.samples import fix_problem_folder
 
+from django.utils.timesince import timesince
+from mog.templatetags.filters import rating_color, user_color
 
 def contests(request):
     running, coming, past = \
@@ -116,28 +118,9 @@ def contest_registration(request, contest_id):
         msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
         messages.warning(request, msg, extra_tags='warning secure')
 
-    instances = contest.instances.order_by(Lower('group'))
-    team_lastlogin = {}
-    user_lastlogin = {}
-
-    for instance in instances:
-        if instance.team:
-            last_login = None
-            for profile in instance.team.profiles.all():
-                if last_login is None:
-                    last_login = profile.user.last_login
-                elif profile.user.last_login is not None:
-                    last_login = max(last_login, profile.user.last_login)
-            team_lastlogin[instance.team.name] = last_login
-        elif instance.user:
-            last_login = instance.user.last_login
-            user_lastlogin[instance.user.username] = last_login
-
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': instances,
-        'team_lastlogin': team_lastlogin,
-        'user_lastlogin': user_lastlogin
+        'instances': contest.instances.order_by(Lower('group'))
     })
 
 
@@ -835,3 +818,50 @@ class CreateProblemInContestView(View):
         problem.compilers.set(data['compilers'])
         fix_problem_folder(problem)
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
+
+
+@login_required
+@require_http_methods(["GET"])
+def contest_instances_info(request, contest_id):
+    if not user_is_admin(request.user):
+        raise Http404()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    instances = contest.instances.order_by(Lower('group'))
+    instances_data = {}
+    for instance in instances:
+        if instance.team:
+            team = instance.team
+            last_login = None
+            list_profiles = []
+            for profile in team.profiles.all():
+                list_profiles.append({
+                    'id': profile.user.id,
+                    'username': profile.user.username,
+                    'rating_color': rating_color(profile.rating)
+                })
+                l = profile.user.last_login
+                if last_login is None:
+                    last_login = l
+                elif l is not None:
+                    last_login = max(last_login, l)
+            instances_data[instance.pk] = {
+                'team': {
+                    'name': team.name,
+                    'last_login': timesince(last_login) if last_login else None,
+                    'profiles': list_profiles
+                },
+            }
+        else:
+            user = instance.user
+            instances_data[instance.pk] = {
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'last_login': timesince(user.last_login) if user.last_login else None,
+                    'rating_color': user_color(user)
+                },
+            }
+    return JsonResponse(data={
+        'success': True,
+        'data': instances_data
+    })
