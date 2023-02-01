@@ -41,7 +41,7 @@ from mog.model_helpers.contest import can_create_problem_in_contest
 from mog.samples import fix_problem_folder
 
 from django.utils.timesince import timesince
-from mog.templatetags.filters import rating_color
+from mog.templatetags.filters import rating_color, user_color
 
 def contests(request):
     running, coming, past = \
@@ -822,12 +822,12 @@ class CreateProblemInContestView(View):
 
 @login_required
 @require_http_methods(["GET"])
-def contest_team_info(request, contest_id):
+def contest_instances_info(request, contest_id):
     if not user_is_admin(request.user):
         raise Http404()
     contest = get_object_or_404(Contest, pk=contest_id)
     instances = contest.instances.order_by(Lower('group'))
-    teams = {}
+    instances_data = {}
     for instance in instances:
         if instance.team:
             team = instance.team
@@ -844,12 +844,24 @@ def contest_team_info(request, contest_id):
                     last_login = l
                 elif l is not None:
                     last_login = max(last_login, l)
-            teams[team.id] = {
-                'team': team.name,
-                'last_login': timesince(last_login) if last_login else None,
-                'profiles': list_profiles
+            instances_data[instance.pk] = {
+                'team': {
+                    'name': team.name,
+                    'last_login': timesince(last_login) if last_login else None,
+                    'profiles': list_profiles
+                },
+            }
+        else:
+            user = instance.user
+            instances_data[instance.pk] = {
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'last_login': timesince(user.last_login) if user.last_login else None,
+                    'rating_color': user_color(user)
+                },
             }
     return JsonResponse(data={
         'success': True,
-        'data': teams
+        'data': instances_data
     })

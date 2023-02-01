@@ -3,7 +3,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     ContestCreateView, ContestEditView, rate_contest, unrate_contest, contest_registration, \
     contest_register_team, contest_register_user, unfreeze_contest, contest_stats, contest_csv, contest_baylor, \
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
-    contest_register_multiple_users, contest_register_multiple_teams, contest_team_info
+    contest_register_multiple_users, contest_register_multiple_teams, contest_instances_info
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test
