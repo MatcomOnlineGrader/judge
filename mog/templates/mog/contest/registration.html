@@ -37,12 +37,13 @@
                         <tbody>
                         {% for instance in instances %}
                             <tr class="text-center">
-                                <td>
-                                    {% include 'mog/contest/_login_status.html' with last_login=instance|get_last_login %}
+                                <td class="instance-info" data-instance-pk="{{ instance.pk }}">
                                     {% if instance.team %}
-                                        {% include 'mog/team/_link.html' with team=instance.team %}
+                                        <strong>{{ instance.team.name }}</strong>
                                     {% else %}
-                                        {% include 'mog/user/_link.html' with user=instance.user %}
+                                        <strong>
+                                            <a class="user" style="color: black;">{{ instance.user.username }}</a>
+                                        </strong>
                                     {% endif %}
                                 </td>
                                 <td>
