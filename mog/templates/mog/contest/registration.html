@@ -225,7 +225,7 @@
                     const data = response.data;
                     $('.instance-info').each(function() {
                         const instance_pk = $(this).data('instance-pk');
-                        instance = data[instance_pk];
+                        const instance = data[instance_pk];
                         const {team, user} = instance;
                         let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>';
                         if(team) {
