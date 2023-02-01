@@ -101,6 +101,12 @@ Create the compiled file used by django to manage translation:
 (venv) - python manage.py compilemessages -l es
 ```
 
+Build React components with webpack into `frontend/static/frontend/dist` folder, then you need to run the next command to copy all static file
+
+```
+(venv) - node_modules/.bin/webpack --config webpack.config.js
+```
+
 Copy static files to the folder specified by the `STATIC_ROOT` variable in django settings:
 
 ```
