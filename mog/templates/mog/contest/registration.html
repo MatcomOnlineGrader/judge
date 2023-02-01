@@ -38,7 +38,7 @@
                             <tr class="text-center">
                                 <td>
                                     {% if instance.team %}
-                                        <div class="info-team" data-url-info-team="{% url 'mog:info_team' instance.team.id %}">
+                                        <div class="info-team" data-team-id="{{ instance.team.id }}">
                                             <strong>{{ instance.team.name }}</strong>
                                         </div>
                                     {% else %}
@@ -217,25 +217,27 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.info-team').each(function() {
-                $.ajax({
-                    type: "GET",
-                    url: $(this).data('url-info-team'),
-                    context: this,
-                    success: function (response) {
-                        const data = response.data
-                        let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>'
-                        if(data.last_login)
-                            last_login = '<i title="Last login: ' + data.last_login + '" class="glyphicon glyphicon-flash logged"></i>'
-                        $(this).prepend(last_login)
-                        const profiles = []
-                        for(const profile of data.profiles) {
-                            profiles.push('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>')
+            $.ajax({
+                type: "GET",
+                url: "{% url 'mog:contest_team_info' contest.pk %}",
+                context: this,
+                success: function (response) {
+                    const data = response.data
+                    $('.info-team').each(function() {
+                        const team_id = $(this).data('team-id');
+                        team = data[team_id];
+                        let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>';
+                        if(team.last_login)
+                            last_login = '<i title="Last login: ' + team.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
+                        $(this).prepend(last_login);
+                        const profiles = [];
+                        for(const profile of team.profiles) {
+                            profiles.push('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>');
                         }
-                        $(this).append('<div>' + profiles.join(' , ') + '<div>')
-                    }
-                })
-            })
-        })
+                        $(this).append('<div>' + profiles.join(' , ') + '<div>');
+                    })
+                }
+            });
+        });
     </script>
 {% endblock %}

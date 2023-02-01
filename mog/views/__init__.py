@@ -3,12 +3,12 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     ContestCreateView, ContestEditView, rate_contest, unrate_contest, contest_registration, \
     contest_register_team, contest_register_user, unfreeze_contest, contest_stats, contest_csv, contest_baylor, \
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
-    contest_register_multiple_users, contest_register_multiple_teams
+    contest_register_multiple_users, contest_register_multiple_teams, contest_team_info
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test
 from .submission import submissions, submission, Submit, rejudge
-from .team import create_team, remove_team, edit_team, teams_json, info_team
+from .team import create_team, remove_team, edit_team, teams_json
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams
 from .views import index, faq, privacy, health
 from .message import send_message

@@ -24,7 +24,6 @@ urlpatterns = [
     url(r'^team/create$', views.create_team, name='create_team'),
     url(r'^team/remove/(?P<team_id>[0-9]+)$', views.remove_team, name='remove_team'),
     url(r'^team/edit/(?P<team_id>[0-9]+)$', views.edit_team, name='edit_team'),
-    url(r'^team/info/(?P<team_id>[0-9]+)$', views.info_team, name='info_team'),
 
     url(r'^comment/(?P<comment_id>[0-9]+)/edit/$', views.edit_comment, name='comment_edit'),
     url(r'^comment/(?P<comment_id>[0-9]+)/remove/$', views.remove_comment, name='comment_remove'),
@@ -54,6 +53,7 @@ urlpatterns = [
         name='contest_remove_instance'),
     url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration,
         name='contest_remove_registration'),
+    url(r'^contest/teaminfo/(?P<contest_id>[0-9]+)$', views.contest_team_info, name='contest_team_info'),
 
     url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
     url(r'^contest/(?P<contest_id>[0-9]+)/create_problem$', views.CreateProblemInContestView.as_view(), name='contest_create_problem'),
