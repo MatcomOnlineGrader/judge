@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as trans
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timesince import timesince
 from django.views import View
 from django.views.decorators.http import require_http_methods
 
@@ -32,22 +33,28 @@ from api.models import (
 )
 from mog.decorators import public_actions_required
 
-from mog.forms import ContestForm, ClarificationForm, ProblemInContestForm
+from mog.forms import (
+    ContestForm,
+    ClarificationForm,
+    ProblemInContestForm,
+    ImportBaylorForm,
+    ExportBaylorForm,
+    ImportGuestTeamsForm,
+    ImportEPCTeamsForm
+)
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.ratings import get_rating_deltas, check_rating_deltas, set_ratings
 from mog.statistics import get_contest_stats
-from mog.templatetags.filters import format_minutes
+from mog.templatetags.filters import format_minutes, rating_color, user_color
+from mog.templatetags.security import can_manage_baylor
 from mog.model_helpers.contest import can_create_problem_in_contest
 from mog.samples import fix_problem_folder
 
-from django.utils.timesince import timesince
-from mog.templatetags.filters import rating_color, user_color
-from mog.import_baylor import ProcessImportBaylor
-from mog.import_team import ProcessImportTeam
-from mog.forms import ImportBaylorForm, ExportBaylorForm, ImportGuestTeamsForm, ImportEPCTeamsForm
-from mog.templatetags.security import can_manage_baylor
-from mog.team_password import ZipTeamPassword
+from mog.baylor.import_baylor import ProcessImportBaylor
+from mog.baylor.import_team import ProcessImportTeam
+from mog.baylor.team_password import ZipTeamPassword
+
 
 def contests(request):
     running, coming, past = \
@@ -163,8 +170,12 @@ class ManageBaylorView(View):
                 try:
                     with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
                         process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
-                        result = process_baylor_file.handle()
-                        messages.success(request, result, extra_tags='success')
+                        results = process_baylor_file.handle()
+                        for result in results:
+                            if result['type'] == 'success':
+                                messages.success(request, result['message'], extra_tags='success')
+                            else: 
+                                messages.warning(request, result['message'], extra_tags='warning')
                 except Exception as e:
                     msg = _('Error reading file from baylor: ' + str(e))
                     messages.error(request, msg, extra_tags='danger')
@@ -173,7 +184,6 @@ class ManageBaylorView(View):
             data = form_export.cleaned_data
             site_citation_selected = data['site_citation']
             response = get_baylor_csv(contest, site_citation_selected)
-            response['Set-Cookie'] = 'fileDownload=true; Path=/'
             return response
 
         return redirect('mog:manage_baylor', contest_id=contest.id)
@@ -246,8 +256,12 @@ def manage_csv_guest(request, contest_id):
             try:
                 csv_ref = csv_teams.read().decode('utf-8').splitlines()
                 process_guest_team = ProcessImportTeam(csv_ref, contest_id, prefix_team, 'Guest_Teams')
-                result = process_guest_team.handle()
-                messages.success(request, result, extra_tags='success')
+                results = process_guest_team.handle()
+                for result in results:
+                    if result['type'] == 'success':
+                        messages.success(request, result['message'], extra_tags='success')
+                    else: 
+                        messages.warning(request, result['message'], extra_tags='warning')
             except Exception as e:
                 msg = _('Error reading CSV Guest Teams file: ' + str(e))
                 messages.error(request, msg, extra_tags='danger')
@@ -276,8 +290,12 @@ def manage_csv_epc(request, contest_id):
             try:
                 csv_ref = csv_teams.read().decode('utf-8').splitlines()
                 process_epc_team = ProcessImportTeam(csv_ref, contest_id, prefix_team, 'Preuniversity_Teams')
-                result = process_epc_team.handle()
-                messages.success(request, result, extra_tags='success')
+                results = process_epc_team.handle()
+                for result in results:
+                    if result['type'] == 'success':
+                        messages.success(request, result['message'], extra_tags='success')
+                    else: 
+                        messages.warning(request, result['message'], extra_tags='warning')
             except Exception as e:
                 msg = _('Error reading CSV Preuniversity Teams file: ' + str(e))
                 messages.error(request, msg, extra_tags='danger')
@@ -297,7 +315,6 @@ def manage_team_password(request, contest_id):
     zip_passwords = zip_team_password.generate_zip_team_password()
     response = HttpResponse(zip_passwords, content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
-    response['Set-Cookie'] = 'fileDownload=true; Path=/'
     return response
 
 

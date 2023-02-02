@@ -4,8 +4,6 @@ import os
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.utils.safestring import mark_safe
-from api.lib import constants
-from hashlib import sha256
 
 
 def get_special_day(date):
@@ -60,10 +58,3 @@ def secure_html(html):
 def user_rating(user):
     """return user rating"""
     return user.profile.rating if hasattr(user, 'profile') else 0
-
-
-def generate_secret_password(user_id):
-    """
-    Generate password
-    """
-    return sha256( (settings.PASSWORD_GENERATOR_SECRET_KEY + str(user_id)).encode() ).hexdigest()[:10]

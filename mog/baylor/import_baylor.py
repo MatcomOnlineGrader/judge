@@ -1,5 +1,5 @@
-from django.contrib import messages
-from django.core.management import BaseCommand
+from io import TextIOWrapper
+
 from django.db import transaction
 
 from api.models import (
@@ -10,9 +10,8 @@ from api.models import (
     User,
     ContestInstance
 )
-from mog.utils import generate_secret_password
 
-from io import TextIOWrapper
+from mog.baylor.utils import generate_secret_password
 
 
 class BaylorTeam:
@@ -27,6 +26,7 @@ class BaylorTeam:
         self.site_id = ''
         self.name = ''
         self.status = ''
+
 
 class BaylorInstitution:
     def __init__(self):
@@ -62,10 +62,9 @@ class ProcessImportBaylor:
         self.team_file = None
         self.team_person_file = None
 
+        self.messages = []
 
     def import_institutions(self):
-        print('Importing institutions')
-        print('-'*30)
         with TextIOWrapper(self.zip_ref.open(self.school_file, "r"), encoding='utf-8') as f:
             lines = list(f.readlines())
             country_names = {'PRI': 'Puerto Rico',
@@ -97,7 +96,7 @@ class ProcessImportBaylor:
                 if country in country_names:
                     institution.country = Country.objects.filter(name=country_names[country]).first()
                 else:
-                    print('WARNING: Country %s was not found' % country)
+                    self.messages.append({'type': 'warning', 'message': 'WARNING: Country %s was not found' % country})
                 institution.save()
                 self.institutions[icpcid] = institution
                 baylor_institution = BaylorInstitution()
@@ -106,11 +105,10 @@ class ProcessImportBaylor:
                 baylor_institution.country = country_names[country]
                 self.baylor_institutions[icpcid] = baylor_institution
 
-            print('Created %d institutions and updated %d institutions' % (created, updated))
+            self.messages.append({'type': 'success', 'message': 'Created %d institutions and updated %d institutions' % (created, updated)})
+
 
     def import_sites(self):
-        print('Importing sites')
-        print('-'*30)
         with TextIOWrapper(self.zip_ref.open(self.site_file, "r"), encoding='utf-8') as f:
             lines = list(f.readlines())
             count = 0
@@ -120,11 +118,10 @@ class ProcessImportBaylor:
                 name = fields[1]
                 self.groups[id] = name
                 count += 1
-            print('%d sites imported' % count)
+            self.messages.append({'type': 'success', 'message': '%d sites imported' % count})
+
 
     def import_persons(self):
-        print('Importing persons')
-        print('-'*30)
         with TextIOWrapper(self.zip_ref.open(self.person_file, "r"), encoding='utf-8') as f:
             lines = list(f.readlines())
             count = 0
@@ -134,11 +131,10 @@ class ProcessImportBaylor:
                 name = fields[4]
                 count += 1
                 self.persons[id] = name
-            print('%d persons imported' % count)
+            self.messages.append({'type': 'success', 'message': '%d persons imported' % count})
+
 
     def import_teams(self):
-        print('Importing teams')
-        print('-'*30)
         with TextIOWrapper(self.zip_ref.open(self.team_file, "r"), encoding='utf-8') as f:
             lines = list(f.readlines())
             count = 0
@@ -161,11 +157,10 @@ class ProcessImportBaylor:
 
                 self.teams[team.id] = team
                 count += 1
-            print('%d teams imported' % count)
+            self.messages.append({'type': 'success', 'message': '%d teams imported' % count})
+
 
     def import_team_members(self):
-        print('Importing team members')
-        print('-'*30)
         with TextIOWrapper(self.zip_ref.open(self.team_person_file, "r"), encoding='utf-8') as f:
             lines = list(f.readlines())
             count = 0
@@ -182,7 +177,8 @@ class ProcessImportBaylor:
                 elif team_role == 'COACH':
                     self.teams[team_id].coach_id = person_id
                     count += 1
-            print('%d team members imported' % count)
+            self.messages.append({'type': 'success', 'message': '%d team members imported' % count})
+
 
     def get_description_of_team(self, team):
         result = ''
@@ -190,6 +186,7 @@ class ProcessImportBaylor:
         for member_id in team.members_id:
             result += self.persons[member_id] + '\n'
         return result
+
 
     def create_user(self, username, password, institution):
         default = {
@@ -205,6 +202,7 @@ class ProcessImportBaylor:
         user.save()
         return user
 
+
     def register_team(self, contest, team, user, site):
         ContestInstance.objects.create(
             contest=contest,
@@ -216,8 +214,8 @@ class ProcessImportBaylor:
             render_team_description_only=True
         )
 
-    def handle(self):
 
+    def handle(self):
         contest = Contest.objects.get(pk=self.contest_id)
         
         if not contest:
@@ -260,10 +258,9 @@ class ProcessImportBaylor:
                 mog_team.institution = self.institutions[team.institution_id]
                 mog_team.save()
                 id += 1
-        msg = 'Registered %d teams in \'%s\' contest' % (id-1, contest.name) 
-        print(msg)
-
-        return msg
+        
+        self.messages.append({'type': 'success', 'message': 'Registered %d teams in \'%s\' contest' % (id-1, contest.name)})
+        return self.messages
 
 
     def load_files(self):
