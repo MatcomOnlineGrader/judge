@@ -1,0 +1,95 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load filters %}
+{% load i18n %}
+{% load security %}
+
+{% block title %}{{ contest.name }} | {% trans 'Manage Contest' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest manage_contest_active='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">
+                        {% trans 'Manage Contest' %}
+                        {% include 'mog/contest/_actions.html' with contest=contest%}
+                    </h3>
+                </div>
+                {% block loading %}
+                    <div class="col-md-12">
+                        {% include 'mog/contest/_loading.html' %}
+                    </div>
+                {% endblock %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Import Baylor</h5>
+                                <form action="{% url 'mog:contest_manage_import_baylor' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_import_baylor %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Import Baylor</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">Import Guest</h5>
+                                <form action="{% url 'mog:contest_manage_import_guest' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_import_guest %}
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block" type="submit">Import Guest</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="margin-bottom-20">
+                                <a href={% url 'mog:contest_baylor' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Export Baylor Official Teams</a>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="margin-bottom-20">
+                                <a href={% url 'mog:contest_manage_export_password' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Get all Teams Passwords</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.show-loading-after-submit').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    if(confirm("Are you sure you want to import those Teams?")) {
+                        $('#loading-on-submit').css('display', 'block');
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+            })
+        });
+    </script>
+{% endblock %}
