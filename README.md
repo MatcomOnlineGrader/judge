@@ -30,6 +30,7 @@ REPLICAS: <int> [use 0 here as default]
 
 [secrets]
 SECRET_KEY: <str> [random string]
+PASSWORD_GENERATOR_SECRET_KEY: <str> [constant string to generate default password, don't change it often]
 
 [email]
 EMAIL_USE_TLS: <bool> [true|false]
