@@ -1,5 +1,6 @@
 import csv
 import json
+import zipfile
 
 from django.db.models.functions import Lower
 from django.urls import reverse
@@ -14,6 +15,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as trans
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timesince import timesince
 from django.views import View
 from django.views.decorators.http import require_http_methods
 
@@ -31,17 +33,27 @@ from api.models import (
 )
 from mog.decorators import public_actions_required
 
-from mog.forms import ContestForm, ClarificationForm, ProblemInContestForm
+from mog.forms import (
+    ContestForm,
+    ClarificationForm,
+    ProblemInContestForm,
+    ImportBaylorForm,
+    ImportGuestTeamsForm
+)
 from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.ratings import get_rating_deltas, check_rating_deltas, set_ratings
 from mog.statistics import get_contest_stats
-from mog.templatetags.filters import format_minutes
+from mog.templatetags.filters import format_minutes, rating_color, user_color
+from mog.templatetags.security import can_manage_contest
 from mog.model_helpers.contest import can_create_problem_in_contest
 from mog.samples import fix_problem_folder
 
-from django.utils.timesince import timesince
-from mog.templatetags.filters import rating_color, user_color
+from mog.baylor.import_baylor import ProcessImportBaylor
+from mog.baylor.import_team import ProcessImportTeam
+from mog.baylor.team_password import ZipTeamPassword
+from mog.baylor.utils import ICPCID_GUEST_PREFIX
+
 
 def contests(request):
     running, coming, past = \
@@ -105,6 +117,114 @@ def contest_problems(request, contest_id):
         'problems': contest.problems.order_by('position'),
         'can_create_problem': can_create_problem_in_contest(user, contest)
     })
+
+
+@login_required
+def contest_manage(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+    
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
+    return render(request, 'mog/contest/manage.html', {
+        'contest': contest,
+        'form_import_baylor': ImportBaylorForm(),
+        'form_import_guest': ImportGuestTeamsForm(),
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_manage_import_baylor(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
+    form_import_baylor = ImportBaylorForm(request.POST, request.FILES)
+
+    zip_baylor = None
+    prefix_baylor = None
+    select_pending_teams_baylor = False
+
+    if form_import_baylor.is_valid():
+        data = form_import_baylor.cleaned_data
+        zip_baylor = data['zip_baylor']
+        prefix_baylor = data['prefix_baylor']
+        select_pending_teams_baylor = data['select_pending_teams_baylor']
+
+        if zip_baylor and prefix_baylor:
+            try:
+                with zipfile.ZipFile(zip_baylor, 'r') as zip_ref:
+                    process_baylor_file = ProcessImportBaylor(zip_ref, contest_id, prefix_baylor, select_pending_teams_baylor)
+                    results = process_baylor_file.handle()
+                    for result in results:
+                        if result['type'] == 'success':
+                            messages.success(request, result['message'], extra_tags='success secure')
+                        else: 
+                            messages.warning(request, result['message'], extra_tags='warning secure')
+            except Exception as e:
+                msg = _('Error reading file from baylor: ' + str(e))
+                messages.error(request, msg, extra_tags='danger')
+    
+    return redirect('mog:contest_manage', contest_id=contest.id)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_manage_import_guest(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+
+    form_import_guest = ImportGuestTeamsForm(request.POST, request.FILES)
+    csv_teams = None
+    prefix_team = None
+
+    if form_import_guest.is_valid():
+        data = form_import_guest.cleaned_data
+        csv_teams = data['csv_teams']
+        prefix_team = data['prefix_team']
+
+        if csv_teams and prefix_team:
+            try:
+                csv_ref = csv_teams.read().decode('utf-8').splitlines()
+                process_guest_team = ProcessImportTeam(csv_ref, contest_id, prefix_team)
+                results = process_guest_team.handle()
+                for result in results:
+                    if result['type'] == 'success':
+                        messages.success(request, result['message'], extra_tags='success secure')
+                    else: 
+                        messages.warning(request, result['message'], extra_tags='warning secure')
+            except Exception as e:
+                msg = _('Error reading CSV Guest Teams file: ' + str(e))
+                messages.error(request, msg, extra_tags='danger')
+
+    return redirect('mog:contest_manage', contest_id=contest.id)
+
+
+@login_required
+@require_http_methods(["GET"])
+def contest_manage_export_password(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+    
+    zip_team_password = ZipTeamPassword(contest)
+    zip_passwords = zip_team_password.generate_zip_team_password()
+    response = HttpResponse(zip_passwords, content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="passwords_{0}.zip"'.format(contest.name)
+    return response
 
 
 @login_required
@@ -738,7 +858,7 @@ def contest_baylor(request, contest_id):
     problems, instance_results = calculate_standing(contest, False, None)
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(contest.name)
+    response['Content-Disposition'] = 'attachment; filename="standing_{0}.csv"'.format(contest.name)
 
     writer = csv.writer(response)
 
@@ -757,6 +877,8 @@ def contest_baylor(request, contest_id):
     for instance_result in instance_results:
         instance = instance_result.instance
         if not instance.team or not instance.team.icpcid or instance.group == contest.group:
+            continue
+        if instance.team.icpcid.startswith(ICPCID_GUEST_PREFIX):
             continue
 
         if instance_result.rank != last_rank:
