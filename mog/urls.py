@@ -69,6 +69,11 @@ urlpatterns = [
     url(r'^contest/create$', views.ContestCreateView.as_view(), name='contest_create'),
     url(r'^contests/$', views.contests, name='contests'),
 
+    url(r'^contest/manage/(?P<contest_id>[0-9]+)$', views.contest_manage, name='contest_manage'),
+    url(r'^contest/manage/import/baylor/(?P<contest_id>[0-9]+)$', views.contest_manage_import_baylor, name='contest_manage_import_baylor'),
+    url(r'^contest/manage/import/guest/(?P<contest_id>[0-9]+)$', views.contest_manage_import_guest, name='contest_manage_import_guest'),
+    url(r'^contest/manage/export/password/(?P<contest_id>[0-9]+)$', views.contest_manage_export_password, name='contest_manage_export_password'),
+
     url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),
     url(r'^contest/(?P<contest_id>[0-9]+)/unfreeze/$', views.unfreeze_contest, name='contest_unfreeze'),

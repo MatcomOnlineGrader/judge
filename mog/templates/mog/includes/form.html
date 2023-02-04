@@ -16,10 +16,12 @@
                 <div class="checkbox margin-left-25">
                     {{ field }}
                     <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
+                    {% if field.help_text %}<small class="form-help-text form-help-text-checkbox">{{field.help_text}}</small>{% endif %}
                 </div>
             {% else %}
                 <label for="{{ field.id_for_label }}" class="{{ label_class }}">{{ field.label }}</label>
                 {{ field|add_class:"form-control" }}
+                {% if field.help_text %}<small class="form-help-text">{{field.help_text}}</small>{% endif %}
             {% endif %}
         </div>
     {% endif %}
