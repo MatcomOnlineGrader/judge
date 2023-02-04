@@ -195,3 +195,16 @@ class UserFeedbackForm(forms.ModelForm):
     class Meta:
         model = UserFeedback
         fields = ['subject', 'description', 'screenshot']
+
+
+class ImportBaylorForm(forms.Form):
+    zip_baylor = forms.FileField(label = 'Upload file',
+        help_text = 'Load the ZIP file from Baylor. The file must have the .tab files (School.tab, Site.tab, Team.tab, Person.tab, and TeamPerson.tab).')
+    prefix_baylor = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each official users account. Example: 2021CFQ will create user like 2021CFQ_ICPC_001')
+    select_pending_teams_baylor = forms.BooleanField(required = False, label = 'Include pending teams')
+
+
+class ImportGuestTeamsForm(forms.Form):
+    csv_teams = forms.FileField(label = 'Upload file',
+        help_text = 'Load the CSV file with all Guest Teams. The file must have the following columns: team_name, institution, coach, participant1, participant2, participant3, and group.')
+    prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each guest users account. Example: 2021CFQ will create user like 2021CFQ_GUEST_001')
