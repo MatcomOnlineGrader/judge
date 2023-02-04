@@ -46,7 +46,11 @@
                         <small>{{ submission.date|date:"d/m/Y G:i:s"}}</small>
                     </td>
                     <td class="text-center">
-                        {% include 'mog/user/_link.html' with user=submission.user %}
+                        {% if submission.instance.team %}
+                            {% include 'mog/team/_team_link.html' with user=submission.user team=submission.instance.team %}
+                        {% else %}
+                            {% include 'mog/user/_link.html' with user=submission.user %}
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{% url 'mog:problem' submission.problem.id submission.problem.slug %}"
