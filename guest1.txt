@@ -1,0 +1,12 @@
+[[
+    "2021CFQG051",
+    "dW1b3rxT",
+    "Preuniversity_Teams",
+    "OMI CDMX",
+    "Leonardo Javier Toral Hernandez",
+    "Alejandro Martin Jiménez Rodríguez",
+    "Daniel Silvestre Rosales Aguilar",
+    "Martin Ibarra Romero",
+    "Mexico",
+    "Olimpiada de Informática de la Ciudad de México"
+]]
