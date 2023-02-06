@@ -1,6 +1,3 @@
 {% load filters %}
 
-<strong>{{ team.name }}</strong>
-<div>
-    <strong><a class="user" href="{% url 'mog:user' user.id %}" style="color: {{ user|user_color }};">{{ user.username }}</a></strong>
-</div>
+<strong><a class="team" href="{% url 'mog:user_teams' user.id %}" style="color: black;">{{ team.name }}</a></strong>
