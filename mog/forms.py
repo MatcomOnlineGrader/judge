@@ -2,6 +2,7 @@ import json
 
 from captcha.fields import CaptchaField
 from django import forms
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
@@ -199,12 +200,16 @@ class UserFeedbackForm(forms.ModelForm):
 
 class ImportBaylorForm(forms.Form):
     zip_baylor = forms.FileField(label = 'Upload file',
-        help_text = 'Load the ZIP file from Baylor. The file must have the .tab files (School.tab, Site.tab, Team.tab, Person.tab, and TeamPerson.tab).')
-    prefix_baylor = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each official users account. Example: 2021CFQ will create user like 2021CFQ_ICPC_001')
+        help_text = mark_safe(_('Load the ZIP file from Baylor. The file must have the .tab files <i>(School.tab, Site.tab, Team.tab, Person.tab, and TeamPerson.tab)</i>.')))
+    prefix_baylor = forms.CharField(max_length = 20, label = 'Prefix', help_text = mark_safe(_('Prefix to add to each official user account. Example: <b>2021CFQ</b>.<br>\
+        Users created will be named as <b>2021CFQ_icpc_[#]</b>.<br>\
+        <span style="color: red;">Make sure you use the same <i>prefix</i> to the same contest and related (warmup and real)</span>')))
     select_pending_teams_baylor = forms.BooleanField(required = False, label = 'Include pending teams')
 
 
 class ImportGuestTeamsForm(forms.Form):
     csv_teams = forms.FileField(label = 'Upload file',
-        help_text = 'Load the CSV file with all Guest Teams. The file must have the following columns: team_name, institution, coach, participant1, participant2, participant3, and group.')
-    prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = 'Prefix to add to each guest users account. Example: 2021CFQ will create user like 2021CFQ_GUEST_001')
+        help_text = mark_safe(_('Load the CSV file with all Guest Teams. The file must have the following columns: <i>team_name, institution, coach, participant1, participant2, participant3, and group</i>.')))
+    prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = mark_safe(_('Prefix to add to each guest user account. Example: <b>2021CFQ</b>.<br>\
+        Users created will be named as <b>2021CFQ_guest_[#]</b>.<br>\
+        <span style="color: red;">Make sure you use the same <i>prefix</i> to the same contest and related (warmup and real)</span>')))
