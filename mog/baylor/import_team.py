@@ -11,7 +11,13 @@ from api.models import (
     ContestInstance
 )
 
-from mog.baylor.utils import generate_secret_password, hash_string, ICPCID_GUEST_PREFIX
+from mog.baylor.utils import (
+    generate_secret_password,
+    hash_string,
+    generate_username,
+    ICPCID_GUEST_PREFIX,
+    CSV_GUEST_HEADER
+)
 
 
 class TeamData:
@@ -129,36 +135,66 @@ class ProcessImportTeam:
             raise Exception('The contest does not exist')
 
         self.csv_mapped = list(csv.reader(self.csv_ref))
+
+        if ','.join(self.csv_mapped[0]).strip() != CSV_GUEST_HEADER:
+            raise Exception('CSV file header must be %s' % CSV_GUEST_HEADER)
+
         self.import_institutions()
         self.import_team_members()
 
         teams = sorted(self.teams, key=lambda x: (x.group, x.institution, x.team_name))
 
         id = 1
+        registered = 0
 
         with transaction.atomic():
             for team in teams:
-                team_id = '%s_GUEST_%03d' % (self.prefix, id)
                 guestid = '%s%s' % (ICPCID_GUEST_PREFIX, team.hash)
-                mog_team = Team.objects.filter(icpcid=guestid).first()
-                mog_user = User.objects.filter(username=team_id).select_related('profile').first()
-                password = ''
+                prefix_guest = '%s_guest_' % self.prefix
+                r_username_prefix = rf'^{prefix_guest}\d+$'
 
-                if not mog_user:
-                    mog_user = self.create_user(team_id, password, self.institutions[team.institution])
-                if not mog_team:
+                # check if {icpcid=guestid} is already registered
+                if ContestInstance.objects.filter(contest_id=contest.pk, team__icpcid=guestid).exists():
+                    self.messages.append({'type': 'warning', 'message': 'Team "%s" is already registered in this contest' % team.team_name})
+                    continue
+
+                # find existing team with the same {icpcid} and has an user with the same {prefix}
+                mog_team = Team.objects.filter(icpcid=guestid, profiles__user__username__regex=r_username_prefix).first()
+
+                created = False
+                # if mog_team exists retrieve the user from itself
+                if mog_team:
+                    tmp_user = mog_team.profiles.filter(user__username__regex=r_username_prefix).first()
+                    mog_user = tmp_user.user
+                else:
+                    username = generate_username(prefix_guest, id)
+                    # while username already exists, generate new one
+                    # make sure the created user is brand new
+                    while User.objects.filter(username=username).exists():
+                        id += 1
+                        username = generate_username(prefix_guest, id)
+                    
+                    mog_user = self.create_user(username, '', self.institutions[team.institution])
                     mog_team = Team.objects.create(name=team.team_name, icpcid=guestid)
                     mog_user.profile.teams.add(mog_team)
+                    created = True
 
                 password = generate_secret_password(mog_user.id)
                 mog_user.set_password(password)
                 mog_user.save()
-                self.register_team(contest, team=mog_team, site=team.group)
 
                 mog_team.description = self.get_description_of_team(team)
                 mog_team.institution = self.institutions[team.institution]
                 mog_team.save()
+
+                # check if the team is not subscribe it in this contest yet
+                if created or not ContestInstance.objects.filter(contest_id=contest.pk, team_id=mog_team.pk).exists():
+                    self.register_team(contest, team=mog_team, site=team.group)
+                    registered += 1
+                else:
+                    self.messages.append({'type': 'warning', 'message': 'Team "%s" is already registered in this contest' % mog_team.name})
+
                 id += 1
 
-        self.messages.append({'type': 'success', 'message': 'Registered %d teams in \'%s\' contest' % (id-1, contest.name)})
+        self.messages.append({'type': 'success', 'message': 'Registered %d teams in \'%s\' contest' % (registered, contest.name)})
         return self.messages
