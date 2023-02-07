@@ -11,7 +11,7 @@ from api.models import (
     ContestInstance
 )
 
-from mog.baylor.utils import generate_secret_password
+from mog.baylor.utils import generate_secret_password, generate_username
 
 
 class BaylorTeam:
@@ -234,31 +234,58 @@ class ProcessImportBaylor:
         teams = sorted(self.teams.values(), key=key)
 
         id = 1
+        registered = 0
 
         with transaction.atomic():
             for team in teams:
-                team_id = '%s_ICPC_%03d' % (self.prefix, id)
-                mog_team = Team.objects.filter(icpcid=team.id).first()
-                mog_user = User.objects.filter(username=team_id).select_related('profile').first()
-                password = ''
+                icpcid = team.id
+                prefix_icpc = '%s_icpc_' % self.prefix
+                r_username_prefix = rf'^{prefix_icpc}\d+$'
 
-                if not mog_user:
-                    mog_user = self.create_user(team_id, password, self.institutions[team.institution_id])
-                if not mog_team:
-                    mog_team = Team.objects.create(name=team.name, icpcid=team.id)
+                # check if {icpcid} is already registered
+                if ContestInstance.objects.filter(contest_id=contest.pk, team__icpcid=icpcid).exists():
+                    self.messages.append({'type': 'warning', 'message': 'Team "%s" is already registered in this contest' % team.name})
+                    continue
+
+                # find existing team with the same {icpcid} and has an user with the same {prefix}
+                mog_team = Team.objects.filter(icpcid=icpcid, profiles__user__username__regex=r_username_prefix).first()
+
+                created = False
+                # if mog_team exists retrieve the user from itself
+                if mog_team:
+                    tmp_user = mog_team.profiles.filter(user__username__regex=r_username_prefix).first()
+                    mog_user = tmp_user.user
+                else:
+                    username = generate_username(prefix_icpc, id)
+                    # while username already exists, generate new one
+                    # make sure the created user is brand new
+                    while User.objects.filter(username=username).exists():
+                        id += 1
+                        username = generate_username(prefix_icpc, id)
+                    
+                    mog_user = self.create_user(username, '', self.institutions[team.institution_id])
+                    mog_team = Team.objects.create(name=team.name, icpcid=icpcid)
                     mog_user.profile.teams.add(mog_team)
+                    created = True
 
                 password = generate_secret_password(mog_user.id)
                 mog_user.set_password(password)
                 mog_user.save()
-                self.register_team(contest, team=mog_team, site=self.groups[team.site_id])
 
                 mog_team.description = self.get_description_of_team(team)
                 mog_team.institution = self.institutions[team.institution_id]
                 mog_team.save()
+
+                # check if the team is not subscribe it in this contest yet
+                if created or not ContestInstance.objects.filter(contest_id=contest.pk, team_id=mog_team.pk).exists():
+                    self.register_team(contest, team=mog_team, site=self.groups[team.site_id])
+                    registered += 1
+                else:
+                    self.messages.append({'type': 'warning', 'message': 'Team "%s" is already registered in this contest' % mog_team.name})
+
                 id += 1
         
-        self.messages.append({'type': 'success', 'message': 'Registered %d teams in \'%s\' contest' % (id-1, contest.name)})
+        self.messages.append({'type': 'success', 'message': 'Registered %d teams in \'%s\' contest' % (registered, contest.name)})
         return self.messages
 
 
