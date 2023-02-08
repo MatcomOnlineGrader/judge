@@ -37,7 +37,7 @@ class RunexeGrader(BaseGrader):
         compiler = arguments.compiler
 
         if language == 'java':
-            self.cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx256M -DMOG=true Main'\
+            self.cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx1024M -Xss64M -DMOG=true Main'\
                 % (RUNEXE_PATH, arguments.time_limit, arguments.memory_limit)
         elif language in ['python', 'javascript', 'python2', 'python3']:
             self.cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s' \
