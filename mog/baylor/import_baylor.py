@@ -1,6 +1,7 @@
 from io import TextIOWrapper
 
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
 
 from api.models import (
     Country,
@@ -72,32 +73,25 @@ class ProcessImportBaylor:
                             'JAM': 'Jamaica',
                             'DOM': 'Dominican Republic',
                             'CUB': 'Cuba'}
-            created = 0
-            updated = 0
+            count = 0
 
             for line in lines[1:]:
                 fields = line.split('\t')
                 icpcid = fields[0]
                 name = fields[2]
                 short_name = fields[3]
-                url = fields[4]
                 country = fields[5]
 
                 institution = Institution.objects.filter(name=name).first()
 
                 if not institution:
-                    institution = Institution.objects.create(name=name)
-                    created += 1
+                    self.messages.append({'type': 'warning', 'message': _('WARNING: Institution <b>%s</b> was not found' % name) })
                 else:
-                    updated += 1
+                    count += 1
 
-                institution.url = url
-
-                if country in country_names:
-                    institution.country = Country.objects.filter(name=country_names[country]).first()
-                else:
+                if country not in country_names:
                     self.messages.append({'type': 'warning', 'message': 'WARNING: Country %s was not found' % country})
-                institution.save()
+
                 self.institutions[icpcid] = institution
                 baylor_institution = BaylorInstitution()
                 baylor_institution.name = name
@@ -105,7 +99,7 @@ class ProcessImportBaylor:
                 baylor_institution.country = country_names[country]
                 self.baylor_institutions[icpcid] = baylor_institution
 
-            self.messages.append({'type': 'success', 'message': 'Created %d institutions and updated %d institutions' % (created, updated)})
+            self.messages.append({'type': 'success', 'message': 'Loaded %d institutions' % count })
 
 
     def import_sites(self):
@@ -195,7 +189,7 @@ class ProcessImportBaylor:
         }
         user = User.objects.create(**default)
         user.set_password(password)
-        user.profile.institution_id = institution.id
+        user.profile.institution_id = institution.id if institution else None
         user.profile.institution = institution
         user.profile.email_notifications = False
         user.profile.save()
