@@ -240,7 +240,7 @@ def contest_registration(request, contest_id):
 
     return render(request, 'mog/contest/registration.html', {
         'contest': contest,
-        'instances': contest.instances.order_by(Lower('group'))
+        'instances': contest.instances.order_by(Lower('group'), 'team__institution__name', 'team__name')
     })
 
 
