@@ -38,7 +38,19 @@
                             <tr class="text-center">
                                 <td class="instance-info" data-instance-pk="{{ instance.pk }}">
                                     {% if instance.team %}
-                                        <strong>{{ instance.team.name }}</strong>
+                                        {% if instance.team.institution.name %}
+                                            <a
+                                                style="text-decoration:none; color: black;"
+                                                data-html="true"
+                                                data-toggle="tooltip"
+                                                title=""
+                                                data-placement="right"
+                                                data-original-title="{{instance.team.institution.name}}">
+                                                    <strong>{{ instance.team.name }}</strong>
+                                            </a>
+                                        {% else %}
+                                            <strong>{{ instance.team.name }}</strong>
+                                        {% endif %}
                                     {% else %}
                                         <strong>
                                             <a class="user" style="color: black;">{{ instance.user.username }}</a>
