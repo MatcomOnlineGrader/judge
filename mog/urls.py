@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description,
         name='api_instance_edit_render_description'),
 
+    url(r'^api/contest/permission/(?P<permission_pk>[0-9]+)/edit/granted$', views.contest_permission_edit_granted, name='api_contest_permission_edit_granted'),
+
     url(r'^message/send/(?P<user_id>[0-9]+)$', views.send_message, name='send_message'),
 
     url(r'^teams/json$', views.teams_json, name='teams_json'),
@@ -73,6 +75,11 @@ urlpatterns = [
     url(r'^contest/manage/import/baylor/(?P<contest_id>[0-9]+)$', views.contest_manage_import_baylor, name='contest_manage_import_baylor'),
     url(r'^contest/manage/import/guest/(?P<contest_id>[0-9]+)$', views.contest_manage_import_guest, name='contest_manage_import_guest'),
     url(r'^contest/manage/export/password/(?P<contest_id>[0-9]+)$', views.contest_manage_export_password, name='contest_manage_export_password'),
+
+    url(r'^contest/permission/(?P<contest_id>[0-9]+)$', views.contest_permission, name='contest_permission'),
+    url(r'^contest/permission/assign/(?P<contest_id>[0-9]+)$', views.contest_add_permission, name='contest_add_permission'),
+    url(r'^contest/permission/import/(?P<contest_id>[0-9]+)$', views.contest_permission_import, name='contest_permission_import'),
+    url(r'^contest/permission/export/(?P<contest_id>[0-9]+)$', views.contest_permission_export, name='contest_permission_export'),
 
     url(r'^contest/rate/(?P<contest_id>[0-9]+)$', views.rate_contest, name='rate_contest'),
     url(r'^contest/unrate/(?P<contest_id>[0-9]+)$', views.unrate_contest, name='unrate_contest'),

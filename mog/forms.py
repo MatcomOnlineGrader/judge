@@ -213,3 +213,8 @@ class ImportGuestTeamsForm(forms.Form):
     prefix_team = forms.CharField(max_length = 20, label = 'Prefix', help_text = mark_safe(_('Prefix to add to each guest user account. Example: <b>2021CFQ</b>.<br>\
         Users created will be named as <b>2021CFQ_guest_[#]</b>.<br>\
         <span style="color: red;">Make sure you use the same <i>prefix</i> to the same contest and related (warmup and real)</span>')))
+
+
+class ImportPermissionForm(forms.Form):
+    csv_permission = forms.FileField(label = 'Upload file',
+        help_text = mark_safe(_('Load the CSV file with all User Permissions. The file must have the following columns: <i>user_id, contest_id, role, and granted</i>.')))

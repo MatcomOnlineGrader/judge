@@ -210,6 +210,13 @@
                                     </a>
                                 </li>
                                 {% endif %}
+                                {% if user|can_manage_contest:contest %}
+                                <li class="{{ manage_permission_active }}">
+                                    <a href="{% url 'mog:contest_permission' contest.id %}">
+                                        <i class="glyphicon glyphicon-lock"></i> {% trans 'Manage Permissions' %}
+                                    </a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </td>
                     </tr>
