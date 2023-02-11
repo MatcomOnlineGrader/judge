@@ -5,7 +5,7 @@
 {% load i18n %}
 {% load security %}
 
-{% block title %}{{ contest.name }} | {% trans 'Manage Contest' %}{% endblock %}
+{% block title %}{{ contest.name }} | {% trans 'Import Teams' %}{% endblock %}
 
 {% block left %}
     {% include 'mog/contest/_left.html' with contest=contest manage_contest_active='active' %}
@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">
-                        {% trans 'Manage Contest' %}
+                        {% trans 'Import Teams' %}
                         {% include 'mog/contest/_actions.html' with contest=contest%}
                     </h3>
                 </div>
@@ -59,17 +59,8 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-sm-12 col-lg-6">
-                            <div class="margin-bottom-20">
-                                <a href={% url 'mog:contest_manage_export_password' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> {% trans 'Export Team Passwords' %}</a>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-lg-6">
-                            <div class="margin-bottom-20">
-                                <a href={% url 'mog:contest_baylor' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> {% trans 'Export Baylor Standing' %}</a>
-                            </div>
-                        </div>
+                    <div class="margin-bottom-20">
+                        <a href={% url 'mog:contest_manage_export_password' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> {% trans 'Export Team Passwords' %}</a>
                     </div>
                 </div>
             </div>

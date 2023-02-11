@@ -206,7 +206,7 @@
                                 {% if user|can_manage_contest:contest %}
                                 <li class="{{ manage_contest_active }}">
                                     <a href="{% url 'mog:contest_manage' contest.id %}">
-                                        <i class="glyphicon glyphicon-cog"></i> {% trans 'Manage Contest' %}
+                                        <i class="glyphicon glyphicon-import"></i> {% trans 'Import Teams' %}
                                     </a>
                                 </li>
                                 {% endif %}
