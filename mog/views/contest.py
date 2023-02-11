@@ -821,7 +821,7 @@ def contest_csv(request, contest_id):
     problems, instance_results = calculate_standing(contest, True, None)
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(contest.name.encode('utf-8').strip())
+    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(contest.name.strip())
 
     response.write("sep=,\r\n")
 
@@ -829,7 +829,7 @@ def contest_csv(request, contest_id):
 
     header = [trans('Rank'), trans('Team'), trans('Solved'), trans('Penalty')]
     header.extend([problem.letter for problem in problems])
-    writerow(map(lambda x: x.encode('utf-8'), header))
+    writerow(map(lambda x: x, header))
 
     append = list.append
 
@@ -841,13 +841,13 @@ def contest_csv(request, contest_id):
         name = '' if instance.real else '(~) '
 
         if instance.team is not None:
-            name += instance.team.name.encode('utf-8').strip()
+            name += instance.team.name.strip()
             if instance.team.institution is not None:
-                name += ' ({0})'.format(instance.team.institution.name.encode('utf-8').strip())
+                name += ' ({0})'.format(instance.team.institution.name.strip())
         else:
-            name += instance.user.username.encode('utf-8').strip()
+            name += instance.user.username.strip()
             if instance.user.profile.institution is not None:
-                name += ' ({0})'.format(instance.user.profile.institution.name.encode('utf-8').strip())
+                name += ' ({0})'.format(instance.user.profile.institution.name.strip())
 
         append(row, name)
         append(row, instance_result.solved)
