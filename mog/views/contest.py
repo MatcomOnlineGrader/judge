@@ -30,6 +30,7 @@ from api.models import (
     Submission,
     Team,
     User,
+    ContestPermission
 )
 from mog.decorators import public_actions_required
 
@@ -38,9 +39,10 @@ from mog.forms import (
     ClarificationForm,
     ProblemInContestForm,
     ImportBaylorForm,
-    ImportGuestTeamsForm
+    ImportGuestTeamsForm,
+    ImportPermissionForm
 )
-from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest
+from mog.gating import user_is_admin, user_can_bypass_frozen_in_contest, user_is_judge_in_contest, grant_role_to_user_in_contest, revoke_role_to_user_in_contest
 from mog.helpers import filter_submissions, get_paginator, get_contest_json
 from mog.ratings import get_rating_deltas, check_rating_deltas, set_ratings
 from mog.statistics import get_contest_stats
@@ -52,7 +54,9 @@ from mog.samples import fix_problem_folder
 from mog.baylor.import_baylor import ProcessImportBaylor
 from mog.baylor.import_team import ProcessImportTeam
 from mog.baylor.team_password import ZipTeamPassword
-from mog.baylor.utils import ICPCID_GUEST_PREFIX
+from mog.baylor.utils import ICPCID_GUEST_PREFIX, CSV_PERMISSION_HEADER
+
+from .permissions import set_granted_to_permission
 
 
 def contests(request):
@@ -987,3 +991,144 @@ def contest_instances_info(request, contest_id):
         'success': True,
         'data': instances_data
     })
+
+
+@login_required
+def contest_permission(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+    
+    if user_is_admin(request.user) and contest.needs_unfreeze and contest.is_past:
+        msg = _('This contest is still frozen. Go to <b>Actions -> Unfreeze contest </b> to see the final results!')
+        messages.warning(request, msg, extra_tags='warning secure')
+
+    return render(request, 'mog/contest/permission.html', {
+        'contest': contest,
+        'permissions': ContestPermission.objects.filter(contest=contest).order_by('-granted', 'role', 'user__username'),
+        'form_import_permission': ImportPermissionForm()
+    })
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_add_permission(request, contest_id):
+    """Administrative tool: Add persission to user in contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    
+    contest = get_object_or_404(Contest, pk=contest_id)
+    
+    next = request.POST.get('next') or reverse('mog:contest_permission', args=(contest.pk, ))
+    observer = request.POST.get('observer', '')
+    judge = request.POST.get('judge', '')
+    members = request.POST.get('user-members', '').split(',')
+    users = []
+
+    if not observer and not judge:
+        msg = _('You need to assign at least one permission (observer / judge) to the users.')
+        messages.success(request, msg, extra_tags='warning')
+        return redirect(next)
+
+    try:
+        for member in members:
+            users.append(get_object_or_404(User, pk=int(member)))
+        users = set(users)
+        
+        for user in users:
+            if judge:
+                prev_permission = ContestPermission.objects.filter(contest=contest, user=user, role='judge').first()
+                if prev_permission:
+                    set_granted_to_permission(prev_permission, True)
+                else:
+                    grant_role_to_user_in_contest(user, contest, role='judge')
+            if observer:
+                prev_permission = ContestPermission.objects.filter(contest=contest, user=user, role='observer').first()
+                if prev_permission:
+                    set_granted_to_permission(prev_permission, True)
+                else:
+                    grant_role_to_user_in_contest(user, contest, role='observer')
+        msg = _('Successfully assigned ' + str(len(users)) + ' new users roles.')
+        messages.success(request, msg, extra_tags='success')
+        
+    except (ValueError, TypeError):
+        messages.error(request, 'Permission users: Invalid data!', extra_tags='danger')
+
+    return redirect(next)
+
+
+@login_required
+def contest_permission_export(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="permission_{0}.csv"'.format(contest.name)
+
+    writer = csv.writer(response)
+
+    header = ['user_id',
+              'contest_id',
+              'role',
+              'granted']
+    writer.writerow(header)
+
+    permissions = ContestPermission.objects.filter(contest=contest)
+
+    for permission in permissions:
+        row = [permission.user_id,
+               permission.contest_id,
+               permission.role,
+               permission.granted]
+        writer.writerow(row)
+
+    return response
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_permission_import(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not can_manage_contest(request.user, contest):
+        return HttpResponseForbidden()
+
+    form_import_permission = ImportPermissionForm(request.POST, request.FILES)
+
+    csv_permission = None
+    
+    if form_import_permission.is_valid():
+        data = form_import_permission.cleaned_data
+        csv_permission = data['csv_permission']
+
+        if csv_permission:
+            try:
+                csv_ref = csv_permission.read().decode('utf-8').splitlines()
+                reader = list(csv.reader(csv_ref))
+
+                if ','.join(reader[0]).strip() != CSV_PERMISSION_HEADER:
+                    raise Exception('CSV file header must be %s' % CSV_PERMISSION_HEADER)
+                
+                for line in reader[1:]:
+                    user = get_object_or_404(User, pk=int(line[0]))
+                    role = line[2]
+                    granted = line[3] == 'True'
+                    prev_permission = ContestPermission.objects.filter(contest=contest, user=user, role=role).first()
+                    if prev_permission:
+                        set_granted_to_permission(prev_permission, granted)
+                    elif granted:
+                        grant_role_to_user_in_contest(user, contest, role)
+                    else:
+                        revoke_role_to_user_in_contest(user, contest, role)
+                    
+                msg = _('Successfully assigned ' + str(len(reader) - 1) + ' new users roles.')
+                messages.success(request, msg, extra_tags='success')
+
+            except Exception as e:
+                msg = _('Error reading CSV User Permissions file: ' + str(e))
+                messages.error(request, msg, extra_tags='danger')
+
+    return redirect('mog:contest_permission', contest_id=contest.id)

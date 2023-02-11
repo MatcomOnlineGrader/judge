@@ -1,0 +1,174 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load i18n %}
+{% load security %}
+
+{% block title %}{{ contest.name }} | {% trans 'Manage Permissions' %}{% endblock %}
+
+{% block left %}
+    {% include 'mog/contest/_left.html' with contest=contest manage_permission_active='active' %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="title margin-bottom-20">
+                        {% trans 'Manage Permissions' %}
+                        {% include 'mog/contest/_actions.html' with contest=contest%}
+                    </h3>
+                </div>
+                {% block loading %}
+                    <div class="col-md-12">
+                        {% include 'mog/contest/_loading.html' %}
+                    </div>
+                {% endblock %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">{% trans 'Import User Permissions' %}</h5>
+                                <form action="{% url 'mog:contest_permission_import' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    {% include 'mog/includes/form.html' with form=form_import_permission %}
+                                    <div class="row">
+                                        <div class="col-md-6 col-md-offset-6">
+                                            <button class="btn btn-primary btn-block" type="submit">{% trans 'Import Permissions' %}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">{% trans 'Assign New User Permissions' %}</h5>
+                                <form action="{% url 'mog:contest_add_permission' contest.id %}" method="post" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url 'mog:contest_permission' contest.id %}"/>
+                                    <div class="form-group margin-bottom-5">
+                                        <div class="checkbox margin-left-25">
+                                            <input type="checkbox" name="observer" id="observer">
+                                            <label for="observer" class="">{% trans 'Observer' %}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group margin-bottom-5">
+                                        <div class="checkbox margin-left-25">
+                                            <input type="checkbox" name="judge" id="judge">
+                                            <label for="judge" class="">{% trans 'Judge' %}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-members" class="">{% trans 'Users' %}</label>
+                                        <input id="user-members" name="user-members" class="form-control">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-md-offset-6">
+                                            <button class="btn btn-primary btn-block form-control" type="submit">{% trans 'Assign Permissions' %}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class="text-center cell-medium">{% trans "User" %}</th>
+                    <th class="text-center cell-medium">{% trans "Role" %}</th>
+                    <th class="text-center cell-medium">{% trans "Granted" %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for permission in permissions %}
+                    <tr class="text-center">
+                        <td>
+                            {% include 'mog/user/_link.html' with user=permission.user %}
+                        </td>
+                        <td>
+                            {{ permission.role }}
+                        </form>
+                        </td>
+                        <td>
+                            <form action="{% url 'mog:api_contest_permission_edit_granted' permission.id %}" method="POST">
+                                <input id="granted" type="checkbox" name="granted"
+                                        onclick="$(this).closest('form').submit();"
+                                        {% if permission.granted %}checked="checked"{% endif %}>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <div class="margin-bottom-20">
+                <a href={% url 'mog:contest_permission_export' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Export Permissions</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input.css' %}" rel="stylesheet"/>
+    <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input-facebook.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.show-loading-after-submit').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    if(confirm("Are you sure you want to add this user/import permissions?")) {
+                        $('#loading-on-submit').css('display', 'block');
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+            })
+        });
+    </script>
+
+    <script type="text/javascript" src="{% static 'mog/plugins/jquery.tokeninput/js/jquery.tokeninput.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#user-members').tokenInput('{% url "mog:users_json" %}', {
+                theme: 'facebook',
+                noResultsText: 'No user found!',
+                searchingText: 'Searching...',
+                deleteText: "&#x2603;",
+                propertyToSearch: "username",
+                preventDuplicates: true,
+                zindex: 11001,
+                resultsFormatter: function(item){
+                    var html = [
+                            '<li>',
+                            '    <img src="' + item.url + '" height="25px" width="25px" />',
+                            '    <div style="display: inline-block; padding-left: 10px;">',
+                            '        <div>',
+                            '            <div class="username">',
+                            '                ' + item.username,
+                            '            </div>',
+                            '            <div class="full_name">',
+                            '                ' + item.first_name + ' ' + item.last_name,
+                            '            </div>',
+                            '        </div>',
+                            '    </div>',
+                            '</li>'
+                    ];
+                    return html.join('');
+                },
+                tokenFormatter: function(item) {
+                    return '<li><p>' + item.username + '</p></li>';
+                }
+            });
+        });
+    </script>
+{% endblock %}
