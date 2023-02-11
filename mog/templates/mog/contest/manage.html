@@ -30,13 +30,13 @@
                     <div class="row">
                         <div class="col-sm-12 col-lg-6">
                             <div class="well bckg-white">
-                                <h5 class="well-title">Import Baylor</h5>
+                                <h5 class="well-title">{% trans 'Import Baylor' %}</h5>
                                 <form action="{% url 'mog:contest_manage_import_baylor' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
                                     {% csrf_token %}
                                     {% include 'mog/includes/form.html' with form=form_import_baylor %}
                                     <div class="row">
                                         <div class="col-md-5 col-md-offset-7">
-                                            <button class="btn btn-primary btn-block" type="submit">Import Baylor</button>
+                                            <button class="btn btn-primary btn-block" type="submit">{% trans 'Import Baylor' %}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -44,13 +44,13 @@
                         </div>
                         <div class="col-sm-12 col-lg-6">
                             <div class="well bckg-white">
-                                <h5 class="well-title">Import Guest</h5>
+                                <h5 class="well-title">{% trans 'Import Guest' %}</h5>
                                 <form action="{% url 'mog:contest_manage_import_guest' contest.id %}" method="post" enctype="multipart/form-data" class="show-loading-after-submit">
                                     {% csrf_token %}
                                     {% include 'mog/includes/form.html' with form=form_import_guest %}
                                     <div class="row">
                                         <div class="col-md-5 col-md-offset-7">
-                                            <button class="btn btn-primary btn-block" type="submit">Import Guest</button>
+                                            <button class="btn btn-primary btn-block" type="submit">{% trans 'Import Guest' %}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -62,12 +62,12 @@
                     <div class="row">
                         <div class="col-sm-12 col-lg-6">
                             <div class="margin-bottom-20">
-                                <a href={% url 'mog:contest_manage_export_password' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Export Team Passwords</a>
+                                <a href={% url 'mog:contest_manage_export_password' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> {% trans 'Export Team Passwords' %}</a>
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-6">
                             <div class="margin-bottom-20">
-                                <a href={% url 'mog:contest_baylor' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Export Standing Baylor</a>
+                                <a href={% url 'mog:contest_baylor' contest.id %} class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> {% trans 'Export Baylor Standing' %}</a>
                             </div>
                         </div>
                     </div>
