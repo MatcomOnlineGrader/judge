@@ -105,13 +105,15 @@ class ZipTeamPassword:
                         institution_password_output = institution_password_output + str('\n')
                         # append institution_password_output to site_password_output
                         site_password_output = site_password_output + institution_password_output
-                        self.institution_password_output[current_institution] = institution_password_output
+                        if current_institution in self.institution_password_output:
+                            self.institution_password_output[current_institution] += institution_password_output
+                        else: self.institution_password_output[current_institution] = institution_password_output
                         # clear institution_password_output
                         institution_password_output = ''
 
                     current_institution = team.institution
 
-                    institution_password_output = institution_password_output + str(current_institution) + str('\n') + \
+                    institution_password_output = institution_password_output + str(current_institution) + ' - ' + str(current_group_site) + str('\n') + \
                         str('-' * 100) + str('\n')
 
                 institution_password_output = institution_password_output + \
@@ -123,7 +125,9 @@ class ZipTeamPassword:
                 institution_password_output = institution_password_output + str('\n')
                 # append institution_password_output to site_password_output
                 site_password_output = site_password_output + institution_password_output
-                self.institution_password_output[current_institution] = institution_password_output
+                if current_institution in self.institution_password_output:
+                    self.institution_password_output[current_institution] += institution_password_output
+                else: self.institution_password_output[current_institution] = institution_password_output
                 # clear institution_password_output
                 institution_password_output = ''
         
