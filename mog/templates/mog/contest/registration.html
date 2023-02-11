@@ -22,7 +22,81 @@
                 <div class="col-md-12">
                     <h3 class="title margin-bottom-20">{% trans 'Registration' %}</h3>
                 </div>
-
+                {% block loading %}
+                    <div class="col-md-12">
+                        {% include 'mog/contest/_loading.html' %}
+                    </div>
+                {% endblock %}
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-12 {% if contest.allow_teams %}col-lg-6{% endif %}">
+                            <div class="well bckg-white">
+                                <h5 class="well-title">{% trans 'Register users' %}</h3>
+                                <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="show-loading-after-submit">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                                    <div class="form-group">
+                                        <label for="user-group" class="">{% trans 'Group' %}</label>
+                                        <select class="select2 team-import" name="user-group" style="width: 100%;">
+                                            <option value="{{ contest.group|default_if_none:'' }}">
+                                                {{ contest.group|default_if_none:'-----' }}
+                                            </option>
+                                        </select>
+                                        <small class="form-help-text">By default it will use the [Default group] of this contest
+                                            {% if contest.group %}
+                                                : {{ contest.group }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-members" class="">{% trans 'Users' %}</label>
+                                        <input id="user-members" name="user-members" class="form-control">
+                                        <small class="form-help-text">You can find user by: <i>username, firstname and lastname</i></small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-5 col-md-offset-7">
+                                            <button class="btn btn-primary btn-block form-control" type="submit">{% trans 'Register Users' %}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% if contest.allow_teams %}
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="well bckg-white">
+                                    <h5 class="well-title">{% trans 'Register teams' %}</h3>
+                                    <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="show-loading-after-submit">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                                        <div class="form-group">
+                                            <label for="team-group" class="">{% trans 'Group' %}</label>
+                                            <select class="select2 team-import" name="team-group" style="width: 100%;">
+                                                <option value="{{ contest.group|default_if_none:'' }}">
+                                                    {{ contest.group|default_if_none:'-----' }}
+                                                </option>
+                                            </select>
+                                            <small class="form-help-text">By default it will use the [Default group] of this contest
+                                                {% if contest.group %}
+                                                    : {{ contest.group }}
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="team-members" class="">{% trans 'Teams' %}</label>
+                                            <input id="team-members" name="team-members" class="form-control">
+                                            <small class="form-help-text">You can find team by: <i>name, description, and institution</i></small>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5 col-md-offset-7">
+                                                <button class="btn btn-primary btn-block form-control" type="submit">{% trans 'Register Teams' %}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -53,7 +127,7 @@
                                 </form>
                                 </td>
                                 <td>
-                                    <select class="select2" style="width: 100%;"
+                                    <select class="select2 contest-instance" style="width: 100%;"
                                             data-url-edit="{% url "mog:api_instance_edit_group" instance.pk %}">
                                         <option value="{{ instance.group|default_if_none:'' }}">
                                             {{ instance.group|default_if_none:'-----' }}
@@ -76,47 +150,31 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <h3 class="title margin-bottom-20">{% trans 'Register user' %}</h3>
-                    <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="well">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                        <div class="form-group">
-                            <label for="user-members" class="sr-only">{% trans 'Users' %}</label>
-                            <input id="user-members" name="user-members" class="form-control">
-                        </div>
-                        <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
-                    </form>
-                </div>
-
-                {% if contest.allow_teams %}
-                    <div class="col-md-6">
-                        <h3 class="title margin-bottom-20">{% trans 'Register team' %}</h3>
-                        <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="well">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                            <div class="form-group">
-                                <label for="team-members" class="sr-only">{% trans 'Teams' %}</label>
-                                <input id="team-members" name="team-members" class="form-control">
-                            </div>
-                            <input type="submit" value="{% trans 'Register' %}" class="form-control"/>
-                        </form>
-                    </div>
-                {% endif %}
-
-            </div>
-        </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        $(document).ready(function() {
+            $('.show-loading-after-submit').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    if(confirm("Are you sure you want to import those Users/Teams?")) {
+                        $('#loading-on-submit').css('display', 'block');
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+            })
+        });
+    </script>
+
     <script src="{% static 'mog/plugins/select2/js/select2.full.min.js' %}"></script>
 
     <script>
         $(document).ready(function () {
-            $('.select2').select2({
+            $('.select2.contest-instance').select2({
                 tags: true,
                 closeOnSelect: true,
                 ajax: {
@@ -141,6 +199,28 @@
                     .fail(function() {
                         alert('some error ocurrs!');
                     })
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2.team-import').select2({
+                tags: true,
+                closeOnSelect: true,
+                ajax: {
+                    url: "{% url 'mog:api_instance_group_list' %}",
+                    dataType: 'json',
+                    processResults: function (response, params) {
+                        return {
+                            results: response.data.map(function (group) {
+                                return {
+                                    id: group, text: group
+                                }
+                            })
+                        }
+                    }
+                }
             });
         });
     </script>

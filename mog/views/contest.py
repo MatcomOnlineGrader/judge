@@ -489,6 +489,7 @@ def contest_register_multiple_users(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     
+    group = request.POST.get('user-group', '')
     members = request.POST.get('user-members', '').split(',')
     users = []
 
@@ -497,14 +498,19 @@ def contest_register_multiple_users(request, contest_id):
             users.append(get_object_or_404(User, pk=int(member)))
         users = set(users)
         contest = get_object_or_404(Contest, pk=contest_id)
+        count = 0
         for user in users:
-            ContestInstance.objects.create(
-                contest=contest,
-                user=user,
-                real=True,
-                group=contest.group
-            )
-        msg = _('Successfully registered ' + str(len(users)) + ' new user')
+            if ContestInstance.objects.filter(contest=contest, user=user).first():
+                messages.warning(request, _("User '%s' is already registerd" % user.username), extra_tags='warning')
+            else:
+                ContestInstance.objects.create(
+                    contest=contest,
+                    user=user,
+                    real=True,
+                    group=group or contest.group
+                )
+                count += 1
+        msg = _('Successfully registered ' + str(count) + ' new user')
         messages.success(request, msg, extra_tags='success')
         
     except (ValueError, TypeError):
@@ -535,6 +541,7 @@ def contest_register_multiple_teams(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     
+    group = request.POST.get('team-group', '')
     members = request.POST.get('team-members', '').split(',')
     teams = []
 
@@ -543,18 +550,23 @@ def contest_register_multiple_teams(request, contest_id):
             teams.append(get_object_or_404(Team, pk=int(member)))
         teams = set(teams)
         contest = get_object_or_404(Contest, pk=contest_id)
+        count = 0
         for team in teams:
             # Check that the team can be registered in the contest
             if not contest.allow_teams:
                 messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
                 return redirect(reverse('mog:contests'))
-            ContestInstance.objects.create(
-                contest=contest,
-                team=team,
-                real=True,
-                group=contest.group
-            )
-        msg = _('Successfully registered ' + str(len(teams)) + ' new team')
+            if ContestInstance.objects.filter(contest=contest, team=team).first():
+                messages.warning(request, _("Team '%s' is already registerd" % team.name), extra_tags='warning')
+            else:
+                ContestInstance.objects.create(
+                    contest=contest,
+                    team=team,
+                    real=True,
+                    group=group or contest.group
+                )
+                count += 1
+        msg = _('Successfully registered ' + str(count) + ' new team')
         messages.success(request, msg, extra_tags='success')
         
     except (ValueError, TypeError):
