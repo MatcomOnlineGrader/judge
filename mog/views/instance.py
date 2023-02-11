@@ -17,7 +17,7 @@ def instance_group_list(request):
     """
     if not user_is_admin(request.user):
         raise Http404()
-    search = request.GET.get('q')
+    search = request.GET.get('q', '')
     groups_list = ContestInstance.objects.filter(~Q(group=None), group__icontains=search)\
         .order_by('group').values_list('group', flat=True).distinct()
     return JsonResponse(data={
