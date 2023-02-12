@@ -126,7 +126,7 @@
                                         {% if user.is_authenticated %}
                                             {% with uc=user|unseen_clarifications:contest %}
                                                 {% if uc %}
-                                                    <span class="badge pull-right">{{ uc }}</span>
+                                                    <span class="badge pull-right" style="background-color: #cc0000;">{{ uc }}</span>
                                                 {% endif %}
                                             {% endwith %}
                                         {% endif %}

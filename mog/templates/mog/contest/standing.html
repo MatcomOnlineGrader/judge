@@ -39,6 +39,34 @@
         {
             padding: 18px 8px !important;
         }
+
+        .death-time, .frozen-time {
+            font-weight: 600;
+            -webkit-animation: 1s cubic-bezier(0.4, 0, 1, 1) animation-scale;
+            animation: 1s cubic-bezier(0.4, 0, 1, 1) animation-scale;
+            animation-iteration-count: infinite;
+            display: inline-block;
+        }
+        .death-time {
+            color: #c00;
+        }
+        .frozen-time {
+            color: #1c42fd;
+        }
+        @-webkit-keyframes animation-scale {
+            0% { transform: scale(1.0); }
+            40% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1.0); }
+        }
+        @keyframes animation-scale {
+            0% { transform: scale(1.0); }
+            40% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1.0); }
+        }
     </style>
 {% endblock %}
 
@@ -53,9 +81,9 @@
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ user_instance.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}
-                            {% trans '(Death time)' %}
+                            <span class="death-time">{% trans '(Death time)' %}</span>
                         {% elif contest.is_frozen_time %}
-                            {% trans '(Frozen time)' %}
+                            <span class="frozen-time">{% trans '(Frozen time)' %}</span>
                         {% endif %}
                     </h5>
                     {% if not user_instance.real %}

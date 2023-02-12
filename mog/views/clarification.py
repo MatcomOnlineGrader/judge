@@ -46,6 +46,17 @@ def clarification_create(request):
             question=form.cleaned_data['question']
         )
 
+        if user_is_admin(request.user) or user_is_judge_in_contest(request.user, contest):
+            answer = request.POST.get('answer')
+            public = request.POST.get('public', '') == 'on'
+            if answer:
+                clarification.answer = answer
+                clarification.public = public
+                clarification.fixer = request.user
+                clarification.answered_date = timezone.now()
+                clarification.seen.clear()
+                clarification.save()
+
         push_clarification_to_webhooks(clarification, create=True)
 
         messages.success(

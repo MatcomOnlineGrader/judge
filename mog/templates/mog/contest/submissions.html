@@ -22,9 +22,9 @@
                        placeholder="{% trans 'Username' %}">
                 <select id="problem" name="problem" class="form-control">
                     <option value="" selected>{% trans '-- Select problem --' %}</option>
-                    {% for problem in contest.problems.all %}
+                    {% for problem in contest.get_problems %}
                         <option value="{{ problem.title }}"
-                                {% if query.problem == problem.title %}selected{% endif %}>{{ problem.title }}</option>
+                                {% if query.problem == problem.title %}selected{% endif %}>{{ problem.full_title }}</option>
                     {% endfor %}
                 </select>
                 <select id="result" name="result" class="form-control">
