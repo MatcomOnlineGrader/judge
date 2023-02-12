@@ -46,6 +46,7 @@
             animation: 1s cubic-bezier(0.4, 0, 1, 1) animation-scale;
             animation-iteration-count: infinite;
             display: inline-block;
+            margin-left: 10px;
         }
         .death-time {
             color: #c00;
@@ -55,16 +56,16 @@
         }
         @-webkit-keyframes animation-scale {
             0% { transform: scale(1.0); }
-            40% { transform: scale(1.2); }
+            48% { transform: scale(1.05); }
             50% { transform: scale(1.1); }
-            60% { transform: scale(1.2); }
+            52% { transform: scale(1.05); }
             100% { transform: scale(1.0); }
         }
         @keyframes animation-scale {
             0% { transform: scale(1.0); }
-            40% { transform: scale(1.2); }
+            48% { transform: scale(1.05); }
             50% { transform: scale(1.1); }
-            60% { transform: scale(1.2); }
+            52% { transform: scale(1.05); }
             100% { transform: scale(1.0); }
         }
     </style>
@@ -81,9 +82,9 @@
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ user_instance.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}
-                            <span class="death-time">{% trans '(Death time)' %}</span>
+                            <span class="death-time">{% trans 'Death time' %}</span>
                         {% elif contest.is_frozen_time %}
-                            <span class="frozen-time">{% trans '(Frozen time)' %}</span>
+                            <span class="frozen-time">{% trans 'Frozen time' %}</span>
                         {% endif %}
                     </h5>
                     {% if not user_instance.real %}
@@ -101,9 +102,9 @@
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ contest.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}
-                            {% trans '(Death time)' %}
+                            <span class="death-time">{% trans 'Death time' %}</span>
                         {% elif contest.is_frozen_time %}
-                            {% trans '(Frozen time)' %}
+                            <span class="frozen-time">{% trans 'Frozen time' %}</span>
                         {% endif %}
                     </h5>
                 {% elif contest.is_past and contest.needs_unfreeze %}
