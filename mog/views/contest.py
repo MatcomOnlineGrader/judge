@@ -273,7 +273,7 @@ def contest_standing(request, contest_id):
         # by default in virtual participation show all teams in one group
         group_names = [None]
     elif group_in_ranking == '<all>':
-        group_names = (contest.group_names() or [None])
+        group_names = (contest.group_names(include_virtual=show_virtual) or [None])
     elif group_in_ranking == '<one>':
         group_names = [None]
     else:
@@ -311,7 +311,7 @@ def contest_standing(request, contest_id):
         'ranking_groups': ranking_groups,
         'show_virtual': show_virtual,
         'user_instance': user_instance,
-        'group_names': contest.group_names(),
+        'group_names': contest.group_names(include_virtual=show_virtual),
         'group_in_ranking': group_in_ranking,
         'show_virtual_checkbox': show_virtual_checkbox
     })
