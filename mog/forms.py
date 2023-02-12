@@ -217,4 +217,4 @@ class ImportGuestTeamsForm(forms.Form):
 
 class ImportPermissionForm(forms.Form):
     csv_permission = forms.FileField(label = 'Upload file',
-        help_text = mark_safe(_('Load the CSV file with all User Permissions. The file must have the following columns: <i>user_id, contest_id, role, and granted</i>.')))
+        help_text = mark_safe(_('Load the CSV file with all User Permissions. The file must have the following columns: <i>username, role, and granted</i>.')))
