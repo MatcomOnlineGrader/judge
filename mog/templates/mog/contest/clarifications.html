@@ -115,6 +115,18 @@
                 <form action="{% url 'mog:clarification_create' %}" method="post">
                     {% csrf_token %}
                     {% include 'mog/includes/form.html' with form=form %}
+                    {% if user|can_edit_clarification:contest %}
+                        <div class="form-group">
+                            <label for="id_answer_0" class="">{% trans 'Answer' %}</label> ({% trans 'Optional' %})
+                            <textarea name="answer" cols="40" rows="5" class="form-control" placeholder="Answer" id="id_answer_0" spellcheck="false"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox margin-left-25">
+                                <input type="checkbox" name="public" id="id_public_0">
+                                <label for="id_public_0" class="">Public</label>
+                            </div>
+                        </div>
+                    {% endif %}
                     <input type="hidden" value="{{ contest.pk }}" name="contest">
                     <input type="submit" value="{% trans 'Send' %}" class="btn btn-primary pull-right">
                 </form>

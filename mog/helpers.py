@@ -44,7 +44,8 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
         if problem_exact:
             queryset = queryset.filter(problem__title=problem)
         else:
-            queryset = queryset.filter(problem__title__contains=problem)
+            # ignore case-sensitive
+            queryset = queryset.filter(problem__title__icontains=problem)
         query['problem'] = problem  # no encode needed
 
     try:
@@ -55,7 +56,8 @@ def filter_submissions(user_who_request, problem=None, contest=None, username=No
         contest = None
 
     if username:
-        queryset = queryset.filter(user__username__icontains=username)
+        # by username and teamname
+        queryset = queryset.filter(Q(user__username__icontains=username) | Q(instance__team__name__icontains=username))
         query['username'] = username  # no encode needed
 
     try:

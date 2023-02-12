@@ -332,11 +332,13 @@ def contest_submissions(request, contest_id):
         compiler=request.GET.get('compiler')
     )
     submissions = get_paginator(submission_list, 30, request.GET.get('page'))
+    compilers_id = list({compiler_id['compilers'] for compiler_id in list(contest.problems.values('compilers'))})
+    compilers = Compiler.objects.filter(pk__in=compilers_id).order_by('name')
     return render(request, 'mog/contest/submissions.html', {
         'contest': contest,
         'submissions': submissions,
         'results': Result.get_all_results(),
-        'compilers': Compiler.get_all_compilers(),
+        'compilers': compilers,
         'query': query
     })
 
