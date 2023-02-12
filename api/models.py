@@ -303,11 +303,12 @@ class Contest(models.Model):
 
         return running, coming, past
 
-    def group_names(self):
-        return list(
-            self.instances.order_by(Lower('group'))
-                .values_list('group', flat=True).distinct()
-        )
+    def group_names(self, include_virtual):
+        qs = self.instances
+        if not include_virtual:
+            qs = qs.filter(real=True)
+
+        return list(qs.order_by(Lower('group')).values_list('group', flat=True).distinct())
 
 
 class Problem(models.Model):
