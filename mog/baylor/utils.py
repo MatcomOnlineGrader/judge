@@ -5,7 +5,7 @@ ICPCID_GUEST_PREFIX = 'guestid_'
 
 CSV_GUEST_HEADER = 'team_name,institution,coach,participant1,participant2,participant3,group'
 
-CSV_PERMISSION_HEADER = 'user_id,contest_id,role,granted'
+CSV_PERMISSION_HEADER = 'username,role,granted'
 
 def generate_secret_password(user_id):
     """

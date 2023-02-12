@@ -1082,8 +1082,7 @@ def contest_permission_export(request, contest_id):
 
     writer = csv.writer(response)
 
-    header = ['user_id',
-              'contest_id',
+    header = ['username',
               'role',
               'granted']
     writer.writerow(header)
@@ -1091,8 +1090,7 @@ def contest_permission_export(request, contest_id):
     permissions = ContestPermission.objects.filter(contest=contest)
 
     for permission in permissions:
-        row = [permission.user_id,
-               permission.contest_id,
+        row = [permission.user.username,
                permission.role,
                permission.granted]
         writer.writerow(row)
@@ -1125,9 +1123,13 @@ def contest_permission_import(request, contest_id):
                     raise Exception('CSV file header must be %s' % CSV_PERMISSION_HEADER)
                 
                 for line in reader[1:]:
-                    user = get_object_or_404(User, pk=int(line[0]))
-                    role = line[2]
-                    granted = line[3] == 'True'
+                    user = User.objects.filter(username=str(line[0])).first()
+                    if not user:
+                        msg = _('Username ' + str(line[0]) + ' do not exists.')
+                        messages.success(request, msg, extra_tags='warning')
+                        continue
+                    role = line[1].lower()
+                    granted = line[2].lower() == 'true'
                     prev_permission = ContestPermission.objects.filter(contest=contest, user=user, role=role).first()
                     if prev_permission:
                         set_granted_to_permission(prev_permission, granted)
