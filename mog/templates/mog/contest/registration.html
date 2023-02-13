@@ -148,7 +148,6 @@
                         <tr>
                             <th class="text-center cell-small"></th>
                             <th class="text-center cell-medium" style="width: 50%;">{% trans "User/Team" %}</th>
-                            <th class="text-center cell-medium" style="width: 20%;">{% trans "Description only" %}</th>
                             <th class="text-center cell-medium" style="width: 30%;">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
@@ -202,13 +201,6 @@
                                     </div>
                                 </td>
                                 <td>
-                                <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST">
-                                    <input id="render_team_description_only" type="checkbox" name="render_team_description_only"
-                                           onclick="$(this).closest('form').submit();"
-                                           {% if instance.render_team_description_only %}checked="checked"{% endif %}>
-                                </form>
-                                </td>
-                                <td>
                                     <select class="select2 contest-instance" style="width: 100%;"
                                             data-url-edit="{% url "mog:api_instance_edit_group" instance.pk %}">
                                         <option value="{{ instance.group|default_if_none:'' }}">
@@ -217,20 +209,32 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="instance-action">
-                                    {% if instance.team %}
+                                    <div class="instance-action" data-instance-pk="{{ instance.pk }}">
+                                        {% if instance.team %}
                                         <div>
-                                            {% include 'mog/contest/_edit_team_modal.html' with instance=instance %}
-                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-team-{{ instance.id }}">{% trans 'Edit' %}</button>
+                                            {% include 'mog/contest/_edit_instance_team_modal.html' with instance=instance %}
+                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
                                         </div>
-                                    {% endif %}
-                                    <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next"
-                                               value="{% url 'mog:contest_registration' contest.id %}"/>
-                                        <input type="submit" class="btn btn-sm btn-default"
-                                               value="{% trans 'Unregister' %}"/>
-                                    </form>
+                                        {% else %}
+                                        <div>
+                                            {% include 'mog/contest/_edit_instance_user_modal.html' with instance=instance %}
+                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
+                                        </div>
+                                        {% endif %}
+                                        <form action="{% url 'mog:api_instance_edit_active' instance.id %}" method="post" class="show-loading-after-submit-confirm">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                                            <input type="checkbox" name="is_active" class="instance-is-active-input" hidden/>
+                                            <input type="submit" class="btn btn-sm btn-default instance-is-active-button" value="{% trans 'Disable' %}"/>
+                                        </form>
+                                        <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post" class="show-loading-after-submit-confirm">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="next"
+                                                   value="{% url 'mog:contest_registration' contest.id %}"/>
+                                            <input type="submit" class="btn btn-sm btn-default"
+                                                   value="{% trans 'Unregister' %}"/>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -249,6 +253,16 @@
             $('.show-loading-after-submit').each(function(id, el) {
                 $(el).on('submit', function(e) {
                     if(confirm("Are you sure you want to import these Users/Teams?")) {
+                        $('#loading-on-submit').css('display', 'block');
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+            });
+            $('.show-loading-after-submit-confirm').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    if(confirm("Are you sure you want to do this opearation?")) {
                         $('#loading-on-submit').css('display', 'block');
                     }
                     else {
@@ -299,32 +313,9 @@
 
     <script>
         $(document).ready(function () {
-            $('.select2.team-import').select2({
+            $('.select2.team-import, .select2.selected-group, .select2.contest-instance-group').select2({
                 tags: true,
                 closeOnSelect: true,
-                ajax: {
-                    url: "{% url 'mog:api_instance_group_list' %}",
-                    dataType: 'json',
-                    processResults: function (response, params) {
-                        return {
-                            results: response.data.map(function (group) {
-                                return {
-                                    id: group, text: group
-                                }
-                            })
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.select2.selected-group').select2({
-                tags: true,
-                closeOnSelect: true,
-                dropdownParent: $("#edit-group-selected-{{ contest.id }}"),
                 ajax: {
                     url: "{% url 'mog:api_instance_group_list' %}",
                     dataType: 'json',
@@ -458,13 +449,30 @@
                                 $teamProfiles.append('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>');
                             }
                         }
-                        else {
+                        else if (user) {
                             if(user.last_login)
                                 last_login = '<i title="Last login: ' + user.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
                             $last_login.prepend(last_login);
                             const $user = $(this).find('.instance-info-user a.user')
                             $user.css("color", user.rating_color).attr("href", "/user/" + user.id);
                         }
+                    });
+                    $('.instance-action').each(function() {
+                        const instance_pk = $(this).data('instance-pk');
+                        const instance = data[instance_pk];
+                        const {team, user} = instance;
+                        const $instance_edit_form_active = $(this).find('.instance-edit-form-active');
+                        const $instance_is_active_input = $(this).find('.instance-is-active-input');
+                        const $instance_is_active_button = $(this).find('.instance-is-active-button');
+                        const is_active = team ? team.is_active : user ? user.is_active : false;
+                        if(is_active) {
+                            $instance_is_active_button.val("{% trans 'Disable' %}");
+                        }
+                        else {
+                            $instance_is_active_button.val("{% trans 'Enable' %}");
+                        }
+                        $instance_is_active_input.prop('checked', !is_active);
+                        $instance_edit_form_active.prop('checked', is_active);
                     });
                 }
             });

@@ -82,25 +82,140 @@ def instance_edit_team(request, instance_pk):
 
     nxt = request.POST.get('nxt', '') or reverse('mog:contest_registration', args=(instance.contest.pk, ))
     description = request.POST.get('description', '')
+    group = request.POST.get('group', '').strip()
     institution_id = request.POST.get('institution', '')
+    edit_profile_institution = request.POST.get('edit-profile-institution', '') == 'on'
+    render_team_description_only = request.POST.get('description-only', '') == 'on'
+    is_active = request.POST.get('is_active', '') == 'on'
+
+    if group in ['<all>', '<one>']:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+        return redirect(nxt)
 
     try:
         institution = Institution.objects.filter(id=int(institution_id)).first()
-        if not institution:
-            raise Exception('Institution with id=%s not exist' % institution_id)
 
-        if instance.team.institution_id != institution.id:
+        edited_team = False
+        if institution and instance.team.institution_id != institution.id:
             instance.team.institution = institution
+            edited_team = True
 
         if instance.team.description != description:
             instance.team.description = description
+            edited_team = True
+        
+        if edited_team:
+            instance.team.save()
 
-        instance.team.save()
+        edited_instance = False
+        if instance.render_team_description_only != render_team_description_only:
+            instance.render_team_description_only = render_team_description_only
+            edited_instance = True
+            
+        if instance.group != group:
+            instance.group = group or instance.contest.group
+            edited_instance = True
+        
+        if edited_instance:
+            instance.save()
 
-        msg = _("Successfully edited Team '%s'" % instance.team.name)
+        for profile in instance.team.profiles.all():
+            if edit_profile_institution:
+                profile.institution = institution
+                profile.save()
+            if profile.user.is_active != is_active:
+                profile.user.is_active = is_active
+                profile.user.save()
+
+        msg = _("Successfully edited team '%s'" % instance.team.name)
         messages.success(request, msg, extra_tags='success')
 
     except (ValueError, TypeError):
         messages.error(request, 'Edit team: Invalid data!', extra_tags='danger')
+
+    return redirect(nxt)
+
+
+@login_required
+@require_http_methods(["POST"])
+def instance_edit_user(request, instance_pk):
+    """Set description and institution of team"""
+    if not user_is_admin(request.user):
+        raise Http404()
+
+    instance = get_object_or_404(ContestInstance, pk=instance_pk)
+
+    nxt = request.POST.get('nxt', '') or reverse('mog:contest_registration', args=(instance.contest.pk, ))
+    group = request.POST.get('group', '').strip()
+    render_team_description_only = request.POST.get('description-only', '') == 'on'
+    is_active = request.POST.get('is_active', '') == 'on'
+
+    if group in ['<all>', '<one>']:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+        return redirect(nxt)
+
+    try:
+        edited_instance = False
+        if instance.render_team_description_only != render_team_description_only:
+            instance.render_team_description_only = render_team_description_only
+            edited_instance = True
+            
+        if instance.group != group:
+            instance.group = group or instance.contest.group
+            edited_instance = True
+        
+        if edited_instance:
+            instance.save()
+        
+        if instance.user.is_active != is_active:
+            instance.user.is_active = is_active
+            instance.user.save()
+
+        msg = _("Successfully edited user '%s'" % instance.name)
+        messages.success(request, msg, extra_tags='success')
+
+    except (ValueError, TypeError):
+        messages.error(request, 'Edit user: Invalid data!', extra_tags='danger')
+
+    return redirect(nxt)
+
+
+@login_required
+@require_http_methods(["POST"])
+def instance_edit_active(request, instance_pk):
+    # TODO: refactoring disable user for a specific contest, not from the whole MOG :(
+    # an option may be prohibit it to make submit
+    """Disable user"""
+    if not user_is_admin(request.user):
+        raise Http404()
+
+    instance = ContestInstance.objects.filter(id=instance_pk).first()
+
+    nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(instance.contest.id))
+    is_active = request.POST.get('is_active', '') == 'on'
+
+    if not instance:
+        msg = _('Instance does not exist')
+        messages.info(request, msg, extra_tags='info')
+        return redirect(nxt)
+
+    try:
+        if instance.team:
+            for profile in instance.team.profiles.all():
+                if profile.user.is_active != is_active:
+                    profile.user.is_active = is_active
+                    profile.user.save()
+                    msg = _("User '%s' %s!" % (profile.user, 'enabled' if is_active else 'disabled'))
+                    messages.success(request, msg, extra_tags='success')
+        elif instance.user:
+            if instance.user.is_active != is_active:
+                instance.user.is_active = is_active
+                instance.user.save()
+                msg = _("User '%s' %s!" % (instance.user, 'enabled' if is_active else 'disabled'))
+                messages.success(request, msg, extra_tags='success')
+
+    except Exception as e:
+        msg = _('Error disabling this user/team: ' + str(e))
+        messages.error(request, msg, extra_tags='danger')
 
     return redirect(nxt)
