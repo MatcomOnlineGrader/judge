@@ -632,6 +632,47 @@ def contest_remove_registration(request, contest_id):
     return remove_instance(request, instance)
 
 
+@login_required
+@require_http_methods(["POST"])
+def contest_remove_registration_mulitple(request, contest_id):
+    """Administrative tool: Remove registration for multiple user/team"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(contest.pk, ))
+    instances_selected = request.POST.get('instances-selected', '').split(',')
+    instances = []
+    
+    try:
+        for selected in instances_selected:
+            instances.append(get_object_or_404(ContestInstance, pk=int(selected)))
+        instances=set(instances)
+        count = 0
+        for instance in instances:
+            if not instance:
+                continue
+            if instance.team:
+                team = True
+                name = instance.team.name
+            else:
+                team = False
+                name = instance.user.username
+            if instance.submissions.count() > 0:
+                msg = _("Cannot remove registration of '%s' because the %s has actions on the contest." % (name, 'team' if team else 'user'))
+                messages.warning(request, msg, extra_tags='warning')
+                continue
+            instance.delete()
+            count += 1
+        msg = _("Successfully unregistered %d user/team!" % count)
+        messages.success(request, msg, extra_tags='success')
+
+    except (ValueError, TypeError):
+        messages.error(request, 'Unregister user/team: Invalid data!', extra_tags='danger')
+
+    return redirect(nxt)
+
+
 class ContestCreateView(View):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
