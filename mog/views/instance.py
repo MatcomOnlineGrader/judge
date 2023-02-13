@@ -171,7 +171,7 @@ def instance_edit_user(request, instance_pk):
             instance.user.is_active = is_active
             instance.user.save()
 
-        msg = _("Successfully edited user '%s'" % instance.name)
+        msg = _("Successfully edited user '%s'" % instance.user.username)
         messages.success(request, msg, extra_tags='success')
 
     except (ValueError, TypeError):
