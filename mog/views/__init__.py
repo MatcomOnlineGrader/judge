@@ -5,7 +5,8 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     contest_manage, contest_manage_import_baylor, contest_manage_import_guest, contest_manage_export_password, \
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
     contest_register_multiple_users, contest_register_multiple_teams, contest_instances_info, \
-    contest_permission, contest_add_permission, contest_permission_import, contest_permission_export
+    contest_permission, contest_add_permission, contest_permission_import, contest_permission_export, \
+    contest_remove_registration_mulitple
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test
