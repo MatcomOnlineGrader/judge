@@ -285,13 +285,3 @@ form.filter * {
     list-style: none;
     padding: 0;
 }
-
-.not-logged {
-  color: #dd2828;
-  margin-right: 10px;
-}
-
-.logged {
-  color: #2da529;
-  margin-right: 10px;
-}
