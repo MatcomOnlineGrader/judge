@@ -6,7 +6,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
     contest_register_multiple_users, contest_register_multiple_teams, contest_instances_info, \
     contest_permission, contest_add_permission, contest_permission_import, contest_permission_export, \
-    contest_remove_registration_mulitple
+    contest_remove_registration_mulitple, contest_edit_group_multiple
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test
@@ -17,6 +17,7 @@ from .views import index, faq, privacy, health
 from .message import send_message
 from .comment import edit_comment, remove_comment
 from .clarification import clarification_create, clarification_edit
-from .instance import instance_group_list, instance_edit_group, instance_edit_render_description
+from .instance import instance_group_list, instance_edit_group, instance_edit_render_description, instance_edit_team
+from .institution import institution_list
 from .feedback import feedback_create
 from .permissions import contest_permission_edit_granted

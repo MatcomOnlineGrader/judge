@@ -12,6 +12,7 @@
     <style>
         .instance-info {
             display: flex;
+            gap: 5px;
         }
         .instance-info-last-login {
             display: flex;
@@ -24,8 +25,9 @@
         }
         .instance-info-team-profiles {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            column-gap: 10px;
         }
         .instance-info-user {
             flex: auto;
@@ -34,13 +36,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 20px;
+            min-width: 30px;
         }
         .instance-info-last-login .not-logged {
             color: #dd2828;
         }        
         .instance-info-last-login .logged {
             color: #2da529;
+        }
+        .instance-action {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
         }
     </style>
 {% endblock %}
@@ -76,11 +83,7 @@
                                                 {{ contest.group|default_if_none:'-----' }}
                                             </option>
                                         </select>
-                                        <small class="form-help-text">By default it will use the [Default group] of this contest
-                                            {% if contest.group %}
-                                                : {{ contest.group }}
-                                            {% endif %}
-                                        </small>
+                                        <small class="form-help-text">By default it will use [{% if contest.group %} {{ contest.group }} {% else %} None {% endif %}]</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="user-members" class="">{% trans 'Users' %}</label>
@@ -109,11 +112,7 @@
                                                     {{ contest.group|default_if_none:'-----' }}
                                                 </option>
                                             </select>
-                                            <small class="form-help-text">By default it will use the [Default group] of this contest
-                                                {% if contest.group %}
-                                                    : {{ contest.group }}
-                                                {% endif %}
-                                            </small>
+                                            <small class="form-help-text">By default it will use [{% if contest.group %} {{ contest.group }} {% else %} None {% endif %}]</small>
                                         </div>
                                         <div class="form-group">
                                             <label for="team-members" class="">{% trans 'Teams' %}</label>
@@ -132,17 +131,15 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="margin-bottom-20">
-                                <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                                    <input type="hidden" id="instances-selected" name="instances-selected"/>
-                                    <button class="btn btn-primary" type="submit">{% trans 'Unregister selected user/team' %}</button>
-                                </form>
-                            </div>
-                        </div>
+                    <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form" class="margin-bottom-20 margin-left-10 pull-right show-loading-after-submit-no-confirm">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                        <input type="hidden" id="instances-unregister-selected" name="instances-unregister-selected"/>
+                        <button class="btn btn-sm" type="submit">{% trans 'Unregister all selected' %}</button>
+                    </form>
+                    {% include 'mog/contest/_edit_group_modal.html' with contest=contest %}
+                    <div class="margin-bottom-20 margin-left-10 pull-right">
+                        <button class="btn btn-sm" data-toggle="modal" data-target="#edit-group-selected-{{ contest.id }}">{% trans 'Edit Group all selected' %}</button>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -150,9 +147,9 @@
                         <thead>
                         <tr>
                             <th class="text-center cell-small"></th>
-                            <th class="text-center cell-medium">{% trans "User/Team" %}</th>
-                            <th class="text-center cell-medium">{% trans "Description only" %}</th>
-                            <th class="text-center cell-medium">{% trans "Group" %}</th>
+                            <th class="text-center cell-medium" style="width: 50%;">{% trans "User/Team" %}</th>
+                            <th class="text-center cell-medium" style="width: 20%;">{% trans "Description only" %}</th>
+                            <th class="text-center cell-medium" style="width: 30%;">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
                         </thead>
@@ -195,7 +192,7 @@
                                             {% with instance.submissions.count as submissions %}
                                                 {% if submissions > 0 %}
                                                     <span 
-                                                        {% comment %} title="The {% if instance.team %}team{% else %}user{% endif %} have {{ submissions }} sumbission{% if submissions > 1 %}s{% endif %}"  {% endcomment %}
+                                                        title="The {% if instance.team %}team{% else %}user{% endif %} have {{ submissions }} submission{% if submissions > 1 %}s{% endif %}"
                                                         class="badge badge-info">
                                                             {{ submissions }}
                                                     </span>
@@ -220,6 +217,13 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <div class="instance-action">
+                                    {% if instance.team %}
+                                        <div>
+                                            {% include 'mog/contest/_edit_team_modal.html' with instance=instance %}
+                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-team-{{ instance.id }}">{% trans 'Edit' %}</button>
+                                        </div>
+                                    {% endif %}
                                     <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" name="next"
@@ -251,7 +255,12 @@
                         e.preventDefault();
                     }
                 });
-            })
+            });
+            $('.show-loading-after-submit-no-confirm').each(function(id, el) {
+                $(el).on('submit', function(e) {
+                    $('#loading-on-submit').css('display', 'block');
+                });
+            });
         });
     </script>
 
@@ -301,6 +310,51 @@
                             results: response.data.map(function (group) {
                                 return {
                                     id: group, text: group
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2.selected-group').select2({
+                tags: true,
+                closeOnSelect: true,
+                dropdownParent: $("#edit-group-selected-{{ contest.id }}"),
+                ajax: {
+                    url: "{% url 'mog:api_instance_group_list' %}",
+                    dataType: 'json',
+                    processResults: function (response, params) {
+                        return {
+                            results: response.data.map(function (group) {
+                                return {
+                                    id: group, text: group
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2.contest-instance-institution').select2({
+                tags: true,
+                closeOnSelect: true,
+                ajax: {
+                    url: "{% url 'mog:api_institution_list' %}",
+                    dataType: 'json',
+                    processResults: function (response, params) {
+                        return {
+                            results: response.data.map(function (institution) {
+                                return {
+                                    id: institution.id, text: institution.name
                                 }
                             })
                         }
@@ -421,7 +475,6 @@
         $(document).ready(function () {
             $("#unregister-selected-form").on('submit', function(e) {
                 if(confirm("Are you sure you want to un-register these Users/Teams?")) {
-                    $('#loading-on-submit').css('display', 'block');
                     const instances_selected = [];
                     $(".instance-select").each(function() {
                         const instance_pk = $(this).data("instance-pk");
@@ -430,11 +483,23 @@
                             instances_selected.push(instance_pk);
                         }
                     });
-                    $('#instances-selected').val(instances_selected.join(','));
+                    $('#instances-unregister-selected').val(instances_selected.join(','));
                 }
                 else {
                     e.preventDefault();
                 }
+            });
+
+            $("#edit-group-selected-form").on('submit', function(e) {
+                const instances_selected = [];
+                $(".instance-select").each(function() {
+                    const instance_pk = $(this).data("instance-pk");
+                    const checked = $(this).is(':checked');
+                    if(checked) {
+                        instances_selected.push(instance_pk);
+                    }
+                });
+                $('#instances-group-selected').val(instances_selected.join(','));
             });
         });
     </script>

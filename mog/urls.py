@@ -10,12 +10,15 @@ urlpatterns = [
 
     url(r'^feedback/create/$', views.feedback_create, name='feedback_create'),
 
+    url(r'^api/institution/list/$', views.institution_list, name='api_institution_list'),
+
     url(r'^api/instance/group/list/$', views.instance_group_list,
         name='api_instance_group_list'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/group/$', views.instance_edit_group,
         name='api_instance_edit_group'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description,
         name='api_instance_edit_render_description'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/team/$', views.instance_edit_team, name='api_instance_edit_team'),
 
     url(r'^api/contest/permission/(?P<permission_pk>[0-9]+)/edit/granted$', views.contest_permission_edit_granted, name='api_contest_permission_edit_granted'),
 
@@ -57,6 +60,8 @@ urlpatterns = [
         name='contest_remove_registration'),
     url(r'^contest/instances/info/(?P<contest_id>[0-9]+)$', views.contest_instances_info, name='contest_instances_info'),
     url(r'^contest/remove/registration/multiple/(?P<contest_id>[0-9]+)$', views.contest_remove_registration_mulitple, name='contest_remove_registration_mulitple'),
+   
+    url(r'^contest/instances/edit/group/multiple/(?P<contest_id>[0-9]+)$', views.contest_edit_group_multiple, name='contest_edit_group_multiple'),
 
     url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
     url(r'^contest/(?P<contest_id>[0-9]+)/create_problem$', views.CreateProblemInContestView.as_view(), name='contest_create_problem'),

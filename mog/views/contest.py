@@ -489,9 +489,13 @@ def contest_register_multiple_users(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     
-    group = request.POST.get('user-group', '')
+    group = request.POST.get('user-group', '').strip()
     members = request.POST.get('user-members', '').split(',')
     users = []
+
+    if group in ['<all>', '<one>']:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+        return redirect(reverse('mog:contest_registration', args=(contest.pk, )))
 
     try:
         for member in members:
@@ -541,9 +545,13 @@ def contest_register_multiple_teams(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     
-    group = request.POST.get('team-group', '')
+    group = request.POST.get('team-group', '').strip()
     members = request.POST.get('team-members', '').split(',')
     teams = []
+
+    if group in ['<all>', '<one>']:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+        return redirect(reverse('mog:contest_registration', args=(contest.pk, )))
 
     try:
         for member in members:
@@ -641,7 +649,7 @@ def contest_remove_registration_mulitple(request, contest_id):
 
     contest = get_object_or_404(Contest, pk=contest_id)
     nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(contest.pk, ))
-    instances_selected = request.POST.get('instances-selected', '').split(',')
+    instances_selected = request.POST.get('instances-unregister-selected', '').split(',')
     instances = []
     
     try:
@@ -1185,3 +1193,51 @@ def contest_permission_import(request, contest_id):
                 messages.error(request, msg, extra_tags='danger')
 
     return redirect('mog:contest_permission', contest_id=contest.id)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_edit_group_multiple(request, contest_id):
+    """Administrative tool: Edit group for multiple user/team"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(contest.pk, ))
+    group = request.POST.get('instances-group', '').strip()
+    instances_selected = request.POST.get('instances-group-selected', '').split(',')
+    instances = []
+
+    if group in ['<all>', '<one>']:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+        return redirect(nxt)
+    
+    try:
+        for selected in instances_selected:
+            instances.append(get_object_or_404(ContestInstance, pk=int(selected)))
+        instances=set(instances)
+        count = 0
+        for instance in instances:
+            if not instance:
+                continue
+            if instance.team:
+                team = True
+                name = instance.team.name
+            else:
+                team = False
+                name = instance.user.username
+            
+            instance.group = group or contest.group
+            instance.save()
+
+            msg = _("Moved %s '%s' to group '%s' successfully." % ('team' if team else 'user', name, group))
+            messages.warning(request, msg, extra_tags='warning')
+
+            count += 1
+        msg = _("Successfully moved %d user/team to Group '%s'" % (count, group))
+        messages.success(request, msg, extra_tags='success')
+
+    except (ValueError, TypeError):
+        messages.error(request, 'Unregister user/team: Invalid data!', extra_tags='danger')
+
+    return redirect(nxt)
