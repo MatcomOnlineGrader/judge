@@ -9,40 +9,6 @@
     <link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input-facebook.css' %}" rel="stylesheet"/>
-    <style>
-        .instance-info {
-            display: flex;
-        }
-        .instance-info-last-login {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-        }
-        .instance-info-team {
-            flex: auto;
-        }
-        .instance-info-team-profiles {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .instance-info-user {
-            flex: auto;
-        }
-        .instance-info-submissions {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-        }
-        .instance-info-last-login .not-logged {
-            color: #dd2828;
-        }        
-        .instance-info-last-login .logged {
-            color: #2da529;
-        }
-    </style>
 {% endblock %}
 
 {% block left %}
@@ -132,24 +98,9 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="margin-bottom-20">
-                                <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                                    <input type="hidden" id="instances-selected" name="instances-selected"/>
-                                    <button class="btn btn-primary" type="submit">{% trans 'Unregister selected user/team' %}</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th class="text-center cell-small"></th>
                             <th class="text-center cell-medium">{% trans "User/Team" %}</th>
                             <th class="text-center cell-medium">{% trans "Description only" %}</th>
                             <th class="text-center cell-medium">{% trans "Group" %}</th>
@@ -159,50 +110,26 @@
                         <tbody>
                         {% for instance in instances %}
                             <tr class="text-center">
-                                <td>
-                                    <input id="select" class="instance-select" data-instance-pk="{{ instance.pk }}" type="checkbox">
-                                </td>
-                                <td>
-                                    <div class="instance-info" data-instance-pk="{{ instance.pk }}">
-                                        <div class="instance-info-last-login"></div>
-                                        {% if instance.team %}
-                                            <div class="instance-info-team">
-                                                <div class="instance-info-name">
-                                                    {% if instance.team.institution.name %}
-                                                        <a
-                                                            style="text-decoration:none; color: black;"
-                                                            data-html="true"
-                                                            data-toggle="tooltip"
-                                                            title=""
-                                                            data-placement="right"
-                                                            data-original-title="{{instance.team.institution.name}}">
-                                                                <strong>{{ instance.team.name }}</strong>
-                                                        </a>
-                                                    {% else %}
-                                                        <strong>{{ instance.team.name }}</strong>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="instance-info-team-profiles"></div>
-                                            </div>
+                                <td class="instance-info" data-instance-pk="{{ instance.pk }}">
+                                    {% if instance.team %}
+                                        {% if instance.team.institution.name %}
+                                            <a
+                                                style="text-decoration:none; color: black;"
+                                                data-html="true"
+                                                data-toggle="tooltip"
+                                                title=""
+                                                data-placement="right"
+                                                data-original-title="{{instance.team.institution.name}}">
+                                                    <strong>{{ instance.team.name }}</strong>
+                                            </a>
                                         {% else %}
-                                            <div class="instance-info-user">
-                                                <strong>
-                                                    <a class="user" style="color: black;">{{ instance.user.username }}</a>
-                                                </strong>
-                                            </div>
+                                            <strong>{{ instance.team.name }}</strong>
                                         {% endif %}
-                                        <div class="instance-info-submissions">
-                                            {% with instance.submissions.count as submissions %}
-                                                {% if submissions > 0 %}
-                                                    <span 
-                                                        {% comment %} title="The {% if instance.team %}team{% else %}user{% endif %} have {{ submissions }} sumbission{% if submissions > 1 %}s{% endif %}"  {% endcomment %}
-                                                        class="badge badge-info">
-                                                            {{ submissions }}
-                                                    </span>
-                                                {% endif %}
-                                            {% endwith %}
-                                        </div>
-                                    </div>
+                                    {% else %}
+                                        <strong>
+                                            <a class="user" style="color: black;">{{ instance.user.username }}</a>
+                                        </strong>
+                                    {% endif %}
                                 </td>
                                 <td>
                                 <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST">
@@ -244,7 +171,7 @@
         $(document).ready(function() {
             $('.show-loading-after-submit').each(function(id, el) {
                 $(el).on('submit', function(e) {
-                    if(confirm("Are you sure you want to import these Users/Teams?")) {
+                    if(confirm("Are you sure you want to import those Users/Teams?")) {
                         $('#loading-on-submit').css('display', 'block');
                     }
                     else {
@@ -391,49 +318,25 @@
                         const instance_pk = $(this).data('instance-pk');
                         const instance = data[instance_pk];
                         const {team, user} = instance;
-                        const $last_login = $(this).find('.instance-info-last-login');
                         let last_login = '<i title="Never logged in" class="glyphicon glyphicon-warning-sign not-logged"></i>';
                         if(team) {
-                            if(team.last_login) {
+                            if(team.last_login)
                                 last_login = '<i title="Last login: ' + team.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
-                            }
-                            $last_login.append(last_login);
-                            const $teamProfiles = $(this).find('.instance-info-team-profiles')
+                            $(this).prepend(last_login);
                             const profiles = [];
                             for(const profile of team.profiles) {
-                                $teamProfiles.append('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>');
+                                profiles.push('<strong><a class="user" href="/user/' + profile.id + '" style="color: ' + profile.rating_color + ';">' + profile.username + '</a></strong>');
                             }
+                            $(this).append('<div>' + profiles.join(' , ') + '<div>');
                         }
                         else {
                             if(user.last_login)
                                 last_login = '<i title="Last login: ' + user.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
-                            $last_login.prepend(last_login);
-                            const $user = $(this).find('.instance-info-user a.user')
+                            $(this).prepend(last_login);
+                            const $user = $(this).find('.user')
                             $user.css("color", user.rating_color).attr("href", "/user/" + user.id);
                         }
                     });
-                }
-            });
-        });
-    </script>
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#unregister-selected-form").on('submit', function(e) {
-                if(confirm("Are you sure you want to un-register these Users/Teams?")) {
-                    $('#loading-on-submit').css('display', 'block');
-                    const instances_selected = [];
-                    $(".instance-select").each(function() {
-                        const instance_pk = $(this).data("instance-pk");
-                        const checked = $(this).is(':checked');
-                        if(checked) {
-                            instances_selected.push(instance_pk);
-                        }
-                    });
-                    $('#instances-selected').val(instances_selected.join(','));
-                }
-                else {
-                    e.preventDefault();
                 }
             });
         });
