@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description,
         name='api_instance_edit_render_description'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/team/$', views.instance_edit_team, name='api_instance_edit_team'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/user/$', views.instance_edit_user, name='api_instance_edit_user'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/active/$', views.instance_edit_active, name='api_instance_edit_active'),
 
     url(r'^api/contest/permission/(?P<permission_pk>[0-9]+)/edit/granted$', views.contest_permission_edit_granted, name='api_contest_permission_edit_granted'),
 
