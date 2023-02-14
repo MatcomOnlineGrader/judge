@@ -292,8 +292,8 @@ form.filter * {
 }
 .instance-info-last-login {
   display: flex;
-  align-items: center;
   justify-content: center;
+  margin-top: 3px;
   min-width: 20px;
 }
 .instance-info-team {
@@ -307,12 +307,6 @@ form.filter * {
 }
 .instance-info-user {
   flex: auto;
-}
-.instance-info-submissions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 30px;
 }
 .instance-info-last-login .not-logged {
   color: #dd2828;
