@@ -73,7 +73,7 @@
                             {% if not problem.contest.visible %}
                                 (Hidden)
                             {% endif %}
-                            {% if user|can_see_tags %}
+                            {% if user|can_see_tags:problem %}
                                 <div class="pull-right">
                                     {% for tag in problem.tags.all %}
                                         <a class="problem-tag" href="?tag={{ tag.name }}">

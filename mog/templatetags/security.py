@@ -129,7 +129,9 @@ def can_see_tabs_in_user_profile(viewer, user_in_profile):
 
 
 @register.filter()
-def can_see_tags(user):
+def can_see_tags(user, problem):
+    if problem.contest.is_running:
+        return False
     if not user.is_authenticated or not hasattr(user, 'profile'):
         return True
     return user.profile.show_tags
