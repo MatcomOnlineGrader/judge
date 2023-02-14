@@ -90,19 +90,19 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_remove_registration_multiple' contest.id %}" method="POST" id="unregister-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-unregister-selected" name="instances-unregister-selected" class="form-input-instances-selected"/>
                         <button class="btn btn-sm" type="submit">{% trans 'Unregister all selected' %}</button>
                     </form>
-                    <form action="{% url 'mog:contest_disable_instance_mulitple' contest.id %}" method="POST" id="disable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_disable_instance_multiple' contest.id %}" method="POST" id="disable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-disable-selected" name="instances-disable-selected" class="form-input-instances-selected"/>
                         <button class="btn btn-sm" type="submit">{% trans 'Disable all selected' %}</button>
                     </form>
-                    <form action="{% url 'mog:contest_enable_instance_mulitple' contest.id %}" method="POST" id="enable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_enable_instance_multiple' contest.id %}" method="POST" id="enable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-enable-selected" name="instances-enable-selected" class="form-input-instances-selected"/>
