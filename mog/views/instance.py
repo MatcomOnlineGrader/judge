@@ -139,7 +139,7 @@ def instance_edit_team(request, instance_pk):
 @login_required
 @require_http_methods(["POST"])
 def instance_edit_user(request, instance_pk):
-    """Set description and institution of team"""
+    """Set description and institution of user"""
     if not user_is_admin(request.user):
         raise Http404()
 
@@ -205,14 +205,13 @@ def instance_edit_active(request, instance_pk):
                 if profile.user.is_active != is_active:
                     profile.user.is_active = is_active
                     profile.user.save()
-                    msg = _("User '%s' %s!" % (profile.user, 'enabled' if is_active else 'disabled'))
-                    messages.success(request, msg, extra_tags='success')
-        elif instance.user:
-            if instance.user.is_active != is_active:
-                instance.user.is_active = is_active
-                instance.user.save()
-                msg = _("User '%s' %s!" % (instance.user, 'enabled' if is_active else 'disabled'))
-                messages.success(request, msg, extra_tags='success')
+            msg = _("Successfully %s all user for team '%s'!" % ('enabled' if is_active else 'disabled', instance.team.name))
+            messages.success(request, msg, extra_tags='success')
+        elif instance.user.is_active != is_active:
+            instance.user.is_active = is_active
+            instance.user.save()
+            msg = _("Successfully %s user '%s'!" % ('enabled' if is_active else 'disabled', instance.user.username))
+            messages.success(request, msg, extra_tags='success')
 
     except Exception as e:
         msg = _('Error disabling this user/team: ' + str(e))
