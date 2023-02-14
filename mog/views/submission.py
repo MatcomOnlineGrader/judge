@@ -187,3 +187,26 @@ def rejudge(request, submission_id):
 
     # TODO: Find a better way to redirect to previous page.
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def get_submission(submission):
+    RESULT_VERDICT = {
+        'Accepted': 'AC',
+        'Wrong Answer': 'WA',
+        'Time Limit Exceeded': 'TLE',
+        'Internal Error': 'IE',
+        'Memory Limit Exceeded': 'MLE',
+        'Runtime Error': 'RTE',
+        'Compilation Error': 'CTE',
+        'Idleness Limit Exceeded': 'ILE'
+    }
+    submission_id = submission.pk
+    problem_letter = submission.problem.letter
+    result = submission.result.name
+    verdict = RESULT_VERDICT[result] if result in RESULT_VERDICT else '?'
+    username = submission.user.username
+    compiler = submission.compiler.file_extension
+    source = submission.source
+    filename = '%s_%s_%s_%s.%s' % (submission_id, verdict, problem_letter, username, compiler)
+    return filename, source
+
