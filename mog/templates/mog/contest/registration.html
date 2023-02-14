@@ -119,8 +119,9 @@
                         <tr>
                             <th class="text-center cell-small"></th>
                             <th class="text-center cell-medium" style="width: 70%;">{% trans "User/Team" %}</th>
-                            <th class="text-center cell-small"></th>
-                            <th class="text-center cell-medium" style="width: 30%;">{% trans "Group" %}</th>
+                            <th class="text-center cell-small">{% trans 'Submissions' %}</th>
+                            <th class="text-center cell-small">{% trans 'Status' %}</th>
+                            <th class="text-center cell-small" style="width: 30%;">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
                         </thead>
@@ -159,29 +160,13 @@
                                                 </strong>
                                             </div>
                                         {% endif %}
-                                        <div class="instance-info-submissions">
-                                            {% with instance.submissions.count as submissions %}
-                                                {% if submissions > 0 %}
-                                                    <span 
-                                                        title="The {% if instance.team %}team{% else %}user{% endif %} have {{ submissions }} submission{% if submissions > 1 %}s{% endif %}"
-                                                        class="badge badge-info">
-                                                            {{ submissions }}
-                                                    </span>
-                                                {% endif %}
-                                            {% endwith %}
-                                        </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST" class="show-loading-after-submit-confirm">
-                                        <input hidden id="render_team_description_only" type="checkbox" name="render_team_description_only" 
-                                            {% if not instance.render_team_description_only %}checked="checked"{% endif %}>
-                                        {% if instance.render_team_description_only %}
-                                        <i class="glyphicon glyphicon-ok" style="color: #1143f7; cursor: pointer;" onclick="$(this).closest('form').submit();"></i>
-                                        {% else %}
-                                        <i class="glyphicon glyphicon-ok" style="color: #bfbfbf; cursor: pointer;" onclick="$(this).closest('form').submit();"></i>
-                                        {% endif %}
-                                    </form>
+                                    {{ instance.submissions.count }}
+                                </td>
+                                <td>
+                                    <div class="instance-status" data-instance-pk="{{ instance.pk }}"></div>
                                 </td>
                                 <td>
                                     {{ instance.group|default_if_none:'-----' }}
@@ -199,12 +184,6 @@
                                             <button class="btn btn-sm btn-default button-action" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
                                         </div>
                                         {% endif %}
-                                        <form action="{% url 'mog:api_instance_edit_active' instance.id %}" method="post" class="show-loading-after-submit-confirm">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                                            <input type="checkbox" name="is_active" class="instance-is-active-input" hidden/>
-                                            <button type="submit" class="btn btn-sm btn-default button-action instance-is-active-button">{% trans 'Disable' %}</button>
-                                        </form>
                                         <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post" class="show-loading-after-submit-confirm">
                                             {% csrf_token %}
                                             <input type="hidden" name="next"
@@ -404,23 +383,24 @@
                             $user.css("color", user.rating_color).attr("href", "/user/" + user.id);
                         }
                     });
+                    $('.instance-status').each(function() {
+                        const instance_pk = $(this).data('instance-pk');
+                        const instance = data[instance_pk];
+                        const {team, user} = instance;
+                        const is_active = team ? team.is_active : user ? user.is_active : false;
+                        if(is_active) {
+                            $(this).html("{% trans 'Enabled' %}");
+                        }
+                        else {
+                            $(this).html("{% trans 'Disabled' %}");
+                        }
+                    });
                     $('.instance-action').each(function() {
                         const instance_pk = $(this).data('instance-pk');
                         const instance = data[instance_pk];
                         const {team, user} = instance;
-                        const $instance_edit_form_active = $(this).find('.instance-edit-form-active');
-                        const $instance_is_active_input = $(this).find('.instance-is-active-input');
-                        const $instance_is_active_button = $(this).find('.instance-is-active-button');
                         const is_active = team ? team.is_active : user ? user.is_active : false;
-                        if(is_active) {
-                            $instance_is_active_button.html("{% trans 'Enabled' %}");
-                            $instance_is_active_button.prepend('<i class="glyphicon glyphicon-ok" style="color: #15910c; margin-right: 5px;">');
-                        }
-                        else {
-                            $instance_is_active_button.html("{% trans 'Disabled' %}");
-                            $instance_is_active_button.prepend('<i class="glyphicon glyphicon-remove" style="color: #ff1616; margin-right: 5px;">');
-                        }
-                        $instance_is_active_input.prop('checked', !is_active);
+                        const $instance_edit_form_active = $(this).find('.instance-edit-form-active');
                         $instance_edit_form_active.prop('checked', is_active);
                     });
                 }
