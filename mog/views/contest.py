@@ -685,7 +685,7 @@ def contest_registration_multiple_unregister(request, contest_id):
     return redirect(nxt)
 
 
-def edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, is_active):
+def set_contest_registration_multiple_enable(request, contest_id, instances_selected, is_active):
     """Administrative tool: Enable multiple instance users from contest"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
@@ -726,7 +726,7 @@ def contest_registration_multiple_enable(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     instances_selected = request.POST.get('instances-enable-selected', '').split(',')
-    return edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, True)
+    return set_contest_registration_multiple_enable(request, contest_id, instances_selected, True)
 
 
 @login_required
@@ -735,7 +735,7 @@ def contest_registration_multiple_disable(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     instances_selected = request.POST.get('instances-disable-selected', '').split(',')
-    return edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, False)
+    return set_contest_registration_multiple_enable(request, contest_id, instances_selected, False)
 
 
 class ContestCreateView(View):
