@@ -12,15 +12,12 @@ urlpatterns = [
 
     url(r'^api/institution/list/$', views.institution_list, name='api_institution_list'),
 
-    url(r'^api/instance/group/list/$', views.instance_group_list,
-        name='api_instance_group_list'),
-    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/group/$', views.instance_edit_group,
-        name='api_instance_edit_group'),
-    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description,
-        name='api_instance_edit_render_description'),
+    url(r'^api/instance/group/list/$', views.instance_group_list, name='api_instance_group_list'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/group/$', views.instance_edit_group, name='api_instance_edit_group'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/render_description/$', views.instance_edit_render_description, name='api_instance_edit_render_description'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/team/$', views.instance_edit_team, name='api_instance_edit_team'),
     url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/user/$', views.instance_edit_user, name='api_instance_edit_user'),
-    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/active/$', views.instance_edit_active, name='api_instance_edit_active'),
+    url(r'^api/instance/(?P<instance_pk>[0-9]+)/edit/enable/$', views.instance_edit_enable, name='api_instance_edit_enable'),
 
     url(r'^api/contest/permission/(?P<permission_pk>[0-9]+)/edit/granted$', views.contest_permission_edit_granted, name='api_contest_permission_edit_granted'),
 
@@ -53,20 +50,17 @@ urlpatterns = [
 
     url(r'^contest/register/(?P<contest_id>[0-9]+)$', views.contest_register, name='contest_register'),
     url(r'^contest/register/user/(?P<contest_id>[0-9]+)$', views.contest_register_user, name='contest_register_user'),
-    url(r'^contest/register/multipleuser/(?P<contest_id>[0-9]+)$', views.contest_register_multiple_users, name='contest_register_multiple_users'),
-    url(r'^contest/register/multipleteam/(?P<contest_id>[0-9]+)$', views.contest_register_multiple_teams, name='contest_register_multiple_teams'),
     url(r'^contest/register/team/(?P<contest_id>[0-9]+)$', views.contest_register_team, name='contest_register_team'),
-    url(r'^contest/remove/instance/(?P<instance_id>[0-9]+)$', views.contest_remove_instance,
-        name='contest_remove_instance'),
-    url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration,
-        name='contest_remove_registration'),
+    url(r'^contest/remove/instance/(?P<instance_id>[0-9]+)$', views.contest_remove_instance, name='contest_remove_instance'),
+    url(r'^contest/remove/registration/(?P<contest_id>[0-9]+)$', views.contest_remove_registration, name='contest_remove_registration'),
     url(r'^contest/instances/info/(?P<contest_id>[0-9]+)$', views.contest_instances_info, name='contest_instances_info'),
-    url(r'^contest/remove/registration/multiple/(?P<contest_id>[0-9]+)$', views.contest_remove_registration_multiple, name='contest_remove_registration_multiple'),
-   
-    url(r'^contest/instances/edit/group/multiple/(?P<contest_id>[0-9]+)$', views.contest_edit_group_multiple, name='contest_edit_group_multiple'),
     
-    url(r'^contest/enable/instances/multiple/(?P<contest_id>[0-9]+)$', views.contest_enable_instance_multiple, name='contest_enable_instance_multiple'),
-    url(r'^contest/disable/instances/multiple/(?P<contest_id>[0-9]+)$', views.contest_disable_instance_multiple, name='contest_disable_instance_multiple'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/register/user/$', views.contest_registration_multiple_register_user, name='contest_registration_multiple_register_user'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/register/team/$', views.contest_registration_multiple_register_team, name='contest_registration_multiple_register_team'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/unregister/$', views.contest_registration_multiple_unregister, name='contest_registration_multiple_unregister'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/edit-group/$', views.contest_registration_multiple_edit_group, name='contest_registration_multiple_edit_group'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/enable/$', views.contest_registration_multiple_enable, name='contest_registration_multiple_enable'),
+    url(r'contest/(?P<contest_id>[0-9]+)/registration/multiple/disable/$', views.contest_registration_multiple_disable, name='contest_registration_multiple_disable'),
 
     url(r'^contest/(?P<contest_id>[0-9]+)/clarifications$', views.contest_clarifications, name='contest_clarifications'),
     url(r'^contest/(?P<contest_id>[0-9]+)/create_problem$', views.CreateProblemInContestView.as_view(), name='contest_create_problem'),

@@ -182,7 +182,7 @@ def instance_edit_user(request, instance_pk):
 
 @login_required
 @require_http_methods(["POST"])
-def instance_edit_active(request, instance_pk):
+def instance_edit_enable(request, instance_pk):
     # TODO: refactoring disable user for a specific contest, not from the whole MOG :(
     # an option may be prohibit it to make submit
     """Disable user"""

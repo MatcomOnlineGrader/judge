@@ -13,7 +13,7 @@
             </div>
             <div class="modal-body">
                 <p>Select Group to edit all selected user/team</p>
-                <form action="{% url 'mog:contest_edit_group_multiple' contest.id %}" method="POST" id="edit-group-selected-form" class="show-loading-after-submit-no-confirm">
+                <form action="{% url 'mog:contest_registration_multiple_edit_group' contest.id %}" method="POST" id="edit-group-selected-form" class="show-loading-after-submit-no-confirm">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                     <input type="hidden" id="instances-group-selected" name="instances-group-selected"/>

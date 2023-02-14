@@ -486,7 +486,7 @@ def contest_register_user(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
-def contest_register_multiple_users(request, contest_id):
+def contest_registration_multiple_register_user(request, contest_id):
     """Administrative tool: Register users in contest"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
@@ -542,7 +542,7 @@ def contest_register_team(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
-def contest_register_multiple_teams(request, contest_id):
+def contest_registration_multiple_register_team(request, contest_id):
     """Administrative tool: Register teams in contest"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
@@ -644,7 +644,7 @@ def contest_remove_registration(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
-def contest_remove_registration_multiple(request, contest_id):
+def contest_registration_multiple_unregister(request, contest_id):
     """Administrative tool: Remove registration for multiple user/team"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
@@ -720,7 +720,7 @@ def edit_contest_instance_user_isactive_multiple(request, contest_id, instances_
 
 @login_required
 @require_http_methods(["POST"])
-def contest_enable_instance_multiple(request, contest_id):
+def contest_registration_multiple_enable(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     instances_selected = request.POST.get('instances-enable-selected', '').split(',')
@@ -729,7 +729,7 @@ def contest_enable_instance_multiple(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
-def contest_disable_instance_multiple(request, contest_id):
+def contest_registration_multiple_disable(request, contest_id):
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
     instances_selected = request.POST.get('instances-disable-selected', '').split(',')
@@ -1258,7 +1258,7 @@ def contest_permission_import(request, contest_id):
 
 @login_required
 @require_http_methods(["POST"])
-def contest_edit_group_multiple(request, contest_id):
+def contest_registration_multiple_edit_group(request, contest_id):
     """Administrative tool: Edit group for multiple user/team"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()

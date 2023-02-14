@@ -32,7 +32,7 @@
                         <div class="col-sm-12 {% if contest.allow_teams %}col-lg-6{% endif %}">
                             <div class="well bckg-white">
                                 <h5 class="well-title">{% trans 'Register users' %}</h3>
-                                <form action="{% url 'mog:contest_register_multiple_users' contest.id %}" method="post" class="show-loading-after-submit">
+                                <form action="{% url 'mog:contest_registration_multiple_register_user' contest.id %}" method="post" class="show-loading-after-submit">
                                     {% csrf_token %}
                                     <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                                     <div class="form-group">
@@ -61,7 +61,7 @@
                             <div class="col-sm-12 col-lg-6">
                                 <div class="well bckg-white">
                                     <h5 class="well-title">{% trans 'Register teams' %}</h3>
-                                    <form action="{% url 'mog:contest_register_multiple_teams' contest.id %}" method="post" class="show-loading-after-submit">
+                                    <form action="{% url 'mog:contest_registration_multiple_register_team' contest.id %}" method="post" class="show-loading-after-submit">
                                         {% csrf_token %}
                                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                                         <div class="form-group">
@@ -90,19 +90,19 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <form action="{% url 'mog:contest_remove_registration_multiple' contest.id %}" method="POST" id="unregister-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_registration_multiple_unregister' contest.id %}" method="POST" id="unregister-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-unregister-selected" name="instances-unregister-selected" class="form-input-instances-selected"/>
                         <button class="btn btn-sm" type="submit">{% trans 'Unregister all selected' %}</button>
                     </form>
-                    <form action="{% url 'mog:contest_disable_instance_multiple' contest.id %}" method="POST" id="disable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_registration_multiple_disable' contest.id %}" method="POST" id="disable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-disable-selected" name="instances-disable-selected" class="form-input-instances-selected"/>
                         <button class="btn btn-sm" type="submit">{% trans 'Disable all selected' %}</button>
                     </form>
-                    <form action="{% url 'mog:contest_enable_instance_multiple' contest.id %}" method="POST" id="enable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                    <form action="{% url 'mog:contest_registration_multiple_enable' contest.id %}" method="POST" id="enable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                         <input type="hidden" id="instances-enable-selected" name="instances-enable-selected" class="form-input-instances-selected"/>
