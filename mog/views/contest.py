@@ -1161,13 +1161,14 @@ def contest_submissions_export(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     instances_id = contest.instances.values_list('id')
     problems = contest.get_problems
+    ignored_results = ['Pending', 'Running', 'Compiling']
 
     try:
         content = io.BytesIO()
         with zipfile.ZipFile(content, 'w') as zipObj:
             for problem in problems:
                 header = 'submissions_%s/%s' % (contest.name, problem.letter)
-                submissions = Submission.objects.filter(problem_id=problem.id, instance_id__in=instances_id)
+                submissions = Submission.objects.filter(~Q(result__name__in=ignored_results), problem_id=problem.id, instance_id__in=instances_id)
                 for submission in submissions:
                     filename, source = get_submission(submission)
                     zipObj.writestr('%s/%s' % (header, filename), source)
