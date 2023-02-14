@@ -285,3 +285,43 @@ form.filter * {
     list-style: none;
     padding: 0;
 }
+
+.instance-info {
+  display: flex;
+  gap: 5px;
+}
+.instance-info-last-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+}
+.instance-info-team {
+  flex: auto;
+}
+.instance-info-team-profiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 10px;
+}
+.instance-info-user {
+  flex: auto;
+}
+.instance-info-submissions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+}
+.instance-info-last-login .not-logged {
+  color: #dd2828;
+}
+.instance-info-last-login .logged {
+  color: #2da529;
+}
+.instance-action {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
