@@ -163,7 +163,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {{ instance.submissions.count }}
+                                    {% if instance.team %}
+                                    <a href="{% url 'mog:team_submissions' contest.id instance.team.id %}" target="_blank" class="no-underline">
+                                        {{ instance.submissions.count }}
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'mog:contest_submissions' contest.id %}?username={{ instance.user.username }}" target="_blank">
+                                        {{ instance.submissions.count }}
+                                    </a>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <div class="instance-status" data-instance-pk="{{ instance.pk }}"></div>
