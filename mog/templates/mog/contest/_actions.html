@@ -57,6 +57,10 @@
             </li>
             <li><a href="{% url 'mog:contest_csv' contest.id %}">Export ranking CSV</a></li>
             <li><a href="{% url 'mog:contest_baylor' contest.id %}">Export Baylor</a></li>
+            {% if user|is_admin %}
+            <li role="separator" class="divider"></li>
+            <li><a href="{% url 'mog:contest_submissions_export' contest.id %}">Export Submissions</a></li>
+            {% endif %}
         </ul>
     </div>
 {% endif %}

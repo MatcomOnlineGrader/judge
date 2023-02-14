@@ -69,6 +69,7 @@ urlpatterns = [
     url(r'^contest/saris/(?P<contest_id>[0-9]+)$', views.contest_saris, name='contest_saris'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
     url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
+    url(r'^contest/submissions/export/(?P<contest_id>[0-9]+)$', views.contest_submissions_export, name='contest_submissions_export'),
     url(r'^contest/registration/(?P<contest_id>[0-9]+)$', views.contest_registration, name='contest_registration'),
     url(r'^contest/edit/(?P<contest_id>[0-9]+)$', views.ContestEditView.as_view(), name='contest_edit'),
     url(r'^contest/remove/(?P<contest_id>[0-9]+)$', views.remove_contest, name='contest_remove'),

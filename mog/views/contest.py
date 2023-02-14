@@ -1,3 +1,4 @@
+import io
 import csv
 import json
 import zipfile
@@ -57,6 +58,7 @@ from mog.baylor.team_password import ZipTeamPassword
 from mog.baylor.utils import ICPCID_GUEST_PREFIX, CSV_PERMISSION_HEADER
 
 from .permissions import set_granted_to_permission
+from .submission import get_submission
 
 
 def contests(request):
@@ -1291,3 +1293,32 @@ def contest_registration_multiple_edit_group(request, contest_id):
         messages.error(request, 'Unregister user/team: Invalid data!', extra_tags='danger')
 
     return redirect(nxt)
+
+
+@require_http_methods(['GET'])
+def contest_submissions_export(request, contest_id):
+    """Export ZIP with all submission of a contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    instances_id = contest.instances.values_list('id')
+    problems = contest.get_problems
+
+    try:
+        content = io.BytesIO()
+        with zipfile.ZipFile(content, 'w') as zipObj:
+            for problem in problems:
+                header = 'submissions_%s/%s' % (contest.name, problem.letter)
+                submissions = Submission.objects.filter(problem_id=problem.id, instance_id__in=instances_id)
+                for submission in submissions:
+                    filename, source = get_submission(submission)
+                    zipObj.writestr('%s/%s' % (header, filename), source)
+        zip_submissions = content.getvalue()
+        response = HttpResponse(zip_submissions, content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename="submissions_{0}.zip"'.format(contest.name)
+        return response
+    
+    except Exception as e:
+        msg = _('Error exporting submissions: ' + str(e))
+        messages.error(request, msg, extra_tags='danger')
+        return HttpResponseForbidden()
