@@ -681,6 +681,57 @@ def contest_remove_registration_mulitple(request, contest_id):
     return redirect(nxt)
 
 
+def edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, is_active):
+    """Administrative tool: Enable multiple instance users from contest"""
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    contest = get_object_or_404(Contest, pk=contest_id)
+    nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(contest.pk, ))
+    instances = []
+    
+    try:
+        for selected in instances_selected:
+            instances.append(get_object_or_404(ContestInstance, pk=int(selected)))
+        instances=set(instances)
+        for instance in instances:
+            if not instance:
+                continue
+            if instance.team:
+                for profile in instance.team.profiles.all():
+                    profile.user.is_active = is_active
+                    profile.user.save()
+                    msg = _("Successfully %s user '%s' of team %s!" % ('active' if is_active else 'disable', profile.user.username, instance.team.name))
+                    messages.success(request, msg, extra_tags='success')
+            else:
+                instance.user.is_active = is_active
+                instance.user.save()
+                msg = _("Successfully %s user '%s'!" % ('active' if is_active else 'disable', instance.user.username))
+                messages.success(request, msg, extra_tags='success')
+
+    except (ValueError, TypeError):
+        messages.error(request, 'Enable/disable user/team: Invalid data!', extra_tags='danger')
+
+    return redirect(nxt)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_enable_instance_mulitple(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    instances_selected = request.POST.get('instances-enable-selected', '').split(',')
+    return edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, True)
+
+
+@login_required
+@require_http_methods(["POST"])
+def contest_disable_instance_mulitple(request, contest_id):
+    if not user_is_admin(request.user):
+        return HttpResponseForbidden()
+    instances_selected = request.POST.get('instances-disable-selected', '').split(',')
+    return edit_contest_instance_user_isactive_multiple(request, contest_id, instances_selected, False)
+
+
 class ContestCreateView(View):
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):

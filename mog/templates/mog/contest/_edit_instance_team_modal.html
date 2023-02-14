@@ -48,6 +48,7 @@
                             <input type="checkbox" name="description-only" id="description-only-{{ instance.id }}" 
                                 {% if instance.render_team_description_only %}checked="checked"{% endif %}>
                             <label for="description-only-{{ instance.id }}" class="" style="font-weight: 600;">{% trans 'Render team description only' %}</label>
+                            <small class="form-help-text form-help-text-checkbox">If true, render the team without members and only displaying the description on hover.</small>
                         </div>
                     </div>
                     <div class="form-group">

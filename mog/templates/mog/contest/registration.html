@@ -9,47 +9,6 @@
     <link href="{% static 'mog/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input.css' %}" rel="stylesheet"/>
     <link href="{% static 'mog/plugins/jquery.tokeninput/css/token-input-facebook.css' %}" rel="stylesheet"/>
-    <style>
-        .instance-info {
-            display: flex;
-            gap: 5px;
-        }
-        .instance-info-last-login {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-        }
-        .instance-info-team {
-            flex: auto;
-        }
-        .instance-info-team-profiles {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            column-gap: 10px;
-        }
-        .instance-info-user {
-            flex: auto;
-        }
-        .instance-info-submissions {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 30px;
-        }
-        .instance-info-last-login .not-logged {
-            color: #dd2828;
-        }        
-        .instance-info-last-login .logged {
-            color: #2da529;
-        }
-        .instance-action {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-    </style>
 {% endblock %}
 
 {% block left %}
@@ -131,11 +90,23 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form" class="margin-bottom-20 margin-left-10 pull-right show-loading-after-submit-no-confirm">
+                    <form action="{% url 'mog:contest_remove_registration_mulitple' contest.id %}" method="POST" id="unregister-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
-                        <input type="hidden" id="instances-unregister-selected" name="instances-unregister-selected"/>
+                        <input type="hidden" id="instances-unregister-selected" name="instances-unregister-selected" class="form-input-instances-selected"/>
                         <button class="btn btn-sm" type="submit">{% trans 'Unregister all selected' %}</button>
+                    </form>
+                    <form action="{% url 'mog:contest_disable_instance_mulitple' contest.id %}" method="POST" id="disable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                        <input type="hidden" id="instances-disable-selected" name="instances-disable-selected" class="form-input-instances-selected"/>
+                        <button class="btn btn-sm" type="submit">{% trans 'Disable all selected' %}</button>
+                    </form>
+                    <form action="{% url 'mog:contest_enable_instance_mulitple' contest.id %}" method="POST" id="enable-selected-form" class="form-edit-selected margin-bottom-20 margin-left-10 pull-right">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
+                        <input type="hidden" id="instances-enable-selected" name="instances-enable-selected" class="form-input-instances-selected"/>
+                        <button class="btn btn-sm" type="submit">{% trans 'Enable all selected' %}</button>
                     </form>
                     {% include 'mog/contest/_edit_group_modal.html' with contest=contest %}
                     <div class="margin-bottom-20 margin-left-10 pull-right">
@@ -147,7 +118,8 @@
                         <thead>
                         <tr>
                             <th class="text-center cell-small"></th>
-                            <th class="text-center cell-medium" style="width: 50%;">{% trans "User/Team" %}</th>
+                            <th class="text-center cell-medium" style="width: 70%;">{% trans "User/Team" %}</th>
+                            <th class="text-center cell-small"></th>
                             <th class="text-center cell-medium" style="width: 30%;">{% trans "Group" %}</th>
                             <th class="text-center cell-small">{% trans "Action" %}</th>
                         </tr>
@@ -201,37 +173,43 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <select class="select2 contest-instance" style="width: 100%;"
-                                            data-url-edit="{% url "mog:api_instance_edit_group" instance.pk %}">
-                                        <option value="{{ instance.group|default_if_none:'' }}">
-                                            {{ instance.group|default_if_none:'-----' }}
-                                        </option>
-                                    </select>
+                                    <form action="{% url 'mog:api_instance_edit_render_description' instance.pk %}" method="POST" class="show-loading-after-submit-confirm">
+                                        <input hidden id="render_team_description_only" type="checkbox" name="render_team_description_only" 
+                                            {% if not instance.render_team_description_only %}checked="checked"{% endif %}>
+                                        {% if instance.render_team_description_only %}
+                                        <i class="glyphicon glyphicon-ok" style="color: #1143f7; cursor: pointer;" onclick="$(this).closest('form').submit();"></i>
+                                        {% else %}
+                                        <i class="glyphicon glyphicon-ok" style="color: #bfbfbf; cursor: pointer;" onclick="$(this).closest('form').submit();"></i>
+                                        {% endif %}
+                                    </form>
+                                </td>
+                                <td>
+                                    {{ instance.group|default_if_none:'-----' }}
                                 </td>
                                 <td>
                                     <div class="instance-action" data-instance-pk="{{ instance.pk }}">
                                         {% if instance.team %}
                                         <div>
                                             {% include 'mog/contest/_edit_instance_team_modal.html' with instance=instance %}
-                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
+                                            <button class="btn btn-sm btn-default button-action" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
                                         </div>
                                         {% else %}
                                         <div>
                                             {% include 'mog/contest/_edit_instance_user_modal.html' with instance=instance %}
-                                            <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
+                                            <button class="btn btn-sm btn-default button-action" data-toggle="modal" data-target="#edit-instance-{{ instance.id }}">{% trans 'Edit' %}</button>
                                         </div>
                                         {% endif %}
                                         <form action="{% url 'mog:api_instance_edit_active' instance.id %}" method="post" class="show-loading-after-submit-confirm">
                                             {% csrf_token %}
                                             <input type="hidden" name="next" value="{% url 'mog:contest_registration' contest.id %}"/>
                                             <input type="checkbox" name="is_active" class="instance-is-active-input" hidden/>
-                                            <input type="submit" class="btn btn-sm btn-default instance-is-active-button" value="{% trans 'Disable' %}"/>
+                                            <button type="submit" class="btn btn-sm btn-default button-action instance-is-active-button">{% trans 'Disable' %}</button>
                                         </form>
                                         <form action="{% url 'mog:contest_remove_instance' instance.id %}" method="post" class="show-loading-after-submit-confirm">
                                             {% csrf_token %}
                                             <input type="hidden" name="next"
                                                    value="{% url 'mog:contest_registration' contest.id %}"/>
-                                            <input type="submit" class="btn btn-sm btn-default"
+                                            <input type="submit" class="btn btn-sm button-action btn-default"
                                                    value="{% trans 'Unregister' %}"/>
                                         </form>
                                     </div>
@@ -279,37 +257,6 @@
     </script>
 
     <script src="{% static 'mog/plugins/select2/js/select2.full.min.js' %}"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('.select2.contest-instance').select2({
-                tags: true,
-                closeOnSelect: true,
-                ajax: {
-                    url: "{% url 'mog:api_instance_group_list' %}",
-                    dataType: 'json',
-                    processResults: function (response, params) {
-                        return {
-                            results: response.data.map(function (group) {
-                                return {
-                                    id: group, text: group
-                                }
-                            })
-                        }
-                    }
-                }
-            }).on("select2:select", function(e) {
-                $.post($(e.target).data('url-edit'), {group: $(e.target).val()})
-                    .done(function(response) {
-                        if (!response.success)
-                            alert(response.message);
-                    })
-                    .fail(function() {
-                        alert('some error ocurrs!');
-                    })
-            });
-        });
-    </script>
 
     <script>
         $(document).ready(function () {
@@ -442,7 +389,7 @@
                             if(team.last_login) {
                                 last_login = '<i title="Last login: ' + team.last_login + '" class="glyphicon glyphicon-flash logged"></i>';
                             }
-                            $last_login.append(last_login);
+                            $last_login.prepend(last_login);
                             const $teamProfiles = $(this).find('.instance-info-team-profiles')
                             const profiles = [];
                             for(const profile of team.profiles) {
@@ -466,10 +413,12 @@
                         const $instance_is_active_button = $(this).find('.instance-is-active-button');
                         const is_active = team ? team.is_active : user ? user.is_active : false;
                         if(is_active) {
-                            $instance_is_active_button.val("{% trans 'Disable' %}");
+                            $instance_is_active_button.html("{% trans 'Enabled' %}");
+                            $instance_is_active_button.prepend('<i class="glyphicon glyphicon-ok" style="color: #15910c; margin-right: 5px;">');
                         }
                         else {
-                            $instance_is_active_button.val("{% trans 'Enable' %}");
+                            $instance_is_active_button.html("{% trans 'Disabled' %}");
+                            $instance_is_active_button.prepend('<i class="glyphicon glyphicon-remove" style="color: #ff1616; margin-right: 5px;">');
                         }
                         $instance_is_active_input.prop('checked', !is_active);
                         $instance_edit_form_active.prop('checked', is_active);
@@ -481,8 +430,9 @@
     
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#unregister-selected-form").on('submit', function(e) {
-                if(confirm("Are you sure you want to un-register these Users/Teams?")) {
+            $(".form-edit-selected").on('submit', function(e) {
+                if(confirm("Are you sure you want to do this bulk opearation?")) {
+                    $('#loading-on-submit').css('display', 'block');
                     const instances_selected = [];
                     $(".instance-select").each(function() {
                         const instance_pk = $(this).data("instance-pk");
@@ -491,7 +441,7 @@
                             instances_selected.push(instance_pk);
                         }
                     });
-                    $('#instances-unregister-selected').val(instances_selected.join(','));
+                    $('.form-input-instances-selected').val(instances_selected.join(','));
                 }
                 else {
                     e.preventDefault();

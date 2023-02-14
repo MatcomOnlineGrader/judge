@@ -6,7 +6,8 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     contest_saris, contest_rating_changes, team_submissions, CreateProblemInContestView, \
     contest_register_multiple_users, contest_register_multiple_teams, contest_instances_info, \
     contest_permission, contest_add_permission, contest_permission_import, contest_permission_export, \
-    contest_remove_registration_mulitple, contest_edit_group_multiple
+    contest_remove_registration_mulitple, contest_edit_group_multiple, contest_enable_instance_mulitple, \
+    contest_disable_instance_mulitple
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test
