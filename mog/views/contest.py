@@ -692,6 +692,7 @@ def edit_contest_instance_user_isactive_multiple(request, contest_id, instances_
     instances = []
     
     try:
+        count = 0
         for selected in instances_selected:
             instances.append(get_object_or_404(ContestInstance, pk=int(selected)))
         instances=set(instances)
@@ -702,16 +703,17 @@ def edit_contest_instance_user_isactive_multiple(request, contest_id, instances_
                 for profile in instance.team.profiles.all():
                     profile.user.is_active = is_active
                     profile.user.save()
-                    msg = _("Successfully %s user '%s' of team %s!" % ('active' if is_active else 'disable', profile.user.username, instance.team.name))
-                    messages.success(request, msg, extra_tags='success')
+                    count += 1
             else:
                 instance.user.is_active = is_active
                 instance.user.save()
-                msg = _("Successfully %s user '%s'!" % ('active' if is_active else 'disable', instance.user.username))
-                messages.success(request, msg, extra_tags='success')
+                count += 1
+
+        msg = _("Successfully %s %d users" % ('enable' if is_active else 'disable', count))
+        messages.success(request, msg, extra_tags='success')
 
     except (ValueError, TypeError):
-        messages.error(request, 'Enable/disable user/team: Invalid data!', extra_tags='danger')
+        messages.error(request, 'Enable/disable users: Invalid data!', extra_tags='danger')
 
     return redirect(nxt)
 
@@ -1279,19 +1281,8 @@ def contest_edit_group_multiple(request, contest_id):
         for instance in instances:
             if not instance:
                 continue
-            if instance.team:
-                team = True
-                name = instance.team.name
-            else:
-                team = False
-                name = instance.user.username
-            
             instance.group = group or contest.group
             instance.save()
-
-            msg = _("Moved %s '%s' to group '%s' successfully." % ('team' if team else 'user', name, group))
-            messages.warning(request, msg, extra_tags='warning')
-
             count += 1
         msg = _("Successfully moved %d user/team to Group '%s'" % (count, group))
         messages.success(request, msg, extra_tags='success')
