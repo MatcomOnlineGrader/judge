@@ -51,6 +51,10 @@ class UserFeedbackAdmin(admin.ModelAdmin):
     ordering = ('-submitted_date',)
 
 
+class ContestInstanceAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'contest', 'is_active', 'real')
+
+
 class ContestPermissionAdmin(admin.ModelAdmin):
     list_display = ('user', 'contest', 'role', 'granted', 'date', )
 
@@ -91,7 +95,7 @@ admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Comment)
 admin.site.register(Compiler)
 admin.site.register(Contest)
-admin.site.register(ContestInstance)
+admin.site.register(ContestInstance, ContestInstanceAdmin)
 admin.site.register(ContestPermission, ContestPermissionAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Division)

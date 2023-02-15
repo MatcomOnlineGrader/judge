@@ -925,6 +925,9 @@ class ContestInstance(models.Model):
     render_team_description_only = models.BooleanField(default=False,
                                                        verbose_name=_(
                                                            'If true, render the team without members and only displaying the description on hover'))
+    is_active = models.BooleanField(default=True, verbose_name=_(
+        'If true, it will allows the instance to submit to the corresponding contest.'
+    ))
 
     def __str__(self):
         if self.team:
