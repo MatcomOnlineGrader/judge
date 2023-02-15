@@ -492,7 +492,7 @@ def contest_registration_multiple_register_user(request, contest_id):
     """Administrative tool: Register users in contest"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
-    
+    contest = get_object_or_404(Contest, pk=contest_id)
     group = request.POST.get('user-group', '').strip()
     members = request.POST.get('user-members', '').split(',')
     users = []
@@ -505,19 +505,23 @@ def contest_registration_multiple_register_user(request, contest_id):
         for member in members:
             users.append(get_object_or_404(User, pk=int(member)))
         users = set(users)
-        contest = get_object_or_404(Contest, pk=contest_id)
         count = 0
         for user in users:
             if ContestInstance.objects.filter(contest=contest, user=user).first():
                 messages.warning(request, _("User '%s' is already registerd" % user.username), extra_tags='warning')
-            else:
-                ContestInstance.objects.create(
-                    contest=contest,
-                    user=user,
-                    real=True,
-                    group=group or contest.group
-                )
-                count += 1
+                continue
+
+            if ContestInstance.objects.filter(Q(contest_id=contest.id), Q(team__profiles__user_id=user.id)):
+                messages.warning(request, _('The user "%s" is already registered as a team!' % user.username), extra_tags='warning')
+                continue
+
+            ContestInstance.objects.create(
+                contest=contest,
+                user=user,
+                real=True,
+                group=group or contest.group
+            )
+            count += 1
         msg = _('Successfully registered ' + str(count) + ' new user')
         messages.success(request, msg, extra_tags='success')
         
@@ -548,7 +552,7 @@ def contest_registration_multiple_register_team(request, contest_id):
     """Administrative tool: Register teams in contest"""
     if not user_is_admin(request.user):
         return HttpResponseForbidden()
-    
+    contest = get_object_or_404(Contest, pk=contest_id)
     group = request.POST.get('team-group', '').strip()
     members = request.POST.get('team-members', '').split(',')
     teams = []
@@ -561,23 +565,34 @@ def contest_registration_multiple_register_team(request, contest_id):
         for member in members:
             teams.append(get_object_or_404(Team, pk=int(member)))
         teams = set(teams)
-        contest = get_object_or_404(Contest, pk=contest_id)
         count = 0
         for team in teams:
             # Check that the team can be registered in the contest
             if not contest.allow_teams:
                 messages.warning(request, _("The contest doesn't allow teams"), extra_tags='warning')
                 return redirect(reverse('mog:contests'))
+            
+            if ContestInstance.objects.filter(contest=contest, team__name=team.name).exists():
+                messages.warning(request, _('There is a team registered with the same name "%s", please check it out, register skiped!' % team.name), extra_tags='warning')
+                continue
+            
             if ContestInstance.objects.filter(contest=contest, team=team).first():
                 messages.warning(request, _("Team '%s' is already registerd" % team.name), extra_tags='warning')
-            else:
-                ContestInstance.objects.create(
-                    contest=contest,
-                    team=team,
-                    real=True,
-                    group=group or contest.group
-                )
-                count += 1
+                continue
+
+            # team > profiles > [user_id]
+            profiles = [profile.user.id for profile in team.profiles.all()]
+            if ContestInstance.objects.filter(Q(contest_id=contest.id), Q(user_id__in=profiles) | Q(team__profiles__user_id__in=profiles)):
+                messages.warning(request, _('There are an user within the team "%s" that is already registered with another team or as an user, please check it out, register skiped!' % team.name), extra_tags='warning')
+                continue
+            
+            ContestInstance.objects.create(
+                contest=contest,
+                team=team,
+                real=True,
+                group=group or contest.group
+            )
+            count += 1
         msg = _('Successfully registered ' + str(count) + ' new team')
         messages.success(request, msg, extra_tags='success')
         

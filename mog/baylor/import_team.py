@@ -158,6 +158,13 @@ class ProcessImportTeam:
                     self.messages.append({'type': 'warning', 'message': 'Team "%s" is already registered in this contest' % team.team_name})
                     continue
 
+                # if the prev conditional is false, then the current team has a different icpcid, 
+                # means that the current team is different to the one already imported
+                # skiped it because two equals team name cannot coexist in the same contest
+                if ContestInstance.objects.filter(contest_id=contest.pk, team__name=team.team_name).exists():
+                    self.messages.append({'type': 'warning', 'message': 'There is a team registered with the same name "%s", please check it out, import skiped!' % team.team_name})
+                    continue
+
                 # find existing team with the same {icpcid} and has an user with the same {prefix}
                 mog_team = Team.objects.filter(icpcid=guestid, profiles__user__username__regex=r_username_prefix).first()
 
