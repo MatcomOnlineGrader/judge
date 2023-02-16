@@ -1022,7 +1022,7 @@ def contest_permission(request, contest_id):
 
     return render(request, 'mog/contest/permission.html', {
         'contest': contest,
-        'permissions': ContestPermission.objects.filter(contest=contest).order_by('-granted', 'role', 'user__username'),
+        'permissions': ContestPermission.objects.filter(contest=contest, role__in=['judge', 'observer']).order_by('-granted', 'role', 'user__username'),
         'form_import_permission': ImportPermissionForm()
     })
 
@@ -1036,16 +1036,21 @@ def contest_add_permission(request, contest_id):
     
     contest = get_object_or_404(Contest, pk=contest_id)
     
-    next = request.POST.get('next') or reverse('mog:contest_permission', args=(contest.pk, ))
-    observer = request.POST.get('observer', '')
-    judge = request.POST.get('judge', '')
+    nxt = request.POST.get('next') or reverse('mog:contest_permission', args=(contest.pk, ))
+    observer = request.POST.get('observer', '') == 'on'
+    judge = request.POST.get('judge', '') == 'on'
     members = request.POST.get('user-members', '').split(',')
     users = []
 
     if not observer and not judge:
         msg = _('You need to assign at least one permission (observer / judge) to the users.')
         messages.success(request, msg, extra_tags='warning')
-        return redirect(next)
+        return redirect(nxt)
+    
+    if len(members) == 0:
+        msg = _('You need to select at least one user.')
+        messages.warning(request, msg, extra_tags='warning')
+        return redirect(nxt)
 
     try:
         for member in members:
@@ -1071,7 +1076,7 @@ def contest_add_permission(request, contest_id):
     except (ValueError, TypeError):
         messages.error(request, 'Permission users: Invalid data!', extra_tags='danger')
 
-    return redirect(next)
+    return redirect(nxt)
 
 
 @login_required
@@ -1091,7 +1096,7 @@ def contest_permission_export(request, contest_id):
               'granted']
     writer.writerow(header)
 
-    permissions = ContestPermission.objects.filter(contest=contest)
+    permissions = ContestPermission.objects.filter(contest=contest, role__in=['judge', 'observer'])
 
     for permission in permissions:
         row = [permission.user.username,
@@ -1133,6 +1138,10 @@ def contest_permission_import(request, contest_id):
                         messages.success(request, msg, extra_tags='warning')
                         continue
                     role = line[1].lower()
+                    if role not in ['judge', 'observer']:
+                        msg = _('Role ' + str(role) + ' skiped from import.')
+                        messages.warning(request, msg, extra_tags='warning')
+                        continue
                     granted = line[2].lower() == 'true'
                     prev_permission = ContestPermission.objects.filter(contest=contest, user=user, role=role).first()
                     if prev_permission:
