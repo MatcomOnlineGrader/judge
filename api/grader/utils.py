@@ -83,11 +83,11 @@ def report_progress(submission_id, current_test, number_of_tests, result, bar_wi
         '%d [%s%s] (%d/%d - %d%%)' % (submission_id, '#' * prg,
                                       ' ' * rmg, current_test, number_of_tests, pct)
     )
-    if result != 'accepted' or current_test == number_of_tests:
+    if result != ACCEPTED or current_test == number_of_tests:
         color = {
-            'accepted': colorama.Fore.GREEN,
-            'compilation error': colorama.Fore.BLUE,
-            'internal error': colorama.Fore.BLUE
+            ACCEPTED: colorama.Fore.GREEN,
+            COMPILATION_ERROR: colorama.Fore.BLUE,
+            INTERNAL_ERROR: colorama.Fore.BLUE
         }.get(result, colorama.Fore.RED)
         sys.stderr.write('%s [%s]%s\n' %
                          (color, result, colorama.Style.RESET_ALL))
