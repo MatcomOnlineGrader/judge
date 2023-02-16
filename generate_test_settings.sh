@@ -40,7 +40,6 @@ STATIC_ROOT: $HOME/.judge/www/static
 MEDIA_ROOT: $HOME/.judge/www/media
 
 [grader]
-GRADER_ID: simple
 RESOURCES_FOLDER: $HOME/.judge/resources
 SANDBOX_FOLDER: $HOME/.judge/sandbox
 PROBLEMS_FOLDER: $HOME/.judge/problems

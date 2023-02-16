@@ -125,42 +125,38 @@ def generate_test_cases():
     return ins[:2], outs[:2], ins[2:], outs[2:]
 
 
-def remove(instance, dry, verbose):
+def remove(instance, dry):
     if instance is None:
         return
 
-    if verbose:
-        print("Delete:", instance)
-
+    print("Delete:", instance)
     if not dry:
         instance.delete()
 
 
-def create(instance, dry, verbose):
+def create(instance, dry):
     if instance is None:
         return
 
-    if verbose:
-        print("Create:", instance)
-
+    print("Create:", instance)
     if not dry:
         instance.save()
 
 
-def apply(current_instance, new_instance, dry, reset, verbose):
+def apply(current_instance, new_instance, dry, reset):
     if reset:
         try:
             instance = current_instance()
         except ObjectDoesNotExist:
             instance = None
-        remove(instance, dry, verbose)
+        remove(instance, dry)
     else:
         try:
             instance = current_instance()
             instance = None
         except ObjectDoesNotExist:
             instance = new_instance()
-        create(instance, dry, verbose)
+        create(instance, dry)
 
 
 def read_from(path):
@@ -262,68 +258,6 @@ def create_user(name, role):
     return UserWrapper(user_profile)
 
 
-def populate_local_dev(dry, reset, verbose=True):
-    _apply = partial(apply, dry=dry, reset=reset, verbose=verbose)
-
-    target_resources = Path(settings.RESOURCES_FOLDER)
-
-    # Copy / Delete (testlib.h & grader.py)
-    if reset:
-        try:
-            if verbose:
-                print("Delete: testlib.h")
-                print("Delete: grader.py")
-
-            if not dry:
-                os.unlink(target_resources / 'testlib.h')
-                os.unlink(target_resources / 'grader.py')
-
-        except FileNotFoundError:
-            pass
-    else:
-        if verbose:
-            print("Create: testlib.h")
-            print("Create: grader.py")
-
-        if not dry:
-            makedirs(target_resources, exist_ok=True)
-            copy2(Path('resources') / 'testlib.h',
-                  target_resources / 'testlib.h')
-            copy2(Path('resources') / 'grader.py',
-                  target_resources / 'grader.py')
-
-    if reset:
-        # Problem needs to be removed first, otherwise it is removed on cascade mode.
-        _apply(lambda: ProblemWrapper(
-            Problem.objects.get(title="A+B")), create_aplusb)
-
-    _apply(lambda: Institution.objects.get(name="Earth"),
-           lambda: Institution(name="Earth", url="earth.org"))
-
-    _apply(lambda: Contest.objects.get(name="test01"), lambda: Contest(
-        name="test01", code="test01", start_date=timezone.now(), end_date=timezone.now()))
-
-    _apply(lambda: Checker.objects.get(name="wcmp"), lambda: Checker(
-        name="wcmp", description="Token comparator checker", source=read_from('tests/checkers/wcmp.cpp'), backend='testlib.h'))
-
-    for compiler in COMPILERS:
-        _apply(lambda: Compiler.objects.get(
-            name=compiler['name']), lambda: Compiler(**compiler))
-
-    if not reset:
-        # Problem needs to be created at the end, after compiler and contest exists.
-        _apply(lambda: ProblemWrapper(
-            Problem.objects.get(title="A+B")), create_aplusb)
-
-    for user in USERS:
-        _apply(lambda: UserWrapper(UserProfile.objects.get(
-            user=User.objects.get(username=user['name']))), partial(create_user, **user))
-
-    for result, color, penalty in RESULTS:
-        _apply(lambda: Result.objects.get(name=result), lambda: Result(
-            name=result, description=result, color=color, penalty=penalty))
-
-
 class Command(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
@@ -344,11 +278,49 @@ class Command(BaseCommand):
 
         dry = not options['no_dry']
         reset = options['reset']
+        _apply = partial(apply, dry=dry, reset=reset)
 
-        if dry:
-            print(
-                "\nThis command is running in dry-mode so no change will be applied to the database.")
-            print("Use -d to apply changes.")
-            print()
+        # Copy / Delete testlib.h
+        if reset:
+            try:
+                print("Delete: testlib.h")
+                if not dry:
+                    os.unlink(Path(settings.RESOURCES_FOLDER) / 'testlib.h')
+            except FileNotFoundError:
+                pass
+        else:
+            print("Create: testlib.h")
+            if not dry:
+                copy2(Path('resources') / 'testlib.h',
+                      Path(settings.RESOURCES_FOLDER) / 'testlib.h')
 
-        populate_local_dev(dry, reset)
+        if reset:
+            # Problem needs to be removed first, otherwise it is removed on cascade mode.
+            _apply(lambda: ProblemWrapper(
+                Problem.objects.get(title="A+B")), create_aplusb)
+
+        _apply(lambda: Institution.objects.get(name="Earth"),
+               lambda: Institution(name="Earth", url="earth.org"))
+
+        _apply(lambda: Contest.objects.get(name="test01"), lambda: Contest(
+            name="test01", code="test01", start_date=timezone.now(), end_date=timezone.now()))
+
+        _apply(lambda: Checker.objects.get(name="wcmp"), lambda: Checker(
+            name="wcmp", description="Token comparator checker", source=read_from('tests/checkers/wcmp.cpp'), backend='testlib.h'))
+
+        for compiler in COMPILERS:
+            _apply(lambda: Compiler.objects.get(
+                name=compiler['name']), lambda: Compiler(**compiler))
+
+        if not reset:
+            # Problem needs to be created at the end, after compiler and contest exists.
+            _apply(lambda: ProblemWrapper(
+                Problem.objects.get(title="A+B")), create_aplusb)
+
+        for user in USERS:
+            _apply(lambda: UserWrapper(UserProfile.objects.get(
+                user=User.objects.get(username=user['name']))), partial(create_user, **user))
+
+        for result, color, penalty in RESULTS:
+            _apply(lambda: Result.objects.get(name=result), lambda: Result(
+                name=result, description=result, color=color, penalty=penalty))
