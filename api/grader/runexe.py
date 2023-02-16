@@ -53,7 +53,7 @@ class RunexeGrader(BaseGrader):
             result = ACCEPTED
 
             _, out, err = get_exitcode_stdout_stderr(
-                cmd=cmd.format(
+                cmd=self.cmd.format(
                     **{'input-file': input_file, 'output-file': 'output.txt'}),
                 cwd=self.submission_folder
             )
