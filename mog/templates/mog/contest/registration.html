@@ -174,7 +174,11 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <div class="instance-status" data-instance-pk="{{ instance.pk }}"></div>
+                                    {% if instance.is_active %}
+                                    {% trans 'Enabled' %}
+                                    {% else %}
+                                    {% trans 'Disabled' %}
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {{ instance.group|default_if_none:'-----' }}
@@ -390,26 +394,6 @@
                             const $user = $(this).find('.instance-info-user a.user')
                             $user.css("color", user.rating_color).attr("href", "/user/" + user.id);
                         }
-                    });
-                    $('.instance-status').each(function() {
-                        const instance_pk = $(this).data('instance-pk');
-                        const instance = data[instance_pk];
-                        const {team, user} = instance;
-                        const is_active = team ? team.is_active : user ? user.is_active : false;
-                        if(is_active) {
-                            $(this).html("{% trans 'Enabled' %}");
-                        }
-                        else {
-                            $(this).html("{% trans 'Disabled' %}");
-                        }
-                    });
-                    $('.instance-action').each(function() {
-                        const instance_pk = $(this).data('instance-pk');
-                        const instance = data[instance_pk];
-                        const {team, user} = instance;
-                        const is_active = team ? team.is_active : user ? user.is_active : false;
-                        const $instance_edit_form_active = $(this).find('.instance-edit-form-active');
-                        $instance_edit_form_active.prop('checked', is_active);
                     });
                 }
             });

@@ -115,6 +115,10 @@ def instance_edit_team(request, instance_pk):
         if instance.group != group:
             instance.group = group or instance.contest.group
             edited_instance = True
+
+        if instance.is_active != is_active:
+            instance.is_active = is_active
+            edited_instance = True
         
         if edited_instance:
             instance.save()
@@ -123,9 +127,6 @@ def instance_edit_team(request, instance_pk):
             if edit_profile_institution:
                 profile.institution = institution
                 profile.save()
-            if profile.user.is_active != is_active:
-                profile.user.is_active = is_active
-                profile.user.save()
 
         msg = _("Successfully edited team '%s'" % instance.team.name)
         messages.success(request, msg, extra_tags='success')
@@ -163,13 +164,13 @@ def instance_edit_user(request, instance_pk):
         if instance.group != group:
             instance.group = group or instance.contest.group
             edited_instance = True
-        
+
+        if instance.is_active != is_active:
+            instance.is_active = is_active
+            edited_instance = True
+
         if edited_instance:
             instance.save()
-        
-        if instance.user.is_active != is_active:
-            instance.user.is_active = is_active
-            instance.user.save()
 
         msg = _("Successfully edited user '%s'" % instance.user.username)
         messages.success(request, msg, extra_tags='success')
@@ -183,8 +184,6 @@ def instance_edit_user(request, instance_pk):
 @login_required
 @require_http_methods(["POST"])
 def instance_edit_enable(request, instance_pk):
-    # TODO: refactoring disable user for a specific contest, not from the whole MOG :(
-    # an option may be prohibit it to make submit
     """Disable user"""
     if not user_is_admin(request.user):
         raise Http404()
@@ -200,21 +199,19 @@ def instance_edit_enable(request, instance_pk):
         return redirect(nxt)
 
     try:
-        if instance.team:
-            for profile in instance.team.profiles.all():
-                if profile.user.is_active != is_active:
-                    profile.user.is_active = is_active
-                    profile.user.save()
-            msg = _("Successfully %s all user for team '%s'!" % ('enabled' if is_active else 'disabled', instance.team.name))
-            messages.success(request, msg, extra_tags='success')
-        elif instance.user.is_active != is_active:
-            instance.user.is_active = is_active
-            instance.user.save()
-            msg = _("Successfully %s user '%s'!" % ('enabled' if is_active else 'disabled', instance.user.username))
-            messages.success(request, msg, extra_tags='success')
+        if instance.is_active != is_active:
+            instance.is_active = is_active
+            instance.save()
+
+            if instance.team:
+                msg = _("Successfully %s team '%s'!" % ('enabled' if is_active else 'disabled', instance.team.name))
+                messages.success(request, msg, extra_tags='success')
+            else: 
+                msg = _("Successfully %s user '%s'!" % ('enabled' if is_active else 'disabled', instance.user.username))
+                messages.success(request, msg, extra_tags='success')
 
     except Exception as e:
-        msg = _('Error disabling this user/team: ' + str(e))
+        msg = _('Error enabling this user/team: ' + str(e))
         messages.error(request, msg, extra_tags='danger')
 
     return redirect(nxt)

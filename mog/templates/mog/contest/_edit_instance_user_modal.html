@@ -35,8 +35,10 @@
                     </div>
                     <div class="form-group">
                         <div class="checkbox margin-left-25">
-                            <input type="checkbox" name="is_active" id="active-{{ instance.id }}" class="instance-edit-form-active">
+                            <input type="checkbox" name="is_active" id="active-{{ instance.id }}" class="instance-edit-form-active" 
+                                {% if instance.is_active %}checked="checked"{% endif %}>
                             <label for="active-{{ instance.id }}" class="" style="font-weight: 600;">{% trans 'Is active' %}</label>
+                            <small class="form-help-text form-help-text-checkbox">If true, it will allows the user to submit to the corresponding contest.</small>
                         </div>
                     </div>
                     <div class="text-center" style="border-top: 1px solid #e5e5e5; padding-top: 15px;">

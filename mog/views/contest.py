@@ -714,16 +714,9 @@ def set_contest_registration_multiple_enable(request, contest_id, instances_sele
             instances.append(get_object_or_404(ContestInstance, pk=int(selected)))
         instances=set(instances)
         for instance in instances:
-            if not instance:
-                continue
-            if instance.team:
-                for profile in instance.team.profiles.all():
-                    profile.user.is_active = is_active
-                    profile.user.save()
-                    count += 1
-            else:
-                instance.user.is_active = is_active
-                instance.user.save()
+            if instance.is_active != is_active:
+                instance.is_active = is_active
+                instance.save()
                 count += 1
 
         msg = _("Successfully %s %d users" % ('enable' if is_active else 'disable', count))
@@ -1091,7 +1084,6 @@ def contest_instances_info(request, contest_id):
         if instance.team:
             team = instance.team
             last_login = None
-            is_active = False
             list_profiles = []
             for profile in team.profiles.all():
                 list_profiles.append({
@@ -1099,7 +1091,6 @@ def contest_instances_info(request, contest_id):
                     'username': profile.user.username,
                     'rating_color': rating_color(profile.rating)
                 })
-                is_active = is_active or profile.user.is_active
                 l = profile.user.last_login
                 if last_login is None:
                     last_login = l
@@ -1110,7 +1101,6 @@ def contest_instances_info(request, contest_id):
                     'name': team.name,
                     'last_login': timesince(last_login) if last_login else None,
                     'profiles': list_profiles,
-                    'is_active': is_active
                 },
             }
         elif instance.user:
@@ -1121,7 +1111,6 @@ def contest_instances_info(request, contest_id):
                     'username': user.username,
                     'last_login': timesince(user.last_login) if user.last_login else None,
                     'rating_color': user_color(user),
-                    'is_active': user.is_active
                 },
             }
     return JsonResponse(data={
