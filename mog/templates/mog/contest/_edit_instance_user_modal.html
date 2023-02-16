@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load filters %}
+{% load security %}
+
+<div class="modal fade" id="edit-instance-{{ instance.id }}" role="dialog" aria-labelledby="editInstanceLabel" style="text-align: initial;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editInstanceLabel">
+                    {% trans 'Edit User' %} <span class="badge badge-info" style="font-size: 15px;">{{ instance.user.username }}<span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'mog:api_instance_edit_user' instance.id %}" method="POST" class="show-loading-after-submit-no-confirm">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'mog:contest_registration' instance.id %}"/>
+                    <div class="form-group">
+                        <label for="instances-group" class="">{% trans 'Group' %}</label>
+                        <select class="select2 contest-instance-group" name="group" style="width: 100%;">
+                            <option value="{{ instance.group|default_if_none:'' }}">
+                                {{ instance.group|default_if_none:'-----' }}
+                            </option>
+                        </select>
+                        <small class="form-help-text">By default it will use [{% if contest.group %} {{ contest.group }} {% else %} None {% endif %}]</small>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox margin-left-25">
+                            <input type="checkbox" name="description-only" id="description-only-{{ instance.id }}" 
+                                {% if instance.render_team_description_only %}checked="checked"{% endif %}>
+                            <label for="description-only-{{ instance.id }}" class="" style="font-weight: 600;">{% trans 'Render team description only' %}</label>
+                            <small class="form-help-text form-help-text-checkbox">If true, render the team without members and only displaying the description on hover.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox margin-left-25">
+                            <input type="checkbox" name="is_active" id="active-{{ instance.id }}" class="instance-edit-form-active" 
+                                {% if instance.is_active %}checked="checked"{% endif %}>
+                            <label for="active-{{ instance.id }}" class="" style="font-weight: 600;">{% trans 'Is active' %}</label>
+                            <small class="form-help-text form-help-text-checkbox">If true, it will allows the user to submit to the corresponding contest.</small>
+                        </div>
+                    </div>
+                    <div class="text-center" style="border-top: 1px solid #e5e5e5; padding-top: 15px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
