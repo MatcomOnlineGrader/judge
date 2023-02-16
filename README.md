@@ -46,7 +46,6 @@ MEDIA_ROOT: <str> [path to media folder]
 STATIC_ROOT: <str> [path to static folder]
 
 [grader]
-GRADER_ID: simple [choose which grader to use. runexe is only available in windows, simple should work on all platforms.]
 RESOURCES_FOLDER: <str> [path to resources folder]
 SANDBOX_FOLDER: <str> [path to sandbox folder]
 PROBLEMS_FOLDER: <str> [path to problems folder]
