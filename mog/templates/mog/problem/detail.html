@@ -45,9 +45,9 @@
             {% endif %}
 
             <div class="col-md-12">
-                <h5><b>{% trans 'Time limit' %}:</b> {{ problem.time_limit }} s </h5>
-                <h5><b>{% trans 'Memory limit' %}:</b> {{  problem.memory_limit }} MiB</h5>
-                <h5><b>{% trans 'Languages' %}:</b> {{ problem.first_compilers }}
+                <h5><b>{% trans 'Languages' %}:</b> {{ problem.languages_by_relevance|join:', ' }}</h5>
+                <h5>
+                    <b>{% trans 'Time & Memory limits' %}:</b> 
                     <a href="#" data-html="true" data-toggle="tooltip" title="{{ problem.compilers2str }}" data-placement="right">(details)</a>
                 </h5>
             </div>
