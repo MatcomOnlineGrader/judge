@@ -296,7 +296,7 @@ class Contest(models.Model):
 
         return running, coming, past
 
-    def group_names(self, include_virtual):
+    def group_names(self, include_virtual=False):
         qs = self.instances
         if not include_virtual:
             qs = qs.filter(real=True)
