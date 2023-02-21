@@ -57,6 +57,10 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['name', 'body', 'meta_description', 'meta_image']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['body'].widget.attrs['class'] = 'summernote-editor'
+
     def clean_body(self):
         return secure_html(self.cleaned_data['body'])
 
@@ -66,6 +70,10 @@ class ContestForm(forms.ModelForm):
         model = Contest
         fields = ['name', 'code', 'description', 'start_date', 'end_date', 'visible', 'frozen_time',
                   'death_time', 'group', 'closed', 'allow_teams']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs['class'] = 'summernote-editor'
 
     def clean_description(self):
         return secure_html(self.cleaned_data['description'])
@@ -110,6 +118,11 @@ class ProblemInContestForm(forms.ModelForm):
         model = Problem
         fields = PROBLEM_FIELDS_WITHOUT_CONTEST
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in ['body','input','output','hints']:
+            self.fields[field].widget.attrs['class'] = 'markdown-editor'
+
     def clean_multiple_limits(self):
         def json_is_correct(content):
             if len(content.strip()) == 0:
@@ -136,6 +149,11 @@ class ProblemForm(ProblemInContestForm):
     class Meta:
         model = Problem
         fields = PROBLEM_FIELDS_WITH_CONTEST
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in ['body','input','output','hints']:
+            self.fields[field].widget.attrs['class'] = 'markdown-editor'
 
 
 class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):

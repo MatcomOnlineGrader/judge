@@ -319,3 +319,20 @@ form.filter * {
   gap: 5px;
   justify-content: center;
 }
+
+/* markdown editor styles */
+.markdown-view-container .CodeMirror {
+  min-height: auto;
+  padding: 10px 0;
+  border: none;
+}
+.markdown-view-container .editor-preview-side,
+.markdown-view-container .CodeMirror > * {
+  display: none !important;
+}
+.markdown-view-container .CodeMirror > .editor-preview.editor-preview-active {
+  display: block !important;
+  position: relative;
+  padding: 10px 0;
+  background: white;
+}

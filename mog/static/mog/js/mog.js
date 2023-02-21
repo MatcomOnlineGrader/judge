@@ -141,8 +141,8 @@
         this.initializeSummernote = function(isAdmin) {
             if (!($().summernote))
                 return;
-            var sns = $('form textarea:not(#id_multiple_limits)');
-            sns.each(function () {
+            const $sne = $('form textarea.summernote-editor');
+            $sne.each(function () {
                 $(this).summernote({
                     height: $(this).attr('data-height') || 200,
                     lang: $(this).attr('data-lang') || 'en-US',
@@ -157,6 +157,51 @@
                         ['misc', (isAdmin === true) ? ['codeview', 'fullscreen', 'help'] : []]
                     ]
                 });
+            });
+        }
+
+        this.initializeSimpleMDE = function(isAdmin) {
+            const $mde = $('form textarea.markdown-editor');
+            $mde.each(function () {
+                const markdownEditor = new SimpleMDE({ 
+                    element: $(this)[0],
+                    renderingConfig: {
+                        codeSyntaxHighlighting: true,
+                    },
+                    shortcuts: {
+                        drawTable: "Cmd-Alt-T",
+                        togglePreview: "Cmd-Alt-P",
+                    },
+                    showIcons: [
+                        "code",
+                        "table",
+                        "strikethrough",
+                        "heading-smaller",
+                        "heading-bigger",
+                        "heading-1",
+                        "heading-2",
+                        "heading-3",
+                        "clean-block",
+                        "horizontal-rule",
+                    ],
+                    hideIcons: ["heading"],
+                });
+            });
+            const $mdv = $('.markdown-view-container textarea.markdown-view');
+            $mdv.each(function () {
+                const markdownEditor = new SimpleMDE({
+                    element: $(this)[0],
+                    shortcuts: {
+                        togglePreview: null,
+                    },
+                    renderingConfig: {
+                        codeSyntaxHighlighting: true,
+                    },
+                    status: false,
+                    toolbar: false,
+                    toolbarTips: false,
+                });
+                markdownEditor.togglePreview();
             });
         }
     }
