@@ -180,6 +180,8 @@ def to(lo, hi):
 def add_class(element, _class):
     if isinstance(element.field, forms.fields.FileField):
         return element.as_widget()
+    if 'class' in element.field.widget.attrs:
+        _class += ' ' + element.field.widget.attrs['class']
     return element.as_widget(attrs={'class': _class, 'placeholder': element.label})
 
 

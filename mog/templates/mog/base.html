@@ -358,8 +358,10 @@
             $(document).ready(function () {
                  $('[data-toggle="tooltip"]').tooltip();
                  $('[data-toggle="popover"]').popover();
-                if (window.MOG !== undefined)
+                if (window.MOG !== undefined) {
                     window.MOG.initializeSummernote({{ user|is_admin|yesno:"true,false" }});
+                    window.MOG.initializeSimpleMDE({{ user|is_admin|yesno:"true,false" }});
+                }
             });
         </script>
     </body>
