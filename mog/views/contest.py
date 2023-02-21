@@ -1064,6 +1064,7 @@ class CreateProblemInContestView(View):
             balloon=data['balloon'],
             letter_color=data['letter_color'],
             contest=contest,
+            is_html=False,
         )
         problem.save()
         problem.tags.set(data['tags'])
