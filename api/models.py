@@ -327,6 +327,9 @@ class Problem(models.Model):
     slug = models.SlugField(max_length=100, null=True)
     compilers = models.ManyToManyField('Compiler')
     samples = models.TextField(null=True, blank=True, verbose_name='Sample inputs/outputs')
+    is_html = models.BooleanField(default=True, verbose_name=_(
+        'If true, the problem source is written in Text Rich Editor, else with Simple Markdown Editor.'
+    ))
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

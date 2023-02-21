@@ -40,15 +40,19 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.css" integrity="sha256-LtkRmRit98lUHXAO6AkQ740CIP8xLrzmSMW+weZj/Ys=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-minicolors/2.2.6/jquery.minicolors.min.css" integrity="sha256-2RwM3b9l2phMxtm6wE9pe2qUDY4J+IONK0lyuXH9mzM=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" integrity="sha256-VBrFgheoreGl4pKmWgZh3J23pJrhNlSUOBek+8Z2Gv0=" crossorigin="anonymous" />
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.7/summernote.min.js" integrity="sha256-h14wZWLJSYljixnsAiegAH/D/hSC9DLl55Jd3+PQSBM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-minicolors/2.2.6/jquery.minicolors.min.js" integrity="sha256-V5ebkEjJU7qHZIKg2pzzKiH/Ghw1AJgRfKvgMyw09ug=" crossorigin="anonymous"></script>
-    
+
     <script>
         $(document).ready(function() {
             $('#id_balloon').minicolors({

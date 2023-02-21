@@ -75,17 +75,35 @@
         </div>
 
         <div id="body" class="col-md-12">
+            {% if problem.is_html %}
             <p>{{ problem.body|safe }}</p>
+            {% else %}
+            <div class="markdown-view-container">
+                <textarea class="markdown-view">{{ problem.body }}</textarea>
+            </div>
+            {% endif %}
         </div>
 
         <div id="input" class="col-md-12">
             <h4 class="text-center">{% trans 'Input' %}</h4>
+            {% if problem.is_html %}
             <p>{{ problem.input|safe }}</p>
+            {% else %}
+            <div class="markdown-view-container">
+                <textarea class="markdown-view">{{ problem.input }}</textarea>
+            </div>
+            {% endif %}
         </div>
 
         <div id="output" class="col-md-12">
             <h4 class="text-center">{% trans 'Output' %}</h4>
+            {% if problem.is_html %}
             <p>{{ problem.output|safe }}</p>
+            {% else %}
+            <div class="markdown-view-container">
+                <textarea class="markdown-view">{{ problem.output }}</textarea>
+            </div>
+            {% endif %}
         </div>
 
         <div id="tests" class="col-md-12">
@@ -110,7 +128,13 @@
         {% if problem.hints %}
             <div id="hints" class="col-md-12">
                 <h4 class="text-center">{% trans 'Hints' %}</h4>
+                {% if problem.is_html %}
                 {{ problem.hints|safe }}
+                {% else %}
+                <div class="markdown-view-container">
+                    <textarea class="markdown-view">{{ problem.hints }}</textarea>
+                </div>
+                {% endif %}
             </div>
         {% endif %}
     </div>
@@ -149,6 +173,15 @@
     {% endif %}
 {% endblock %}
 
+
+{% block styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css">
+{% endblock %}
+
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+
     {% include 'mog/includes/mathjax' %}
 {% endblock %}
