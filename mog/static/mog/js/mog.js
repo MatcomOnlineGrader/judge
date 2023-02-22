@@ -185,6 +185,14 @@
                         "horizontal-rule",
                     ],
                     hideIcons: ["heading"],
+                    previewRender: function (plainText) {
+                        setTimeout(function() {
+                            MathJax.Hub.Queue(
+                                ["Typeset", MathJax.Hub]
+                            );
+                        }, 250);
+                        return this.parent.markdown(plainText);
+                    },
                 });
             });
             const $mdv = $('.markdown-view-container textarea.markdown-view');

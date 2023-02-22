@@ -336,3 +336,14 @@ form.filter * {
   padding: 10px 0;
   background: white;
 }
+
+/* fullscreen editor overleid the header nav */
+.editor-toolbar.fullscreen,
+.editor-toolbar.fullscreen::before,
+.editor-toolbar.fullscreen::after {
+  z-index: 1050 !important;
+}
+.CodeMirror.CodeMirror-fullscreen,
+.editor-preview-side.editor-preview-active-side {
+  z-index: 1050 !important;
+}
