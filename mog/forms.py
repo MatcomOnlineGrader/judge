@@ -153,7 +153,10 @@ class ProblemForm(ProblemInContestForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in ['body','input','output','hints']:
-            self.fields[field].widget.attrs['class'] = 'markdown-editor'
+            if self.instance and self.instance.is_html:
+                self.fields[field].widget.attrs['class'] = 'summernote-editor'
+            else:
+                self.fields[field].widget.attrs['class'] = 'markdown-editor'
 
 
 class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
