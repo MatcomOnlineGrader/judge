@@ -166,7 +166,6 @@ class ProblemEditView(View):
         problem.contest = data['contest']
         problem.tags.set(data['tags'])
         problem.compilers.set(data['compilers'])
-        problem.is_html = False
         problem.save()
 
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
