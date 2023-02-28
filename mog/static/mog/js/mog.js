@@ -162,12 +162,78 @@
 
         this.initializeSimpleMDE = function(isAdmin) {
             const $mde = $('form textarea.markdown-editor');
+            const parceMathJax = function(plainText) {
+                const simpleRender = ['$$', '$']
+                const mathRender = [
+                    { in: '\\(', out: '\\)' },
+                    { in: '\\[', out: '\\]' }
+                ];
+                const complexRender = [
+                    { in: '\\begin{equation}', out: '\\end{equation}' },
+                    { in: '\\begin{equation*}', out: '\\end{equation*}' },
+                    { in: '\\begin{multline}', out: '\\end{multline}' },
+                    { in: '\\begin{multline*}', out: '\\end{multline*}' },
+                    { in: '\\begin{gather}', out: '\\end{gather}' },
+                    { in: '\\begin{gather*}', out: '\\end{gather*}' },
+                    { in: '\\begin{align}', out: '\\end{align}' },
+                    { in: '\\begin{align*}', out: '\\end{align*}' }
+                ];
+                const len = plainText.length;
+                let parcedText = '';
+                for(let i=0; i<len; ) {
+                    const substr1 = plainText.substr(i,1);
+                    const substr2 = plainText.substr(i,2);
+                    const substr3 = plainText.substr(i,6);
+                    let mathjax = '';
+                    let end = -1;
+                    let j = 0;
+                    if(substr2 === '\\$') {
+                        parcedText += substr2;
+                        i += 2;
+                        continue;
+                    }
+                    for(const m of simpleRender) {
+                        if(end === -1 && (substr1 === m || substr2 === m)) {
+                            j = m.length;
+                            do {
+                                end = plainText.indexOf(m, end === -1 ? i + j : end + 1);
+                            } while(end != -1 && plainText[end-1] === '\\');
+                        }
+                    }
+                    for(const m of mathRender) {
+                        if(end === -1 && substr2 === m.in) {
+                            j = m.in.length;
+                            end = plainText.indexOf(m.out, i + j);
+                        }
+                    }
+                    for(const m of complexRender) {
+                        if(end === -1 && m.in.startsWith(substr3)) {
+                            if(plainText.substr(i,m.in.length) === m.in) {
+                                j = m.in.length;
+                                end = plainText.indexOf(m.out, i + j);
+                            }
+                        }
+                    }
+                    if(end !== -1) {
+                        mathjax = plainText.substring(i, end + j)
+                            .replaceAll('\\', '\\\\')
+                            .replaceAll('_', '\\_')
+                            .replaceAll('*', '\\*')
+                            .replaceAll('~', '\\~')
+                        parcedText += mathjax;
+                        i = end + j;
+                    }
+                    else {
+                        parcedText += substr1;
+                        i += 1;
+                    }
+                }
+                return parcedText;
+            }
+            let mathJaxRenderTimeout;
             $mde.each(function () {
                 const markdownEditor = new SimpleMDE({ 
                     element: $(this)[0],
-                    renderingConfig: {
-                        codeSyntaxHighlighting: true,
-                    },
                     shortcuts: {
                         drawTable: "Cmd-Alt-T",
                         togglePreview: "Cmd-Alt-P",
@@ -186,12 +252,13 @@
                     ],
                     hideIcons: ["heading"],
                     previewRender: function (plainText) {
-                        setTimeout(function() {
+                        if(mathJaxRenderTimeout) clearTimeout(mathJaxRenderTimeout);
+                        mathJaxRenderTimeout = setTimeout(function() {
                             MathJax.Hub.Queue(
                                 ["Typeset", MathJax.Hub]
                             );
                         }, 250);
-                        return this.parent.markdown(plainText);
+                        return this.parent.markdown(parceMathJax(plainText));
                     },
                 });
             });
@@ -202,8 +269,8 @@
                     shortcuts: {
                         togglePreview: null,
                     },
-                    renderingConfig: {
-                        codeSyntaxHighlighting: true,
+                    previewRender: function (plainText) {
+                        return this.parent.markdown(parceMathJax(plainText));
                     },
                     status: false,
                     toolbar: false,
