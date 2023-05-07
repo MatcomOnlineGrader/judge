@@ -4,8 +4,8 @@ from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
+from api import models
 from mog.decorators import asynchronous
-
 
 @asynchronous
 def send_email(subject, message, recipients):
@@ -46,8 +46,13 @@ def report_clarification(clarification):
         'clarification': clarification,
         'domain': 'http://%s' % Site.objects.get(pk=settings.SITE_ID).domain
     })
+
+    admins = set(user.email for user in User.objects.filter(profile__role='admin'))
+    judges = set(permission.user.email for permission in models.ContestPermission.objects.filter(contest=clarification.contest, role='judge', granted=True))
+    recipients = list(admins.union(judges))
+
     send_email(
         subject=subject,
         message=message,
-        recipients=[user.email for user in User.objects.filter(profile__role='admin')]
+        recipients=recipients
     )
