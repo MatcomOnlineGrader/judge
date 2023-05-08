@@ -19,12 +19,14 @@ def send_message(request, user_id):
     body = request.POST.get('body')
     source = request.user
     target = get_object_or_404(User, pk=user_id)
-    Message.objects.create(
+    message = Message(
         source=source,
         target=target,
         subject=subject,
         body=body
     )
+    message.save()
+
     msgs.success(request, 'Message sent successfully!', extra_tags='success')
 
     redirect_url = request.POST.get('redirect_url', '').strip()

@@ -502,6 +502,23 @@ class Message(models.Model):
     date = models.DateTimeField(auto_now=True)
     saw = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        super(Message, self).save(*args, **kwargs)
+        send_mail(
+            '{0} sent you a message'.format(self.source.username),
+            message='<NO TEXT>',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[self.target.email],
+            fail_silently=True,
+            html_message=render_to_string(
+                'mog/email/message_notification.html',
+                {
+                    'message': self,
+                    'domain': 'http://matcomgrader.com'
+                }
+            )
+        )
+
 
 class Division(models.Model):
     title = models.CharField(max_length=50)
