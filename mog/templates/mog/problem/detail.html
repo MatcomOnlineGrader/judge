@@ -19,8 +19,8 @@
             </div>
 
             {% if user|can_edit_problem:problem %}
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="col-md-4">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-3">
                         {% if user|is_admin %}
                             <a href="#" data-toggle="modal" data-target="#remove-problem-{{ problem.id }}" class="no-underline">
                                 <i class="glyphicon glyphicon-remove"></i> {% trans 'Remove problem' %}
@@ -31,12 +31,17 @@
                             </a>
                         {% endif %}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <a href="{% url 'mog:problem_tests' problem.id %}" target="_blank" class="no-underline">
                             <i class="glyphicon glyphicon-list"></i> {% trans 'Edit tests' %}
                         </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <a href="{% url 'mog:problem_checker' problem.id %}" target="_blank" class="no-underline">
+                            <i class="glyphicon glyphicon-ok"></i> {% trans 'Edit checker' %}
+                        </a>
+                    </div>
+                    <div class="col-md-3">
                         <a href="{% url 'mog:problem_edit' problem.id %}" class="no-underline">
                             <i class="glyphicon glyphicon-pencil"></i> {% trans 'Edit problem' %}
                         </a>
