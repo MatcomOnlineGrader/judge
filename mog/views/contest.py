@@ -31,7 +31,8 @@ from api.models import (
     Submission,
     Team,
     User,
-    ContestPermission
+    ContestPermission,
+    Checker
 )
 from mog.decorators import public_actions_required
 
@@ -1059,7 +1060,7 @@ class CreateProblemInContestView(View):
             time_limit=data['time_limit'],
             memory_limit=data['memory_limit'],
             multiple_limits=data['multiple_limits'],
-            checker=data['checker'],
+            checker=Checker.objects.get(id=1),
             position=data['position'],
             balloon=data['balloon'],
             letter_color=data['letter_color'],
