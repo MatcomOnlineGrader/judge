@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
-from api.models import UserProfile, UserFeedback, User, Post, Contest, Problem, Clarification
+from api.models import UserProfile, UserFeedback, User, Post, Contest, Problem, Clarification, Checker
 from mog.utils import secure_html
 
 
@@ -102,7 +102,6 @@ PROBLEM_FIELDS_WITHOUT_CONTEST = [
     'time_limit',
     'memory_limit',
     'multiple_limits',
-    'checker',
     'position',
     'balloon',
     'letter_color',
@@ -239,3 +238,10 @@ class ImportGuestTeamsForm(forms.Form):
 class ImportPermissionForm(forms.Form):
     csv_permission = forms.FileField(label = 'Upload file',
         help_text = mark_safe(_('Load the CSV file with all User Permissions. The file must have the following columns: <i>username, role, and granted</i>.')))
+
+
+class CheckerForm(forms.ModelForm):
+
+    class Meta:
+        model: Checker
+        fields = ['name', 'description', 'source', 'backend']
