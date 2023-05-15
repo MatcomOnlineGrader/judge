@@ -75,20 +75,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <a href="{% url 'mog:exports_checker_testlib' %}?file=testlib.h" download class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Download c++ test library "testlib.h"</a>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <a href="{% url 'mog:exports_checker_testlib' %}?file=testlib4j.jar" download class="btn btn-primary btn-block"><i class="glyphicon glyphicon-download-alt"></i> Download java test library "testlib4j.jar"</a>
-                        </div>
-
                     </div>
                 </div>
             </div>
 
             <div class="col-md-12">
                 <div class="pull-right">
+                    <a type="button" class="btn btn-default"
+                       href="{% url 'mog:checker' problem.id %}">Create new checker</a>
                     <a type="button" class="btn btn-default"
                        href="{% url 'mog:problem' problem.id problem.slug %}">Cancel</a>
                     <button type="submit" class="btn btn-primary">Submit</button>
