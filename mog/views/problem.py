@@ -1,16 +1,18 @@
+from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View, generic
 from django.views.decorators.http import require_http_methods
+from django.views.static import serve
 
-from api.models import Contest, Problem, Tag
+from api.models import Contest, Problem, Tag, Checker
 from judge import settings
 from mog.forms import ProblemForm
-from mog.gating import is_admin_or_judge_for_problem, user_is_admin
+from mog.gating import is_admin_or_judge_for_problem, user_is_admin, is_admin_or_judge
 from mog.samples import (
     fix_problem_folder,
     get_tests,
@@ -22,6 +24,7 @@ from mog.model_helpers.contest import (
     can_create_problem_in_contest,
     get_all_contests_a_user_can_create_problems_in,
 )
+import os
 
 
 @login_required
@@ -230,3 +233,56 @@ class ProblemListView(generic.ListView):
 
         context['query'] = query
         return context
+
+
+class ProblemCheckerView(View):
+    @method_decorator(login_required)
+    def get(self, request, problem_id, *args, **kwargs):
+        problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
+            return HttpResponseForbidden()
+
+        checkers = Checker.objects.annotate(num_problems=Count('problem')).order_by('-num_problems')
+
+        return render(request, 'mog/problem/checker.html', {
+            'problem': problem,
+            'checkers': checkers
+        })
+
+    @method_decorator(login_required)
+    def post(self, request, problem_id, *args, **kwargs):
+        problem = get_object_or_404(Problem, pk=problem_id)
+        if not is_admin_or_judge_for_problem(request.user, problem):
+            return HttpResponseForbidden()
+
+        checkers = Checker.objects.annotate(num_problems=Count('problem')).order_by('-num_problems')
+        checker_id = int(request.POST.get('checker'))
+        if not checker_id:
+            return render(request, 'mog/problem/checker.html', {
+                'problem': problem,
+                'checkers': checkers
+            })
+        problem = get_object_or_404(Problem, pk=problem_id)
+        checker = get_object_or_404(Checker, pk=checker_id)
+        problem.checker = checker
+        problem.save()
+        return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
+
+
+@login_required
+def exports_checker_testlib(request):
+    file_name = request.GET.get('file', '')
+    file_path = os.path.join(settings.BASE_DIR, 'resources', file_name)
+    
+    if not is_admin_or_judge(request.user):
+        return HttpResponseForbidden()
+
+    if os.path.exists(file_path):
+        try:
+            response = serve(request, os.path.basename(file_path), os.path.dirname(file_path))
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
+            return response
+        except:
+            pass
+    else:
+        return HttpResponse('File not found', status=404)
