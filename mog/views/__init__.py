@@ -10,7 +10,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     contest_registration_multiple_disable, contest_submissions_export
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
-    ProblemListView, ProblemTestsView, remove_test, view_test, ProblemCheckerView, exports_checker_testlib
+    ProblemListView, ProblemTestsView, remove_test, view_test, ProblemCheckerView
 from .submission import submissions, submission, Submit, rejudge
 from .team import create_team, remove_team, edit_team, teams_json
 from .user import UserListView, user_profile, users_json, UserEditView, user_messages, user_teams
@@ -22,3 +22,4 @@ from .instance import instance_group_list, instance_edit_group, instance_edit_re
 from .institution import institution_list
 from .feedback import feedback_create
 from .permissions import contest_permission_edit_granted
+from .checker import CheckerView, exports_checker_testlib

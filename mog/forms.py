@@ -243,5 +243,5 @@ class ImportPermissionForm(forms.Form):
 class CheckerForm(forms.ModelForm):
 
     class Meta:
-        model: Checker
+        model = Checker
         fields = ['name', 'description', 'source', 'backend']

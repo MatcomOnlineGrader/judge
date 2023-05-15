@@ -1,7 +1,7 @@
 from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseForbidden, HttpResponse
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -254,34 +254,9 @@ class ProblemCheckerView(View):
         if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
 
-        checkers = Checker.objects.annotate(num_problems=Count('problem')).order_by('-num_problems')
-        checker_id = int(request.POST.get('checker'))
-        if not checker_id:
-            return render(request, 'mog/problem/checker.html', {
-                'problem': problem,
-                'checkers': checkers
-            })
-        problem = get_object_or_404(Problem, pk=problem_id)
-        checker = get_object_or_404(Checker, pk=checker_id)
+        checker_id = request.POST.get('checker')
+        checker = get_object_or_404(Checker, pk=int(checker_id))
         problem.checker = checker
         problem.save()
+
         return redirect('mog:problem', problem_id=problem.id, slug=problem.slug)
-
-
-@login_required
-def exports_checker_testlib(request):
-    file_name = request.GET.get('file', '')
-    file_path = os.path.join(settings.BASE_DIR, 'resources', file_name)
-    
-    if not is_admin_or_judge(request.user):
-        return HttpResponseForbidden()
-
-    if os.path.exists(file_path):
-        try:
-            response = serve(request, os.path.basename(file_path), os.path.dirname(file_path))
-            response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
-            return response
-        except:
-            pass
-    else:
-        return HttpResponse('File not found', status=404)
