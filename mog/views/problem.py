@@ -162,7 +162,6 @@ class ProblemEditView(View):
         problem.time_limit = data['time_limit']
         problem.memory_limit = data['memory_limit']
         problem.multiple_limits = data['multiple_limits']
-        problem.checker = data['checker']
         problem.position = data['position']
         problem.balloon = data['balloon']
         problem.letter_color = data['letter_color']
