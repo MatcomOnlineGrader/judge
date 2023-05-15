@@ -1,0 +1,99 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load security %}
+{% load filters %}
+
+{% block title %}Create checker{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/codemirror/lib/codemirror.css' %}" rel="stylesheet"/>
+
+    {% with turl=user|theme_url %}
+        {% if turl %}
+            <link href="{% static turl %}" rel="stylesheet"/>
+        {% endif %}
+    {% endwith %}
+
+    <style>
+        .CodeMirror-scroll {
+            min-height: 250px;
+            max-height: 400px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title margin-bottom-20">
+                Create checker
+                {% include 'mog/checker/_actions.html' with problem=problem %}
+            </h3>
+        </div>
+
+        <form action="{% url 'mog:checker' problem.id %}" method="post">
+            {% csrf_token %}
+
+            <div class="col-md-12">
+                <div class="well bckg-white">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_name" class="">Name</label>
+                                <input name="name" class="form-control" placeholder="Name" required="" id="id_name">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_description" class="">Description</label>
+                                <textarea type="text" rows="4" cols="20" style="resize: vertical;" name="description" placeholder="Description" required="" class="form-control" id="id_description" ></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_source" class="">Source</label>
+                                <textarea name="source" class="" id="id_source" ></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="file" name="file" class="btn btn-default"/>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_backend" class="">Backend</label>
+                                <select name="backend" class="form-control" id="id_backend" >
+                                    <option value="testlib.h">testlib.h</option>
+                                    <option value="testlib4j.jar">testlib4j.jar</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a type="button" class="btn btn-default"
+                       href="{% url 'mog:problem_checker' problem.id %}">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/lib/codemirror.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/clike/clike.js' %}"></script>
+
+    <script>
+        const sourceArea = document.getElementById('id_source');
+        const codeMirror = CodeMirror.fromTextArea(sourceArea, {
+            lineNumbers: true, theme: '{{ user|theme_name }}'
+        });
+    </script>
+{% endblock %}
