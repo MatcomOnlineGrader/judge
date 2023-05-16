@@ -1060,7 +1060,7 @@ class CreateProblemInContestView(View):
             time_limit=data['time_limit'],
             memory_limit=data['memory_limit'],
             multiple_limits=data['multiple_limits'],
-            checker=Checker.objects.get(id=1),
+            checker=Checker.objects.order_by('id').first(),
             position=data['position'],
             balloon=data['balloon'],
             letter_color=data['letter_color'],
