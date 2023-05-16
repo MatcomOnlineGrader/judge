@@ -66,22 +66,3 @@ class CheckerView(View):
             return redirect('mog:checker', problem_id=problem.id)
 
         return redirect('mog:problem_checker', problem_id=problem.id)
-
-
-@login_required
-def exports_checker_testlib(request):
-    file_name = request.GET.get('file', '')
-    file_path = os.path.join(settings.BASE_DIR, 'resources', file_name)
-    
-    if not is_admin_or_judge(request.user):
-        return HttpResponseForbidden()
-
-    if os.path.exists(file_path):
-        try:
-            response = serve(request, os.path.basename(file_path), os.path.dirname(file_path))
-            response['Content-Disposition'] = 'attachment; filename="{}"'.format(file_name)
-            return response
-        except:
-            pass
-    else:
-        return HttpResponse('File not found', status=404)
