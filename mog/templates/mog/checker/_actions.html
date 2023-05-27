@@ -4,7 +4,7 @@
 {% load security %}
 {% load i18n %}
 
-{% if user|can_edit_problem:problem %}
+{% if user|is_admin or user|can_edit_problem:problem %}
     <div class="dropdown pull-right">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                 data-toggle="dropdown"
