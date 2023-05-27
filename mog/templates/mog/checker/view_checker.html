@@ -1,0 +1,147 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load security %}
+{% load filters %}
+
+{% block title %}Checker{% endblock %}
+
+{% block styles %}
+    <link href="{% static 'mog/plugins/codemirror/lib/codemirror.css' %}" rel="stylesheet"/>
+
+    {% with turl=user|theme_url %}
+        {% if turl %}
+            <link href="{% static turl %}" rel="stylesheet"/>
+        {% endif %}
+    {% endwith %}
+
+    <style>
+        .CodeMirror-scroll {
+            min-height: 250px;
+            max-height: 400px;
+        }
+        #copycodesource {
+            position: absolute;
+            right: 40px;
+            top: 30px;
+            z-index: 100;
+            padding: 2px;
+            width: 110px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title margin-bottom-20">
+                Create checker
+            </h3>
+        </div>
+
+        <div>
+            {% comment %} {% csrf_token %} {% endcomment %}
+
+            <div class="col-md-12">
+                <div class="well bckg-white">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label for="id_checker" class="uniform-text uniform-medium">Name</label>
+                                <select name="checker" class="form-control" placeholder="Checker" required="" id="id_checker" onchange="checkerChanged(this);">
+                                    {% for checker in checkers %}
+                                        <option value="{{ checker.id }}">{{ checker.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_description" class="uniform-text uniform-medium">Description</label>
+                                <textarea type="text" rows="4" cols="20" style="resize: vertical;" name="description" class="form-control" id="id_description" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_source" class="uniform-text uniform-medium">Source</label>
+                                <button id="copycodesource" class="btn btn-default" onclick="copyCodeClick(event);"><i class="glyphicon glyphicon-copy"></i> Copy code</button>
+                                <textarea name="source" class="" id="id_source" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_backend" class="uniform-text uniform-medium">Backend</label>
+                                <input type="text" rows="4" cols="20" style="resize: vertical;" name="backend" class="form-control" id="id_backend" readonly>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a type="button" class="btn btn-primary"
+                       href="{% url 'mog:create_checker' %}">Create new checker</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/lib/codemirror.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mog/plugins/codemirror/mode/clike/clike.js' %}"></script>
+
+    <script>
+
+        var checkerList = {}
+        {% for checker in checkers %}
+            checkerList[{{ checker.id }}] = {
+                name: '{{ checker.name }}',
+                description: '{{ checker.description|escapejs }}',
+                source: '{{ checker.source|escapejs }}',
+                backend: '{{ checker.backend|escapejs }}',
+            };
+        {% endfor %}
+
+        const descriptionElement = document.getElementById('id_description')
+        const backendElement = document.getElementById('id_backend');
+
+        const sourceArea = document.getElementById('id_source');
+        const codeMirror = CodeMirror.fromTextArea(sourceArea, {
+            lineNumbers: true, theme: '{{ user|theme_name }}', readOnly: true
+        });
+
+        const copyCodeSourceButton = document.getElementById("copycodesource");
+
+        function copyCodeClick(event) {
+            event.preventDefault();
+            sourceArea.select();
+            sourceArea.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(sourceArea.value);
+            copyCodeSourceButton.innerHTML = `<i class="glyphicon glyphicon-ok"></i> Copied!`;
+            setTimeout(function() {
+                copyCodeSourceButton.innerHTML = `<i class="glyphicon glyphicon-copy"></i> Copy code`;
+            }, 2000);
+        }
+
+        function checkerChanged(checkerHolder) {
+            const checkerId = checkerHolder.options[checkerHolder.selectedIndex].value;
+            const {description, source, backend} = checkerList[checkerId];
+            descriptionElement.value = description;
+            backendElement.value = backend;
+            sourceArea.value = source;
+            codeMirror.setValue(source);
+        }
+
+        checkerChanged(document.getElementById('id_checker'));
+
+    </script>
+{% endblock %}

@@ -22,4 +22,4 @@ from .instance import instance_group_list, instance_edit_group, instance_edit_re
 from .institution import institution_list
 from .feedback import feedback_create
 from .permissions import contest_permission_edit_granted
-from .checker import CheckerView
+from .checker import CheckerView, view_checker, CreateCheckerView

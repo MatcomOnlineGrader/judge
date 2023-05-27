@@ -1,4 +1,5 @@
 ﻿{% load i18n %}
+{% load security %}
 
 {% if user.is_authenticated %}
     <li class="dropdown">
@@ -15,6 +16,10 @@
             <li><a href="{% url 'mog:user' user.id %}"><i class="glyphicon glyphicon-user"></i> {% trans 'View profile' %}</a></li>
             <li><a href="{% url 'mog:user_edit' user.id %}"><i class="glyphicon glyphicon-edit"></i> {% trans 'Edit profile' %}</a></li>
             <li><a href="{% url 'mog:post_create' %}"><i class="glyphicon glyphicon-pencil"></i> {% trans 'Add blog entry' %}</a></li>
+            {% if user|is_admin %}
+            <li class="divider"></li>
+            <li><a href="{% url 'mog:view_checker' %}"><i class="glyphicon glyphicon-ok"></i> {% trans 'View checkers' %}</a></li>
+            {% endif %}
             <li class="divider"></li>
             <li><a href="{% url 'auth_logout' %}?next={% url 'mog:index' %}"><i class="glyphicon glyphicon-off"></i> {% trans 'Logout' %}</a></li>
         </ul>
