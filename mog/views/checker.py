@@ -103,8 +103,6 @@ class CreateCheckerView(View):
             msg = _(u'Empty source code')
             messages.info(request, msg, extra_tags='info')
             return redirect('mog:create_checker')
-        
-        print(Checker.objects.get(id=1))
 
         if Checker.objects.filter(name=name).exists():
             msg = _(u'Name "%s" already exists' % name)
