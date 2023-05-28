@@ -1052,6 +1052,11 @@ class Clarification(models.Model):
 
 
 class UserFeedback(models.Model):
+    STATUS_CHOICES = [
+        ('created', 'CREATED'),
+        ('viewed', 'VIEWED'),
+        ('closed', 'CLOSED'),
+    ]
     sender = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -1073,6 +1078,12 @@ class UserFeedback(models.Model):
         null=True,
         blank=True,
         verbose_name=_('Screenshot')
+    )
+    status = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        choices=STATUS_CHOICES
     )
 
     def __str__(self):
