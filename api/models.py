@@ -1053,8 +1053,8 @@ class Clarification(models.Model):
 
 class UserFeedback(models.Model):
     STATUS_CHOICES = [
-        ('created', 'CREATED'),
-        ('viewed', 'VIEWED'),
+        ('open', 'OPEN'),
+        ('in_progress', 'IN_PROGRESS'),
         ('closed', 'CLOSED'),
     ]
     sender = models.ForeignKey(
@@ -1081,9 +1081,15 @@ class UserFeedback(models.Model):
     )
     status = models.CharField(
         max_length=20,
+        default='open',
+        choices=STATUS_CHOICES
+    )
+    assigned = models.ForeignKey(
+        User,
         null=True,
         blank=True,
-        choices=STATUS_CHOICES
+        related_name='assigned_feedbacks',
+        on_delete=models.SET_NULL
     )
 
     def __str__(self):
