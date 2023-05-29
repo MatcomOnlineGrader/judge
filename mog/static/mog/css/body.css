@@ -347,3 +347,54 @@ form.filter * {
 .editor-preview-side.editor-preview-active-side {
   z-index: 1050 !important;
 }
+
+/* badge colors */
+.badge.badge-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.badge.badge-primary {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.badge.badge-danger {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+/* feedback image */
+.feedback-screenshot {
+  display: flex;
+  margin: auto;
+  cursor: pointer;
+  max-height: 500px;
+  max-width: 100%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.feedback-screenshot:hover {
+  filter: brightness(0.95);
+}
+.overlay-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00000050;
+  z-index: 2000;
+}
+.overlay-image img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

@@ -1,0 +1,46 @@
+{% extends 'mog/base.html' %}
+
+{% load static %}
+{% load security %}
+{% load filters %}
+{% load paginator %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title margin-bottom-20">
+                Feedbacks
+            </h3>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <form action="{% url 'mog:feedback_list' %}" method="get" class="filter margin-bottom-10 pull-right">
+                <input id="subject" name="subject" type="text" class="form-control" value="{{ query.subject }}"
+                       placeholder="Subject">
+                <select id="status" name="status" class="form-control">
+                    <option value="">-- Select status --</option>
+                    {% for key, value in status_choices %}
+                    <option value="{{ key }}" {% if query.status == key %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-default">Filter</button>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            {% include 'mog/feedback/_list.html' with feedbacks=feedbacks %}
+        </div>
+
+        <div class="col-md-12">
+            <div class="text-center">
+                {% if query %}
+                    {{ feedbacks|paginate:query }}
+                {% else %}
+                    {{ feedbacks|paginate }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

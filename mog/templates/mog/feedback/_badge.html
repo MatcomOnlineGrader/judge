@@ -1,0 +1,9 @@
+{% if status == 'open' %}
+<span class="badge badge-success">{{ status|upper }}</span>
+{% elif status == 'in_progress' %}
+<span class="badge badge-primary">{{ status|upper }}</span>
+{% elif status == 'closed' %}
+<span class="badge badge-danger">{{ status|upper }}</span>
+{% else %}
+<span class="badge badge-info">{{ status|upper }}</span>
+{% endif %}

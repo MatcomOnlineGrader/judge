@@ -20,6 +20,6 @@ from .comment import edit_comment, remove_comment
 from .clarification import clarification_create, clarification_edit
 from .instance import instance_group_list, instance_edit_group, instance_edit_render_description, instance_edit_team, instance_edit_user, instance_edit_enable
 from .institution import institution_list
-from .feedback import feedback_create
+from .feedback import feedback_create, feedback_list, FeedbackView
 from .permissions import contest_permission_edit_granted
 from .checker import CheckerView, view_checker, CreateCheckerView

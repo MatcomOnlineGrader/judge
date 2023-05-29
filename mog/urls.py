@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^faq/$', views.faq, name='faq'),
     url(r'^privacy/$', views.privacy, name='privacy'),
 
+    url(r'^feedback$', views.feedback_list, name='feedback_list'),
+    url(r'^feedback/(?P<feedback_id>[0-9]+)$', views.FeedbackView.as_view(), name='feedback_view'),
     url(r'^feedback/create/$', views.feedback_create, name='feedback_create'),
 
     url(r'^api/institution/list/$', views.institution_list, name='api_institution_list'),

@@ -1,0 +1,122 @@
+{% extends 'mog/base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load security %}
+{% load filters %}
+{% load paginator %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3 class="title margin-bottom-20">
+                Feedback
+            </h3>
+        </div>
+
+        <form action="{% url 'mog:feedback_view' feedback.id %}" method="post">
+            {% csrf_token %}
+
+            <div class="col-md-12">
+                <div class="well bckg-white">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="subject" class="">Subject</label>
+                                <input name="subject" class="form-control" id="subject" value="{{ feedback.subject }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description" class="">Description</label>
+                                <textarea type="text" rows="6" cols="20" style="resize: vertical;" name="description" class="form-control" id="description" readonly>{{ feedback.description }}</textarea>
+                            </div>
+                        </div>
+                        {% if feedback.screenshot %}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <img id="screenshot" src="/media/{{ feedback.screenshot }}" alt="Screenshot" class="feedback-screenshot"/>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="">Created by</label>
+                                {% include 'mog/user/_link.html' with user=feedback.sender %}
+                                {% if user|is_admin or user == feedback.assigned %}
+                                <a class="btn btn-primary btn-block margin-top-5" data-toggle="modal" data-target="#send-message">
+                                    <i class="glyphicon glyphicon-envelope"></i> {% trans 'Send a message' %}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if user|is_admin or user == feedback.assigned %}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="status" class="">Status</label>
+                                <select id="status" name="status" class="form-control">
+                                    {% for key, value in status_choices %}
+                                    <option value="{{ key }}" {% if feedback.status == key %}selected{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if user|is_admin %}
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="assigned" class="">Assigned to</label>
+                                <select id="assigned" name="assigned" class="form-control">
+                                    <option value="unassigned">-- Select to assign --</option>
+                                    {% for admin in admins %}
+                                    <option value="{{ admin.id }}" {% if feedback.assigned == admin %}selected{% endif %}>{{ admin.username }} ({{ admin.profile.role }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <a type="button" class="btn btn-default" href="{% url 'mog:feedback_list' %}">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </form>
+
+        {% if user|is_admin or user == feedback.assigned %}
+        {% url 'mog:feedback_view' feedback.id as redirect_url %}
+        {% include 'mog/message/_send_message.html' with target=feedback.sender redirect_url=redirect_url %}
+        {% endif %}
+
+        {% if feedback.screenshot %}
+        <div id="overlay-screenshot" class="overlay-image" style="display: none;">
+            <img src="/media/{{ feedback.screenshot }}" alt="" class=""/>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const screenshot = document.getElementById("screenshot");
+        const overlayScreenshot = document.getElementById("overlay-screenshot");
+
+        screenshot.addEventListener('click', function() {
+            document.body.style.overflow = 'hidden';
+            overlayScreenshot.style.display = 'flex';
+        });
+        overlayScreenshot.addEventListener('click', function() {
+            document.body.style.overflow = 'auto';
+            overlayScreenshot.style.display = 'none';
+        });
+
+    </script>
+{% endblock %}
