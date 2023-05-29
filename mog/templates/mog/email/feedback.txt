@@ -1,0 +1,16 @@
+Submitted Date: {{ feedback.submitted_date }}
+Created by: {{ feedback.sender }}
+Subject: {{ feedback.subject }}
+Status: {{ feedback.status|upper }}
+Assigned to: {% if feedback.assigned %}{{ feedback.assigned }}{% else %}----{% endif %}
+
+--------------------
+
+{{ feedback.description }}
+
+--------------------
+
+Reply at {{ domain }}{% url 'mog:feedback_view' feedback.id %}
+
+Matcom Online Grader
+{{ domain }}
