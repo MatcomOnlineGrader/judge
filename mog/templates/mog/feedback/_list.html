@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load filters %}
+{% load humanize %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-center">Subject</th>
+            <th class="text-center">Created by</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Assigned to</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feedback in feedbacks %}
+            <tr>
+                <td>
+                    <a href="{% url 'mog:feedback_view' feedback.id %}" class="no-underline">{{ feedback.subject }}</a>
+                </td>
+                <td class="text-center">
+                    {% include 'mog/user/_link.html' with user=feedback.sender %}
+                </td>
+                <td title="{{ feedback.submitted_date|date:'d/m/Y G:i:s' }}" class="text-center">
+                    {{ feedback.submitted_date|naturaltime }}
+                </td>
+                <td class="text-center">
+                    {% include 'mog/feedback/_badge.html' with status=feedback.status %}
+                </td>
+                <td class="text-center">
+                    {% if feedback.assigned %}
+                        {% include 'mog/user/_link.html' with user=feedback.assigned %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No feedback!</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
