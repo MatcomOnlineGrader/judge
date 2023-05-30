@@ -76,6 +76,7 @@ def report_feedback(feedback):
     )
 
 
+@asynchronous
 def report_feedback_to_user(feedback, subject):
     send_mail(
         subject,
