@@ -7,7 +7,7 @@ from .contest import contests, contest_clarifications, contest_overview, contest
     contest_registration_multiple_register_user, contest_registration_multiple_register_team, contest_instances_info, \
     contest_permission, contest_add_permission, contest_permission_import, contest_permission_export, \
     contest_registration_multiple_unregister, contest_registration_multiple_edit_group, contest_registration_multiple_enable, \
-    contest_registration_multiple_disable, contest_submissions_export
+    contest_registration_multiple_disable, contest_submissions_export, download_json_saris
 from .post import PostListView, PostDetailView, PostCreateView, EditPostView
 from .problem import remove_problem, problem, ProblemEditView, \
     ProblemListView, ProblemTestsView, remove_test, view_test, ProblemCheckerView
