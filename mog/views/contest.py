@@ -840,6 +840,23 @@ def contest_saris(request, contest_id):
 
 
 @login_required
+@require_http_methods(["GET"])
+def download_json_saris(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id)
+
+    if not contest.can_show_saris_to(request.user):
+        return HttpResponseForbidden()
+
+    group = request.GET.get('group', None)
+
+    result = get_contest_json(contest, group)
+
+    response = JsonResponse(data=result, safe=True)
+    response['Content-Disposition'] = 'attachment; filename="saris_{0}.json"'.format(contest.name)
+    return response
+
+
+@login_required
 @require_http_methods(["POST"])
 def rate_contest(request, contest_id):
     if not user_is_admin(request.user):
