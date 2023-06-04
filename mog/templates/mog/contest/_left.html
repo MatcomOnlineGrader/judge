@@ -271,7 +271,7 @@
     {% endif %}
     {% if user|can_see_saris:contest %}
         <div class="modal fade" id="saris-{{ contest.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-dialog modal-sm" style="width: 400px;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -281,14 +281,11 @@
                         </h4>
                     </div>
                     <div class="modal-body">
-                        <p class="text-justify">
-                            {% trans 'Select group to show' %}
-                        </p>
                         <form action="{% url 'mog:contest_saris' contest.id %}" method="post" target="_blank">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="group"></label>
-                                <select id="group" name="group" class="form-control">
+                                <label for="group">{% trans 'Select group to show or download' %}</label>
+                                <select id="group" name="group" class="form-control" onchange="changeDownloadUrl(this.value);">
                                     <option value="">-- All --</option>
                                     {% for group in contest.group_names %}
                                         {% if group %}
@@ -297,7 +294,15 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="text-center">
+                            <div class="form-group">
+                                <a href="{% url 'mog:download_json_saris' contest.id %}?group=" id="download-json-saris" download>
+                                    <i class="glyphicon glyphicon-download-alt"></i> Download JSON (This action may take some time)</a>
+                            </div>
+                            <div class="form-group">
+                                <a href="https://neosaris.huronos.org/" target="_blank">
+                                    <i class="glyphicon glyphicon-link"></i> Ir a neoSaris (S4RiS StanD JSON)</a>
+                            </div>
+                            <div class="text-center margin-top-25">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
                                 <button type="submit" class="btn btn-primary">{% trans 'Show' %}</button>
                             </div>
@@ -308,3 +313,12 @@
         </div>
     {% endif %}
 </div>
+
+{% block scripts %}
+    <script>
+        const downloadJson = document.getElementById("download-json-saris");
+        function changeDownloadUrl(url) {
+            downloadJson.setAttribute('href', "{% url 'mog:download_json_saris' contest.id %}?group=" + url)
+        }
+    </script>
+{% endblock %}
