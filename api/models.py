@@ -565,6 +565,7 @@ class Compiler(models.Model):
     path = models.CharField(max_length=1000)
     file_extension = models.CharField(max_length=10, default='')
     exec_extension = models.CharField(max_length=10, default='')
+    env = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
