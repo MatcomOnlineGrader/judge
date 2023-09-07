@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import stat
@@ -93,9 +94,11 @@ def compile_submission(submission):
         return True
 
     try:
+        env = json.loads(compiler.env) if compiler.env else None
         code, out, err = get_exitcode_stdout_stderr(
             cmd='"%s" %s' % (compiler.path, compiler.arguments.format(src_file, exe_file)),
-            cwd=submission_folder
+            cwd=submission_folder,
+            env=env,
         )
         if os.path.exists(os.path.join(submission_folder, exe_file)):
             return True
