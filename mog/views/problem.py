@@ -144,7 +144,7 @@ class ProblemEditView(View):
         if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
 
-        form = ProblemForm(request.POST)
+        form = ProblemForm(request.POST, instance=problem)
         if not form.is_valid():
             return render(request, 'mog/problem/edit.html', {
                 'form': form, 'problem': problem,
