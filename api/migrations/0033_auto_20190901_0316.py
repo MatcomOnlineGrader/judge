@@ -4,25 +4,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0032_auto_20190831_2318'),
+        ("api", "0032_auto_20190831_2318"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contestinstance',
-            name='render_team_description_only',
-            field=models.BooleanField(default=False, verbose_name='If true, render the team without members and only displaying the description on hover'),
+            model_name="contestinstance",
+            name="render_team_description_only",
+            field=models.BooleanField(
+                default=False,
+                verbose_name="If true, render the team without members and only displaying the description on hover",
+            ),
         ),
         migrations.AddField(
-            model_name='team',
-            name='icpcid',
-            field=models.CharField(blank=True, max_length=64, null=True, verbose_name='ID that links this team to the ICPC, we get this value down from baylor'),
+            model_name="team",
+            name="icpcid",
+            field=models.CharField(
+                blank=True,
+                max_length=64,
+                null=True,
+                verbose_name="ID that links this team to the ICPC, we get this value down from baylor",
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='description',
+            model_name="team",
+            name="description",
             field=models.TextField(null=True),
         ),
     ]

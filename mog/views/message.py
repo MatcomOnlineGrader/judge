@@ -13,24 +13,19 @@ from mog.decorators import public_actions_required
 @require_http_methods(["POST"])
 def send_message(request, user_id):
     """Send a message to <user_id> from <request.user>"""
-    subject = request.POST.get('subject', '').strip()
+    subject = request.POST.get("subject", "").strip()
     if len(subject) == 0:
-        subject = '(no subject)'
-    body = request.POST.get('body')
+        subject = "(no subject)"
+    body = request.POST.get("body")
     source = request.user
     target = get_object_or_404(User, pk=user_id)
-    message = Message(
-        source=source,
-        target=target,
-        subject=subject,
-        body=body
-    )
+    message = Message(source=source, target=target, subject=subject, body=body)
     message.save()
 
-    msgs.success(request, 'Message sent successfully!', extra_tags='success')
+    msgs.success(request, "Message sent successfully!", extra_tags="success")
 
-    redirect_url = request.POST.get('redirect_url', '').strip()
+    redirect_url = request.POST.get("redirect_url", "").strip()
 
     if len(redirect_url) != 0:
         return redirect(redirect_url)
-    return redirect('mog:user', user_id=target.id)
+    return redirect("mog:user", user_id=target.id)

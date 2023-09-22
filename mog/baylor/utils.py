@@ -1,17 +1,22 @@
 from django.conf import settings
 from hashlib import sha256
 
-ICPCID_GUEST_PREFIX = 'guestid_'
+ICPCID_GUEST_PREFIX = "guestid_"
 
-CSV_GUEST_HEADER = 'team_name,institution,coach,participant1,participant2,participant3,group'
+CSV_GUEST_HEADER = (
+    "team_name,institution,coach,participant1,participant2,participant3,group"
+)
 
-CSV_PERMISSION_HEADER = 'username,role,granted'
+CSV_PERMISSION_HEADER = "username,role,granted"
+
 
 def generate_secret_password(user_id):
     """
     Generate password
     """
-    return sha256( (settings.PASSWORD_GENERATOR_SECRET_KEY + str(user_id)).encode() ).hexdigest()[:10]
+    return sha256(
+        (settings.PASSWORD_GENERATOR_SECRET_KEY + str(user_id)).encode()
+    ).hexdigest()[:10]
 
 
 def hash_string(value):
@@ -19,4 +24,4 @@ def hash_string(value):
 
 
 def generate_username(prefix: str, id: int):
-    return '%s%03d' % (prefix, id)
+    return "%s%03d" % (prefix, id)

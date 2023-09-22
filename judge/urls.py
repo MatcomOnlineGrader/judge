@@ -22,21 +22,22 @@ from registration.backends.hmac.views import RegistrationView
 from mog.forms import MOGRegistrationFormWithCaptcha
 
 urlpatterns = [
-    path(r'captcha/', include('captcha.urls')),
+    path(r"captcha/", include("captcha.urls")),
     path(
-        r'register/',
+        r"register/",
         RegistrationView.as_view(form_class=MOGRegistrationFormWithCaptcha),
-        name='registration_register'
+        name="registration_register",
     ),
-    path(r'', include('registration.backends.hmac.urls')),
-    path(r'', include('mog.urls')),
-    path(r'social/', include('social_django.urls', namespace='social')),
-    path(r'admin/', admin.site.urls),
-    path(r'i18n/', include('django.conf.urls.i18n')),
+    path(r"", include("registration.backends.hmac.urls")),
+    path(r"", include("mog.urls")),
+    path(r"social/", include("social_django.urls", namespace="social")),
+    path(r"admin/", admin.site.urls),
+    path(r"i18n/", include("django.conf.urls.i18n")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG and settings.DEBUG_TOOLBAR:
     import debug_toolbar
+
     urlpatterns += [
-        path(r'__debug__/', include(debug_toolbar.urls)),
+        path(r"__debug__/", include(debug_toolbar.urls)),
     ]

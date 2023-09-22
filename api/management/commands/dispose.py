@@ -22,22 +22,21 @@ class Command(BaseCommand):
         super(Command, self).__init__(*args, **kwargs)
 
     def add_arguments(self, parser):
-        parser.add_argument('--domain', type=str, help='Domain to be disposed.')
+        parser.add_argument("--domain", type=str, help="Domain to be disposed.")
 
     def handle(self, *args, **options):
-        domain = (options.get('domain') or '').strip().lower()
+        domain = (options.get("domain") or "").strip().lower()
         if not domain:
-            raise CommandError('Domain is required')
-        path = os.path.join(settings.BASE_DIR, 'disposable.json')
+            raise CommandError("Domain is required")
+        path = os.path.join(settings.BASE_DIR, "disposable.json")
         with open(path, "r") as f:
             domains = json.load(f)
         domains.append(domain)
         with open(path, "w") as f:
             json.dump(sorted(set(domains)), f, indent=2)
-            f.write('\n')
+            f.write("\n")
         print(
             'Domain "{}" affects {} account(s)'.format(
-                domain,
-                User.objects.filter(email__iendswith=domain).count()
+                domain, User.objects.filter(email__iendswith=domain).count()
             )
         )

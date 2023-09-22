@@ -64,7 +64,7 @@ def reassign_ranks(ranks):
         cnt = 0
         while cur + cnt < num_coders and ranks[cur + cnt] == ranks[cur]:
             cnt += 1
-        rank = ranks[cur] + cnt-1
+        rank = ranks[cur] + cnt - 1
         new_ranks += [rank] * cnt
         cur += cnt
 
@@ -93,7 +93,6 @@ def check_rating_deltas(ranks, ratings, deltas):
     """
     for i in range(len(ranks)):
         for j in range(i + 1, len(ranks)):
-
             # Check condition a)
             if ratings[i] >= ratings[j]:
                 if ratings[i] + deltas[i] < ratings[j] + deltas[j]:
@@ -131,13 +130,13 @@ def get_rating_deltas(ranks, ratings):
     # 2) Compute seeds
     seeds = []
     for i in range(num_coders):
-        other_ratings = ratings[:i] + ratings[i+1:]
+        other_ratings = ratings[:i] + ratings[i + 1 :]
         seeds.append(get_seed(other_ratings, ratings[i]))
 
     # 3) Compute deltas
     deltas = []
     for i in range(num_coders):
-        other_ratings = ratings[:i] + ratings[i+1:]
+        other_ratings = ratings[:i] + ratings[i + 1 :]
         # take geometric mean of expected and actual ranks
         # this is similar to (a+b)/2 but when there is a big difference between a and b
         # it is closer to a (this protects users with high ratings from loosing too much rating)
@@ -164,7 +163,9 @@ def set_ratings(contest):
     _, instance_results = calculate_standing(contest)
 
     # only instances with some submissions (other than Compilation Error or Internal Error)
-    instance_results = [result for result in instance_results if result.submissions_count > 0]
+    instance_results = [
+        result for result in instance_results if result.submissions_count > 0
+    ]
 
     ratings, ranks = [], []
     for ir in instance_results:
@@ -189,7 +190,7 @@ def set_ratings(contest):
             contest=contest,
             rating=deltas[i],
             rank=result.rank,
-            seed=seeds[i]
+            seed=seeds[i],
         )
 
     contest.rated = True

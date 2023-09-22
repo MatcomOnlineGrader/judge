@@ -6,15 +6,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0015_auto_20171103_2354'),
+        ("api", "0015_auto_20171103_2354"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='problem',
-            name='balloon',
-            field=models.CharField(blank=True, max_length=50, null=True, verbose_name='Balloon color'),
+            model_name="problem",
+            name="balloon",
+            field=models.CharField(
+                blank=True, max_length=50, null=True, verbose_name="Balloon color"
+            ),
         ),
     ]

@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0019_auto_20180114_0425'),
+        ("api", "0019_auto_20180114_0425"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='email_notifications',
-            field=models.BooleanField(default=True, verbose_name='Send email notifications'),
+            model_name="userprofile",
+            name="email_notifications",
+            field=models.BooleanField(
+                default=True, verbose_name="Send email notifications"
+            ),
         ),
     ]

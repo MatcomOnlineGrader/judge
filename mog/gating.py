@@ -1,26 +1,27 @@
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # Legacy permissions based on user only
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 from judge import settings
 
 
 def user_is_admin(user):
     """return True iff logged user is administrator"""
-    return user.is_authenticated and hasattr(user, 'profile') and user.profile.is_admin
+    return user.is_authenticated and hasattr(user, "profile") and user.profile.is_admin
 
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # New permission model based on ContestPermission table
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
+
 
 def user_is_judge_in_contest(user, contest):
     """Does the user has role judge in contest?"""
-    return __user_has_role_in_contest(user, contest, 'judge')
+    return __user_has_role_in_contest(user, contest, "judge")
 
 
 def user_is_observer_in_contest(user, contest):
     """Does the user has role observer in contest?"""
-    return __user_has_role_in_contest(user, contest, 'observer')
+    return __user_has_role_in_contest(user, contest, "observer")
 
 
 def user_is_judge_in_submission_contest(user, submission):
@@ -35,7 +36,11 @@ def user_is_observer_in_submission_contest(user, submission):
 
 def user_can_bypass_frozen_in_contest(user, contest):
     """return True iff logged user can see submissions and standing in frozen/death time"""
-    return user_is_admin(user) or user_is_observer_in_contest(user, contest) or user_is_judge_in_contest(user, contest)
+    return (
+        user_is_admin(user)
+        or user_is_observer_in_contest(user, contest)
+        or user_is_judge_in_contest(user, contest)
+    )
 
 
 def grant_role_to_user_in_contest(user, contest, role):
@@ -47,11 +52,11 @@ def revoke_role_to_user_in_contest(user, contest, role):
 
 
 def get_all_contest_for_judge(user):
-    return __get_all_contest_for_role(user, 'judge')
+    return __get_all_contest_for_role(user, "judge")
 
 
 def get_all_contest_for_observer(user):
-    return __get_all_contest_for_role(user, 'observer')
+    return __get_all_contest_for_role(user, "observer")
 
 
 def is_admin_or_judge_for_contest(user, contest):
@@ -61,7 +66,10 @@ def is_admin_or_judge_for_contest(user, contest):
 def is_admin_or_judge_or_observer_for_contest(user, contest):
     if user_is_admin(user):
         return True
-    if contest and (user_is_judge_in_contest(user, contest) or user_is_observer_in_contest(user, contest)):
+    if contest and (
+        user_is_judge_in_contest(user, contest)
+        or user_is_observer_in_contest(user, contest)
+    ):
         return True
     return False
 
@@ -75,8 +83,11 @@ def is_admin_or_judge(user):
 
 
 def contest_actions_are_blocked_for_user(contest, user):
-    if public_actions_blocked() and not contest.is_running \
-            and not is_admin_or_judge_or_observer_for_contest(user, contest):
+    if (
+        public_actions_blocked()
+        and not contest.is_running
+        and not is_admin_or_judge_or_observer_for_contest(user, contest)
+    ):
         return True
     return False
 
@@ -84,11 +95,12 @@ def contest_actions_are_blocked_for_user(contest, user):
 def public_actions_blocked():
     return settings.BLOCK_PUBLIC_ACTIONS
 
-#-----------------------------------------------------------------------
+
+# -----------------------------------------------------------------------
 # Bellow there are "private" functions only that shouldn't be used
 # directly outside this file. Use those functions defined above that
 # calls into the private ones.
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 
 
 def __user_has_role_in_contest(user, contest, role):
@@ -118,12 +130,14 @@ def __get_all_contest_for_role(user, role):
         List of contest ids that `user` has the role of `role`.
     """
     from api.lib.queries import get_all_contest_for_role
+
     return get_all_contest_for_role(user.id, role)
 
 
 def __add_user_role_to_contest(user, contest, role, granted):
     # TODO(leandro): Remove circular dependency :(
     from api.models import ContestPermission
+
     ContestPermission.objects.create(
         user=user, contest=contest, role=role, granted=granted
     )

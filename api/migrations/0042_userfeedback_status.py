@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0041_problem_is_html'),
+        ("api", "0041_problem_is_html"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userfeedback',
-            name='status',
-            field=models.CharField(blank=True, choices=[('created', 'CREATED'), ('viewed', 'VIEWED'), ('closed', 'CLOSED')], max_length=20, null=True),
+            model_name="userfeedback",
+            name="status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("created", "CREATED"),
+                    ("viewed", "VIEWED"),
+                    ("closed", "CLOSED"),
+                ],
+                max_length=20,
+                null=True,
+            ),
         ),
     ]

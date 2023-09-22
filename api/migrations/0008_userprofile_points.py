@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0007_comment_html'),
+        ("api", "0007_comment_html"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='points',
-            field=models.PositiveIntegerField(default=0, verbose_name='Points'),
+            model_name="userprofile",
+            name="points",
+            field=models.PositiveIntegerField(default=0, verbose_name="Points"),
         ),
     ]

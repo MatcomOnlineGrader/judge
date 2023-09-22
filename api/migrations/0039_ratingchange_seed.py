@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0038_problem_multiple_limits'),
+        ("api", "0038_problem_multiple_limits"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ratingchange',
-            name='seed',
+            model_name="ratingchange",
+            name="seed",
             field=models.FloatField(default=0),
         ),
     ]

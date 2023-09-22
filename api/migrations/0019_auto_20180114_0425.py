@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0018_auto_20171231_0613'),
+        ("api", "0018_auto_20171231_0613"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tag',
-            name='description',
+            model_name="tag",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
     ]

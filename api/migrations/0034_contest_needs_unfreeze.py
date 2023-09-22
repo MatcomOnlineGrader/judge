@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0033_auto_20190901_0316'),
+        ("api", "0033_auto_20190901_0316"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contest',
-            name='needs_unfreeze',
+            model_name="contest",
+            name="needs_unfreeze",
             field=models.BooleanField(default=True),
         ),
     ]

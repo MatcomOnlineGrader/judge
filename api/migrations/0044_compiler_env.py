@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0043_auto_20230528_1642'),
+        ("api", "0043_auto_20230528_1642"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='compiler',
-            name='env',
+            model_name="compiler",
+            name="env",
             field=models.TextField(blank=True, null=True),
         ),
     ]

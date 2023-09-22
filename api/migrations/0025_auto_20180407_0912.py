@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0024_submission_status'),
+        ("api", "0024_submission_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='submission',
-            name='date',
+            model_name="submission",
+            name="date",
             field=models.DateTimeField(),
         ),
     ]

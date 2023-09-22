@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0023_contestinstance_group'),
+        ("api", "0023_contestinstance_group"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='submission',
-            name='status',
-            field=models.CharField(choices=[('normal', 'normal'), ('frozen', 'frozen'), ('death', 'death')], default='normal', max_length=10),
+            model_name="submission",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("normal", "normal"),
+                    ("frozen", "frozen"),
+                    ("death", "death"),
+                ],
+                default="normal",
+                max_length=10,
+            ),
         ),
     ]

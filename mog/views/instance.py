@@ -20,13 +20,14 @@ def instance_group_list(request):
     """
     if not user_is_admin(request.user):
         raise Http404()
-    search = request.GET.get('q', '')
-    groups_list = ContestInstance.objects.filter(~Q(group=None), group__icontains=search)\
-        .order_by('group').values_list('group', flat=True).distinct()
-    return JsonResponse(data={
-        'success': True,
-        'data': list(groups_list)
-    })
+    search = request.GET.get("q", "")
+    groups_list = (
+        ContestInstance.objects.filter(~Q(group=None), group__icontains=search)
+        .order_by("group")
+        .values_list("group", flat=True)
+        .distinct()
+    )
+    return JsonResponse(data={"success": True, "data": list(groups_list)})
 
 
 @login_required
@@ -37,22 +38,17 @@ def instance_edit_group(request, instance_pk):
     if not user_is_admin(request.user):
         raise Http404()
     try:
-        group = request.POST.get('group', '').strip()
-        if group in ['<all>', '<one>']:
-            return JsonResponse(data={
-                'success': False,
-                'message': 'Invalid group name "%s"' % group
-            })
-        ContestInstance.objects.filter(pk=instance_pk)\
-            .update(group=(group or None))
+        group = request.POST.get("group", "").strip()
+        if group in ["<all>", "<one>"]:
+            return JsonResponse(
+                data={"success": False, "message": 'Invalid group name "%s"' % group}
+            )
+        ContestInstance.objects.filter(pk=instance_pk).update(group=(group or None))
     except:
-        return JsonResponse(data={
-            'success': False,
-            'message': 'Contest instance not found'
-        })
-    return JsonResponse(data={
-        'success': True
-    })
+        return JsonResponse(
+            data={"success": False, "message": "Contest instance not found"}
+        )
+    return JsonResponse(data={"success": True})
 
 
 @login_required
@@ -64,11 +60,11 @@ def instance_edit_render_description(request, instance_pk):
         raise Http404()
 
     instance = get_object_or_404(ContestInstance, pk=instance_pk)
-    check = request.POST.get('render_team_description_only', '') == 'on'
+    check = request.POST.get("render_team_description_only", "") == "on"
     instance.render_team_description_only = check
     instance.save()
 
-    return redirect('mog:contest_registration', contest_id=instance.contest_id)
+    return redirect("mog:contest_registration", contest_id=instance.contest_id)
 
 
 @login_required
@@ -80,16 +76,18 @@ def instance_edit_team(request, instance_pk):
 
     instance = get_object_or_404(ContestInstance, pk=instance_pk)
 
-    nxt = request.POST.get('nxt', '') or reverse('mog:contest_registration', args=(instance.contest.pk, ))
-    description = request.POST.get('description', '')
-    group = request.POST.get('group', '').strip()
-    institution_id = request.POST.get('institution', '')
-    edit_profile_institution = request.POST.get('edit-profile-institution', '') == 'on'
-    render_team_description_only = request.POST.get('description-only', '') == 'on'
-    is_active = request.POST.get('is_active', '') == 'on'
+    nxt = request.POST.get("nxt", "") or reverse(
+        "mog:contest_registration", args=(instance.contest.pk,)
+    )
+    description = request.POST.get("description", "")
+    group = request.POST.get("group", "").strip()
+    institution_id = request.POST.get("institution", "")
+    edit_profile_institution = request.POST.get("edit-profile-institution", "") == "on"
+    render_team_description_only = request.POST.get("description-only", "") == "on"
+    is_active = request.POST.get("is_active", "") == "on"
 
-    if group in ['<all>', '<one>']:
-        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+    if group in ["<all>", "<one>"]:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags="danger")
         return redirect(nxt)
 
     try:
@@ -103,7 +101,7 @@ def instance_edit_team(request, instance_pk):
         if instance.team.description != description:
             instance.team.description = description
             edited_team = True
-        
+
         if edited_team:
             instance.team.save()
 
@@ -111,7 +109,7 @@ def instance_edit_team(request, instance_pk):
         if instance.render_team_description_only != render_team_description_only:
             instance.render_team_description_only = render_team_description_only
             edited_instance = True
-            
+
         if instance.group != group:
             instance.group = group or instance.contest.group
             edited_instance = True
@@ -119,7 +117,7 @@ def instance_edit_team(request, instance_pk):
         if instance.is_active != is_active:
             instance.is_active = is_active
             edited_instance = True
-        
+
         if edited_instance:
             instance.save()
 
@@ -129,10 +127,10 @@ def instance_edit_team(request, instance_pk):
                 profile.save()
 
         msg = _("Successfully edited team '%s'" % instance.team.name)
-        messages.success(request, msg, extra_tags='success')
+        messages.success(request, msg, extra_tags="success")
 
     except (ValueError, TypeError):
-        messages.error(request, 'Edit team: Invalid data!', extra_tags='danger')
+        messages.error(request, "Edit team: Invalid data!", extra_tags="danger")
 
     return redirect(nxt)
 
@@ -146,13 +144,15 @@ def instance_edit_user(request, instance_pk):
 
     instance = get_object_or_404(ContestInstance, pk=instance_pk)
 
-    nxt = request.POST.get('nxt', '') or reverse('mog:contest_registration', args=(instance.contest.pk, ))
-    group = request.POST.get('group', '').strip()
-    render_team_description_only = request.POST.get('description-only', '') == 'on'
-    is_active = request.POST.get('is_active', '') == 'on'
+    nxt = request.POST.get("nxt", "") or reverse(
+        "mog:contest_registration", args=(instance.contest.pk,)
+    )
+    group = request.POST.get("group", "").strip()
+    render_team_description_only = request.POST.get("description-only", "") == "on"
+    is_active = request.POST.get("is_active", "") == "on"
 
-    if group in ['<all>', '<one>']:
-        messages.error(request, 'Invalid group name "%s"' % group, extra_tags='danger')
+    if group in ["<all>", "<one>"]:
+        messages.error(request, 'Invalid group name "%s"' % group, extra_tags="danger")
         return redirect(nxt)
 
     try:
@@ -160,7 +160,7 @@ def instance_edit_user(request, instance_pk):
         if instance.render_team_description_only != render_team_description_only:
             instance.render_team_description_only = render_team_description_only
             edited_instance = True
-            
+
         if instance.group != group:
             instance.group = group or instance.contest.group
             edited_instance = True
@@ -173,10 +173,10 @@ def instance_edit_user(request, instance_pk):
             instance.save()
 
         msg = _("Successfully edited user '%s'" % instance.user.username)
-        messages.success(request, msg, extra_tags='success')
+        messages.success(request, msg, extra_tags="success")
 
     except (ValueError, TypeError):
-        messages.error(request, 'Edit user: Invalid data!', extra_tags='danger')
+        messages.error(request, "Edit user: Invalid data!", extra_tags="danger")
 
     return redirect(nxt)
 
@@ -190,12 +190,14 @@ def instance_edit_enable(request, instance_pk):
 
     instance = ContestInstance.objects.filter(id=instance_pk).first()
 
-    nxt = request.POST.get('next') or reverse('mog:contest_registration', args=(instance.contest.id))
-    is_active = request.POST.get('is_active', '') == 'on'
+    nxt = request.POST.get("next") or reverse(
+        "mog:contest_registration", args=(instance.contest.id)
+    )
+    is_active = request.POST.get("is_active", "") == "on"
 
     if not instance:
-        msg = _('Instance does not exist')
-        messages.info(request, msg, extra_tags='info')
+        msg = _("Instance does not exist")
+        messages.info(request, msg, extra_tags="info")
         return redirect(nxt)
 
     try:
@@ -204,14 +206,20 @@ def instance_edit_enable(request, instance_pk):
             instance.save()
 
             if instance.team:
-                msg = _("Successfully %s team '%s'!" % ('enabled' if is_active else 'disabled', instance.team.name))
-                messages.success(request, msg, extra_tags='success')
-            else: 
-                msg = _("Successfully %s user '%s'!" % ('enabled' if is_active else 'disabled', instance.user.username))
-                messages.success(request, msg, extra_tags='success')
+                msg = _(
+                    "Successfully %s team '%s'!"
+                    % ("enabled" if is_active else "disabled", instance.team.name)
+                )
+                messages.success(request, msg, extra_tags="success")
+            else:
+                msg = _(
+                    "Successfully %s user '%s'!"
+                    % ("enabled" if is_active else "disabled", instance.user.username)
+                )
+                messages.success(request, msg, extra_tags="success")
 
     except Exception as e:
-        msg = _('Error enabling this user/team: ' + str(e))
-        messages.error(request, msg, extra_tags='danger')
+        msg = _("Error enabling this user/team: " + str(e))
+        messages.error(request, msg, extra_tags="danger")
 
     return redirect(nxt)

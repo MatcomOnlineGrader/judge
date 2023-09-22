@@ -7,15 +7,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0010_checker_backend'),
+        ("api", "0010_checker_backend"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='avatar',
-            field=models.ImageField(blank=True, null=True, upload_to=api.models.UUIDImageName('user/avatar'), verbose_name='Avatar'),
+            model_name="userprofile",
+            name="avatar",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to=api.models.UUIDImageName("user/avatar"),
+                verbose_name="Avatar",
+            ),
         ),
     ]

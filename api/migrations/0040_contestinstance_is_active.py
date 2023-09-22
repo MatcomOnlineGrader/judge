@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0039_ratingchange_seed'),
+        ("api", "0039_ratingchange_seed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contestinstance',
-            name='is_active',
-            field=models.BooleanField(default=True, verbose_name='If true, it will allows the instance to submit to the corresponding contest.'),
+            model_name="contestinstance",
+            name="is_active",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="If true, it will allows the instance to submit to the corresponding contest.",
+            ),
         ),
     ]

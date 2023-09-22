@@ -1,8 +1,13 @@
 from django.test import TestCase
 
-from mog.ratings import reassign_ranks, win_probability, get_seed, get_rating_for_rank, get_rating_deltas, \
-    check_rating_deltas
-from mog.standing import ParticipantResult
+from mog.ratings import (
+    reassign_ranks,
+    win_probability,
+    get_seed,
+    get_rating_for_rank,
+    get_rating_deltas,
+    check_rating_deltas,
+)
 
 
 class RatingsTestCase(TestCase):
@@ -36,19 +41,19 @@ class RatingsTestCase(TestCase):
         ratings = [2000, 1900, 1500, 1000]
         seeds = []
         for i in range(len(ratings)):
-            other_ratings = ratings[:i] + ratings[i+1:]
+            other_ratings = ratings[:i] + ratings[i + 1 :]
             seeds.append(get_seed(other_ratings, ratings[i]))
 
         for i in range(len(ratings)):
             self.assertTrue(1 <= seeds[i] <= len(ratings))
             if i > 0:
-                self.assertTrue(seeds[i-1] < seeds[i])
+                self.assertTrue(seeds[i - 1] < seeds[i])
 
     def test_rating_for_rank(self):
         ratings = [1500, 1900, 2000, 1850, 1200, 1350, 1000]
         for i in range(len(ratings)):
             rank = i + 1
-            other_ratings = ratings[:i] + ratings[i+1:]
+            other_ratings = ratings[:i] + ratings[i + 1 :]
             performed_rating = get_rating_for_rank(other_ratings, rank=rank)
             seed = get_seed(other_ratings, performed_rating)
             self.assertTrue(rank - 1e-2 <= seed <= rank + 1e-2)

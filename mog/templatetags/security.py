@@ -78,6 +78,7 @@ def can_remove_contest(user, contest):
 def can_edit_registration(user, contest):
     return user_is_admin(user)
 
+
 @register.filter()
 def can_manage_contest(user, contest):
     return user_is_admin(user)
@@ -130,7 +131,7 @@ def can_see_tabs_in_user_profile(viewer, user_in_profile):
 
 @register.filter()
 def can_see_tags(user):
-    if not user.is_authenticated or not hasattr(user, 'profile'):
+    if not user.is_authenticated or not hasattr(user, "profile"):
         return True
     return user.profile.show_tags
 
@@ -179,7 +180,9 @@ def can_create_clarification(user, contest):
     """
     if user_is_admin(user) or user_is_judge_in_contest(user, contest):
         return True
-    return user.is_authenticated and (contest.is_running and contest.real_registration(user))
+    return user.is_authenticated and (
+        contest.is_running and contest.real_registration(user)
+    )
 
 
 @register.filter()

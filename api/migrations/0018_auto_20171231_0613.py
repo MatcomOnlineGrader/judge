@@ -5,40 +5,68 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0017_problem_letter_color'),
+        ("api", "0017_problem_letter_color"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='institution',
-            name='country',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.Country'),
+            model_name="institution",
+            name="country",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="api.Country",
+            ),
         ),
         migrations.AlterField(
-            model_name='problem',
-            name='checker',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.Checker'),
+            model_name="problem",
+            name="checker",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="api.Checker",
+            ),
         ),
         migrations.AlterField(
-            model_name='submission',
-            name='instance',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='submissions', to='api.ContestInstance'),
+            model_name="submission",
+            name="instance",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="submissions",
+                to="api.ContestInstance",
+            ),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='institution',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.Institution'),
+            model_name="team",
+            name="institution",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="api.Institution",
+            ),
         ),
         migrations.AlterField(
-            model_name='userprofile',
-            name='compiler',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.Compiler', verbose_name='Compiler'),
+            model_name="userprofile",
+            name="compiler",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="api.Compiler",
+                verbose_name="Compiler",
+            ),
         ),
         migrations.AlterField(
-            model_name='userprofile',
-            name='institution',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='api.Institution', verbose_name='Institution'),
+            model_name="userprofile",
+            name="institution",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="api.Institution",
+                verbose_name="Institution",
+            ),
         ),
     ]

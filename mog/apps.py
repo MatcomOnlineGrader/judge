@@ -4,5 +4,5 @@ from django.apps import AppConfig
 
 
 class MogConfig(AppConfig):
-    name = 'mog'
+    name = "mog"
     verbose_name = "MATCOM Online Grader"

@@ -46,26 +46,30 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import BaseCommand
 from django.utils import timezone
 
-from api.models import (Checker, Compiler, Contest, Institution, Problem,
-                        Result, UserProfile)
+from api.models import (
+    Checker,
+    Compiler,
+    Contest,
+    Institution,
+    Problem,
+    Result,
+    UserProfile,
+)
 
 USERS = [
+    {"name": "admin", "role": "admin"},
     {
-        'name': 'admin',
-        'role': 'admin'
+        "name": "observer",
+        "role": "observer",
     },
     {
-        'name': 'observer',
-        'role': 'observer',
+        "name": "judge",
+        "role": "judge",
     },
     {
-        'name': 'judge',
-        'role': 'judge',
+        "name": "alice",
+        "role": None,
     },
-    {
-        'name': 'alice',
-        'role': None,
-    }
 ]
 
 COMPILERS = [
@@ -92,7 +96,7 @@ COMPILERS = [
         "path": "g++",
         "file_extension": "cpp",
         "exec_extension": "exe",
-    }
+    },
 ]
 
 RESULTS = [
@@ -182,24 +186,21 @@ class ProblemWrapper:
         # Save sample testcases
         samples = {}
         for ix, (s_in, s_out) in enumerate(zip(sample_in, sample_out)):
-            samples[str(ix)] = {
-                "in": s_in,
-                "out": s_out
-            }
+            samples[str(ix)] = {"in": s_in, "out": s_out}
         self.problem.samples = dumps(samples)
         self.problem.save()
 
         # Save testcases
         problem = Path(settings.PROBLEMS_FOLDER) / str(self.problem.id)
-        ins = problem / 'inputs'
-        outs = problem / 'outputs'
+        ins = problem / "inputs"
+        outs = problem / "outputs"
         makedirs(ins, exist_ok=True)
         makedirs(outs, exist_ok=True)
         for ix, (f_in, f_out) in enumerate(zip(full_in, full_out)):
             r_ix = ix + len(sample_in)
-            with open(ins / f'{r_ix}.in', 'w') as f:
+            with open(ins / f"{r_ix}.in", "w") as f:
                 f.write(f_in)
-            with open(outs / f'{r_ix}.out', 'w') as f:
+            with open(outs / f"{r_ix}.out", "w") as f:
                 f.write(f_out)
 
     def delete(self):
@@ -216,8 +217,15 @@ class ProblemWrapper:
 
 
 def create_aplusb():
-    problem = Problem(title="A+B", body="A+B", time_limit=1, memory_limit=1024,
-                      position=1, contest_id=Contest.objects.get(name="test01").id, checker=Checker.objects.get(name="wcmp"))
+    problem = Problem(
+        title="A+B",
+        body="A+B",
+        time_limit=1,
+        memory_limit=1024,
+        position=1,
+        contest_id=Contest.objects.get(name="test01").id,
+        checker=Checker.objects.get(name="wcmp"),
+    )
     return ProblemWrapper(problem)
 
 
@@ -230,7 +238,7 @@ class UserWrapper:
         user = User.objects.create_user(
             username=self.user.username,
             password=self.user.password,
-            email=self.user.email
+            email=self.user.email,
         )
         self.user_profile.user = user
         self.user_profile.save()
@@ -250,7 +258,7 @@ def create_user(name, role):
         email=f"{name}@mog.com",
     )
 
-    if role == 'admin':
+    if role == "admin":
         user.is_staff = True
 
     user_profile = UserProfile(user=user, role=role)
@@ -263,21 +271,35 @@ class Command(BaseCommand):
         super(Command, self).__init__(*args, **kwargs)
 
     def add_arguments(self, parser):
-        parser.add_argument('-d', '--no-dry', action='store_true', default=False,
-                            help="Without this argument it shows the implications this command will have without running it. In no-dry mode it will apply the changes")
-        parser.add_argument('-r', '--reset', action='store_true',
-                            default=False, help="Rollback all changes done by this command.")
+        parser.add_argument(
+            "-d",
+            "--no-dry",
+            action="store_true",
+            default=False,
+            help="Without this argument it shows the implications this command will have without running it. In no-dry mode it will apply the changes",
+        )
+        parser.add_argument(
+            "-r",
+            "--reset",
+            action="store_true",
+            default=False,
+            help="Rollback all changes done by this command.",
+        )
 
     def handle(self, *args, **options):
-        print("WARNING: Running this command in PRODUCTION can be a security risk! DON'T DO IT.")
+        print(
+            "WARNING: Running this command in PRODUCTION can be a security risk! DON'T DO IT."
+        )
 
-        if os.environ.get('MOG_LOCAL_DEV', '0') != '1':
-            print("To run this command you need to explicitely set environment variable:")
+        if os.environ.get("MOG_LOCAL_DEV", "0") != "1":
+            print(
+                "To run this command you need to explicitely set environment variable:"
+            )
             print("MOG_LOCAL_DEV=1")
             exit(1)
 
-        dry = not options['no_dry']
-        reset = options['reset']
+        dry = not options["no_dry"]
+        reset = options["reset"]
         _apply = partial(apply, dry=dry, reset=reset)
 
         # Copy / Delete testlib.h
@@ -285,42 +307,74 @@ class Command(BaseCommand):
             try:
                 print("Delete: testlib.h")
                 if not dry:
-                    os.unlink(Path(settings.RESOURCES_FOLDER) / 'testlib.h')
+                    os.unlink(Path(settings.RESOURCES_FOLDER) / "testlib.h")
             except FileNotFoundError:
                 pass
         else:
             print("Create: testlib.h")
             if not dry:
-                copy2(Path('resources') / 'testlib.h',
-                      Path(settings.RESOURCES_FOLDER) / 'testlib.h')
+                copy2(
+                    Path("resources") / "testlib.h",
+                    Path(settings.RESOURCES_FOLDER) / "testlib.h",
+                )
 
         if reset:
             # Problem needs to be removed first, otherwise it is removed on cascade mode.
-            _apply(lambda: ProblemWrapper(
-                Problem.objects.get(title="A+B")), create_aplusb)
+            _apply(
+                lambda: ProblemWrapper(Problem.objects.get(title="A+B")), create_aplusb
+            )
 
-        _apply(lambda: Institution.objects.get(name="Earth"),
-               lambda: Institution(name="Earth", url="earth.org"))
+        _apply(
+            lambda: Institution.objects.get(name="Earth"),
+            lambda: Institution(name="Earth", url="earth.org"),
+        )
 
-        _apply(lambda: Contest.objects.get(name="test01"), lambda: Contest(
-            name="test01", code="test01", start_date=timezone.now(), end_date=timezone.now()))
+        _apply(
+            lambda: Contest.objects.get(name="test01"),
+            lambda: Contest(
+                name="test01",
+                code="test01",
+                start_date=timezone.now(),
+                end_date=timezone.now(),
+            ),
+        )
 
-        _apply(lambda: Checker.objects.get(name="wcmp"), lambda: Checker(
-            name="wcmp", description="Token comparator checker", source=read_from('tests/checkers/wcmp.cpp'), backend='testlib.h'))
+        _apply(
+            lambda: Checker.objects.get(name="wcmp"),
+            lambda: Checker(
+                name="wcmp",
+                description="Token comparator checker",
+                source=read_from("tests/checkers/wcmp.cpp"),
+                backend="testlib.h",
+            ),
+        )
 
         for compiler in COMPILERS:
-            _apply(lambda: Compiler.objects.get(
-                name=compiler['name']), lambda: Compiler(**compiler))
+            _apply(
+                lambda: Compiler.objects.get(name=compiler["name"]),
+                lambda: Compiler(**compiler),
+            )
 
         if not reset:
             # Problem needs to be created at the end, after compiler and contest exists.
-            _apply(lambda: ProblemWrapper(
-                Problem.objects.get(title="A+B")), create_aplusb)
+            _apply(
+                lambda: ProblemWrapper(Problem.objects.get(title="A+B")), create_aplusb
+            )
 
         for user in USERS:
-            _apply(lambda: UserWrapper(UserProfile.objects.get(
-                user=User.objects.get(username=user['name']))), partial(create_user, **user))
+            _apply(
+                lambda: UserWrapper(
+                    UserProfile.objects.get(
+                        user=User.objects.get(username=user["name"])
+                    )
+                ),
+                partial(create_user, **user),
+            )
 
         for result, color, penalty in RESULTS:
-            _apply(lambda: Result.objects.get(name=result), lambda: Result(
-                name=result, description=result, color=color, penalty=penalty))
+            _apply(
+                lambda: Result.objects.get(name=result),
+                lambda: Result(
+                    name=result, description=result, color=color, penalty=penalty
+                ),
+            )
