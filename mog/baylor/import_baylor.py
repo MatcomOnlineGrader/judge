@@ -70,6 +70,7 @@ class ProcessImportBaylor:
             lines = list(f.readlines())
             country_names = {'PRI': 'Puerto Rico',
                             'TTO': 'Trinidad & Tobago',
+                            'ATG': 'Antigua & Barbuda',
                             'JAM': 'Jamaica',
                             'DOM': 'Dominican Republic',
                             'CUB': 'Cuba'}
