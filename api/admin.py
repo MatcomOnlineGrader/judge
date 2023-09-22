@@ -88,6 +88,13 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ("id", "source", "target", "saw", "date")
 
 
+class CompilerAdmin(admin.ModelAdmin):
+    readonly_fields = (
+        "language",
+        "name",
+    )
+
+
 class ContestPermissionAdmin(admin.ModelAdmin):
     list_display = (
         "user",
@@ -133,7 +140,7 @@ class ContestPermissionAdmin(admin.ModelAdmin):
 
 admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Comment)
-admin.site.register(Compiler)
+admin.site.register(Compiler, CompilerAdmin)
 admin.site.register(Contest)
 admin.site.register(ContestInstance, ContestInstanceAdmin)
 admin.site.register(ContestPermission, ContestPermissionAdmin)
