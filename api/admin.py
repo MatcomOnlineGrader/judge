@@ -3,6 +3,8 @@ from .models import *
 
 
 class UserProfileAdmin(admin.ModelAdmin):
+    readonly_fields = ('user', 'points', )
+
     class RoleFilter(admin.SimpleListFilter):
         title = 'role'
         parameter_name = 'role'
@@ -54,9 +56,13 @@ class UserFeedbackAdmin(admin.ModelAdmin):
 class ContestInstanceAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'contest', 'is_active', 'real')
 
+class MessageAdmin(admin.ModelAdmin):
+    readonly_fields = ('source', 'target', 'subject', 'body', 'saw')
+    list_display = ('id', 'source', 'target', 'saw', 'date')
 
 class ContestPermissionAdmin(admin.ModelAdmin):
     list_display = ('user', 'contest', 'role', 'granted', 'date', )
+    readonly_fields = ('user', 'contest', 'role', 'granted')
 
     class ActiveContestPermission(admin.SimpleListFilter):
         title = 'role'
@@ -100,7 +106,7 @@ admin.site.register(ContestPermission, ContestPermissionAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(Division)
 admin.site.register(Institution, InstitutionAdmin)
-admin.site.register(Message)
+admin.site.register(Message, MessageAdmin)
 admin.site.register(Post)
 admin.site.register(Problem)
 admin.site.register(RatingChange)
