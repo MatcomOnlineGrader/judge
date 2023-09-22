@@ -74,6 +74,7 @@ urlpatterns = [
     url(r'^contest/overview/(?P<contest_id>[0-9]+)$', views.contest_overview, name='contest_overview'),
     url(r'^contest/problems/(?P<contest_id>[0-9]+)$', views.contest_problems, name='contest_problems'),
     url(r'^contest/saris/(?P<contest_id>[0-9]+)$', views.contest_saris, name='contest_saris'),
+    url(r'^contest/saris/(?P<contest_id>[0-9]+)/download$', views.download_json_saris, name='download_json_saris'),
     url(r'^contest/standing/(?P<contest_id>[0-9]+)$', views.contest_standing, name='contest_standing'),
     url(r'^contest/submissions/(?P<contest_id>[0-9]+)$', views.contest_submissions, name='contest_submissions'),
     url(r'^contest/submissions/export/(?P<contest_id>[0-9]+)$', views.contest_submissions_export, name='contest_submissions_export'),
