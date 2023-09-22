@@ -6,17 +6,18 @@ from django.conf import settings
 
 
 def sql_migrations():
-    folder = os.path.join(os.path.join(settings.BASE_DIR, 'db_scripts'))
+    folder = os.path.join(os.path.join(settings.BASE_DIR, "db_scripts"))
     for name in sorted(os.listdir(folder)):
-        with open(os.path.join(folder, name), 'r') as file:
-            sql = ''.join(file.readlines()).replace('${USERNAME}', settings.DEFAULT_DATABASE['USER'])
+        with open(os.path.join(folder, name), "r") as file:
+            sql = "".join(file.readlines()).replace(
+                "${USERNAME}", settings.DEFAULT_DATABASE["USER"]
+            )
             yield migrations.RunSQL(sql)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0025_auto_20180407_0912'),
+        ("api", "0025_auto_20180407_0912"),
     ]
 
     operations = list(sql_migrations())

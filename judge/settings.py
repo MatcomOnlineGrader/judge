@@ -41,7 +41,7 @@ def get_array_from_config(configuration, section, option, target=str):
              Resulting list of valid values.
     """
     result = []
-    for word in configuration.get(section, option).split(','):
+    for word in configuration.get(section, option).split(","):
         try:
             result.append(target(word))
         except Exception:
@@ -51,119 +51,119 @@ def get_array_from_config(configuration, section, option, target=str):
 
 # Store messages in the session. The choice by default doesn't work well when redirecting
 # after a POST request
-MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Import configuration from settings.ini file
 config = RawConfigParser()
-config.read(os.path.join(BASE_DIR, 'settings.ini'))
+config.read(os.path.join(BASE_DIR, "settings.ini"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.get('secrets', 'SECRET_KEY')
+SECRET_KEY = config.get("secrets", "SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.getboolean('debugging', 'DEBUG')
+DEBUG = config.getboolean("debugging", "DEBUG")
 
 # SECURITY WARNING: used to generate default password for a team, keep the secret key secure!
-PASSWORD_GENERATOR_SECRET_KEY = config.get('secrets', 'PASSWORD_GENERATOR_SECRET_KEY')
+PASSWORD_GENERATOR_SECRET_KEY = config.get("secrets", "PASSWORD_GENERATOR_SECRET_KEY")
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # REDIRECT: If the server is nor running in the server where the problem's data is
 # stored -> redirect to that server when modifying test cases
 
-DATA_SERVER_URL = config.get('redirect', 'DATA_SERVER_URL', fallback=None)
+DATA_SERVER_URL = config.get("redirect", "DATA_SERVER_URL", fallback=None)
 
 # Application definition
 
 INSTALLED_APPS = [
-    'api.apps.ApiConfig',
-    'mog.apps.MogConfig',
-    'palantir.apps.PalantirConfig',
-    'frontend.apps.FrontendConfig',
-    'social_django',
-    'captcha',
-    'django.contrib.humanize',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites'
+    "api.apps.ApiConfig",
+    "mog.apps.MogConfig",
+    "palantir.apps.PalantirConfig",
+    "frontend.apps.FrontendConfig",
+    "social_django",
+    "captcha",
+    "django.contrib.humanize",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',
-    'mog.middleware.AddNeverCacheHeadersMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
+    "mog.middleware.AddNeverCacheHeadersMiddleware",
 ]
 
 
-if config.getboolean('palantir', 'LOG_REQUESTS'):
-    MIDDLEWARE.append('palantir.middlewares.AccessLogMiddleware')
+if config.getboolean("palantir", "LOG_REQUESTS"):
+    MIDDLEWARE.append("palantir.middlewares.AccessLogMiddleware")
 
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
+    "social_core.backends.github.GithubOAuth2",
+    "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.facebook.FacebookOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
 )
 
-ROOT_URLCONF = 'judge.urls'
+ROOT_URLCONF = "judge.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'mog.context_processor.common',
-                'mog.context_processor.special_day',
-                'django.template.context_processors.media',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "mog.context_processor.common",
+                "mog.context_processor.special_day",
+                "django.template.context_processors.media",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'judge.wsgi.application'
+WSGI_APPLICATION = "judge.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DEFAULT_DATABASE = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'HOST': config.get('database', 'DATABASE_HOST'),
-    'PORT': config.getint('database', 'DATABASE_PORT'),
-    'NAME': config.get('database', 'DATABASE_NAME'),
-    'USER': config.get('database', 'DATABASE_USER'),
-    'PASSWORD': config.get('database', 'DATABASE_PASS')
+    "ENGINE": "django.db.backends.postgresql_psycopg2",
+    "HOST": config.get("database", "DATABASE_HOST"),
+    "PORT": config.getint("database", "DATABASE_PORT"),
+    "NAME": config.get("database", "DATABASE_NAME"),
+    "USER": config.get("database", "DATABASE_USER"),
+    "PASSWORD": config.get("database", "DATABASE_PASS"),
 }
 
 
 DATABASES = {
-    'default': DEFAULT_DATABASE,
+    "default": DEFAULT_DATABASE,
 }
 
 
-NUMBER_OF_REPLICAS = config.getint('database', 'REPLICAS')
+NUMBER_OF_REPLICAS = config.getint("database", "REPLICAS")
 
 # Setup re-only nodes (replicas) that will keep almost every setting
 # the same than the primary database (default) except host, port and
@@ -183,12 +183,14 @@ NUMBER_OF_REPLICAS = config.getint('database', 'REPLICAS')
 # replica's sections numerated 1, 2, ..., K.
 for k in range(NUMBER_OF_REPLICAS):
     replica_conf = DEFAULT_DATABASE.copy()
-    replica_name = 'replica%d' % (k + 1)  # 1-index
-    replica_conf.update(**{
-        'HOST': config.get(replica_name, 'DATABASE_HOST'),
-        'PORT': config.getint(replica_name, 'DATABASE_PORT'),
-        'NAME': config.get(replica_name, 'DATABASE_NAME'),
-    })
+    replica_name = "replica%d" % (k + 1)  # 1-index
+    replica_conf.update(
+        **{
+            "HOST": config.get(replica_name, "DATABASE_HOST"),
+            "PORT": config.getint(replica_name, "DATABASE_PORT"),
+            "NAME": config.get(replica_name, "DATABASE_NAME"),
+        }
+    )
     DATABASES[replica_name] = replica_conf
 
 
@@ -196,7 +198,7 @@ if NUMBER_OF_REPLICAS > 0:
     DATABASE_ROUTERS = [
         "mog.routers.DefaultRouter",
     ]
-    MIDDLEWARE.insert(0, 'mog.routers.RouterMiddleware')  # first!
+    MIDDLEWARE.insert(0, "mog.routers.RouterMiddleware")  # first!
 
 
 # Password validation
@@ -204,16 +206,16 @@ if NUMBER_OF_REPLICAS > 0:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -221,9 +223,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
@@ -235,26 +237,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = config.get('others', 'STATIC_ROOT')
+STATIC_URL = "/static/"
+STATIC_ROOT = config.get("others", "STATIC_ROOT")
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = config.get('others', 'MEDIA_ROOT')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = config.get("others", "MEDIA_ROOT")
 
-LOGIN_URL = '/login/'
+LOGIN_URL = "/login/"
 
 # Internationalization
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale')
-]
+LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
 LANGUAGES = [
-    ('es', _('Spanish')),
-    ('en', _('English')),
+    ("es", _("Spanish")),
+    ("en", _("English")),
 ]
 
 # Used by django_registration
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 ACCOUNT_ACTIVATION_DAYS = 7
 
 SITE_ID = 1
@@ -268,74 +268,68 @@ BASE_RATING = 1300
 MAX_RATING = 8000
 
 # Place to store problem test-cases ( secret location )
-PROBLEMS_FOLDER = config.get('grader', 'PROBLEMS_FOLDER')
+PROBLEMS_FOLDER = config.get("grader", "PROBLEMS_FOLDER")
 
 # Place to store temporal submission executables
-SANDBOX_FOLDER = config.get('grader', 'SANDBOX_FOLDER')
+SANDBOX_FOLDER = config.get("grader", "SANDBOX_FOLDER")
 
 # Resource folders
 # - runexe.exe
 # - testlib.h
 # - testlib4j.jar
-RESOURCES_FOLDER = config.get('grader', 'RESOURCES_FOLDER')
+RESOURCES_FOLDER = config.get("grader", "RESOURCES_FOLDER")
 
 # Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = config.getboolean('email', 'EMAIL_USE_TLS')
-EMAIL_HOST = config.get('email', 'EMAIL_HOST')
-EMAIL_PORT = config.getint('email', 'EMAIL_PORT')
-EMAIL_HOST_USER = config.get('email', 'EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config.get('email', 'EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config.get('email', 'DEFAULT_FROM_EMAIL')
-EMAIL_TIMEOUT = config.getint('email', 'EMAIL_TIMEOUT')
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = config.getboolean("email", "EMAIL_USE_TLS")
+EMAIL_HOST = config.get("email", "EMAIL_HOST")
+EMAIL_PORT = config.getint("email", "EMAIL_PORT")
+EMAIL_HOST_USER = config.get("email", "EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config.get("email", "EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = config.get("email", "DEFAULT_FROM_EMAIL")
+EMAIL_TIMEOUT = config.getint("email", "EMAIL_TIMEOUT")
 
 # Flags
-BLOCK_PUBLIC_ACTIONS = config.getboolean('flags', 'BLOCK_PUBLIC_ACTIONS', fallback=False)
+BLOCK_PUBLIC_ACTIONS = config.getboolean(
+    "flags", "BLOCK_PUBLIC_ACTIONS", fallback=False
+)
 
 
 # Activate debug toolbar
-DEBUG_TOOLBAR = config.getboolean('debugging', 'DEBUG_TOOLBAR')
+DEBUG_TOOLBAR = config.getboolean("debugging", "DEBUG_TOOLBAR")
 
 if DEBUG and DEBUG_TOOLBAR:
-    INSTALLED_APPS += [
-        'debug_toolbar'
-    ]
-    MIDDLEWARE += [
-        'debug_toolbar.middleware.DebugToolbarMiddleware'
-    ]
-    INTERNAL_IPS = ['127.0.0.1']
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+    INTERNAL_IPS = ["127.0.0.1"]
 
 # Social settings
 
 # --> facebook
-SOCIAL_AUTH_FACEBOOK_KEY = config.get('social', 'SOCIAL_AUTH_FACEBOOK_KEY')
-SOCIAL_AUTH_FACEBOOK_SECRET = config.get('social', 'SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_KEY = config.get("social", "SOCIAL_AUTH_FACEBOOK_KEY")
+SOCIAL_AUTH_FACEBOOK_SECRET = config.get("social", "SOCIAL_AUTH_FACEBOOK_SECRET")
 SOCIAL_AUTH_FACEBOOK_SCOPE = get_array_from_config(
-    configuration=config,
-    section='social',
-    option='SOCIAL_AUTH_FACEBOOK_SCOPE'
+    configuration=config, section="social", option="SOCIAL_AUTH_FACEBOOK_SCOPE"
 )
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'locale': config.get('social', 'SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_LOCALE'),
-    'fields': config.get('social', 'SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_FIELDS')
+    "locale": config.get("social", "SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_LOCALE"),
+    "fields": config.get("social", "SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_FIELDS"),
 }
 
 # --> github
-SOCIAL_AUTH_GITHUB_KEY = config.get('social', 'SOCIAL_AUTH_GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = config.get('social', 'SOCIAL_AUTH_GITHUB_SECRET')
+SOCIAL_AUTH_GITHUB_KEY = config.get("social", "SOCIAL_AUTH_GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_SECRET = config.get("social", "SOCIAL_AUTH_GITHUB_SECRET")
 SOCIAL_AUTH_GITHUB_SCOPE = get_array_from_config(
-    configuration=config,
-    section='social',
-    option='SOCIAL_AUTH_GITHUB_SCOPE'
+    configuration=config, section="social", option="SOCIAL_AUTH_GITHUB_SCOPE"
 )
 
 # --> google
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get('social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get('social', 'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config.get("social", "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config.get(
+    "social", "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"
+)
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = get_array_from_config(
-    configuration=config,
-    section='social',
-    option='SOCIAL_AUTH_GOOGLE_SCOPE'
+    configuration=config, section="social", option="SOCIAL_AUTH_GOOGLE_SCOPE"
 )
 
 # --> default pipeline plus `associate_by_email` step
@@ -345,70 +339,60 @@ SOCIAL_AUTH_PIPELINE = (
     # user instance later. On some cases the details are
     # already part of the auth response from the provider, but sometimes this
     # could hit a provider API.
-    'social_core.pipeline.social_auth.social_details',
-
+    "social_core.pipeline.social_auth.social_details",
     # Get the social uid from whichever service we're authing thru. The uid is
     # the unique identifier of the given user in the provider.
-    'social_core.pipeline.social_auth.social_uid',
-
+    "social_core.pipeline.social_auth.social_uid",
     # Verifies that the current auth process is valid within the current
     # project, this is where emails and domains whitelists are applied (if
     # defined).
-    'social_core.pipeline.social_auth.auth_allowed',
-
+    "social_core.pipeline.social_auth.auth_allowed",
     # Checks if the current social-account is already associated in the site.
-    'social_core.pipeline.social_auth.social_user',
-
+    "social_core.pipeline.social_auth.social_user",
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
-    'social_core.pipeline.user.get_username',
-
+    "social_core.pipeline.user.get_username",
     # Associates the current social details with another user account with
     # a similar email address.
-    'social_core.pipeline.social_auth.associate_by_email',
-
+    "social_core.pipeline.social_auth.associate_by_email",
     # Create a user account if we haven't found one yet.
-    'social_core.pipeline.user.create_user',
-
+    "social_core.pipeline.user.create_user",
     # Create the record that associates the social account with the user.
-    'social_core.pipeline.social_auth.associate_user',
-
+    "social_core.pipeline.social_auth.associate_user",
     # Populate the extra_data field in the social record with the values
     # specified by settings (and the default ones like access_token, etc).
-    'social_core.pipeline.social_auth.load_extra_data',
-
+    "social_core.pipeline.social_auth.load_extra_data",
     # Update the user record with any changed info from the auth service.
-    'social_core.pipeline.user.user_details',
-
+    "social_core.pipeline.user.user_details",
     # Set avatar to user.
-    'mog.pipeline.associate_avatar',
+    "mog.pipeline.associate_avatar",
 )
 
 # Cache settings
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'mog-cache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "mog-cache",
     }
 }
 
 
-if config.getboolean('session', 'USE_REDIS'):
+if config.getboolean("session", "USE_REDIS"):
     SESSION_CACHE_ALIAS = "redis"
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
     CACHES[SESSION_CACHE_ALIAS] = {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config.get('session', 'REDIS_CONNECTION_STRING'),
+        "LOCATION": config.get("session", "REDIS_CONNECTION_STRING"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 
 # Settings for the testing environment
-IS_TESTING_ENVIRONMENT = config.getboolean('testing', 'TESTING', fallback=False)
+IS_TESTING_ENVIRONMENT = config.getboolean("testing", "TESTING", fallback=False)
 
 if IS_TESTING_ENVIRONMENT:
     for k in CACHES:
         CACHES[k] = {
-            'BACKEND' : 'django.core.cache.backends.dummy.DummyCache',
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         }

@@ -1,8 +1,6 @@
-import datetime
 import urllib
 
-from django import forms
-from django import template
+from django import forms, template
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.safestring import mark_safe
@@ -20,20 +18,20 @@ register = template.Library()
 def get_color(rating):
     """Given a rating value returns the color of the corresponding division"""
     value = max(rating or 0, 0)
-    divisions = cache.get('divisions')
+    divisions = cache.get("divisions")
     if divisions is None:
-        divisions = Division.objects.order_by('-rating').all()
-        cache.set('divisions', divisions)
+        divisions = Division.objects.order_by("-rating").all()
+        cache.set("divisions", divisions)
     for division in divisions:
         if value >= division.rating:
             return division.color
-    return 'black'
+    return "black"
 
 
 @register.filter()
 def put_into_array(obj):
     """Used to put a single submission into an array and reuse
-     submission lists template.
+    submission lists template.
     """
     return [obj]
 
@@ -41,15 +39,16 @@ def put_into_array(obj):
 @register.filter()
 def date_url(date):
     date = date.astimezone(pytz.timezone(settings.TIME_ZONE))
-    return 'https://www.timeanddate.com/worldclock/fixedtime.html?day={}&month={}&year={}&hour={}&min={}&sec={}&p1=99'\
-        .format(date.day, date.month, date.year, date.hour, date.minute, date.second)
+    return "https://www.timeanddate.com/worldclock/fixedtime.html?day={}&month={}&year={}&hour={}&min={}&sec={}&p1=99".format(
+        date.day, date.month, date.year, date.hour, date.minute, date.second
+    )
 
 
 @register.filter()
 def rating(user):
     result = cache.get(user.id)
     if result is None:
-        result = user.profile.rating if hasattr(user, 'profile') else 0
+        result = user.profile.rating if hasattr(user, "profile") else 0
         cache.set(user.id, result, 5 * 60)  # 5 minutes
     return result
 
@@ -66,9 +65,7 @@ def rating_color(rating):
 
 @register.filter(needs_autoscape=True)
 def colorize_rating(rating):
-    html = '<strong style="color:{0};">{1}</strong>'.format(
-        get_color(rating), rating
-    )
+    html = '<strong style="color:{0};">{1}</strong>'.format(get_color(rating), rating)
     return mark_safe(html)
 
 
@@ -80,16 +77,19 @@ def percent(num, den):
 @register.filter()
 def user_stats(user):
     data = {
-        'rating': 0, 'points': 0, 'solved': 0,
-        'accepted': 0, 'submissions': 0,
+        "rating": 0,
+        "points": 0,
+        "solved": 0,
+        "accepted": 0,
+        "submissions": 0,
     }
-    if hasattr(user, 'profile'):
+    if hasattr(user, "profile"):
         profile = user.profile
-        data['rating'] = profile.rating
-        data['points'] = profile.points
-        data['solved'] = profile.solved_problems
-        data['accepted'] = profile.accepted_submissions
-        data['submissions'] = profile.total_submissions
+        data["rating"] = profile.rating
+        data["points"] = profile.points
+        data["solved"] = profile.solved_problems
+        data["accepted"] = profile.accepted_submissions
+        data["submissions"] = profile.total_submissions
     return data
 
 
@@ -99,48 +99,48 @@ def avatar(user):
 
 
 modes = {
-    'c': ('clike', 'text/x-csrc'),
-    'c++': ('clike', 'text/x-c++src'),
-    'cpp': ('clike', 'text/x-c++src'),
-    'csharp': ('clike', 'text/x-csharp'),
-    'java': ('clike', 'text/x-java'),
-    'javascript': ('javascript', 'text/javascript'),
-    'pascal': ('pascal', 'text/x-pascal'),
-    'python': ('python', 'text/x-python'),
-    'python2': ('python', 'text/x-python'),
-    'python3': ('python', 'text/x-python'),
-    'haskell': ('haskell', 'text/x-haskell'),
-    'fsharp': ('mllike', 'text/x-fsharp'),
-    'sql': ('sql', 'text/x-sql'),
-    'asm': ('gas', 'text/x-gas'),
+    "c": ("clike", "text/x-csrc"),
+    "c++": ("clike", "text/x-c++src"),
+    "cpp": ("clike", "text/x-c++src"),
+    "csharp": ("clike", "text/x-csharp"),
+    "java": ("clike", "text/x-java"),
+    "javascript": ("javascript", "text/javascript"),
+    "pascal": ("pascal", "text/x-pascal"),
+    "python": ("python", "text/x-python"),
+    "python2": ("python", "text/x-python"),
+    "python3": ("python", "text/x-python"),
+    "haskell": ("haskell", "text/x-haskell"),
+    "fsharp": ("mllike", "text/x-fsharp"),
+    "sql": ("sql", "text/x-sql"),
+    "asm": ("gas", "text/x-gas"),
 }
 
 
 @register.filter()
 def compiler_mime(compiler):
-    if compiler is None or not hasattr(compiler, 'name'):
-        return 'default'
-    return modes.get(compiler.language.lower(), ('default', 'default'))[1]
+    if compiler is None or not hasattr(compiler, "name"):
+        return "default"
+    return modes.get(compiler.language.lower(), ("default", "default"))[1]
 
 
 @register.filter()
 def compiler_mode(compiler):
-    if compiler is None or not hasattr(compiler, 'name'):
+    if compiler is None or not hasattr(compiler, "name"):
         return None
-    return modes.get(compiler.language.lower(), ('default', 'default'))[0]
+    return modes.get(compiler.language.lower(), ("default", "default"))[0]
 
 
 @register.filter()
 def theme_name(user):
-    if hasattr(user, 'profile'):
+    if hasattr(user, "profile"):
         return user.profile.theme
-    return 'default'
+    return "default"
 
 
 @register.filter()
 def theme_url(user):
-    if hasattr(user, 'profile'):
-        return 'mog/plugins/codemirror/theme/%s.css' % user.profile.theme
+    if hasattr(user, "profile"):
+        return "mog/plugins/codemirror/theme/%s.css" % user.profile.theme
     return None
 
 
@@ -150,10 +150,10 @@ def user_problem_status(problem, user):
     # purpose of add cache ?
     if user.is_authenticated:
         submissions = problem.submissions.filter(user=user)
-        if submissions.filter(result__name__iexact='accepted').count() > 0:
-            return 'accepted'
+        if submissions.filter(result__name__iexact="accepted").count() > 0:
+            return "accepted"
         if submissions.count() > 0:
-            return 'attempted'
+            return "attempted"
 
 
 @register.filter()
@@ -180,9 +180,9 @@ def to(lo, hi):
 def add_class(element, _class):
     if isinstance(element.field, forms.fields.FileField):
         return element.as_widget()
-    if 'class' in element.field.widget.attrs:
-        _class += ' ' + element.field.widget.attrs['class']
-    return element.as_widget(attrs={'class': _class, 'placeholder': element.label})
+    if "class" in element.field.widget.attrs:
+        _class += " " + element.field.widget.attrs["class"]
+    return element.as_widget(attrs={"class": _class, "placeholder": element.label})
 
 
 @register.filter()
@@ -211,26 +211,26 @@ def unpack_delta(delta):
 def format_seconds(delta):
     d, h, m, s = unpack_delta(delta)
     if d > 0:
-        return '%d:%02d:%02d:%02d' % (d, h, m, s)
-    return '%02d:%02d:%02d' % (h, m, s)
+        return "%d:%02d:%02d:%02d" % (d, h, m, s)
+    return "%02d:%02d:%02d" % (h, m, s)
 
 
 @register.filter()
 def format_minutes(delta):
     d, h, m, _ = unpack_delta(delta)
     if d > 0:
-        return '%d:%02d:%02d' % (d, h, m)
-    return '%02d:%02d' % (h, m)
+        return "%d:%02d:%02d" % (d, h, m)
+    return "%02d:%02d" % (h, m)
 
 
 @register.filter()
 def result_by_name(name):
-    results = cache.get('results')
+    results = cache.get("results")
     if results is None:
         results = {}
         for result in Result.objects.all():
             results[result.name.lower()] = result.id
-        cache.set('results', results)
+        cache.set("results", results)
     return results.get(name)
 
 
@@ -246,7 +246,7 @@ def format_float(seed, ndigits=4):
 
 @register.filter()
 def first_problem(contest):
-    return contest.problems.order_by('position').first()
+    return contest.problems.order_by("position").first()
 
 
 @register.filter()
@@ -255,17 +255,17 @@ def add_sort_query(query, sort_key):
     for key in query:
         new_query[key] = query[key]
 
-    new_query['sort'] = sort_key
-    if 'sort' not in query or query['sort'] != sort_key:
-        new_query['mode'] = 'asc'
+    new_query["sort"] = sort_key
+    if "sort" not in query or query["sort"] != sort_key:
+        new_query["mode"] = "asc"
     else:
-        if query['mode'] == 'desc':
-            new_query['mode'] = 'asc'
+        if query["mode"] == "desc":
+            new_query["mode"] = "asc"
         else:
-            new_query['mode'] = 'desc'
+            new_query["mode"] = "desc"
 
-    new_query = dict((k, v.encode('utf8')) for k, v in new_query.items())
-    return '?' + urllib.parse.urlencode(dict(new_query))
+    new_query = dict((k, v.encode("utf8")) for k, v in new_query.items())
+    return "?" + urllib.parse.urlencode(dict(new_query))
 
 
 @register.filter()
@@ -301,4 +301,4 @@ def type_(obj):
 
 @register.filter()
 def explore_dict(obj):
-    return '\n'.join(str((k, v)) for k, v in obj.items())
+    return "\n".join(str((k, v)) for k, v in obj.items())

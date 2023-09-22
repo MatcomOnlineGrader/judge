@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0026_auto_20180407_0914'),
+        ("api", "0026_auto_20180407_0914"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contest',
-            name='group',
-            field=models.CharField(blank=True, max_length=64, null=True, verbose_name='Default group'),
+            model_name="contest",
+            name="group",
+            field=models.CharField(
+                blank=True, max_length=64, null=True, verbose_name="Default group"
+            ),
         ),
     ]

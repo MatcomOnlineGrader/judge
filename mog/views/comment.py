@@ -12,9 +12,9 @@ def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if not comment.can_be_edited_by(request.user):
         return HttpResponseForbidden()
-    comment.body = request.POST.get('body', '')
+    comment.body = request.POST.get("body", "")
     comment.save()
-    return redirect('mog:post', pk=comment.post_id, slug=comment.post.slug)
+    return redirect("mog:post", pk=comment.post_id, slug=comment.post.slug)
 
 
 @login_required
@@ -24,4 +24,4 @@ def remove_comment(request, comment_id):
     if not comment.can_be_removed_by(request.user):
         return HttpResponseForbidden()
     comment.delete()
-    return redirect('mog:post', pk=comment.post_id, slug=comment.post.slug)
+    return redirect("mog:post", pk=comment.post_id, slug=comment.post.slug)

@@ -14,7 +14,7 @@ from django.conf import settings
 
 def legacy_get_tests(problem, folder):
     """get file names living in a problem folder"""
-    if folder in ['inputs', 'outputs', 'sample inputs', 'sample outputs']:
+    if folder in ["inputs", "outputs", "sample inputs", "sample outputs"]:
         path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder)
         if not os.path.exists(path) or not os.path.isdir(path):
             return []
@@ -24,11 +24,11 @@ def legacy_get_tests(problem, folder):
 
 
 def legacy_test_content(problem, folder, test):
-    if folder in ['sample inputs', 'sample outputs']:
+    if folder in ["sample inputs", "sample outputs"]:
         path = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), folder, test)
         if os.path.exists(path):
-            with open(path, 'r') as f:
-                content = ''.join(f.readlines())
+            with open(path, "r") as f:
+                content = "".join(f.readlines())
             return content
     return None
 
@@ -36,17 +36,22 @@ def legacy_test_content(problem, folder, test):
 def get_samples_json(problem):
     # create structure for the json-dictionary
     result = dict()
-    input_names = sorted(legacy_get_tests(problem, 'sample inputs'))
-    output_names = sorted(legacy_get_tests(problem, 'sample outputs'))
+    input_names = sorted(legacy_get_tests(problem, "sample inputs"))
+    output_names = sorted(legacy_get_tests(problem, "sample outputs"))
 
     if len(input_names) != len(output_names):
-        print("WARNING: Problem %d has different number of input and output samples" % problem.id)
+        print(
+            "WARNING: Problem %d has different number of input and output samples"
+            % problem.id
+        )
 
     for i, (input_name, output_name) in enumerate(zip(input_names, output_names)):
-        name = "sample{:02d}".format(i+1)
+        name = "sample{:02d}".format(i + 1)
         result[name] = dict()
         result[name]["in"] = legacy_test_content(problem, "sample inputs", input_name)
-        result[name]["out"] = legacy_test_content(problem, "sample outputs", output_name)
+        result[name]["out"] = legacy_test_content(
+            problem, "sample outputs", output_name
+        )
 
     return json.dumps(result)
 
@@ -61,4 +66,4 @@ class Command(BaseCommand):
             samples_json = get_samples_json(problem)
             problem.samples = samples_json
             problem.save()
-            print('Successfully stored samples for Problem %d' % problem.id)
+            print("Successfully stored samples for Problem %d" % problem.id)

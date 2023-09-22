@@ -17,10 +17,10 @@ def contest_permission_edit_granted(request, permission_pk):
         raise Http404()
 
     permission = get_object_or_404(ContestPermission, pk=permission_pk)
-    granted = request.POST.get('granted', '') == 'on'
+    granted = request.POST.get("granted", "") == "on"
     set_granted_to_permission(permission, granted)
 
-    return redirect('mog:contest_permission', contest_id=permission.contest_id)
+    return redirect("mog:contest_permission", contest_id=permission.contest_id)
 
 
 def set_granted_to_permission(permission, granted):

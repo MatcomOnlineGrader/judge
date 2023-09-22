@@ -15,9 +15,7 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "judge.settings")
 
 sys.path.append(
-    os.path.abspath(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
 application = get_wsgi_application()

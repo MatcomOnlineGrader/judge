@@ -1,0 +1,33 @@
+name: Flake8 Python code
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '**.py'
+  pull_request:
+    branches: [master]
+    paths:
+      - '**.py'
+
+jobs:
+  flake8-python-code:
+    name: Run flake8
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Installing Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing flake8
+        run: pip install flake8
+      - name: Run flake
+        run: flake8 .

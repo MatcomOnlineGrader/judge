@@ -1,11 +1,9 @@
 from api.models import Submission
-from django.db.models import Q
-from django.utils.timezone import timedelta
 
 
-COMPETITION_FASTEST = 'competition-fastest'
-PROBLEM_FASTEST = 'problem-fastest'
-PENDING_SUBMISSION = 'pending-submission'
+COMPETITION_FASTEST = "competition-fastest"
+PROBLEM_FASTEST = "problem-fastest"
+PENDING_SUBMISSION = "pending-submission"
 
 
 class ProblemResult(object):
@@ -18,6 +16,7 @@ class ProblemResult(object):
     information from parent (participant result, row containing
     this cell).
     """
+
     def __init__(self, participant_result, contest_start_date):
         # Wether the problem was accepted or not.
         self.accepted = False
@@ -38,12 +37,10 @@ class ProblemResult(object):
         self._participant_result = participant_result
         self._contest_start_date = contest_start_date
 
-
     def delta(self):
         if self.acc_delta:
             return self.acc_delta.total_seconds()
-        return float('inf')
-
+        return float("inf")
 
     def add_submission(self, submission, info):
         # Ignore all submissions after the first accepted
@@ -67,9 +64,13 @@ class ProblemResult(object):
             self.accepted = True
 
             self._participant_result.solved += 1
-            self._participant_result.penalty += int(self.acc_delta.total_seconds()) // 60 + 20 * self.attempts
+            self._participant_result.penalty += (
+                int(self.acc_delta.total_seconds()) // 60 + 20 * self.attempts
+            )
             self._participant_result.attempts += self.attempts
-            self._participant_result.last_accepted_delta = self.acc_delta.total_seconds()
+            self._participant_result.last_accepted_delta = (
+                self.acc_delta.total_seconds()
+            )
 
         elif submission.result.penalty:
             self.attempts += 1
@@ -86,6 +87,7 @@ class ParticipantResult(object):
     Submissions should be feeded in order (from older to newer).
     Each submission is given to respective problem_result.
     """
+
     def __init__(self, participant, problem_mapping, contest_start_date):
         """
         problem_mapping: Dictionary containing {problem.id -> position in the contest (columns)}
@@ -107,7 +109,9 @@ class ParticipantResult(object):
 
         # Participant instance.
         self.participant = participant
-        self.problem_results = [ProblemResult(self, contest_start_date) for _ in problem_mapping]
+        self.problem_results = [
+            ProblemResult(self, contest_start_date) for _ in problem_mapping
+        ]
 
         self._problem_mapping = problem_mapping
 
@@ -115,7 +119,7 @@ class ParticipantResult(object):
         problem_id = self._problem_mapping.get(submission.problem_id)
         self.problem_results[problem_id].add_submission(submission, info)
 
-        if submission.result.penalty or submission.result.name == 'Accepted':
+        if submission.result.penalty or submission.result.name == "Accepted":
             self.submissions_count += 1
 
     @property
@@ -134,9 +138,8 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
     """
     # Submissions
 
-    submissions = Submission.objects.select_related('result').filter(
-        instance__contest__id=contest.id,
-        hidden=False
+    submissions = Submission.objects.select_related("result").filter(
+        instance__contest__id=contest.id, hidden=False
     )
 
     if not virtual:
@@ -145,10 +148,12 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
     if group:
         submissions = submissions.filter(instance__group=group)
 
-    submissions = list(submissions.order_by('date'))
+    submissions = list(submissions.order_by("date"))
 
     # Participants
-    participants = contest.instances.select_related('team__institution__country', 'user__profile__institution__country').all()
+    participants = contest.instances.select_related(
+        "team__institution__country", "user__profile__institution__country"
+    ).all()
 
     if not virtual:
         participants = participants.filter(real=True)
@@ -157,21 +162,23 @@ def get_relevant_standing_data(contest, virtual=False, group=None, bypass_frozen
         participants = participants.filter(group=group)
 
     # Problems
-    problems = list(contest.problems.order_by('position'))
+    problems = list(contest.problems.order_by("position"))
     participants = list(participants)
 
     return submissions, participants, problems
 
 
-def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False):
+def calculate_standing_new(
+    contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False
+):
     # Load relevant data from database
-    submissions, participants, problems = \
-        get_relevant_standing_data(contest, virtual, group, bypass_frozen)
+    submissions, participants, problems = get_relevant_standing_data(
+        contest, virtual, group, bypass_frozen
+    )
 
     # Relative time used for virtual participants
     if viewer_instance:
-        viewer_instance_relative_time =\
-            viewer_instance.relative_time
+        viewer_instance_relative_time = viewer_instance.relative_time
 
     # Helper functions
 
@@ -206,16 +213,15 @@ def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=N
         else:
             return 0
 
-    problem_mapping = {
-        problem.id : ix for (ix, problem) in enumerate(problems)
-    }
+    problem_mapping = {problem.id: ix for (ix, problem) in enumerate(problems)}
 
     standing = {
-        participant.id : ParticipantResult(
+        participant.id: ParticipantResult(
             participant,
             problem_mapping,
             participant.instance_start_date,
-        ) for participant in participants
+        )
+        for participant in participants
     }
 
     # Keep track of all problem accepted so far to determine first accepted per problem and
@@ -266,7 +272,12 @@ def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=N
             - Least time of last Accepted.
             - Instance id (this is not relevant to the rank but to keep order consistent among requests.)
         """
-        return -participant_result.solved, participant_result.penalty, participant_result.last_accepted_delta, participant_result.participant.id
+        return (
+            -participant_result.solved,
+            participant_result.penalty,
+            participant_result.last_accepted_delta,
+            participant_result.participant.id,
+        )
 
     participants_result.sort(key=instance_key)
 
@@ -277,7 +288,10 @@ def calculate_standing_new(contest, virtual=False, viewer_instance=None, group=N
         participants_result[0].rank = 1
 
         for i in range(1, len(participants_result)):
-            if instance_key(participants_result[i])[:-1] == instance_key(participants_result[i - 1])[:-1]:
+            if (
+                instance_key(participants_result[i])[:-1]
+                == instance_key(participants_result[i - 1])[:-1]
+            ):
                 participants_result[i].rank = participants_result[i - 1].rank
             else:
                 participants_result[i].rank = i + 1

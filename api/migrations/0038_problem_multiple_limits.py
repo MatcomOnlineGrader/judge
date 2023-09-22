@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0037_problem_samples'),
+        ("api", "0037_problem_samples"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='problem',
-            name='multiple_limits',
-            field=models.TextField(blank=True, verbose_name='JSON with memory & time limit per compiler'),
+            model_name="problem",
+            name="multiple_limits",
+            field=models.TextField(
+                blank=True, verbose_name="JSON with memory & time limit per compiler"
+            ),
         ),
     ]

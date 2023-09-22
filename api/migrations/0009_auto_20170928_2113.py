@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0008_userprofile_points'),
+        ("api", "0008_userprofile_points"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='problem',
-            name='points',
+            model_name="problem",
+            name="points",
             field=models.IntegerField(default=0),
         ),
     ]

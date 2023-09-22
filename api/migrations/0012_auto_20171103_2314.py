@@ -6,25 +6,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0011_auto_20171103_1905'),
+        ("api", "0011_auto_20171103_1905"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=64, verbose_name='Country Name')),
-                ('flag', models.CharField(max_length=128, verbose_name='Country Flag URL')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=64, verbose_name="Country Name")),
+                (
+                    "flag",
+                    models.CharField(max_length=128, verbose_name="Country Flag URL"),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Countries',
+                "verbose_name_plural": "Countries",
             },
         ),
         migrations.RemoveField(
-            model_name='institution',
-            name='country',
+            model_name="institution",
+            name="country",
         ),
     ]

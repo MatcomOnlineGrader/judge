@@ -4,6 +4,6 @@ class AddNeverCacheHeadersMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        response['Expires'] = "Thu, 01 Jan 1970 00:00:00 GMT"
-        response['Cache-Control'] = 'no-cache, no-store, must-revalidate,max-age=0'
+        response["Expires"] = "Thu, 01 Jan 1970 00:00:00 GMT"
+        response["Cache-Control"] = "no-cache, no-store, must-revalidate,max-age=0"
         return response

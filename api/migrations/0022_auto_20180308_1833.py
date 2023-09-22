@@ -6,45 +6,66 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0021_clarification'),
+        ("api", "0021_clarification"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='clarification',
-            name='answer',
-            field=models.TextField(blank=True, null=True, verbose_name='Answer'),
+            model_name="clarification",
+            name="answer",
+            field=models.TextField(blank=True, null=True, verbose_name="Answer"),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='contest',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='clarifications', to='api.Contest', verbose_name='Contest'),
+            model_name="clarification",
+            name="contest",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="clarifications",
+                to="api.Contest",
+                verbose_name="Contest",
+            ),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='fixer',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="clarification",
+            name="fixer",
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='problem',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='clarifications', to='api.Problem', verbose_name='Problem'),
+            model_name="clarification",
+            name="problem",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="clarifications",
+                to="api.Problem",
+                verbose_name="Problem",
+            ),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='public',
-            field=models.BooleanField(default=False, verbose_name='Public'),
+            model_name="clarification",
+            name="public",
+            field=models.BooleanField(default=False, verbose_name="Public"),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='question',
-            field=models.CharField(max_length=2048, verbose_name='Question'),
+            model_name="clarification",
+            name="question",
+            field=models.CharField(max_length=2048, verbose_name="Question"),
         ),
         migrations.AlterField(
-            model_name='clarification',
-            name='sender',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='clarifications', to=settings.AUTH_USER_MODEL),
+            model_name="clarification",
+            name="sender",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="clarifications",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -18,11 +18,12 @@ class SubmitTestCase(FixturedTestCase):
 
         # Send a submit using python2
         self.client.post(
-            "/submit/{}/".format(self.problem1.id), data={
+            "/submit/{}/".format(self.problem1.id),
+            data={
                 "source": "blah",
                 "problem": self.problem1.id,
                 "compiler": self.py2.id,
-            }
+            },
         )
 
         # Assert that the compiler changed to python2

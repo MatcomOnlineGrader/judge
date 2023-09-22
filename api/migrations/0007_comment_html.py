@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0006_problem_points'),
+        ("api", "0006_problem_points"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='html',
-            field=models.TextField(default=''),
+            model_name="comment",
+            name="html",
+            field=models.TextField(default=""),
         ),
     ]
