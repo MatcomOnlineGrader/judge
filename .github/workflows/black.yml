@@ -1,0 +1,33 @@
+name: Black Python code
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '**.py'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '**.py'
+
+jobs:
+  black-python-code:
+    name: Run black
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Installing Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Installing black
+        run: pip install black
+      - name: Run black
+        run: black --check .

@@ -4,15 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0034_contest_needs_unfreeze'),
+        ("api", "0034_contest_needs_unfreeze"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='role',
-            field=models.CharField(blank=True, choices=[('admin', 'Administrator'), ('browser', 'Code Browser'), ('observer', 'Observer'), ('judge', 'Judge')], max_length=10, null=True),
+            model_name="userprofile",
+            name="role",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("admin", "Administrator"),
+                    ("browser", "Code Browser"),
+                    ("observer", "Observer"),
+                    ("judge", "Judge"),
+                ],
+                max_length=10,
+                null=True,
+            ),
         ),
     ]

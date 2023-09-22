@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0027_contest_group'),
+        ("api", "0027_contest_group"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='problem',
-            name='points',
+            model_name="problem",
+            name="points",
             field=models.IntegerField(default=10),
         ),
     ]

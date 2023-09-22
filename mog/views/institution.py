@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from api.models import Institution
@@ -17,11 +15,10 @@ def institution_list(request):
     """
     if not user_is_admin(request.user):
         raise Http404()
-    q = request.GET.get('q', '')
-    institutions_list = Institution.objects.filter(
-        Q(name__icontains=q) | Q(country__name__icontains=q)
-    ).order_by('name').values('id', 'name')
-    return JsonResponse(data={
-        'success': True,
-        'data': list(institutions_list)
-    })
+    q = request.GET.get("q", "")
+    institutions_list = (
+        Institution.objects.filter(Q(name__icontains=q) | Q(country__name__icontains=q))
+        .order_by("name")
+        .values("id", "name")
+    )
+    return JsonResponse(data={"success": True, "data": list(institutions_list)})

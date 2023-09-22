@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0040_contestinstance_is_active'),
+        ("api", "0040_contestinstance_is_active"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='problem',
-            name='is_html',
-            field=models.BooleanField(default=True, verbose_name='If true, the problem source is written in Text Rich Editor, else with Simple Markdown Editor.'),
+            model_name="problem",
+            name="is_html",
+            field=models.BooleanField(
+                default=True,
+                verbose_name="If true, the problem source is written in Text Rich Editor, else with Simple Markdown Editor.",
+            ),
         ),
     ]

@@ -17,3 +17,4 @@ package-lock.json
 node_modules/
 frontend/static/frontend/dist/*
 !frontend/static/frontend/dist/.gitkeep
+__pycache__/

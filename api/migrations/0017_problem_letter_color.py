@@ -6,15 +6,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0016_auto_20171112_0401'),
+        ("api", "0016_auto_20171112_0401"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='problem',
-            name='letter_color',
-            field=models.CharField(choices=[('#ffffff', 'white'), ('#000000', 'black')], default='#ffffff', max_length=20),
+            model_name="problem",
+            name="letter_color",
+            field=models.CharField(
+                choices=[("#ffffff", "white"), ("#000000", "black")],
+                default="#ffffff",
+                max_length=20,
+            ),
         ),
     ]

@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0005_auto_20170506_1503'),
+        ("api", "0005_auto_20170506_1503"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='problem',
-            name='points',
+            model_name="problem",
+            name="points",
             field=models.IntegerField(default=0),
             preserve_default=False,
         ),

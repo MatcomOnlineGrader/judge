@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0013_institution_country'),
+        ("api", "0013_institution_country"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='institution',
-            name='url',
+            model_name="institution",
+            name="url",
             field=models.URLField(blank=True, null=True),
         ),
     ]

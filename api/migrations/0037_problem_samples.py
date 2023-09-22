@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0036_contestpermission'),
+        ("api", "0036_contestpermission"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='problem',
-            name='samples',
-            field=models.TextField(blank=True, null=True, verbose_name='Sample inputs/outputs'),
+            model_name="problem",
+            name="samples",
+            field=models.TextField(
+                blank=True, null=True, verbose_name="Sample inputs/outputs"
+            ),
         ),
     ]

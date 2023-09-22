@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0004_auto_20170506_1250'),
+        ("api", "0004_auto_20170506_1250"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='contestinstance',
-            name='start_date',
+            model_name="contestinstance",
+            name="start_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

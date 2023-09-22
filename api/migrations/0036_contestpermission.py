@@ -6,22 +6,48 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('api', '0035_auto_20190903_2355'),
+        ("api", "0035_auto_20190903_2355"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ContestPermission',
+            name="ContestPermission",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(blank=True, choices=[('judge', 'Judge'), ('observer', 'Observer')], max_length=16, null=True)),
-                ('granted', models.BooleanField(default=False)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('contest', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.Contest')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        blank=True,
+                        choices=[("judge", "Judge"), ("observer", "Observer")],
+                        max_length=16,
+                        null=True,
+                    ),
+                ),
+                ("granted", models.BooleanField(default=False)),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "contest",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="api.Contest"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

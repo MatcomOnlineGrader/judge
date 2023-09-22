@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0029_auto_20180907_0009'),
+        ("api", "0029_auto_20180907_0009"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='submission',
-            name='memory_used',
+            model_name="submission",
+            name="memory_used",
             field=models.BigIntegerField(default=0),
         ),
     ]

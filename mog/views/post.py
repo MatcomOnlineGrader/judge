@@ -12,22 +12,26 @@ from mog.gating import user_is_admin
 
 class PostListView(generic.ListView):
     paginate_by = 30
-    template_name = 'mog/post/index.html'
+    template_name = "mog/post/index.html"
 
     def get_queryset(self):
-        return Post.objects.order_by('-creation_date')
+        return Post.objects.order_by("-creation_date")
 
 
 class PostDetailView(View):
     def get(self, request, pk, slug, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         if post.slug != slug:
-            return redirect('mog:post', pk=pk, slug=post.slug, permanent=True)
+            return redirect("mog:post", pk=pk, slug=post.slug, permanent=True)
         if request.user.is_authenticated:
             post.update_seen_comments(request.user)
-        return render(request, 'mog/post/detail.html', {
-            'post': post,
-        })
+        return render(
+            request,
+            "mog/post/detail.html",
+            {
+                "post": post,
+            },
+        )
 
     @method_decorator(public_actions_required)
     @method_decorator(login_required)
@@ -35,44 +39,41 @@ class PostDetailView(View):
         post = get_object_or_404(Post, pk=pk)
         if not post.can_be_commented_by(request.user):
             return HttpResponseForbidden()
-        body = request.POST['body']
+        body = request.POST["body"]
         if body:
             comment = Comment(user=request.user, post=post, body=body)
             comment.save()
             # Save post to put it on top of modified posts!
             post.save()
-        return redirect('mog:post', pk=pk, slug=post.slug)
+        return redirect("mog:post", pk=pk, slug=post.slug)
 
 
 class PostCreateView(View):
     @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        return render(request, 'mog/post/create.html', {
-            'form': PostForm()
-        })
+        return render(request, "mog/post/create.html", {"form": PostForm()})
 
     @method_decorator(public_actions_required)
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         form = PostForm(request.POST)
         if not form.is_valid():
-            return render(request, 'mog/post/create.html', {
-                'form': form
-            })
+            return render(request, "mog/post/create.html", {"form": form})
         data = form.cleaned_data
         post = Post(
-            name=data['name'],
-            body=data['body'],
-            meta_description=data['meta_description'],
-            meta_image=data['meta_image'],
-            user=request.user
+            name=data["name"],
+            body=data["body"],
+            meta_description=data["meta_description"],
+            meta_image=data["meta_image"],
+            user=request.user,
         )
         if user_is_admin(request.user):
-            post.show_in_main_page = \
-                request.POST.get('show_in_main_page', None) is not None
+            post.show_in_main_page = (
+                request.POST.get("show_in_main_page", None) is not None
+            )
         post.save()
-        return redirect('mog:post', pk=post.id, slug=post.slug)
+        return redirect("mog:post", pk=post.id, slug=post.slug)
 
 
 class EditPostView(View):
@@ -82,9 +83,14 @@ class EditPostView(View):
         post = get_object_or_404(Post, pk=post_id)
         if not post.can_be_edited_by(request.user, user_is_admin(request.user)):
             return HttpResponseForbidden()
-        return render(request, 'mog/post/edit.html', {
-            'form': PostForm(instance=post), 'post': post,
-        })
+        return render(
+            request,
+            "mog/post/edit.html",
+            {
+                "form": PostForm(instance=post),
+                "post": post,
+            },
+        )
 
     @method_decorator(public_actions_required)
     @method_decorator(login_required)
@@ -94,16 +100,22 @@ class EditPostView(View):
             return HttpResponseForbidden()
         form = PostForm(request.POST)
         if not form.is_valid():
-            return render(request, 'mog/post/edit.html', {
-                'form': form, 'post': post,
-            })
+            return render(
+                request,
+                "mog/post/edit.html",
+                {
+                    "form": form,
+                    "post": post,
+                },
+            )
         data = form.cleaned_data
-        post.name = data['name']
-        post.body = data['body']
-        post.meta_description = data['meta_description']
-        post.meta_image = data['meta_image']
+        post.name = data["name"]
+        post.body = data["body"]
+        post.meta_description = data["meta_description"]
+        post.meta_image = data["meta_image"]
         if user_is_admin(request.user):
-            post.show_in_main_page =\
-                request.POST.get('show_in_main_page', None) is not None
+            post.show_in_main_page = (
+                request.POST.get("show_in_main_page", None) is not None
+            )
         post.save()
-        return redirect('mog:post', pk=post.pk, slug=post.slug)
+        return redirect("mog:post", pk=post.pk, slug=post.slug)

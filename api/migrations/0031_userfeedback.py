@@ -7,22 +7,47 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('api', '0030_auto_20181023_2329'),
+        ("api", "0030_auto_20181023_2329"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='UserFeedback',
+            name="UserFeedback",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('submitted_date', models.DateTimeField(auto_now_add=True)),
-                ('subject', models.CharField(max_length=1024, verbose_name='Subject')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Description')),
-                ('screenshot', models.ImageField(blank=True, null=True, upload_to=api.models.UUIDImageName('screenshot'), verbose_name='Screenshot')),
-                ('sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feedbacks', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("submitted_date", models.DateTimeField(auto_now_add=True)),
+                ("subject", models.CharField(max_length=1024, verbose_name="Subject")),
+                (
+                    "description",
+                    models.TextField(blank=True, null=True, verbose_name="Description"),
+                ),
+                (
+                    "screenshot",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=api.models.UUIDImageName("screenshot"),
+                        verbose_name="Screenshot",
+                    ),
+                ),
+                (
+                    "sender",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feedbacks",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

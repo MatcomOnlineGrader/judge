@@ -21,5 +21,5 @@ def can_create_problem_in_contest(user, contest):
 
 def get_all_contests_a_user_can_create_problems_in(user):
     if user_is_admin(user):
-        return Contest.objects.all().values_list('id', flat=True)
+        return Contest.objects.all().values_list("id", flat=True)
     return get_all_contest_for_judge(user)

@@ -17,7 +17,6 @@ should describe the following sections:
 """
 
 from django.core.cache import cache
-from django.db.models import Sum
 
 from api.lib import constants
 from api.models import Post, UserProfile, ContestPermission, Contest
@@ -27,13 +26,15 @@ from mog.standing import calculate_standing_new
 def cache_result(key, timeout=3600):
     def outer(func):
         def inner(*args, **kwargs):
-            custom_key = key + '-'.join([str(x).replace(' ', '_') for x in args])
+            custom_key = key + "-".join([str(x).replace(" ", "_") for x in args])
             val = cache.get(custom_key)
             if val is None:
                 val = func(*args, **kwargs)
                 cache.set(custom_key, val, timeout)
             return val
+
         return inner
+
     return outer
 
 
@@ -69,7 +70,7 @@ def five_top_rated_profiles():
     - Invalidate when a submission is modified/removed to detect points
     changes.
     """
-    users = UserProfile.sorted_by_ratings().select_related('user')[:5]
+    users = UserProfile.sorted_by_ratings().select_related("user")[:5]
     return list(users)
 
 
@@ -93,12 +94,17 @@ def ten_most_recent_posts():
     method for a Post is called, we can invalidate the cache on Post
     modification.
     """
-    posts = Post.objects.order_by('-modification_date').select_related('user')\
-        .select_related('user__profile')[:10]
+    posts = (
+        Post.objects.order_by("-modification_date")
+        .select_related("user")
+        .select_related("user__profile")[:10]
+    )
     return list(posts)
 
 
-@cache_result(key=constants.CACHE_KEY_USER_CONTESTS, timeout=constants.USER_CONTESTS_TIMEOUT)
+@cache_result(
+    key=constants.CACHE_KEY_USER_CONTESTS, timeout=constants.USER_CONTESTS_TIMEOUT
+)
 def get_all_contest_for_role(user_id, role):
     """
     This function returns the list of contests that user was granted
@@ -122,17 +128,25 @@ def get_all_contest_for_role(user_id, role):
     shouldn't be modified too often.
     """
 
-    permissions = ContestPermission.objects.filter(user_id=user_id, role=role).order_by('-pk')
+    permissions = ContestPermission.objects.filter(user_id=user_id, role=role).order_by(
+        "-pk"
+    )
     contests = {}
     for permission in permissions:
         if permission.contest_id not in contests:
             contests[permission.contest_id] = permission.granted
-    return list([contest_id for contest_id, granted in contests.items() if granted]) + [-1]
+    return list([contest_id for contest_id, granted in contests.items() if granted]) + [
+        -1
+    ]
 
 
-def calculate_standing(contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False):
+def calculate_standing(
+    contest, virtual=False, viewer_instance=None, group=None, bypass_frozen=False
+):
     if virtual or bypass_frozen:
-        return calculate_standing_new(contest, virtual, viewer_instance, group, bypass_frozen)
+        return calculate_standing_new(
+            contest, virtual, viewer_instance, group, bypass_frozen
+        )
     else:
         return get_normal_standing(contest.id, group)
 
