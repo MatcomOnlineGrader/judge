@@ -2,7 +2,6 @@
 This file contains the functions for computing the new rating of the users after a rated-contest
 The formulas are taken from https://codeforces.com/blog/entry/20762
 """
-
 from math import sqrt
 
 from judge import settings

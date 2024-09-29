@@ -32,7 +32,6 @@ Compilers:
   - C++
   - Java
 """
-
 import os
 import random
 from functools import partial

@@ -157,11 +157,9 @@ def teams_json(request):
             "name": team.name,
             "description": team.description,
             "institution": team.institution.name if team.institution else "",
-            "country": (
-                team.institution.country.name
-                if team.institution and team.institution.country
-                else ""
-            ),
+            "country": team.institution.country.name
+            if team.institution and team.institution.country
+            else "",
         }
         for team in teams[:10]
     ]

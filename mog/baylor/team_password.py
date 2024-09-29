@@ -148,9 +148,9 @@ class ZipTeamPassword:
                                 current_institution
                             ] += institution_password_output
                         else:
-                            self.institution_password_output[current_institution] = (
-                                institution_password_output
-                            )
+                            self.institution_password_output[
+                                current_institution
+                            ] = institution_password_output
                         # clear institution_password_output
                         institution_password_output = ""
 
@@ -185,9 +185,9 @@ class ZipTeamPassword:
                         current_institution
                     ] += institution_password_output
                 else:
-                    self.institution_password_output[current_institution] = (
-                        institution_password_output
-                    )
+                    self.institution_password_output[
+                        current_institution
+                    ] = institution_password_output
                 # clear institution_password_output
                 institution_password_output = ""
 
