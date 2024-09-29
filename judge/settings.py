@@ -275,7 +275,7 @@ SANDBOX_FOLDER = config.get("grader", "SANDBOX_FOLDER")
 
 # Resource folders
 # - runexe.exe
-# - testlib.h
+# - testlib.h versions
 # - testlib4j.jar
 RESOURCES_FOLDER = config.get("grader", "RESOURCES_FOLDER")
 
