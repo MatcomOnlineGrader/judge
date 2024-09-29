@@ -46,7 +46,7 @@ def compile_checker(checker, cwd):
     Compiles the corresponding checker and return the command to
     test input/output/answer for every test case.
     """
-    if "testlib.h" in checker.backend:
-        return compile_checker_testlib_h(checker, cwd)
-    elif checker.backend == "testlib4j.jar":
+    if checker.backend == "testlib4j.jar":
         return compile_checker_testlib4j_jar(checker, cwd)
+    else:
+        return compile_checker_testlib_h(checker, cwd)
