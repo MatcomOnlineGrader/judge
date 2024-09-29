@@ -94,8 +94,8 @@ class Tag(models.Model):
 
 class Checker(models.Model):
     BACKEND_CHOICES = [
-        ("testlib.h (0.9.10-SNAPSHOT)", "testlib.h"),
-        ("testlib.h (0.9.42-SNAPSHOT)", "testlib-0.9.42-SNAPSHOT.h"),
+        ("testlib.h", "testlib.h (0.9.10-SNAPSHOT)"),
+        ("testlib-0.9.42-SNAPSHOT.h", "testlib.h (0.9.42-SNAPSHOT)"),
         ("testlib4j.jar", "testlib4j.jar"),
     ]
 
