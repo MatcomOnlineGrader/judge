@@ -131,9 +131,11 @@ def get_contest_json(contest, group=None):
             Q(result__penalty=True) | Q(result__name__iexact="Accepted")
         ):
             run = {
-                "contestant": instance.team.name
-                if instance.team is not None
-                else instance.user.username,
+                "contestant": (
+                    instance.team.name
+                    if instance.team is not None
+                    else instance.user.username
+                ),
                 "problemLetter": submission.problem.letter,
                 "timeMinutesFromStart": int(
                     (submission.date - contest.start_date).seconds / 60

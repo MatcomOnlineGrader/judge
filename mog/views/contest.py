@@ -1310,9 +1310,9 @@ def contest_instances_info(request, contest_id):
                 "user": {
                     "id": user.id,
                     "username": user.username,
-                    "last_login": timesince(user.last_login)
-                    if user.last_login
-                    else None,
+                    "last_login": (
+                        timesince(user.last_login) if user.last_login else None
+                    ),
                     "rating_color": user_color(user),
                 },
             }
@@ -1413,9 +1413,9 @@ def contest_permission_export(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
 
     response = HttpResponse(content_type="text/csv")
-    response[
-        "Content-Disposition"
-    ] = 'attachment; filename="permission_{0}.csv"'.format(contest.name)
+    response["Content-Disposition"] = (
+        'attachment; filename="permission_{0}.csv"'.format(contest.name)
+    )
 
     writer = csv.writer(response)
 
@@ -1558,9 +1558,9 @@ def contest_submissions_export(request, contest_id):
                     zipObj.writestr("%s/%s" % (header, filename), source)
         zip_submissions = content.getvalue()
         response = HttpResponse(zip_submissions, content_type="application/zip")
-        response[
-            "Content-Disposition"
-        ] = 'attachment; filename="submissions_{0}.zip"'.format(contest.name)
+        response["Content-Disposition"] = (
+            'attachment; filename="submissions_{0}.zip"'.format(contest.name)
+        )
         return response
 
     except Exception as e:

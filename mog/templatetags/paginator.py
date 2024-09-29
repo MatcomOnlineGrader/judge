@@ -22,9 +22,11 @@ def paginate(page, query=None):
     html = '<ul class="pagination">'
     html += '<li class="{0}"><a href="{1}">&#171</a></li>'.format(
         "" if page.has_previous() else "disabled",
-        encode_parameters(page.previous_page_number(), query)
-        if page.has_previous()
-        else "#",
+        (
+            encode_parameters(page.previous_page_number(), query)
+            if page.has_previous()
+            else "#"
+        ),
     )
 
     for number in range(first, last + 1):
