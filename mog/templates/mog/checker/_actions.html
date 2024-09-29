@@ -6,15 +6,18 @@
 
 {% if user|is_admin or user|can_edit_problem:problem %}
     <div class="dropdown pull-right">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+        <button class="btn btn-default dropdown-toggle" type="button" id="librariesDropdownMenu"
                 data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
             {% trans 'Actions' %}
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <ul class="dropdown-menu" aria-labelledby="librariesDropdownMenu">
             <li>
-                <a href="/static/mog/testlib/testlib.h" download>Download c++ test library "testlib.h"</a>
+                <a href="/static/mog/testlib/testlib-0.9.10-SNAPSHOT.h" download>Download c++ test library "testlib.h" (0.9.10-SNAPSHOT)</a>
+            </li>
+            <li>
+                <a href="/static/mog/testlib/testlib-0.9.42-SNAPSHOT.h" download>Download c++ test library "testlib.h" (0.9.42-SNAPSHOT)</a>
             </li>
             <li>
                 <a href="/static/mog/testlib/testlib4j.jar" download>Download java test library "testlib4j.jar"</a>

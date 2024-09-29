@@ -93,7 +93,11 @@ class Tag(models.Model):
 
 
 class Checker(models.Model):
-    BACKEND_CHOICES = [("testlib.h", "testlib.h"), ("testlib4j.jar", "testlib4j.jar")]
+    BACKEND_CHOICES = [
+        ("testlib.h", "testlib.h (0.9.10-SNAPSHOT)"),
+        ("testlib-0.9.42-SNAPSHOT.h", "testlib.h (0.9.42-SNAPSHOT)"),
+        ("testlib4j.jar", "testlib4j.jar"),
+    ]
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
