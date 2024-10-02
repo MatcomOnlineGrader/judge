@@ -158,7 +158,7 @@ def grade_submission(submission, number_of_executions):
 
     if language == "java":
         cmd = (
-            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx256M -DMOG=true Main'
+            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx256M -Xss64m -DMOG=true Main'
             % (RUNEXE_PATH, time_limit, memory_limit)
         )
     elif language in ["python", "javascript", "python2", "python3"]:
