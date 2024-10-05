@@ -18,3 +18,5 @@ node_modules/
 frontend/static/frontend/dist/*
 !frontend/static/frontend/dist/.gitkeep
 __pycache__/
+moss/moss-output-*
+.DS_Store
