@@ -1,0 +1,188 @@
+diff --git a/safeexec.c b/safeexec.c
+index 8d0d1f6..a5836ec 100644
+--- a/safeexec.c
++++ b/safeexec.c
+@@ -22,6 +22,7 @@
+ #include <sys/time.h>
+ #include <sys/param.h>
+ #include <sys/resource.h>
++#include "setlimits.h"
+ 
+ #include "error.h"
+ #include "safe.h"
+@@ -47,6 +48,8 @@ FILE *redirect;
+ FILE *junk;
+ char *usage_file = "/dev/null";
+ char *error_file = "/dev/null";
++char *stdinfile = NULL;
++char *stdoutfile = NULL;
+ char *chroot_dir = NULL;
+ char *run_dir = NULL;
+ 
+@@ -63,7 +66,7 @@ enum
+   {
+     PARSE, INPUT1, INPUT16,
+     INPUT2, INPUT4, INPUT8,
+-    ERROR, EXECUTE, INPUT32
++    ERROR, EXECUTE, INPUT32, INPUT64, INPUT128, INPUT256, INPUT512
+   };				/* for the parsing "finite-state machine" */
+ 
+ char *names[] = {
+@@ -246,8 +249,12 @@ char **parse (char **p)
+               state = INPUT8;
+             else if (strcmp (*p, "--rundir") == 0)
+               state = INPUT16;
+-            else if (strcmp (*p, "--error") == 0)
++            else if (strcmp (*p, "--stderr") == 0)
+               state = INPUT32;
++            else if (strcmp (*p, "--stdin") == 0)
++              state = INPUT64;
++            else if (strcmp (*p, "--stdout") == 0)
++              state = INPUT128;
+             else if (strcmp (*p, "--silent") == 0)
+               {
+                 silent = 1;
+@@ -275,6 +282,14 @@ char **parse (char **p)
+             error_file = *p;
+             state = PARSE;
+             break;
++          case INPUT64:
++            stdinfile = *p;
++            state = PARSE;
++            break;
++          case INPUT128:
++            stdoutfile = *p;
++            state = PARSE;
++            break;
+           case INPUT2:
+             if (sscanf (*p, "%u", input2) == 1)
+               state = INPUT1;
+@@ -338,7 +353,9 @@ void printusage (char **p)
+            pdefault->clock);
+   fprintf (stderr, "\t--usage   <filename>          Report statistics to ... (default: stderr)\n");
+   fprintf (stderr, "\t--chroot  <path>              Directory to chrooted (default: /tmp)\n");
+-  fprintf (stderr, "\t--error   <path>              Print stderr to file (default: /dev/null)\n");
++  fprintf (stderr, "\t--stderr  <path>              Print stderr to file (default: /dev/null)\n");
++  fprintf (stderr, "\t--stdin   <path>              Redirect stdin from file (default: pipe)\n");
++  fprintf (stderr, "\t--stdout  <path>              Redirect stdout to file (default pipe)\n");
+ }
+ 
+ void wallclock (int v)
+@@ -397,6 +414,36 @@ int main (int argc, char **argv, char **envp)
+           chmod (error_file, 0640);
+         }
+ 
++      /* Redirect stdin */
++      if( stdinfile != NULL ){
++          // warning: this is actually vulnerable, to get rid we must 
++          int inp = open(stdinfile, O_RDONLY);
++          if( close(STDIN_FILENO) < 0 ){
++              error ("Couldn't close the stdin");
++          }
++          if( dup2(inp, STDIN_FILENO) < 0 ){
++              error("Couldn't duplicate the file descriptor (stdin)");
++          }
++          if( close(inp) < 0 ){
++              error("Couldn't close the old fd (stdin)");
++          }
++      }
++
++      /* Redirect stdout */
++      if( stdoutfile != NULL ){
++          int outp = open(stdoutfile, O_CREAT|O_WRONLY);
++          
++          if( close(STDOUT_FILENO) < 0 ){
++              error("Could not close the stdout");
++          }
++          if( dup2(outp, STDOUT_FILENO) < 0){
++              error("Could not duplicate the file descriptor (stdout)");
++          }
++          if( close(outp) < 0){
++              error("Couldn't close the old fd (stdout)");
++          }
++      }
++
+       if (setgid (profile.minuid) < 0)
+         {
+           if (errno == EPERM)
+@@ -544,19 +591,21 @@ int main (int argc, char **argv, char **envp)
+ 
+           ttarget = time (NULL);
+ 
++          printstats("{\n \"result\":\"");
+           if (mark == MLE)
+-            printstats ("Memory Limit Exceeded\n");
++            printstats ("MLE");
+           else if (mark == RTLE)
+-            printstats ("Time Limit Exceeded\n");
++            printstats ("RTLE");
+           else
+             {
+               if (WIFEXITED (status) != 0)
+                 {
+                   if (WEXITSTATUS (status) != 0)
+-                    printstats ("Command exited with non-zero status (%d)\n",
+-                                WEXITSTATUS (status));
++                    /*printstats ("Command exited with non-zero status (%d)\n",
++                                WEXITSTATUS (status));*/
++                    printstats("IRET");
+                   else
+-                    printstats ("OK\n");
++                    printstats ("OK");
+                 }
+               else
+                 {
+@@ -572,15 +621,18 @@ int main (int argc, char **argv, char **envp)
+                       else if (WTERMSIG (status) == SIGPIPE)
+                         mark = IE;
+                       else
+-                        printstats ("Command terminated by signal (%d: %s)\n",
++                        /*printstats ("Command terminated by signal (%d: %s)\n",
+                                     WTERMSIG (status),
+-                                    name (WTERMSIG (status)));
++                                    name (WTERMSIG (status)));*/
++                        printstats("SIGNAL");
+                     }
+                   else if (WIFSTOPPED (status) != 0)
+-                    printstats ("Command terminated by signal (%d: %s)\n",
++                    /*printstats ("Command terminated by signal (%d: %s)\n",
+                                 WSTOPSIG (status), name (WSTOPSIG (status)));
++                                */
++                    printstats("SIGNAL");
+                   else
+-                    printstats ("OK\n");
++                    printstats ("OK");
+ 
+                   if (mark == TLE)
+                     {
+@@ -589,21 +641,22 @@ int main (int argc, char **argv, char **envp)
+                        * So here is small adjustment for presentation.           */
+                       usage.ru_utime.tv_sec = profile.cpu;
+                       usage.ru_utime.tv_usec = 0;
+-                      printstats ("Time Limit Exceeded\n");
++                      printstats ("TLE");
+                     }
+                   else if (mark == OLE)
+-                    printstats ("Output Limit Exceeded\n");
++                    printstats ("OLE");
+                   else if (mark == RTLE)
+-                    printstats ("Time Limit Exceeded\n");
++                    printstats ("RTLE");
+                   else if (mark == RF)
+-                    printstats ("Invalid Function\n");
++                    printstats ("RF");
+                   else if (mark == IE)
+-                    printstats ("Internal Error\n");
++                    printstats ("IE");
+                 }
+             }
+-          printstats ("elapsed time: %d seconds\n", ttarget - tsource);
+-          printstats ("memory usage: %d kbytes\n", mem);
+-          printstats ("cpu usage: %0.3f seconds\n",
++          printstats("\",\n");
++          printstats (" \"elapsed_time_secs\": %d,\n", ttarget - tsource);
++          printstats (" \"memory_usage_kiby\": %d\n", mem);
++          printstats (" \"cpu_usage_secs\": %0.3f\n}\n",
+                       (float) miliseconds (&usage.ru_utime) / 1000.0);
+         }
+     }

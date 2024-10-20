@@ -16,16 +16,25 @@ build() {
 	info "Changing to a temprorary directory"
 	ODIR=$PWD
 	TDIR=$(mktemp -d)
+	cp ci/*.patch $TDIR
 	cd $TDIR
 
 	# Now clone and apply the patches
 	info "Cloning safeexec..."
 	git clone https://github.com/ochko/safeexec || { warn "Error cloning repository, aborting"; exit 1; }
+	cp *.patch safeexec
 	cd safeexec
 
 	# Run cmake
 	info "Running cmake..."
 	cmake . || { warn "Could not execute cmake, aborting"; exit 1; }
+
+	# Apply patches
+	echo *.patch
+	for p in *.patch; do
+		info "Applying patch: $p"
+		patch < $p || { warn "Could not apply patch, aborting"; exit 1; }
+	done
 
 	# Install system-wide
 	info "Installing..."

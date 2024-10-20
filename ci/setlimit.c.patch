@@ -1,0 +1,12 @@
+diff --git a/setlimit.c b/setlimit.c
+index ddc5a7c..9e21406 100644
+--- a/setlimit.c
++++ b/setlimit.c
+@@ -1,6 +1,7 @@
+ #include <unistd.h>
+ #include <errno.h>
+ 
++#include "error.h"
+ #include "setlimit.h"
+ 
+ void setlimit (int resource, rlim_t n)
