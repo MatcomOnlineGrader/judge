@@ -17,6 +17,7 @@ from django.db import DatabaseError, transaction, close_old_connections
 from api.models import Submission, Result
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 
+from .graderapi import make_cmd, parse_and_grade
 
 RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, "runexe.exe")
 
@@ -156,28 +157,8 @@ def grade_submission(submission, number_of_executions):
     time_limit = problem.time_limit_for_compiler(compiler)
     memory_limit = problem.memory_limit_for_compiler(compiler)
 
-    if language == "java":
-        cmd = (
-            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main'
-            % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
-        )
-    elif language in ["python", "javascript", "python2", "python3"]:
-        cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s' % (
-            RUNEXE_PATH,
-            time_limit,
-            memory_limit,
-            compiler.path,
-            compiler.arguments.format(
-                "%d.%s" % (submission.id, compiler.file_extension)
-            ),
-        )
-    else:
-        cmd = '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" %s' % (
-            RUNEXE_PATH,
-            time_limit,
-            memory_limit,
-            "%d.%s" % (submission.id, compiler.exec_extension),
-        )
+    # Make the grader command
+    cmd: str = make_cmd(language, time_limit, memory_limit, compiler, submission)
 
     i_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), "inputs")
     o_folder = os.path.join(settings.PROBLEMS_FOLDER, str(problem.id), "outputs")
@@ -194,10 +175,6 @@ def grade_submission(submission, number_of_executions):
 
     for input_file, answer_file in zip(i_files, o_files):
         try:
-            # parse runexe output
-            def get_tag_value(xml, tag_name):
-                element = xml.getElementsByTagName(tag_name)[0].firstChild
-                return element.nodeValue if element else None
 
             current_test += 1
             for _ in range(number_of_executions):
@@ -213,55 +190,7 @@ def grade_submission(submission, number_of_executions):
                     cwd=submission_folder,
                 )
 
-                xml = minidom.parseString(out.strip())
-                invocation_verdict = get_tag_value(xml, "invocationVerdict")
-                exit_code = int(get_tag_value(xml, "exitCode"))
-                processor_user_mode_time = int(
-                    get_tag_value(xml, "processorUserModeTime")
-                )
-                processor_kernel_mode_time = int(
-                    get_tag_value(xml, "processorKernelModeTime")
-                )
-                passed_time = int(get_tag_value(xml, "passedTime"))
-                consumed_memory = int(get_tag_value(xml, "consumedMemory"))
-                comment = get_tag_value(xml, "comment") or "<blank>"
-
-                execution_time = processor_user_mode_time
-                execution_time = min(execution_time, time_limit * 1000)
-
-                if invocation_verdict in [
-                    "TIME_LIMIT_EXCEEDED",
-                    "IDLENESS_LIMIT_EXCEEDED",
-                ]:
-                    execution_time = time_limit * 1000
-
-                if invocation_verdict != "SUCCESS":
-                    comment = result = {
-                        "SECURITY_VIOLATION": "runtime error",
-                        "MEMORY_LIMIT_EXCEEDED": "memory limit exceeded",
-                        "TIME_LIMIT_EXCEEDED": "time limit exceeded",
-                        "IDLENESS_LIMIT_EXCEEDED": "idleness limit exceeded",
-                        "CRASH": "internal error",
-                        "FAIL": "internal error",
-                    }[invocation_verdict]
-                    if invocation_verdict in ["CRASH", "FAIL"]:
-                        comment = "internal error, executing submission"
-                elif exit_code != 0:
-                    result = "runtime error"
-                    compressed_error = compress_output_lines(err)
-                    comment = ("runtime error\n\n" + compressed_error).strip()
-                else:
-                    rc, out, err = get_exitcode_stdout_stderr(
-                        cmd=checker_command % (input_file, "output.txt", answer_file),
-                        cwd=submission_folder,
-                    )
-                    out = out.strip()
-                    err = err.strip()
-                    comment = out or err
-                    if rc != 0:
-                        result = "wrong answer"
-                if result not in ["time limit exceeded", "idleness limit exceeded"]:
-                    break  # abort retry of the test if is not time related
+                result = parse_and_grade(out, time_limit, err, cmd, checker_command, input_file, answer_file, cwd, submission_folder, result)
             maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)
             judgement_details += "Case#%d [%d bytes][%d ms]: %s\n" % (
