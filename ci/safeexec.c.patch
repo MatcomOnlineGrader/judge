@@ -181,7 +181,7 @@ index 8d0d1f6..a5836ec 100644
 -          printstats ("cpu usage: %0.3f seconds\n",
 +          printstats("\",\n");
 +          printstats (" \"elapsed_time_secs\": %d,\n", ttarget - tsource);
-+          printstats (" \"memory_usage_kiby\": %d\n", mem);
++          printstats (" \"memory_usage_kiby\": %d,\n", mem);
 +          printstats (" \"cpu_usage_secs\": %0.3f\n}\n",
                        (float) miliseconds (&usage.ru_utime) / 1000.0);
          }
