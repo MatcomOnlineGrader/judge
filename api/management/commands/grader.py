@@ -109,14 +109,19 @@ def compile_submission(submission):
             cwd=submission_folder,
             env=env,
         )
-        
-        if code!=0:
+
+        if code != 0:
             # Some error ocurred
-            log.warn("Compiler exited with non-zero code (%d), stdout: %s, stderr: %s", code, out, err)
+            log.warn(
+                "Compiler exited with non-zero code (%d), stdout: %s, stderr: %s",
+                code,
+                out,
+                err,
+            )
 
         if os.path.exists(os.path.join(submission_folder, exe_file)):
             return True
-        
+
         details = ""
         details = details + out if out else details
         details = details + err if err else details
@@ -128,7 +133,13 @@ def compile_submission(submission):
 
 
 def report_progress(submission, current_test, number_of_tests, result, bar_width=50):
-    log.debug("Submission #%d -> %s (Ran %d out of %d test cases)", submission.id, result or "(unknown)", current_test, number_of_tests)
+    log.debug(
+        "Submission #%d -> %s (Ran %d out of %d test cases)",
+        submission.id,
+        result or "(unknown)",
+        current_test,
+        number_of_tests,
+    )
     # Uncomment to show the progress instead of a log
     # pct = 100 * current_test // number_of_tests
     # prg = current_test * bar_width // number_of_tests
@@ -158,7 +169,13 @@ def get_submission_folder(submission: Submission) -> str:
     return os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
 
 
-def get_cmd_for_language_safeexec(submission: Submission, compiler: Compiler, lang: str, time_limit: int, memory_limit: int) -> str:
+def get_cmd_for_language_safeexec(
+    submission: Submission,
+    compiler: Compiler,
+    lang: str,
+    time_limit: int,
+    memory_limit: int,
+) -> str:
     "Get language-specific command, using safeexec"
     # note that safeexec should be in PATH, see the ci/make_safeexec.sh script
     # note2:we need to pipe the data directly, patching safeexec to accept --stdin/--stdout
@@ -166,8 +183,8 @@ def get_cmd_for_language_safeexec(submission: Submission, compiler: Compiler, la
     #    escalation/Information diclosure) all because it uses the SUID bit
     # note3:we only count CPU seconds, if you wanr to run in exactly that time (well, approximately)
     #   you must use --clock instead of --cpu to set a background alarm instead of counting CPU seconds
-    if lang=="java":
-        return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main'
+    if lang == "java":
+        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
@@ -175,10 +192,16 @@ def get_cmd_for_language_safeexec(submission: Submission, compiler: Compiler, la
         return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec ./{submission.id}.{compiler.exec_extension}'
+        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
-def get_cmd_for_language_runexe(submission: Submission, compiler: Compiler, language: str, time_limit: int, memory_limit: int) -> str:
+def get_cmd_for_language_runexe(
+    submission: Submission,
+    compiler: Compiler,
+    language: str,
+    time_limit: int,
+    memory_limit: int,
+) -> str:
     "Get language specific command, using runexe instead"
 
     if language == "java":
@@ -187,14 +210,17 @@ def get_cmd_for_language_runexe(submission: Submission, compiler: Compiler, lang
             % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
         )
     elif language in ["python", "javascript", "python2", "python3"]:
-        return '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s' % (
-            RUNEXE_PATH,
-            time_limit,
-            memory_limit,
-            compiler.path,
-            compiler.arguments.format(
-                "%d.%s" % (submission.id, compiler.file_extension)
-            ),
+        return (
+            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s'
+            % (
+                RUNEXE_PATH,
+                time_limit,
+                memory_limit,
+                compiler.path,
+                compiler.arguments.format(
+                    "%d.%s" % (submission.id, compiler.file_extension)
+                ),
+            )
         )
     else:
         return '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" %s' % (
@@ -205,19 +231,29 @@ def get_cmd_for_language_runexe(submission: Submission, compiler: Compiler, lang
         )
 
 
-def get_cmd_for_language(submission: Submission, compiler: Compiler, lang: str, time_limit: int, memory_limit: int) -> str:
+def get_cmd_for_language(
+    submission: Submission,
+    compiler: Compiler,
+    lang: str,
+    time_limit: int,
+    memory_limit: int,
+) -> str:
     "Get the language-specific command to execute"
     if USE_SAFEEXEC:
-        return get_cmd_for_language_safeexec(submission, compiler, lang, time_limit, memory_limit)
-    else: # Use runexe    
-        return get_cmd_for_language_runexe(submission, compiler, lang, time_limit, memory_limit)
+        return get_cmd_for_language_safeexec(
+            submission, compiler, lang, time_limit, memory_limit
+        )
+    else:  # Use runexe
+        return get_cmd_for_language_runexe(
+            submission, compiler, lang, time_limit, memory_limit
+        )
 
 
 def grade_submission(submission, number_of_executions):
     log.info(f"Grading submission: %d", submission.id)
     mark_as_running(submission)
 
-    #Extract the required data
+    # Extract the required data
     problem = submission.problem
     checker = problem.checker
     compiler = submission.compiler
@@ -227,7 +263,12 @@ def grade_submission(submission, number_of_executions):
     # The checker
     checker_command = compile_checker(checker, submission_folder)
     if not checker_command:
-        log.error("Could not compile checker (checker=%s, folder=%s, submission id=%d)", str(checker), submission_folder, submission.id)
+        log.error(
+            "Could not compile checker (checker=%s, folder=%s, submission id=%d)",
+            str(checker),
+            submission_folder,
+            submission.id,
+        )
         set_internal_error(submission, "internal error compiling checker")
         return
 
@@ -247,7 +288,7 @@ def grade_submission(submission, number_of_executions):
     i_files = sorted(os.path.join(i_folder, name) for name in os.listdir(i_folder))
     o_files = sorted(os.path.join(o_folder, name) for name in os.listdir(o_folder))
 
-    current_test, number_of_tests                   = 0, len(i_files)
+    current_test, number_of_tests = 0, len(i_files)
     maximum_execution_time, maximum_consumed_memory = 0, 0
     judgement_details = ""
     result = "accepted"
@@ -273,8 +314,13 @@ def grade_submission(submission, number_of_executions):
                     ),
                     cwd=submission_folder,
                 )
-                if True or ret!=0:
-                    log.debug("(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s", ret, out, err)
+                if True or ret != 0:
+                    log.debug(
+                        "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
+                        ret,
+                        out,
+                        err,
+                    )
 
                 xml = minidom.parseString(out.strip())
                 invocation_verdict = get_tag_value(xml, "invocationVerdict")
@@ -389,13 +435,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        verbosity = {
-            0: log.WARN,
-            1: log.INFO,
-            2: log.DEBUG,
-            3: log.DEBUG
-        }
-        log.basicConfig(format="%(levelname)s - %(message)s", level=verbosity.get(options["verbosity"], log.INFO))
+        verbosity = {0: log.WARN, 1: log.INFO, 2: log.DEBUG, 3: log.DEBUG}
+        log.basicConfig(
+            format="%(levelname)s - %(message)s",
+            level=verbosity.get(options["verbosity"], log.INFO),
+        )
         sleep = options.get("sleep")
         number_of_executions = options.get("number_of_executions")
         # validate input
@@ -426,7 +470,10 @@ class Command(BaseCommand):
                         .first()
                     )
                     if submission:
-                        log.debug("Received submission #%d, marking as 'compiling' and proceed", submission.id)
+                        log.debug(
+                            "Received submission #%d, marking as 'compiling' and proceed",
+                            submission.id,
+                        )
                         submission.result = Result.objects.get(name__iexact="compiling")
                         submission.save()
 
@@ -437,7 +484,11 @@ class Command(BaseCommand):
                         if compile_submission(submission):
                             grade_submission(submission, number_of_executions)
                     else:
-                        log.warn("There was a problem with the problem folder %s for submission #%d", get_submission_folder(submission), submission.id)
+                        log.warn(
+                            "There was a problem with the problem folder %s for submission #%d",
+                            get_submission_folder(submission),
+                            submission.id,
+                        )
                         set_internal_error(
                             submission, "internal error, problem not ready"
                         )

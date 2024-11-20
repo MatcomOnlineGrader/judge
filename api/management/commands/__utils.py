@@ -2,7 +2,9 @@ import shlex
 import subprocess
 
 
-def get_exitcode_stdout_stderr(cmd, cwd, env=None, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
+def get_exitcode_stdout_stderr(
+    cmd, cwd, env=None, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+):
     args = shlex.split(cmd)
     proc = subprocess.Popen(
         args, stdin=stdin, stdout=stdout, stderr=stderr, cwd=cwd, env=env
