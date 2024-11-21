@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0045_auto_20240929_1243'),
+        ("api", "0045_auto_20240929_1243"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='checker',
-            name='backend',
-            field=models.CharField(choices=[('testlib.h', 'testlib.h (0.9.10-SNAPSHOT)'), ('testlib-0.9.42-SNAPSHOT.h', 'testlib.h (0.9.42-SNAPSHOT)'), ('testlib4j.jar', 'testlib4j.jar')], default='testlib.h', max_length=32),
+            model_name="checker",
+            name="backend",
+            field=models.CharField(
+                choices=[
+                    ("testlib.h", "testlib.h (0.9.10-SNAPSHOT)"),
+                    ("testlib-0.9.42-SNAPSHOT.h", "testlib.h (0.9.42-SNAPSHOT)"),
+                    ("testlib4j.jar", "testlib4j.jar"),
+                ],
+                default="testlib.h",
+                max_length=32,
+            ),
         ),
     ]
