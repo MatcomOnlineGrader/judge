@@ -2,6 +2,7 @@
 
 import json
 import logging as log
+from math import ceil
 import os
 from re import compile
 import shutil
@@ -281,7 +282,7 @@ def parse_safeexec_output(out: str) -> dict:
         elif "Time Limit Exceeded" == line:
             invocation_verdict = "TIME_LIMIT_EXCEEDED"
         elif "Output Limit Exceeded" == line:
-            invocation_verdict = "CRASH" # ??? It is usually a crash
+            invocation_verdict = "CRASH"  # ??? It is usually a crash
         elif "Command terminated by signal" in line:
             invocation_verdict = "CRASH"
         elif "Command exited with non-zero status" in line:
@@ -292,35 +293,41 @@ def parse_safeexec_output(out: str) -> dict:
             invocation_verdict = "SUCCESS"
             exit_code = 0
         elif elapsed_match is not None:
-            elapsed = int(elapsed_match.group(1))
-            processor_user_mode_time = elapsed
-            processor_kernel_mode_time = elapsed
-            passed_time = elapsed
-            execution_time = elapsed
+            # elapsed = int(elapsed_match.group(1))
+            # processor_user_mode_time = elapsed
+            # processor_kernel_mode_time = elapsed
+            # passed_time = elapsed
+            # execution_time = elapsed
+            pass
         elif memory_match is not None:
             mem = int(memory_match.group(1))
-            consumed_memory = mem
+            consumed_memory = mem * 1024  # KiB -> Bytes
         elif cpu_match is not None:
-            pass # ?Ignore?
-        
-        return {
-            "invocation_verdict": invocation_verdict,
-            "exit_code": exit_code,
-            "processor_user_mode_time": processor_user_mode_time,
-            "passed_time": passed_time,
-            "processor_kernel_mode_time": processor_kernel_mode_time,
-            "comment": comment,
-            "consumed_memory": consumed_memory,
-            "execution_time": execution_time
-        }
+            tme = float(cpu_match.group(1))
+            millis = ceil(tme * 1000)  # Secs -> Millis
+            processor_user_mode_time = millis  # Nope
+            processor_kernel_mode_time = millis  # Actually no
+            passed_time = millis  # Yes
+            execution_time = millis  # Yes
+
+    return {
+        "invocation_verdict": invocation_verdict,
+        "exit_code": exit_code,
+        "processor_user_mode_time": processor_user_mode_time,
+        "passed_time": passed_time,
+        "processor_kernel_mode_time": processor_kernel_mode_time,
+        "comment": comment,
+        "consumed_memory": consumed_memory,
+        "execution_time": execution_time,
+    }
 
 
 def run_grader(
-        cmd: str,
-        input_file: str,
-        submission_folder: str,
-        time_limit: int,
-    ):
+    cmd: str,
+    input_file: str,
+    submission_folder: str,
+    time_limit: int,
+):
     "Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"
 
     result = dict()
@@ -330,12 +337,14 @@ def run_grader(
             with open(os.path.join(submission_folder, input_file), "rb") as stdin:
                 # Need to pipe manually
                 ret, out, err = get_exitcode_stdout_stderr(
-                        cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
-                        cwd=submission_folder,
-                        stdin=stdin,
-                        stdout=stdout,
+                    cmd=cmd.format(
+                        **{"input-file": input_file, "output-file": "output.txt"}
+                    ),
+                    cwd=submission_folder,
+                    stdin=stdin,
+                    stdout=stdout,
                 )
-        
+
         # Check for errors
         if ret != 0:
             log.debug(
@@ -347,9 +356,7 @@ def run_grader(
         result = parse_safeexec_output(err)
     else:
         ret, out, err = get_exitcode_stdout_stderr(
-            cmd=cmd.format(
-                **{"input-file": input_file, "output-file": "output.txt"}
-            ),
+            cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
             cwd=submission_folder,
         )
 
@@ -366,12 +373,8 @@ def run_grader(
         xml = minidom.parseString(out.strip())
         invocation_verdict = get_tag_value(xml, "invocationVerdict")
         exit_code = int(get_tag_value(xml, "exitCode"))
-        processor_user_mode_time = int(
-            get_tag_value(xml, "processorUserModeTime")
-        )
-        processor_kernel_mode_time = int(
-            get_tag_value(xml, "processorKernelModeTime")
-        )
+        processor_user_mode_time = int(get_tag_value(xml, "processorUserModeTime"))
+        processor_kernel_mode_time = int(get_tag_value(xml, "processorKernelModeTime"))
         passed_time = int(get_tag_value(xml, "passedTime"))
         consumed_memory = int(get_tag_value(xml, "consumedMemory"))
         comment = get_tag_value(xml, "comment") or "<blank>"
@@ -387,6 +390,7 @@ def run_grader(
         result["consumed_memory"] = consumed_memory
         result["comment"] = comment
         result["execution_time"] = execution_time
+    log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
 
@@ -438,7 +442,7 @@ def grade_submission(submission, number_of_executions):
         log.debug("Running test cases: in=%s, out=%s", input_file, answer_file)
         try:
             current_test += 1
-            
+
             # parse runexe output
             for _ in range(number_of_executions):
                 # NOTE: Setting result to accepted here is needed in
@@ -446,7 +450,9 @@ def grade_submission(submission, number_of_executions):
                 # up, we need to revisit the logic of this section and
                 # refactor to make it more readable.
                 result = "accepted"
-                data, ret, out, err = run_grader(cmd, input_file, submission_folder, time_limit)
+                data, ret, out, err = run_grader(
+                    cmd, input_file, submission_folder, time_limit
+                )
                 invocation_verdict = data["invocation_verdict"]
                 exit_code = data["exit_code"]
                 consumed_memory = data["consumed_memory"]
