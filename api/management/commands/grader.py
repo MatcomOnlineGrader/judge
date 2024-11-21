@@ -1,7 +1,9 @@
 # flake8: noqa: F841
 
 import json
+import logging as log
 import os
+from re import compile
 import shutil
 import stat
 import sys
@@ -16,8 +18,6 @@ from django.db import DatabaseError, transaction, close_old_connections
 
 from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
-
-import logging as log
 
 USE_SAFEEXEC = True
 RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, "runexe.exe")
@@ -181,18 +181,17 @@ def get_cmd_for_language_safeexec(
     # note2:we need to pipe the data directly, patching safeexec to accept --stdin/--stdout
     #   (like i did a time ago :p ) may lead to some unwanted security issues (RCE/Privilege
     #    escalation/Information diclosure) all because it uses the SUID bit
-    # note3:we only count CPU seconds, if you wanr to run in exactly that time (well, approximately)
-    #   you must use --clock instead of --cpu to set a background alarm instead of counting CPU seconds
+    # note3:Shall we consider only CPU seconds and ignore the delay caused by the syscalls?
     if lang == "java":
         return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
         )
-        return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec "{compiler.path}" {fmt_args}'
+        return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
 def get_cmd_for_language_runexe(
@@ -249,6 +248,148 @@ def get_cmd_for_language(
         )
 
 
+def get_tag_value(xml, tag_name):
+    element = xml.getElementsByTagName(tag_name)[0].firstChild
+    return element.nodeValue if element else None
+
+
+def parse_safeexec_output(out: str) -> dict:
+    invocation_verdict = "FAIL"
+    exit_code = 1
+    processor_user_mode_time = 0
+    processor_kernel_mode_time = 0
+    passed_time = 0
+    consumed_memory = 0
+    comment = None
+    execution_time = 0
+
+    elapsed_re = compile("elapsed time: (\\d+) seconds")
+    memory_re = compile("memory usage: (\\d+) kbytes")
+    cpu_re = compile("cpu usage: (\\d+(\\.\\d+)?) seconds")
+
+    for line in out.splitlines():
+        line = line.strip()
+
+        elapsed_match = elapsed_re.match(line)
+        memory_match = memory_re.match(line)
+        cpu_match = cpu_re.match(line)
+
+        if "Internal Error" == line:
+            invocation_verdict = "CRASH"
+        elif "Invalid Function" == line:
+            invocation_verdict = "CRASH"
+        elif "Time Limit Exceeded" == line:
+            invocation_verdict = "TIME_LIMIT_EXCEEDED"
+        elif "Output Limit Exceeded" == line:
+            invocation_verdict = "CRASH" # ??? It is usually a crash
+        elif "Command terminated by signal" in line:
+            invocation_verdict = "CRASH"
+        elif "Command exited with non-zero status" in line:
+            invocation_verdict = "CRASH"
+        elif "Memory Limit Exceeded" == line:
+            invocation_verdict = "MEMORY_LIMIT_EXCEEDED"
+        elif "OK" == line:
+            invocation_verdict = "SUCCESS"
+            exit_code = 0
+        elif elapsed_match is not None:
+            elapsed = int(elapsed_match.group(1))
+            processor_user_mode_time = elapsed
+            processor_kernel_mode_time = elapsed
+            passed_time = elapsed
+            execution_time = elapsed
+        elif memory_match is not None:
+            mem = int(memory_match.group(1))
+            consumed_memory = mem
+        elif cpu_match is not None:
+            pass # ?Ignore?
+        
+        return {
+            "invocation_verdict": invocation_verdict,
+            "exit_code": exit_code,
+            "processor_user_mode_time": processor_user_mode_time,
+            "passed_time": passed_time,
+            "processor_kernel_mode_time": processor_kernel_mode_time,
+            "comment": comment,
+            "consumed_memory": consumed_memory,
+            "execution_time": execution_time
+        }
+
+
+def run_grader(
+        cmd: str,
+        input_file: str,
+        submission_folder: str,
+        time_limit: int,
+    ):
+    "Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"
+
+    result = dict()
+
+    if USE_SAFEEXEC:
+        with open(os.path.join(submission_folder, "output.txt"), "wb") as stdout:
+            with open(os.path.join(submission_folder, input_file), "rb") as stdin:
+                # Need to pipe manually
+                ret, out, err = get_exitcode_stdout_stderr(
+                        cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
+                        cwd=submission_folder,
+                        stdin=stdin,
+                        stdout=stdout,
+                )
+        
+        # Check for errors
+        if ret != 0:
+            log.debug(
+                "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
+                ret,
+                out,
+                err,
+            )
+        result = parse_safeexec_output(err)
+    else:
+        ret, out, err = get_exitcode_stdout_stderr(
+            cmd=cmd.format(
+                **{"input-file": input_file, "output-file": "output.txt"}
+            ),
+            cwd=submission_folder,
+        )
+
+        # Also check for errors
+        if ret != 0:
+            log.debug(
+                "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
+                ret,
+                out,
+                err,
+            )
+
+        # Parse the runexe output
+        xml = minidom.parseString(out.strip())
+        invocation_verdict = get_tag_value(xml, "invocationVerdict")
+        exit_code = int(get_tag_value(xml, "exitCode"))
+        processor_user_mode_time = int(
+            get_tag_value(xml, "processorUserModeTime")
+        )
+        processor_kernel_mode_time = int(
+            get_tag_value(xml, "processorKernelModeTime")
+        )
+        passed_time = int(get_tag_value(xml, "passedTime"))
+        consumed_memory = int(get_tag_value(xml, "consumedMemory"))
+        comment = get_tag_value(xml, "comment") or "<blank>"
+
+        execution_time = processor_user_mode_time
+        execution_time = min(execution_time, time_limit * 1000)
+
+        result["invocation_verdict"] = invocation_verdict
+        result["exit_code"] = exit_code
+        result["processor_user_mode_time"] = processor_user_mode_time
+        result["processor_kernel_mode_time"] = processor_kernel_mode_time
+        result["passed_time"] = passed_time
+        result["consumed_memory"] = consumed_memory
+        result["comment"] = comment
+        result["execution_time"] = execution_time
+    return result, ret, out or "", err or ""
+
+
 def grade_submission(submission, number_of_executions):
     log.info(f"Grading submission: %d", submission.id)
     mark_as_running(submission)
@@ -296,47 +437,20 @@ def grade_submission(submission, number_of_executions):
     for input_file, answer_file in zip(i_files, o_files):
         log.debug("Running test cases: in=%s, out=%s", input_file, answer_file)
         try:
-            # parse runexe output
-            def get_tag_value(xml, tag_name):
-                element = xml.getElementsByTagName(tag_name)[0].firstChild
-                return element.nodeValue if element else None
-
             current_test += 1
+            
+            # parse runexe output
             for _ in range(number_of_executions):
                 # NOTE: Setting result to accepted here is needed in
                 # case we retry after a TLE/ILE judgment. As a follow
                 # up, we need to revisit the logic of this section and
                 # refactor to make it more readable.
                 result = "accepted"
-                ret, out, err = get_exitcode_stdout_stderr(
-                    cmd=cmd.format(
-                        **{"input-file": input_file, "output-file": "output.txt"}
-                    ),
-                    cwd=submission_folder,
-                )
-                if True or ret != 0:
-                    log.debug(
-                        "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
-                        ret,
-                        out,
-                        err,
-                    )
-
-                xml = minidom.parseString(out.strip())
-                invocation_verdict = get_tag_value(xml, "invocationVerdict")
-                exit_code = int(get_tag_value(xml, "exitCode"))
-                processor_user_mode_time = int(
-                    get_tag_value(xml, "processorUserModeTime")
-                )
-                processor_kernel_mode_time = int(
-                    get_tag_value(xml, "processorKernelModeTime")
-                )
-                passed_time = int(get_tag_value(xml, "passedTime"))
-                consumed_memory = int(get_tag_value(xml, "consumedMemory"))
-                comment = get_tag_value(xml, "comment") or "<blank>"
-
-                execution_time = processor_user_mode_time
-                execution_time = min(execution_time, time_limit * 1000)
+                data, ret, out, err = run_grader(cmd, input_file, submission_folder, time_limit)
+                invocation_verdict = data["invocation_verdict"]
+                exit_code = data["exit_code"]
+                consumed_memory = data["consumed_memory"]
+                execution_time = data["execution_time"]
 
                 if invocation_verdict in [
                     "TIME_LIMIT_EXCEEDED",

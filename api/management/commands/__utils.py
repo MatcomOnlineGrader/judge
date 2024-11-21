@@ -13,8 +13,8 @@ def get_exitcode_stdout_stderr(
     exitcode = proc.returncode
     return (
         exitcode,
-        out.decode("utf-8", errors="replace"),
-        err.decode("utf-8", errors="replace"),
+        out.decode("utf-8", errors="replace") if out else "",
+        err.decode("utf-8", errors="replace") if err else "",
     )
 
 
