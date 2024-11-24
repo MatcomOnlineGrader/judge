@@ -321,6 +321,82 @@ def parse_safeexec_output(out: str) -> dict:
     }
 
 
+def run_runexe(
+    cmd: str,
+    input_file: str,
+    submission_folder: str,
+    time_limit: int,
+):
+    """See `run_grader`"""
+    result = dict()
+    ret, out, err = get_exitcode_stdout_stderr(
+        cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
+        cwd=submission_folder,
+    )
+
+    # Also check for errors
+    if ret != 0:
+        log.debug(
+            "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
+            ret,
+            out,
+            err,
+        )
+
+    # Parse the runexe output
+    xml = minidom.parseString(out.strip())
+    invocation_verdict = get_tag_value(xml, "invocationVerdict")
+    exit_code = int(get_tag_value(xml, "exitCode"))
+    processor_user_mode_time = int(get_tag_value(xml, "processorUserModeTime"))
+    processor_kernel_mode_time = int(get_tag_value(xml, "processorKernelModeTime"))
+    passed_time = int(get_tag_value(xml, "passedTime"))
+    consumed_memory = int(get_tag_value(xml, "consumedMemory"))
+    comment = get_tag_value(xml, "comment") or "<blank>"
+
+    execution_time = processor_user_mode_time
+    execution_time = min(execution_time, time_limit * 1000)
+
+    result["invocation_verdict"] = invocation_verdict
+    result["exit_code"] = exit_code
+    result["processor_user_mode_time"] = processor_user_mode_time
+    result["processor_kernel_mode_time"] = processor_kernel_mode_time
+    result["passed_time"] = passed_time
+    result["consumed_memory"] = consumed_memory
+    result["comment"] = comment
+    result["execution_time"] = execution_time
+    return result, ret, out, err
+
+
+def run_safeexec(
+    cmd: str,
+    input_file: str,
+    submission_folder: str,
+    time_limit: int,
+):
+    """See `run_grader`"""
+    with open(os.path.join(submission_folder, "output.txt"), "wb") as stdout:
+        with open(os.path.join(submission_folder, input_file), "rb") as stdin:
+            # Need to pipe manually
+            ret, out, err = get_exitcode_stdout_stderr(
+                cmd=cmd.format(
+                    **{"input-file": input_file, "output-file": "output.txt"}
+                ),
+                cwd=submission_folder,
+                stdin=stdin,
+                stdout=stdout,
+            )
+
+    # Check for errors
+    if ret != 0:
+        log.debug(
+            "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
+            ret,
+            out,
+            err,
+        )
+    return parse_safeexec_output(err), ret, out, err
+
+
 def run_grader(
     cmd: str,
     input_file: str,
@@ -328,67 +404,8 @@ def run_grader(
     time_limit: int,
 ):
     """Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"""
-
-    result = dict()
-
-    if USE_SAFEEXEC:
-        with open(os.path.join(submission_folder, "output.txt"), "wb") as stdout:
-            with open(os.path.join(submission_folder, input_file), "rb") as stdin:
-                # Need to pipe manually
-                ret, out, err = get_exitcode_stdout_stderr(
-                    cmd=cmd.format(
-                        **{"input-file": input_file, "output-file": "output.txt"}
-                    ),
-                    cwd=submission_folder,
-                    stdin=stdin,
-                    stdout=stdout,
-                )
-
-        # Check for errors
-        if ret != 0:
-            log.debug(
-                "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
-                ret,
-                out,
-                err,
-            )
-        result = parse_safeexec_output(err)
-    else:
-        ret, out, err = get_exitcode_stdout_stderr(
-            cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
-            cwd=submission_folder,
-        )
-
-        # Also check for errors
-        if ret != 0:
-            log.debug(
-                "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
-                ret,
-                out,
-                err,
-            )
-
-        # Parse the runexe output
-        xml = minidom.parseString(out.strip())
-        invocation_verdict = get_tag_value(xml, "invocationVerdict")
-        exit_code = int(get_tag_value(xml, "exitCode"))
-        processor_user_mode_time = int(get_tag_value(xml, "processorUserModeTime"))
-        processor_kernel_mode_time = int(get_tag_value(xml, "processorKernelModeTime"))
-        passed_time = int(get_tag_value(xml, "passedTime"))
-        consumed_memory = int(get_tag_value(xml, "consumedMemory"))
-        comment = get_tag_value(xml, "comment") or "<blank>"
-
-        execution_time = processor_user_mode_time
-        execution_time = min(execution_time, time_limit * 1000)
-
-        result["invocation_verdict"] = invocation_verdict
-        result["exit_code"] = exit_code
-        result["processor_user_mode_time"] = processor_user_mode_time
-        result["processor_kernel_mode_time"] = processor_kernel_mode_time
-        result["passed_time"] = passed_time
-        result["consumed_memory"] = consumed_memory
-        result["comment"] = comment
-        result["execution_time"] = execution_time
+    run_the_grader = run_safeexec if USE_SAFEEXEC else run_runexe
+    result, ret, out, err = run_the_grader(cmd, input_file, submission_folder, time_limit)
     log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
@@ -492,7 +509,8 @@ def grade_submission(submission, number_of_executions):
                 if result not in ["time limit exceeded", "idleness limit exceeded"]:
                     break  # abort retry of the test if is not time related
                 if result == "internal error":
-                    log.error("Internal error ocurred: %s,", str(data))
+                    log.error("Internal error ocurred: %s,", json.dumps(data))
+
             maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)
             judgement_details += "Case#%d [%d bytes][%d ms]: %s\n" % (
