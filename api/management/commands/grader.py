@@ -241,14 +241,8 @@ def get_cmd_for_language(
     memory_limit: int,
 ) -> str:
     """Get the language-specific command to execute"""
-    if USE_SAFEEXEC:
-        return get_cmd_for_language_safeexec(
-            submission, compiler, lang, time_limit, memory_limit
-        )
-    else:  # Use runexe
-        return get_cmd_for_language_runexe(
-            submission, compiler, lang, time_limit, memory_limit
-        )
+    fun = get_cmd_for_language_safeexec if USE_SAFEEXEC else get_cmd_for_language_runexe
+    return fun(submission, compiler, lang, time_limit, memory_limit)
 
 
 def get_tag_value(xml, tag_name):
