@@ -4,7 +4,7 @@ import json
 import logging as log
 from math import ceil
 import os
-from re import compile
+import re
 import shutil
 import stat
 import sys
@@ -113,7 +113,7 @@ def compile_submission(submission):
 
         if code != 0:
             # Some error ocurred
-            log.warn(
+            log.warning(
                 "Compiler exited with non-zero code (%d), stdout: %s, stderr: %s",
                 code,
                 out,
@@ -134,34 +134,36 @@ def compile_submission(submission):
 
 
 def report_progress(submission, current_test, number_of_tests, result, bar_width=50):
-    log.debug(
-        "Submission #%d -> %s (Ran %d out of %d test cases)",
-        submission.id,
-        result or "(unknown)",
-        current_test,
-        number_of_tests,
-    )
-    # Uncomment to show the progress instead of a log
-    # pct = 100 * current_test // number_of_tests
-    # prg = current_test * bar_width // number_of_tests
-    # rmg = bar_width - prg
-    # sys.stderr.write(
-    #     "%d [%s%s] (%d/%d - %d%%)"
-    #     % (submission.id, "#" * prg, " " * rmg, current_test, number_of_tests, pct)
-    # )
-    # if result != "accepted" or current_test == number_of_tests:
-    #     color = {
-    #         "accepted": colorama.Fore.GREEN,
-    #         "compilation error": colorama.Fore.BLUE,
-    #         "internal error": colorama.Fore.BLUE,
-    #     }.get(result, colorama.Fore.RED)
-    #     sys.stderr.write("%s [%s]%s\n" % (color, result, colorama.Style.RESET_ALL))
-    # else:
-    #     sys.stderr.write("\r")
+    if USE_SAFEEXEC:
+        log.debug(
+            "Submission #%d -> %s (Ran %d out of %d test cases)",
+            submission.id,
+            result or "(unknown)",
+            current_test,
+            number_of_tests,
+        )
+    else:
+        # Show on
+        pct = 100 * current_test // number_of_tests
+        prg = current_test * bar_width // number_of_tests
+        rmg = bar_width - prg
+        sys.stderr.write(
+            "%d [%s%s] (%d/%d - %d%%)"
+            % (submission.id, "#" * prg, " " * rmg, current_test, number_of_tests, pct)
+        )
+        if result != "accepted" or current_test == number_of_tests:
+            color = {
+                "accepted": colorama.Fore.GREEN,
+                "compilation error": colorama.Fore.BLUE,
+                "internal error": colorama.Fore.BLUE,
+            }.get(result, colorama.Fore.RED)
+            sys.stderr.write("%s [%s]%s\n" % (color, result, colorama.Style.RESET_ALL))
+        else:
+            sys.stderr.write("\r")
 
 
 def mark_as_running(submission: Submission):
-    "Marks a submission as running"
+    """Marks a submission as running"""
     submission.result = Result.objects.get(name__iexact="running")
     submission.save()
 
@@ -177,7 +179,7 @@ def get_cmd_for_language_safeexec(
     time_limit: int,
     memory_limit: int,
 ) -> str:
-    "Get language-specific command, using safeexec"
+    """Get language-specific command, using safeexec"""
     # note that safeexec should be in PATH, see the ci/make_safeexec.sh script
     # note2:we need to pipe the data directly, patching safeexec to accept --stdin/--stdout
     #   (like i did a time ago :p ) may lead to some unwanted security issues (RCE/Privilege
@@ -202,7 +204,7 @@ def get_cmd_for_language_runexe(
     time_limit: int,
     memory_limit: int,
 ) -> str:
-    "Get language specific command, using runexe instead"
+    """Get language specific command, using runexe instead"""
 
     if language == "java":
         return (
@@ -238,7 +240,7 @@ def get_cmd_for_language(
     time_limit: int,
     memory_limit: int,
 ) -> str:
-    "Get the language-specific command to execute"
+    """Get the language-specific command to execute"""
     if USE_SAFEEXEC:
         return get_cmd_for_language_safeexec(
             submission, compiler, lang, time_limit, memory_limit
@@ -264,45 +266,48 @@ def parse_safeexec_output(out: str) -> dict:
     comment = None
     execution_time = 0
 
-    elapsed_re = compile("elapsed time: (\\d+) seconds")
-    memory_re = compile("memory usage: (\\d+) kbytes")
-    cpu_re = compile("cpu usage: (\\d+(\\.\\d+)?) seconds")
+    lines = out.splitlines()
+    if len(lines)==4:
+        message = lines[0].strip()
 
-    for line in out.splitlines():
-        line = line.strip()
+        elapsed_match = re.match(r"elapsed time: (\d+) seconds", lines[1].strip())
+        memory_match = re.match(r"memory usage: (\d+) kbytes", lines[2].strip())
+        cpu_match = re.match(r"cpu usage: (\d+(\.\d+)?) seconds", lines[3].strip())
 
-        elapsed_match = elapsed_re.match(line)
-        memory_match = memory_re.match(line)
-        cpu_match = cpu_re.match(line)
-
-        if "Internal Error" == line:
-            invocation_verdict = "CRASH"
-        elif "Invalid Function" == line:
-            invocation_verdict = "CRASH"
-        elif "Time Limit Exceeded" == line:
+        if "Internal Error" == message:
+            invocation_verdict = "runtime_error"
+        elif "Invalid Function" == message:
+            invocation_verdict = "runtime_error"
+        elif "Time Limit Exceeded" == message:
             invocation_verdict = "TIME_LIMIT_EXCEEDED"
-        elif "Output Limit Exceeded" == line:
-            invocation_verdict = "CRASH"  # ??? It is usually a crash
-        elif "Command terminated by signal" in line:
-            invocation_verdict = "CRASH"
-        elif "Command exited with non-zero status" in line:
-            invocation_verdict = "CRASH"
-        elif "Memory Limit Exceeded" == line:
+        elif "Output Limit Exceeded" == message:
+            invocation_verdict = "runtime_error"
+        elif "Command terminated by signal" in message:
+            invocation_verdict = "runtime_error"
+            comment = message
+        elif "Command exited with non-zero status" in message:
+            invocation_verdict = "runtime_error"
+            comment = message
+        elif "Memory Limit Exceeded" == message:
             invocation_verdict = "MEMORY_LIMIT_EXCEEDED"
-        elif "OK" == line:
+        elif "OK" == message:
             invocation_verdict = "SUCCESS"
             exit_code = 0
-        elif elapsed_match is not None:
+
+
+        if elapsed_match is not None:
             # elapsed = int(elapsed_match.group(1))
             # processor_user_mode_time = elapsed
             # processor_kernel_mode_time = elapsed
             # passed_time = elapsed
             # execution_time = elapsed
             pass
-        elif memory_match is not None:
+        
+        if memory_match is not None:
             mem = int(memory_match.group(1))
             consumed_memory = mem * 1024  # KiB -> Bytes
-        elif cpu_match is not None:
+        
+        if cpu_match is not None:
             tme = float(cpu_match.group(1))
             millis = ceil(tme * 1000)  # Secs -> Millis
             processor_user_mode_time = millis  # Nope
@@ -328,7 +333,7 @@ def run_grader(
     submission_folder: str,
     time_limit: int,
 ):
-    "Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"
+    """Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"""
 
     result = dict()
 
@@ -472,6 +477,7 @@ def grade_submission(submission, number_of_executions):
                         "IDLENESS_LIMIT_EXCEEDED": "idleness limit exceeded",
                         "CRASH": "internal error",
                         "FAIL": "internal error",
+                        "runtime_error": "runtime error",
                     }[invocation_verdict]
                     if invocation_verdict in ["CRASH", "FAIL"]:
                         comment = "internal error, executing submission"
@@ -499,8 +505,8 @@ def grade_submission(submission, number_of_executions):
                 execution_time,
                 comment,
             )
-        except Exception as err:
-            log.warn("Unexpected error running test case: %s", str(err))
+        except Exception as e:
+            log.warning("Unexpected error running test case: %s", str(e))
             result = "internal error"
         report_progress(
             submission=submission,
@@ -604,7 +610,7 @@ class Command(BaseCommand):
                         if compile_submission(submission):
                             grade_submission(submission, number_of_executions)
                     else:
-                        log.warn(
+                        log.warning(
                             "There was a problem with the problem folder %s for submission #%d",
                             get_submission_folder(submission),
                             submission.id,
