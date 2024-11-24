@@ -20,7 +20,7 @@ from django.db import DatabaseError, transaction, close_old_connections
 from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 
-USE_SAFEEXEC = True
+USE_SAFEEXEC = settings.USE_SAFEEXEC
 RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, "runexe.exe")
 
 
