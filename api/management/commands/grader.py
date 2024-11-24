@@ -127,8 +127,8 @@ def compile_submission(submission):
         details = details + out if out else details
         details = details + err if err else details
         set_compilation_error(submission, details)
-    except:
-        log.error("Internal error during compilation, submission: #%d", submission.id)
+    except Exception as e:
+        log.error("Internal error during compilation, submission: #%d, error: %s", submission.id, str(e))
         set_internal_error(submission, "internal error during compilation phase")
     return False
 
@@ -491,6 +491,8 @@ def grade_submission(submission, number_of_executions):
                         result = "wrong answer"
                 if result not in ["time limit exceeded", "idleness limit exceeded"]:
                     break  # abort retry of the test if is not time related
+                if result == "internal error":
+                    log.error("Internal error ocurred: %s,", str(data))
             maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)
             judgement_details += "Case#%d [%d bytes][%d ms]: %s\n" % (
@@ -500,7 +502,7 @@ def grade_submission(submission, number_of_executions):
                 comment,
             )
         except Exception as e:
-            log.warning("Unexpected error running test case: %s", str(e))
+            log.error("Unexpected error running test case: %s", str(e))
             result = "internal error"
         report_progress(
             submission=submission,
@@ -604,7 +606,7 @@ class Command(BaseCommand):
                         if compile_submission(submission):
                             grade_submission(submission, number_of_executions)
                     else:
-                        log.warning(
+                        log.error(
                             "There was a problem with the problem folder %s for submission #%d",
                             get_submission_folder(submission),
                             submission.id,
