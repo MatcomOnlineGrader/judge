@@ -264,23 +264,22 @@ def parse_safeexec_output(out: str) -> dict:
     if len(lines)==4:
         message = lines[0].strip()
 
-        elapsed_match = re.match(r"elapsed time: (\d+) seconds", lines[1].strip())
         memory_match = re.match(r"memory usage: (\d+) kbytes", lines[2].strip())
         cpu_match = re.match(r"cpu usage: (\d+(\.\d+)?) seconds", lines[3].strip())
 
         if "Internal Error" == message:
-            invocation_verdict = "runtime_error"
+            invocation_verdict = "INTERNAL_ERROR"
         elif "Invalid Function" == message:
-            invocation_verdict = "runtime_error"
+            invocation_verdict = "RUNTIME_ERROR"
         elif "Time Limit Exceeded" == message:
             invocation_verdict = "TIME_LIMIT_EXCEEDED"
         elif "Output Limit Exceeded" == message:
-            invocation_verdict = "runtime_error"
+            invocation_verdict = "RUNTIME_ERROR"
         elif "Command terminated by signal" in message:
-            invocation_verdict = "runtime_error"
+            invocation_verdict = "RUNTIME_ERROR"
             comment = message
         elif "Command exited with non-zero status" in message:
-            invocation_verdict = "runtime_error"
+            invocation_verdict = "RUNTIME_ERROR"
             comment = message
         elif "Memory Limit Exceeded" == message:
             invocation_verdict = "MEMORY_LIMIT_EXCEEDED"
@@ -288,15 +287,6 @@ def parse_safeexec_output(out: str) -> dict:
             invocation_verdict = "SUCCESS"
             exit_code = 0
 
-
-        if elapsed_match is not None:
-            # elapsed = int(elapsed_match.group(1))
-            # processor_user_mode_time = elapsed
-            # processor_kernel_mode_time = elapsed
-            # passed_time = elapsed
-            # execution_time = elapsed
-            pass
-        
         if memory_match is not None:
             mem = int(memory_match.group(1))
             consumed_memory = mem * 1024  # KiB -> Bytes
@@ -304,10 +294,10 @@ def parse_safeexec_output(out: str) -> dict:
         if cpu_match is not None:
             tme = float(cpu_match.group(1))
             millis = ceil(tme * 1000)  # Secs -> Millis
-            processor_user_mode_time = millis  # Nope
-            processor_kernel_mode_time = millis  # Actually no
-            passed_time = millis  # Yes
-            execution_time = millis  # Yes
+            processor_user_mode_time = millis
+            processor_kernel_mode_time = millis
+            passed_time = millis
+            execution_time = millis
 
     return {
         "invocation_verdict": invocation_verdict,
@@ -488,7 +478,8 @@ def grade_submission(submission, number_of_executions):
                         "IDLENESS_LIMIT_EXCEEDED": "idleness limit exceeded",
                         "CRASH": "internal error",
                         "FAIL": "internal error",
-                        "runtime_error": "runtime error",
+                        "RUNTIME_ERROR": "runtime error",
+                        "INTERNAL_ERROR": "internal error",
                     }[invocation_verdict]
                     if invocation_verdict in ["CRASH", "FAIL"]:
                         comment = "internal error, executing submission"
@@ -578,7 +569,7 @@ class Command(BaseCommand):
         verbosity = {0: log.WARN, 1: log.INFO, 2: log.DEBUG, 3: log.DEBUG}
         log.basicConfig(
             format="%(levelname)s - %(message)s",
-            level=verbosity.get(options["verbosity"], log.INFO),
+            level=log.FATAL if not USE_SAFEEXEC else verbosity.get(options["verbosity"], log.INFO),
         )
         sleep = options.get("sleep")
         number_of_executions = options.get("number_of_executions")
