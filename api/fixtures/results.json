@@ -1,0 +1,110 @@
+[
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Accepted",
+      "description": "Accepted",
+      "color": "green",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Wrong Answer",
+      "description": "Wrong Answer",
+      "color": "red",
+      "penalty": true
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Time Limit Exceeded",
+      "description": "Time Limit Exceeded",
+      "color": "red",
+      "penalty": true
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Memory Limit Exceeded",
+      "description": "Memory Limit Exceeded",
+      "color": "red",
+      "penalty": true
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Pending",
+      "description": "Pending",
+      "color": "orange",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Running",
+      "description": "Running",
+      "color": "orange",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Compiling",
+      "description": "Compiling",
+      "color": "orange",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Runtime Error",
+      "description": "Runtime Error",
+      "color": "red",
+      "penalty": true
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Compilation Error",
+      "description": "Compilation Error",
+      "color": "blue",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Internal Error",
+      "description": "Internal Error",
+      "color": "blue",
+      "penalty": false
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Disqualified",
+      "description": "Disqualified ",
+      "color": "red",
+      "penalty": true
+    }
+  },
+  {
+    "model": "api.result",
+    "fields": {
+      "name": "Idleness Limit Exceeded",
+      "description": "Idleness Limit Exceeded",
+      "color": "red",
+      "penalty": true
+    }
+  }
+]
