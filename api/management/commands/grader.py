@@ -128,7 +128,11 @@ def compile_submission(submission):
         details = details + err if err else details
         set_compilation_error(submission, details)
     except Exception as e:
-        log.error("Internal error during compilation, submission: #%d, error: %s", submission.id, str(e))
+        log.error(
+            "Internal error during compilation, submission: #%d, error: %s",
+            submission.id,
+            str(e),
+        )
         set_internal_error(submission, "internal error during compilation phase")
     return False
 
@@ -261,7 +265,7 @@ def parse_safeexec_output(out: str) -> dict:
     execution_time = 0
 
     lines = out.splitlines()
-    if len(lines)==4:
+    if len(lines) == 4:
         message = lines[0].strip()
 
         memory_match = re.match(r"memory usage: (\d+) kbytes", lines[2].strip())
@@ -290,7 +294,7 @@ def parse_safeexec_output(out: str) -> dict:
         if memory_match is not None:
             mem = int(memory_match.group(1))
             consumed_memory = mem * 1024  # KiB -> Bytes
-        
+
         if cpu_match is not None:
             tme = float(cpu_match.group(1))
             millis = ceil(tme * 1000)  # Secs -> Millis
@@ -395,7 +399,9 @@ def run_grader(
 ):
     """Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"""
     run_the_grader = run_safeexec if USE_SAFEEXEC else run_runexe
-    result, ret, out, err = run_the_grader(cmd, input_file, submission_folder, time_limit)
+    result, ret, out, err = run_the_grader(
+        cmd, input_file, submission_folder, time_limit
+    )
     log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
@@ -569,7 +575,11 @@ class Command(BaseCommand):
         verbosity = {0: log.WARN, 1: log.INFO, 2: log.DEBUG, 3: log.DEBUG}
         log.basicConfig(
             format="%(levelname)s - %(message)s",
-            level=log.FATAL if not USE_SAFEEXEC else verbosity.get(options["verbosity"], log.INFO),
+            level=(
+                log.FATAL
+                if not USE_SAFEEXEC
+                else verbosity.get(options["verbosity"], log.INFO)
+            ),
         )
         sleep = options.get("sleep")
         number_of_executions = options.get("number_of_executions")
