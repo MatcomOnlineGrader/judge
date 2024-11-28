@@ -21,6 +21,9 @@ RUN mkdir -p /var/www/judge/media
 RUN apt-get install -y cmake make git g++
 RUN bash ci/make_safeexec.sh && safeexec --exec /bin/true
 
+# Create sandbox dir
+RUN mkdir /sandbox
+
 # Move all static files (js, images, css, etc.) into
 # `/var/www/judge/static` folder. This folder path
 # must match with `STATIC_ROOT` in the `settings.ini`
