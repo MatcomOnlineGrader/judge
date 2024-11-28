@@ -4,6 +4,7 @@ This command reads the sample test cases from the hard drive and stores them in 
 NOTE: This command should be run after the branch `sample_tests` is
 merged in master and pushed to our prod database.
 """
+
 import os
 import json
 

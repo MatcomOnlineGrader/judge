@@ -64,9 +64,11 @@ def users_json(request):
             "username": user.username,
             "first_name": user.first_name,
             "last_name": user.last_name,
-            "url": user.profile.avatar.url
-            if user.profile.avatar
-            else "/static/mog/images/avatar.jpg",
+            "url": (
+                user.profile.avatar.url
+                if user.profile.avatar
+                else "/static/mog/images/avatar.jpg"
+            ),
         }
         for user in users[:10]
     ]

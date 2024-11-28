@@ -1310,9 +1310,9 @@ def contest_instances_info(request, contest_id):
                 "user": {
                     "id": user.id,
                     "username": user.username,
-                    "last_login": timesince(user.last_login)
-                    if user.last_login
-                    else None,
+                    "last_login": (
+                        timesince(user.last_login) if user.last_login else None
+                    ),
                     "rating_color": user_color(user),
                 },
             }
