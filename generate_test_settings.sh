@@ -43,6 +43,7 @@ MEDIA_ROOT: $HOME/.judge/www/media
 RESOURCES_FOLDER: $HOME/.judge/resources
 SANDBOX_FOLDER: $HOME/.judge/sandbox
 PROBLEMS_FOLDER: $HOME/.judge/problems
+USE_SAFEEXEC: false
 
 [cache]
 BACKEND: django.core.cache.backends.locmem.LocMemCache

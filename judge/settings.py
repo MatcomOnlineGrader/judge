@@ -60,6 +60,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = RawConfigParser()
 config.read(os.path.join(BASE_DIR, "settings.ini"))
 
+# Use safeexec
+USE_SAFEEXEC = config.getboolean("grader", "USE_SAFEEXEC")
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get("secrets", "SECRET_KEY")
 
