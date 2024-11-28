@@ -3,6 +3,7 @@ venv/
 emails/
 api/fixtures/*.json
 !api/fixtures/countries.json
+!api/fixtures/results.json
 .idea/
 *.pyc
 *.mo
