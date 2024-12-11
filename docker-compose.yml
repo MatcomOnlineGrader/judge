@@ -23,7 +23,9 @@ services:
     depends_on:
       - database
   grader:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfile.grader
     command: python manage.py grader --number_of_executions 1
     volumes:
       - .:/code

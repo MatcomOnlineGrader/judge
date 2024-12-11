@@ -1,0 +1,21 @@
+FROM python:3.7
+
+# Update and upgrade the list of packages
+RUN apt-get update && apt-get upgrade -y
+
+# Copy project content in the host machine into the container
+# as /code folder.
+RUN mkdir /code
+WORKDIR /code
+COPY . /code/
+
+# 1. Install all python dependencies.
+# 2. Install the build dependencies
+# 3. Make safeexec
+# 4. Test safeexec
+# 5. Create the sandbox dir (where the solution gets executed)
+RUN pip install -r requirements.txt && \
+	apt-get install -y cmake make git g++ && \
+	bash ci/make_safeexec.sh && \
+	safeexec --exec /bin/true && \
+	mkdir /sandbox
