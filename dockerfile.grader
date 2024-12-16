@@ -1,7 +1,8 @@
-FROM python:3.7
+FROM alpine:3.15.0
 
-# Update and upgrade the list of packages
-RUN apt-get update && apt-get upgrade -y
+# Update the system, and add bash and the glibc compatibility
+# layer, plus git python gcc and java
+RUN apk update && apk upgrade && apk add bash gcompat postgresql-dev git python3 python3-dev gcc g++ openjdk17-jdk
 
 # Copy project content in the host machine into the container
 # as /code folder.
@@ -9,13 +10,18 @@ RUN mkdir /code
 WORKDIR /code
 COPY . /code/
 
-# 1. Install all python dependencies.
-# 2. Install the build dependencies
+# 0. Create a virtual environment and load it
+# 1. Install the build dependencies
+# 2. Install all python dependencies.
 # 3. Make safeexec
-# 4. Test safeexec
-# 5. Create the sandbox dir (where the solution gets executed)
-RUN pip install -r requirements.txt && \
-	apt-get install -y cmake make git g++ && \
+# 4. Uninstall cmake and make
+# 5. Test safeexec
+# 6. Create the sandbox dir (where the solution gets executed)
+RUN python3 -m venv environ && \
+	source environ/bin/activate && \
+	apk add cmake make jpeg-dev zlib-dev && \
+	pip install --upgrade pip && pip install -r requirements.txt && \
 	bash ci/make_safeexec.sh && \
+	apk del cmake make && \
 	safeexec --exec /bin/true && \
 	mkdir /sandbox

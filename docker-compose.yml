@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile.grader
-    command: python manage.py grader --number_of_executions 1
+    command: /code/environ/bin/python3 manage.py grader --number_of_executions 1
     volumes:
       - .:/code
       - judge-problems:/problems
