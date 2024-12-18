@@ -28,7 +28,6 @@ services:
       dockerfile: dockerfile.grader
     command: /code/environ/bin/python3 manage.py grader --number_of_executions 1
     volumes:
-      - .:/code
       - judge-problems:/problems
 
 volumes:
