@@ -17,6 +17,7 @@ COPY . /code/
 # 4. Uninstall cmake and make
 # 5. Test safeexec
 # 6. Create the sandbox dir (where the solution gets executed)
+# 7. Clear PIP and APKcaches
 RUN python3 -m venv environ && \
 	source environ/bin/activate && \
 	apk add cmake make jpeg-dev zlib-dev && \
@@ -24,4 +25,5 @@ RUN python3 -m venv environ && \
 	bash ci/make_safeexec.sh && \
 	apk del cmake make && \
 	safeexec --exec /bin/true && \
-	mkdir /sandbox
+	mkdir /sandbox && \
+	pip cache purge && rm -r /var/cache/apk
