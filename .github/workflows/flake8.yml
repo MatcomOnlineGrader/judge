@@ -26,7 +26,7 @@ jobs:
       - name: Installing Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.7.17'
       - name: Installing flake8
         run: pip install flake8
       - name: Run flake
