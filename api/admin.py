@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.db.models import Q
 from .models import (
@@ -140,7 +141,7 @@ class ContestPermissionAdmin(admin.ModelAdmin):
 
 admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Comment)
-admin.site.register(Compiler, CompilerAdmin)
+admin.site.register(Compiler, None if settings.DEBUG else CompilerAdmin)
 admin.site.register(Contest)
 admin.site.register(ContestInstance, ContestInstanceAdmin)
 admin.site.register(ContestPermission, ContestPermissionAdmin)
