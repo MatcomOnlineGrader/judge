@@ -1,8 +1,9 @@
-FROM python:3.7
+FROM alpine:3.15.0
 
-# Update/Upgrade apt before doing anything else
-RUN apt-get update
-RUN apt-get upgrade -y
+# Upgrade installed packages (busybox and few others) before doing anything else
+# And install bash, GNU Libc Compatibility layer, Python 3 (including dev files), Jpeg Dev files (for Pillow) and Zlib,
+# postgresql development files, gcc (required for pip dependencies, removed later), musl development files (header files required)
+RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev postgresql-dev gcc musl-dev
 
 # Copy project content in the host machine into the container
 # as /code folder.
@@ -10,15 +11,18 @@ RUN mkdir /code
 WORKDIR /code
 COPY . /code/
 
-# Install all python dependencies.
-RUN pip install -r requirements.txt
-
-# Create some folders that will be used by the web server.
-RUN mkdir -p /var/www/judge/static
-RUN mkdir -p /var/www/judge/media
-
-# Move all static files (js, images, css, etc.) into
-# `/var/www/judge/static` folder. This folder path
-# must match with `STATIC_ROOT` in the `settings.ini`
-# config file.
-RUN python manage.py collectstatic --noinput
+# 0. Create the virtual environment and load it
+# 1. Upgrade pip and install all python dependencies.
+# 2. Create some folders that will be used by the web server.
+# 3. Move all static files (js, images, css, etc.) into
+#    `/var/www/judge/static` folder. This folder path
+#     must match with `STATIC_ROOT` in the `settings.ini`
+#    config file.
+# 4. Remove some unnecesary build-time dependencies
+# 5. Remove caches
+RUN python3 -m venv environ && source environ/bin/activate && \
+	pip install --upgrade pip && pip install -r requirements.txt && \
+	mkdir -p /var/www/judge/static /var/www/judge/media && \
+	python3 manage.py collectstatic --noinput && \
+	apk del gcc musl-dev && \
+	pip cache purge && rm -r /var/cache/apk
