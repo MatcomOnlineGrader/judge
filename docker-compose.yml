@@ -13,9 +13,8 @@ services:
       - '5432:5432'
   api:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: /code/environ/bin/python3 manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
       - django-media:/var/www/judge/media
       - judge-problems:/problems
     ports:
