@@ -687,6 +687,7 @@ class Compiler(models.Model):
     file_extension = models.CharField(max_length=10, default="")
     exec_extension = models.CharField(max_length=10, default="")
     env = models.TextField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
