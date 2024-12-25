@@ -90,10 +90,8 @@ class MessageAdmin(admin.ModelAdmin):
 
 
 class CompilerAdmin(admin.ModelAdmin):
-    readonly_fields = (
-        "language",
-        "name",
-    )
+    readonly_fields = ("language", "name") if settings.DEBUG else ()
+    list_display = ("id", "name", "language", "active")
 
 
 class ContestPermissionAdmin(admin.ModelAdmin):
@@ -141,7 +139,7 @@ class ContestPermissionAdmin(admin.ModelAdmin):
 
 admin.site.register(Checker, CheckerAdmin)
 admin.site.register(Comment)
-admin.site.register(Compiler, None if settings.DEBUG else CompilerAdmin)
+admin.site.register(Compiler, CompilerAdmin)
 admin.site.register(Contest)
 admin.site.register(ContestInstance, ContestInstanceAdmin)
 admin.site.register(ContestPermission, ContestPermissionAdmin)
