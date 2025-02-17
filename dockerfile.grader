@@ -27,3 +27,13 @@ RUN python3 -m venv environ && \
 	safeexec --exec /bin/true && \
 	mkdir /sandbox && \
 	pip cache purge && rm -r /var/cache/apk
+
+# 8. Download gcc v11.3.0 from github
+# 9. Install in /opt
+# 10.Cleanup
+RUN cd / && \
+	wget https://github.com/karelantonio/gcc-11.3.0/releases/download/master/gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	mkdir /opt/gcc-11.3.0 && \
+	tar -C /opt/gcc-11.3.0 -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	rm gcc-11.3.0-x86_64-linux-musl.tar.gz
+	
