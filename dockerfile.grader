@@ -34,6 +34,9 @@ RUN python3 -m venv environ && \
 RUN cd / && \
 	wget https://github.com/MatcomOnlineGrader/gcc-11.3.0/releases/download/master/gcc-11.3.0-x86_64-linux-musl.tar.gz && \
 	mkdir /opt/gcc-11.3.0 && \
-	tar -C /opt/gcc-11.3.0 -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz && \
-	rm gcc-11.3.0-x86_64-linux-musl.tar.gz
+	tar -C /opt -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	rm gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	cp -r /usr/include/* /opt/gcc-11.3.0/include && \
+	cp -r /opt/gcc-11.3.0/include/c++/10.3.1 /opt/gcc-11.3.0/include/c++/11.3.0 && \
+	cp -r /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-alpine-linux-musl /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-pc-linux-musl
 	
