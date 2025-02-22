@@ -59,7 +59,7 @@ def remove_submission_folder(submission):
 
 def create_submission_folder(submission):
     submission_folder = remove_submission_folder(submission)
-    os.mkdir(submission_folder)
+    os.makedirs(submission_folder, exist_ok=True)
     return submission_folder
 
 
