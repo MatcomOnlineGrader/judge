@@ -39,4 +39,13 @@ RUN cd / && \
 	cp -r /usr/include/* /opt/gcc-11.3.0/include && \
 	cp -r /opt/gcc-11.3.0/include/c++/10.3.1 /opt/gcc-11.3.0/include/c++/11.3.0 && \
 	cp -r /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-alpine-linux-musl /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-pc-linux-musl
-	
+
+# 11. Install java 17
+# 12. Download kotlin 1.7.21
+# 13. Unzip kotlin
+RUN cd /opt && \
+	apk add openjdk17 && \
+	wget https://github.com/JetBrains/kotlin/releases/download/v1.7.21/kotlin-compiler-1.7.21.zip && \
+	unzip kotlin-compiler-1.7.21.zip && \
+	rm kotlin-compiler-1.7.21.zip && \
+	mv kotlinc kotlin-1.7.21
