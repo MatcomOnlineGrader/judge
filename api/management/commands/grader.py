@@ -95,6 +95,9 @@ def compile_submission(submission):
     if compiler.language.lower() == "java":
         src_file = "Main.java"
         exe_file = "Main.class"
+    elif compiler.language.lower() == "kotlin":
+        src_file = "Main.kt"
+        exe_file = "MainKt.class"
 
     with open(os.path.join(submission_folder, src_file), "wb") as f:
         f.write(submission.source.encode("utf8"))
@@ -190,7 +193,9 @@ def get_cmd_for_language_safeexec(
     #    escalation/Information diclosure) all because it uses the SUID bit
     # note3:Shall we consider only CPU seconds and ignore the delay caused by the syscalls?
     if lang == "java":
-        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --exec java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main"
+        return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/bin/java -Xms32M -Xmx{memory_limit*1024}M -Xss64m -DMOG=true Main"
+    elif lang == "kotlin":
+        return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/bin/java -Xms32M -Xmx{memory_limit*1024}M -Xss64m -DMOG=true MainKt"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
@@ -213,6 +218,12 @@ def get_cmd_for_language_runexe(
     if language == "java":
         return (
             '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main'
+            % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
+        )
+    elif language == "kotlin":
+        # Like Java
+        return (
+            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx%dM -Xss64m -DMOG=true MainKt'
             % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
         )
     elif language in ["python", "javascript", "python2", "python3"]:
