@@ -49,3 +49,6 @@ RUN cd /opt && \
 	unzip kotlin-compiler-1.7.21.zip && \
 	rm kotlin-compiler-1.7.21.zip && \
 	mv kotlinc kotlin-1.7.21
+
+# 14. Install the C# tools
+RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing
