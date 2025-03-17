@@ -51,4 +51,6 @@ RUN cd /opt && \
 	mv kotlinc kotlin-1.7.21
 
 # 14. Install the C# tools
-RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing
+# 15. Compile and save the fix to the bug described in ci/fix_mono.sh
+RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing && \
+	bash ci/fix_mono.sh
