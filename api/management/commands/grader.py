@@ -196,6 +196,8 @@ def get_cmd_for_language_safeexec(
         return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit*1024}M -Xss64m -DMOG=true Main"
     elif lang == "kotlin":
         return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+    elif lang=="csharp":
+        return f"safeexec --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
