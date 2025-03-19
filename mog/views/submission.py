@@ -29,7 +29,7 @@ def submissions(request):
         contest=request.GET.get("contest"),
         username=request.GET.get("username"),
         result=request.GET.get("result"),
-        compiler=request.GET.get("compiler"),
+        language=request.GET.get("language"),
     )
     submissions = get_paginator(submission_list, 30, request.GET.get("page"))
     return render(
@@ -38,7 +38,7 @@ def submissions(request):
         {
             "submissions": submissions,
             "results": Result.get_all_results(),
-            "compilers": Compiler.get_all_compilers(),
+            "languages": Compiler.get_all_languages(),
             "query": query,
         },
     )

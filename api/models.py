@@ -693,8 +693,8 @@ class Compiler(models.Model):
         return self.name
 
     @staticmethod
-    def get_all_compilers():
-        return Compiler.objects.order_by("name").all()
+    def get_all_languages():
+        return sorted(Compiler.objects.values_list("language", flat=True).distinct())
 
 
 ROLE_CHOICES = [

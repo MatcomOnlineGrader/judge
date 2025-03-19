@@ -26,7 +26,7 @@ def filter_submissions(
     contest=None,
     username=None,
     result=None,
-    compiler=None,
+    language=None,
     problem_exact=False,
     **kwargs
 ):
@@ -96,12 +96,9 @@ def filter_submissions(
     except (Result.DoesNotExist, ValueError):
         result = None
 
-    try:
-        compiler = Compiler.objects.get(pk=compiler)
-        queryset = queryset.filter(compiler=compiler)
-        query["compiler"] = str(compiler.pk)  # encode back
-    except (Compiler.DoesNotExist, ValueError):
-        compiler = None
+    if language:
+        queryset = queryset.filter(compiler__language=language)
+        query["language"] = language  # encode back
 
     return queryset.order_by("-pk"), query
 

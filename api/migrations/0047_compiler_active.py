@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('api', '0046_auto_20240929_1518'),
+        ("api", "0046_auto_20240929_1518"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='compiler',
-            name='active',
+            model_name="compiler",
+            name="active",
             field=models.BooleanField(default=True),
         ),
     ]
