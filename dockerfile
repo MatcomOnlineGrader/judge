@@ -3,7 +3,7 @@ FROM alpine:3.15.0
 # Upgrade installed packages (busybox and few others) before doing anything else
 # And install bash, GNU Libc Compatibility layer, Python 3 (including dev files), Jpeg Dev files (for Pillow) and Zlib,
 # postgresql development files, gcc (required for pip dependencies, removed later), musl development files (header files required)
-RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev postgresql-dev gcc musl-dev
+RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev postgresql-dev gcc musl-dev gettext
 
 # Copy project content in the host machine into the container
 # as /code folder.
@@ -24,5 +24,6 @@ RUN python3 -m venv environ && source environ/bin/activate && \
 	pip install --upgrade pip && pip install -r requirements.txt && \
 	mkdir -p /var/www/judge/static /var/www/judge/media && \
 	python3 manage.py collectstatic --noinput && \
+	python3 manage.py compilemessages && \
 	apk del gcc musl-dev && \
 	pip cache purge && rm -r /var/cache/apk
