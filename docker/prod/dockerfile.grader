@@ -1,0 +1,55 @@
+FROM alpine:3.15.0
+
+# Update the system, and add bash and the glibc compatibility
+# layer, plus git python gcc and java
+RUN apk update && apk upgrade && apk add bash gcompat postgresql-dev git python3 python3-dev gcc g++ openjdk17-jdk iptables
+
+# Copy project content in the host machine into the container
+# as /code folder.
+WORKDIR /code
+COPY . /code/
+
+# 0. Create a virtual environment and load it
+# 1. Install the build dependencies
+# 2. Install all python dependencies.
+# 3. Make safeexec
+# 4. Uninstall cmake and make
+# 5. Test safeexec
+# 6. Create the sandbox dir (where the solution gets executed)
+# 7. Clear PIP and APKcaches
+RUN python3 -m venv environ && \
+	source environ/bin/activate && \
+	apk add cmake make jpeg-dev zlib-dev && \
+	pip install --upgrade pip && pip install -r requirements.txt && \
+	bash ci/make_safeexec.sh && \
+	apk del cmake make && \
+	safeexec --exec /bin/true && \
+	mkdir /sandbox && \
+	pip cache purge && rm -r /var/cache/apk
+
+# 8. Download gcc v11.3.0 from github
+# 9. Install in /opt
+# 10.Cleanup
+RUN cd / && \
+	wget https://github.com/MatcomOnlineGrader/gcc-11.3.0/releases/download/master/gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	mkdir /opt/gcc-11.3.0 && \
+	tar -C /opt -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	rm gcc-11.3.0-x86_64-linux-musl.tar.gz && \
+	cp -r /usr/include/* /opt/gcc-11.3.0/include && \
+	cp -r /opt/gcc-11.3.0/include/c++/10.3.1 /opt/gcc-11.3.0/include/c++/11.3.0 && \
+	cp -r /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-alpine-linux-musl /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-pc-linux-musl
+
+# 11. Install java 17
+# 12. Download kotlin 1.7.21
+# 13. Unzip kotlin
+RUN cd /opt && \
+	apk add openjdk17 && \
+	wget https://github.com/JetBrains/kotlin/releases/download/v1.7.21/kotlin-compiler-1.7.21.zip && \
+	unzip kotlin-compiler-1.7.21.zip && \
+	rm kotlin-compiler-1.7.21.zip && \
+	mv kotlinc kotlin-1.7.21
+
+# 14. Install the C# tools
+# 15. Compile and save the fix to the bug described in ci/fix_mono.sh
+RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing && \
+	bash ci/fix_mono.sh

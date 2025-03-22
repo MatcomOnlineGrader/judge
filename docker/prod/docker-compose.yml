@@ -12,8 +12,10 @@ services:
     ports:
       - '5432:5432'
   api:
-    build: .
-    command: /code/environ/bin/python3 manage.py runserver 0.0.0.0:8000
+    build:
+      context: ../..
+      dockerfile: docker/prod/dockerfile
+    command: environ/bin/gunicorn --workers 4 -b :8000 judge.wsgi:application
     volumes:
       - django-media:/var/www/judge/media
       - judge-problems:/problems
@@ -23,8 +25,8 @@ services:
       - database
   grader:
     build:
-      context: .
-      dockerfile: dockerfile.grader
+      context: ../..
+      dockerfile: docker/prod/dockerfile.grader
     command: bash -c "bash grader-firewall.sh && /code/environ/bin/python3 manage.py grader"
     volumes:
       - judge-problems:/problems

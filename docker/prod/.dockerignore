@@ -1,0 +1,22 @@
+# Testing and development
+node_modules/
+
+# Bytecode and cache
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Git and version control
+.git/
+.gitignore
+
+# Editor and OS files
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.log
+*.DS_Store
+Thumbs.db
