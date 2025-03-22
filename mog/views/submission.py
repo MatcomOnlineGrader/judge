@@ -234,7 +234,10 @@ def rejudge(request, submission_id):
         ):
             return HttpResponseForbidden()
 
-        if submission.result.name in ["Running", "Compiling", "Pending"]:
+        if not submission.compiler.active:
+            msg = _("Cannot rejudge a submission using an inactive compiler.")
+            messages.info(request, msg, extra_tags="warning")
+        elif submission.result.name in ["Running", "Compiling", "Pending"]:
             msg = _("Cannot rejudge submission: It is currently in grading process.")
             messages.info(request, msg, extra_tags="warning")
         else:
