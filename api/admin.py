@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import admin
 from django.db.models import Q
 from .models import (
@@ -90,7 +89,6 @@ class MessageAdmin(admin.ModelAdmin):
 
 
 class CompilerAdmin(admin.ModelAdmin):
-    readonly_fields = ("language", "name") if settings.DEBUG else ()
     list_display = ("id", "name", "language", "active")
 
 
