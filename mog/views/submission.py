@@ -88,7 +88,7 @@ class Submit(View):
             "mog/submit/submit.html",
             {
                 "problem": problem,
-                "compilers": Compiler.objects.order_by("id"),
+                "compilers": Compiler.objects.filter(active=True).order_by("id"),
             },
         )
 
@@ -132,7 +132,6 @@ class Submit(View):
         if (
             not user_is_admin(request.user)
             and not user_is_judge_in_contest(request.user, problem.contest)
-            and compiler not in problem.compilers.all()
         ):
             msg = _("Invalid language choice")
             messages.warning(request, msg, extra_tags="danger")
