@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=judge
       - POSTGRES_PASSWORD=uhdtas
     volumes:
-      - pg-database:/var/lib/postgresql/data
+      - pgdb:/var/lib/postgresql/data
     ports:
       - '5432:5432'
   api:
@@ -22,8 +22,8 @@ services:
                /opt/environ/bin/python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../..:/code
-      - django-media:/var/www/judge/media
-      - judge-problems:/problems
+      - varwww:/var/www/judge
+      - problems:/problems
     ports:
       - '8000:8000'
     depends_on:
@@ -34,11 +34,11 @@ services:
       dockerfile: docker/dev/dockerfile.grader
     command: bash -c "bash grader-firewall.sh && /code/environ/bin/python3 manage.py grader"
     volumes:
-      - judge-problems:/problems
+      - problems:/problems
     cap_add:
       - NET_ADMIN
 
 volumes:
-  django-media:
-  pg-database:
-  judge-problems:
+  pgdb:
+  problems:
+  varwww:
