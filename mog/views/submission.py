@@ -122,6 +122,13 @@ class Submit(View):
                 "mog:problem", problem_id=problem_id, slug=problem.slug, permanent=True
             )
 
+        if not compiler.active:
+            msg = _(
+                "The selected compiler is inactive. Please choose a different one to submit your solution."
+            )
+            messages.warning(request, msg, extra_tags="danger")
+            return redirect("mog:submit", problem.id)
+
         if (
             not user_is_admin(request.user)
             and not user_is_judge_in_contest(request.user, problem.contest)
