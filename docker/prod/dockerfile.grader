@@ -53,3 +53,11 @@ RUN cd /opt && \
 # 15. Compile and save the fix to the bug described in ci/fix_mono.sh
 RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing && \
 	bash ci/fix_mono.sh
+
+# 16. Download PyPy
+# 17. Decompress, cleanup and install
+RUN cd /opt && \
+        wget https://downloads.python.org/pypy/pypy3.9-v7.3.10-linux64.tar.bz2 && \
+        tar xjvf pypy3.9-v7.3.10-linux64.tar.bz2 && \
+        rm pypy3.9-v7.3.10-linux64.tar.bz2 && \
+        mv pypy3.9-v7.3.10-linux64 pypy-7.3.10
