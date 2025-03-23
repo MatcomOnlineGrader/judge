@@ -7,9 +7,17 @@ RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev po
 
 # Copy project content in the host machine into the container
 # as /code folder.
-RUN mkdir /code
 WORKDIR /code
 COPY . /code/
+
+# Build `bundle.js` and place it in the `/static` directory of the
+# frontend app. This file will later be collected and moved to 
+# `/var/www/judge/static`.
+RUN apk add nodejs npm && \
+	npm install && \
+	npm run build && \
+	apk del nodejs npm && \
+	rm -rf node_modules /root/.npm
 
 # 0. Create the virtual environment and load it
 # 1. Upgrade pip and install all python dependencies.

@@ -6,7 +6,6 @@ RUN apk update && apk upgrade && apk add bash gcompat postgresql-dev git python3
 
 # Copy project content in the host machine into the container
 # as /code folder.
-RUN mkdir /code
 WORKDIR /code
 COPY . /code/
 
