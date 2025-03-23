@@ -112,7 +112,7 @@
         var compilersPerProblem = {};
         {% for problem_ in problem.contest.problems.all %}
             compilersPerProblem[{{ problem_.id }}] = [];
-            {% for compiler in problem_.compilers.all %}
+            {% for compiler in compilers %}
                 compilersPerProblem[{{ problem_.id }}].push({{ compiler.id }});
             {% endfor %}
             compilersPerProblem[{{ problem_.id }}].sort(function(a, b) {
