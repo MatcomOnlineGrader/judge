@@ -9,8 +9,6 @@ services:
       - POSTGRES_PASSWORD=uhdtas
     volumes:
       - pgdb:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
   api:
     build:
       context: ../..
