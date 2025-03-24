@@ -4,129 +4,47 @@
 
 [![](mog/static/mog/images/logo.png)](mog/static/mog/images/logo.png)
 
-**Softwares**
-
-- Postgres-9.5.\*
-- Python3
-  - Install `pip`
-  - Install `virtualenv`
-
-**Secret file:**
-
-Create a file named **settings.ini** at the root of the project with the following content:
-
-```
-[debugging]
-DEBUG: <bool> [true|false]
-DEBUG_TOOLBAR: <bool> [true|false]
-
-[database]
-DATABASE_NAME: <str> [database name]
-DATABASE_USER: <str> [database user]
-DATABASE_PASS: <str> [database password]
-DATABASE_HOST: <str> [localhost | xxx.xxx.xxx.xxx | mydomain.com]
-DATABASE_PORT: <int> [5432 for PostgreSQL, 3306 for MySQL, etc]
-REPLICAS: <int> [use 0 here as default]
-
-[secrets]
-SECRET_KEY: <str> [random string]
-PASSWORD_GENERATOR_SECRET_KEY: <str> [constant string to generate default password, don't change it often]
-
-[email]
-EMAIL_USE_TLS: <bool> [true|false]
-EMAIL_HOST: <str> [SMTP host]
-EMAIL_PORT: <int> [SMTP port]
-EMAIL_HOST_USER: <str> [email host user]
-EMAIL_HOST_PASSWORD: <str> [email host password]
-DEFAULT_FROM_EMAIL: <str> [default from email]
-EMAIL_TIMEOUT: <int>
-
-[others]
-MEDIA_ROOT: <str> [path to media folder]
-STATIC_ROOT: <str> [path to static folder]
-
-[grader]
-RESOURCES_FOLDER: <str> [path to resources folder]
-SANDBOX_FOLDER: <str> [path to sandbox folder]
-PROBLEMS_FOLDER: <str> [path to problems folder]
-
-[cache]
-BACKEND: <str> [redis, memcached, in-memory, etc]
-LOCATION: <str> [depends on the backend]
-
-[palantir]
-LOG_REQUESTS: <bool> [true if we want to store detailed request logs]
-```
-
-You can use the following script to generate the settings:
-
-```bash
-./generate_test_settings.sh
-```
-
-**Postgres:**
-
-Execute `psql` and run:
-
-```
-postgres=# CREATE USER [DATABASE_USER] PASSWORD '[DATABASE_PASS]';
-postgres=# CREATE DATABASE [DATABASE_NAME] OWNER [DATABASE_USER];
-postgres=# GRANT postgres TO [DATABASE_USER];
-postgres=# ALTER USER [DATABASE_USER] CREATEDB;
-```
-
-**Run some python scripts:**
-
-Create and activate a virtual environment (optional):
-
-- `virtualenv venv`
-- `venv\Scripts\activate` # Windows
-- `source venv/bin/activate` # Linux
-
-Install pip requirements:
-
-```
-(venv) - pip install -r requirements.txt
-```
-
-Migrate tables into the database:
-
-```
-(venv) - python manage.py migrate
-```
-
-Create the compiled file used by django to manage translation:
-
-```
-(venv) - python manage.py compilemessages -l es
-```
-
-Build React components with webpack into `frontend/static/frontend/dist` folder, then you need to run the next command to copy all static file
-
-```
-(venv) - node_modules/.bin/webpack --config webpack.config.js
-```
-
-Copy static files to the folder specified by the `STATIC_ROOT` variable in django settings:
-
-```
-(venv) - python manage.py collectstatic
-```
-
-Generate some data to start developing (using) the platform:
-**WARNING**: Only do this to run the platform in development mode locally.
-
-```
-export MOG_LOCAL_DEV=1
-(venv) - python manage.py populate_local_dev -d
-```
-
-Launch the grader using:
-
-```
-(venv) - python manage.py runserver
-```
-
 ## Local set up using Docker
 
-Click [here](./docs/LOCAL_SETUP_DOCKER.md) to see instalattion instructions with Docker
+```bash
+./updev.sh
+```
+
+## How to restore a database backup
+
+Here, I'll show you how to load a database snapshot into your development database. We'll assume you've already downloaded a backup file called `judge.sql` from production and have it on your computer. Follow the steps in this video: [restore-database-backup.mov](https://www.dropbox.com/scl/fi/beqyqobdrtxp98r52y5gm/restore-database-backup.mov?rlkey=6kelu7o98tqzyff8idk0inbru&dl=0).
+
+
+```sh
+# Retrieve the Docker container ID from the Docker image.
+CONTAINER_ID=$(docker ps -q --filter "ancestor=postgres:11.5")
+
+# The first step is to move the `judge.sql` file into the
+# PostgreSQL Docker container. Use the command below:
+docker cp ~/Downloads/judge.sql $CONTAINER_ID:/
+
+# Now, we need to remove the existing database before restoring the backup.
+# The challenge is that we're using PostgreSQL 11, which doesn't have a simple
+# way to delete a database. However, I found a solution on Stack Overflow:
+# https://dba.stackexchange.com/a/11895.
+
+# Make sure no one is connected to your database
+docker exec -it $CONTAINER_ID psql -h localhost postgres judge -c \
+    "UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'judge';"
+
+# Force disconnect all clients from the database using this command
+docker exec -it $CONTAINER_ID psql -h localhost postgres judge -c \
+    "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'judge';"
+
+# Delete the database
+docker exec -it $CONTAINER_ID psql -h localhost postgres judge -c \
+    "DROP DATABASE judge;"
+
+# After deleting the `judge` database, we need to create a placeholder
+# for the restore.
+docker exec -it $CONTAINER_ID psql -h localhost postgres judge -c \
+    "CREATE DATABASE judge OWNER judge;"
+
+# Finally, restore the database from `judge.sql`
+docker exec -i $CONTAINER_ID sh -c 'psql -U judge < /judge.sql'
+```
