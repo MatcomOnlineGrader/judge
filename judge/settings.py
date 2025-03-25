@@ -307,7 +307,6 @@ if DEBUG and DEBUG_TOOLBAR:
     INTERNAL_IPS = ["127.0.0.1"]
 
 # Social settings
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # --> facebook
 SOCIAL_AUTH_FACEBOOK_KEY = config.get("social", "SOCIAL_AUTH_FACEBOOK_KEY")
