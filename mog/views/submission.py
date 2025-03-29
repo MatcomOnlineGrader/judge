@@ -128,14 +128,18 @@ class Submit(View):
             )
             messages.warning(request, msg, extra_tags="danger")
             return redirect("mog:submit", problem.id)
+        
 
-        if (
-            not user_is_admin(request.user)
-            and not user_is_judge_in_contest(request.user, problem.contest)
-        ):
-            msg = _("Invalid language choice")
-            messages.warning(request, msg, extra_tags="danger")
-            return redirect("mog:submit", problem.id)
+        # TODO(lcastillov): We're temporarily bypassing the list of compilers in a problem
+        # until we can get both active and inactive compilers working together properly.
+        # if (
+        #     not user_is_admin(request.user)
+        #     and not user_is_judge_in_contest(request.user, problem.contest)
+        #     and compiler not in problem.compilers.all()
+        # ):
+        #     msg = _("Invalid language choice")
+        #     messages.warning(request, msg, extra_tags="danger")
+        #     return redirect("mog:submit", problem.id)
 
         if file is not None:
             source = file.read().decode("utf8")
