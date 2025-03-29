@@ -77,6 +77,7 @@ class TagAdmin(admin.ModelAdmin):
 
 class UserFeedbackAdmin(admin.ModelAdmin):
     ordering = ("-submitted_date",)
+    readonly_fields = ("sender", "assigned", "subject", "description")
 
 
 class ContestInstanceAdmin(admin.ModelAdmin):
