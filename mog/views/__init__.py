@@ -65,7 +65,7 @@ from .user import (
     user_messages,
     user_teams,
 )
-from .views import index, faq, privacy, health
+from .views import index, faq, privacy, health, robotstxt
 from .message import send_message
 from .comment import edit_comment, remove_comment
 from .clarification import clarification_create, clarification_edit
