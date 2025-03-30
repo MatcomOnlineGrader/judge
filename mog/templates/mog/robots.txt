@@ -1,0 +1,37 @@
+# https://www.semrush.com/bot/
+User-agent: SiteAuditBot
+Disallow: /
+
+User-agent: SemrushBot-BA
+Disallow: /
+
+User-agent: SemrushBot-SI
+Disallow: /
+
+User-agent: SemrushBot-SWA
+Disallow: /
+
+User-agent: SplitSignalBot
+Disallow: /
+
+User-agent: SemrushBot-OCOB
+Disallow: /
+
+User-agent: SemrushBot-FT
+Disallow: /
+
+# https://webmaster.petalsearch.com/site/petalbot
+User-agent: PetalBot
+Disallow: /
+
+# https://developers.facebook.com/docs/sharing/webmasters/crawler
+User-agent: meta-externalagent
+Disallow: /
+
+# spider-feedback@bytedance.com
+User-agent: Bytespider
+Disallow: /
+
+# default
+User-agent: *  
+Disallow: /admin/

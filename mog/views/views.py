@@ -5,6 +5,8 @@ from django.core.paginator import (
 )
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
 
 from api.models import Post
 
@@ -36,3 +38,11 @@ def privacy(request):
 
 def health(request):
     return HttpResponse("OK")
+
+
+@cache_page(24 * 60 * 60)
+def robotstxt(request):
+    content = render_to_string("mog/robots.txt")
+    response = HttpResponse(content, content_type="text/plain")
+    response["Cache-Control"] = "private, no-cache, no-store, must-revalidate"
+    return response
