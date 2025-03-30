@@ -13,8 +13,8 @@ from django.http import Http404, HttpResponseForbidden, HttpResponse, JsonRespon
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext as trans
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext as trans
+from django.utils.translation import gettext_lazy as _
 from django.utils.timesince import timesince
 from django.views import View
 from django.views.decorators.http import require_http_methods

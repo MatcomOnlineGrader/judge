@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:11.5
+    image: postgres:12.0
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge

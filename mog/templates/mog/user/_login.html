@@ -27,9 +27,9 @@
     </li>
 {% else %}
     <li>
-        <a href="{% url 'auth_login' %}">{% trans 'Login' %}</a>
+        <a href="{% url 'login' %}">{% trans 'Login' %}</a>
     </li>
     <li>
-        <a href="{% url 'registration_register' %}">{% trans 'Register' %}</a>
+        <a href="{% url 'django_registration_register' %}">{% trans 'Register' %}</a>
     </li>
 {% endif %}

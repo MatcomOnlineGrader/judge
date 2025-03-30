@@ -3,8 +3,8 @@ import json
 from captcha.fields import CaptchaField
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
-from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
+from django.utils.translation import gettext_lazy as _
+from django_registration.forms import RegistrationFormUniqueEmail
 
 from api.models import (
     UserProfile,
@@ -203,18 +203,7 @@ class ProblemForm(ProblemInContestForm):
                 self.fields[field].widget.attrs["class"] = "markdown-editor"
 
 
-class MOGRegistrationForm(RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail):
-    """https://github.com/ivolo/disposable-email-domains/blob/master/index.json"""
-
-    bad_domains = json.load(open("disposable.json", "r"))
-
-    def clean_email(self):
-        RegistrationFormNoFreeEmail.clean_email(self)
-        RegistrationFormUniqueEmail.clean_email(self)
-        return self.cleaned_data["email"]
-
-
-class MOGRegistrationFormWithCaptcha(MOGRegistrationForm):
+class MOGRegistrationFormWithCaptcha(RegistrationFormUniqueEmail):
     captcha = CaptchaField()
 
 

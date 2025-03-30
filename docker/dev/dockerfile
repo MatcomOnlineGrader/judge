@@ -3,7 +3,12 @@ FROM alpine:3.15.0
 # Upgrade installed packages (busybox and few others) before doing anything else
 # And install bash, GNU Libc Compatibility layer, Python 3 (including dev files), Jpeg Dev files (for Pillow) and Zlib,
 # postgresql development files, gcc (required for pip dependencies, removed later), musl development files (header files required)
+# NOTE: Some of these dependencies can be removed in the production
+#       build, but we keep them in development for easier iteration.
 RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev postgresql-dev gcc musl-dev gettext
+
+# To make `django-simple-captcha` work correctly, install Pillow with FreeType support.
+RUN apk add freetype
 
 # Copy project content in the host machine into the container
 # as /code folder.
@@ -21,11 +26,9 @@ RUN apk add nodejs npm && \
 #    `/var/www/judge/static` folder. This folder path
 #     must match with `STATIC_ROOT` in the `settings.ini`
 #    config file.
-# 4. Remove some unnecesary build-time dependencies
-# 5. Remove caches
+# 4. Remove caches
 RUN python3 -m venv /opt/environ && source /opt/environ/bin/activate && \
 	pip install --upgrade pip && pip install -r requirements.txt && \
 	mkdir -p /var/www/judge/static /var/www/judge/media && \
 	python3 manage.py compilemessages && \
-	apk del gcc musl-dev && \
 	pip cache purge && rm -r /var/cache/apk

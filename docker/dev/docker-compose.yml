@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:11.5
+    image: postgres:12.0
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge
@@ -15,11 +15,11 @@ services:
     build:
       context: ../..
       dockerfile: docker/dev/dockerfile
-    # command: tail -f /dev/null
-    command: >
-      bash -c "npm start &
-               /opt/environ/bin/python3 manage.py migrate &&
-               /opt/environ/bin/python3 manage.py runserver 0.0.0.0:8000"
+    command: bash -c docker/dev/command.sh
+    # command: >
+    #   bash -c "npm start &
+    #            /opt/environ/bin/python3 manage.py migrate &&
+    #            /opt/environ/bin/python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../..:/code
       - varwww:/var/www/judge

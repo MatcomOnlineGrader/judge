@@ -20,7 +20,7 @@ from django.conf import settings
 from django.utils.deconstruct import deconstructible
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from mog.tasks import report_clarification
 from mog.gating import (

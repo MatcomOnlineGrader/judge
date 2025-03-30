@@ -17,7 +17,7 @@ Here, I'll show you how to load a database snapshot into your development databa
 
 ```sh
 # Retrieve the Docker container ID from the Docker image.
-CONTAINER_ID=$(docker ps -q --filter "ancestor=postgres:11.5")
+CONTAINER_ID=$(docker ps -q --filter "ancestor=postgres:12.0")
 
 # The first step is to move the `judge.sql` file into the
 # PostgreSQL Docker container. Use the command below:

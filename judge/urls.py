@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from registration.backends.hmac.views import RegistrationView
+from django_registration.views import RegistrationView
 
 from mog.forms import MOGRegistrationFormWithCaptcha
 
@@ -29,7 +29,8 @@ urlpatterns = [
         RegistrationView.as_view(form_class=MOGRegistrationFormWithCaptcha),
         name="registration_register",
     ),
-    path(r"", include("registration.backends.hmac.urls")),
+    path(r"", include("django_registration.backends.activation.urls")),
+    path(r"", include("django.contrib.auth.urls")),
     path(r"", include("mog.urls")),
     path(r"social/", include("social_django.urls", namespace="social")),
     path(r"admin/", admin.site.urls),
