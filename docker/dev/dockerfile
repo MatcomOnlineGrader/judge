@@ -5,6 +5,9 @@ FROM alpine:3.15.0
 # postgresql development files, gcc (required for pip dependencies, removed later), musl development files (header files required)
 RUN apk upgrade && apk add bash gcompat python3 python3-dev jpeg-dev zlib-dev postgresql-dev gcc musl-dev gettext
 
+# To make `django-simple-captcha` work correctly, install Pillow with FreeType support.
+RUN apk add freetype
+
 # Copy project content in the host machine into the container
 # as /code folder.
 WORKDIR /code
