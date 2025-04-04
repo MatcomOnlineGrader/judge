@@ -52,6 +52,9 @@ services:
       - "3000:3000"
     env_file:
       - ./grafana.env
+    environment:
+      - GF_SERVER_ROOT_URL=/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
     volumes:
       - grafana:/var/lib/grafana
     depends_on:
