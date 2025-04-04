@@ -51,6 +51,10 @@ services:
     ports:
       - "3000:3000"
     env_file:
+      # docker/prod/grafana.env
+      # -----------------------
+      # GF_SECURITY_ADMIN_USER=XXX
+      # GF_SECURITY_ADMIN_PASSWORD=XXX
       - ./grafana.env
     environment:
       - GF_SERVER_ROOT_URL=/grafana
