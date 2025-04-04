@@ -64,6 +64,12 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    environment:
+      - DATA_SOURCE_NAME=postgresql://judge:uhdtas@database:5432/judge?sslmode=disable
+    depends_on:
+      - database
 
 volumes:
   grafana:
