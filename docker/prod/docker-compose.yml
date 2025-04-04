@@ -46,8 +46,20 @@ services:
     ports:
       - "9090:9090"
     restart: unless-stopped
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./grafana.env
+    volumes:
+      - grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 volumes:
+  grafana:
   pgdb:
   problems:
   varwww:
