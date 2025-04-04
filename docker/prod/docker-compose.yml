@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   database:
@@ -18,7 +18,7 @@ services:
       - varwww:/var/www/judge
       - problems:/problems
     ports:
-      - '8000:8000'
+      - "8000:8000"
     depends_on:
       - database
   grader:
@@ -30,6 +30,20 @@ services:
       - problems:/problems
     cap_add:
       - NET_ADMIN
+  ######################################################################
+  # Monitoring
+  ######################################################################
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./web-config.yml:/etc/prometheus/web-config.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.config.file=/etc/prometheus/web-config.yml"
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
 
 volumes:
   pgdb:
