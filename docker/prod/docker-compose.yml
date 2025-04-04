@@ -46,8 +46,27 @@ services:
     ports:
       - "9090:9090"
     restart: unless-stopped
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      # docker/prod/grafana.env
+      # -----------------------
+      # GF_SECURITY_ADMIN_USER=XXX
+      # GF_SECURITY_ADMIN_PASSWORD=XXX
+      - ./grafana.env
+    environment:
+      - GF_SERVER_ROOT_URL=/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    volumes:
+      - grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 volumes:
+  grafana:
   pgdb:
   problems:
   varwww:
