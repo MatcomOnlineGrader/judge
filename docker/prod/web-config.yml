@@ -1,0 +1,3 @@
+basic_auth_users:
+  # Generated via `htpasswd -nB admin`
+  admin: $2y$05$lr5wj6cRA0nwqgSnThnUZegcFIvB06C9mry7d271CSllYfs.bLUZO
