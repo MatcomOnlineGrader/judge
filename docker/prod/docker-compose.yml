@@ -51,8 +51,8 @@ services:
       # We still need to allow connections from Docker. If
       # we're using something like UFW, we need to gather the
       # Docker subnet info and enable it:
-      # $ docker network inspect bridge
-      # $ sudo ufw allow from 172.17.0.0/16 to any port 9100 proto tcp
+      # $ docker network inspect prod_default | jq .[0].IPAM.Config.[0].Subnet
+      # $ sudo ufw allow from 172.18.0.0/16 to any port 9100 proto tcp
       - "host.docker.internal:host-gateway"
     ports:
       - "9090:9090"
