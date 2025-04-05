@@ -10,4 +10,4 @@ scrape_configs:
       - targets: ["postgres_exporter:9187"]
   - job_name: node
     static_configs:
-      - targets: ["node_exporter:9100"]
+      - targets: ["host.docker.internal:9100"]
