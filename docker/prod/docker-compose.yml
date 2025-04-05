@@ -43,6 +43,11 @@ services:
       - "--web.config.file=/etc/prometheus/web-config.yml"
       - "--web.external-url=/prometheus/"
       - "--web.route-prefix=/prometheus/"
+    extra_hosts:
+      # We needed to connect to a `node_exporter` running
+      # in host mode, so we also had to scrape an endpoint
+      # expose at the host level.
+      - "host.docker.internal:host-gateway"
     ports:
       - "9090:9090"
     restart: unless-stopped
