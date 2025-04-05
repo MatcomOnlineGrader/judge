@@ -43,6 +43,17 @@ services:
       - "--web.config.file=/etc/prometheus/web-config.yml"
       - "--web.external-url=/prometheus/"
       - "--web.route-prefix=/prometheus/"
+    extra_hosts:
+      # We needed to connect to a `node_exporter` running
+      # in host mode, so we also had to scrape an endpoint
+      # expose at the host level.
+      #
+      # We still need to allow connections from Docker. If
+      # we're using something like UFW, we need to gather the
+      # Docker subnet info and enable it:
+      # $ docker network inspect prod_default | jq .[0].IPAM.Config.[0].Subnet
+      # $ sudo ufw allow from 172.18.0.0/16 to any port 9100 proto tcp
+      - "host.docker.internal:host-gateway"
     ports:
       - "9090:9090"
     restart: unless-stopped
@@ -70,6 +81,15 @@ services:
       - DATA_SOURCE_NAME=postgresql://judge:uhdtas@database:5432/judge?sslmode=disable
     depends_on:
       - database
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
 
 volumes:
   grafana:
