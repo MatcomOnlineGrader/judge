@@ -7,14 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 from registration.forms import RegistrationFormNoFreeEmail, RegistrationFormUniqueEmail
 
 from api.models import (
-    UserProfile,
-    UserFeedback,
-    User,
-    Post,
-    Contest,
-    Problem,
-    Clarification,
     Checker,
+    Clarification,
+    Compiler,
+    Contest,
+    Post,
+    Problem,
+    User,
+    UserFeedback,
+    UserProfile,
 )
 from mog.utils import secure_html
 
@@ -163,6 +164,7 @@ class ProblemInContestForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["compilers"].queryset = Compiler.objects.filter(active=False)
         for field in ["body", "input", "output", "hints"]:
             self.fields[field].widget.attrs["class"] = "markdown-editor"
 
