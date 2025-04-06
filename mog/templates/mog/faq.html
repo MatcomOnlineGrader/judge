@@ -15,27 +15,56 @@
             <p>
                 The system supports the following programming languages:
             </p>
-            <ol>
-                <li><strong>C</strong> &#x2013; GNU GCC 5.1.0 / 7.3.0</li>
-                <li><strong>C++</strong> &#x2013; GNU G++ 5.1.0 / 7.3.0</li>
-                <li><strong>C++11</strong> &#x2013; GNU G++11 5.1.0 / 7.3.0</li>
-                <li><strong>C++17</strong> &#x2013; GNU G++17 7.3.0</li>
-                <li><strong>C++20</strong> &#x2013; GNU G++20 13.2.0 (64bit)</li>
-                <li><strong>C#</strong> &#x2013; MS C# .NET 4.7</li>
-                <li><strong>Java</strong> &#x2013; Java 1.8</li>
-                <li><strong>JavaScript</strong> &#x2013; JavaScript v8 4.8.0</li>
-                <li><strong>Pascal</strong> &#x2013; Free Pascal 2.6.4</li>
-                <li><strong>Python 2.7</strong> &#x2013; Python 2.7.13 (PyPy)</li>
-                <li><strong>Python 2.7</strong> &#x2013; Python 2.7.13 (CPython)</li>
-                <li><strong>Python 3.5</strong> &#x2013; Python 3.5.3 (CPython)</li>
-                <li><strong>Python 3.9</strong> &#x2013; Python 3.9.16 (PyPy)</li>
-                <li><strong>Haskell</strong> &#x2013; Haskell GHC 8.0.2</li>
-                <li><strong>Kotlin</strong> &#x2013; Kotlin 1.3.50</li>
-                <li><strong>Tiger</strong> &#x2013; <a href="http://matcomgrader.com/media/faq/tiger.pdf">tiger.pdf</a> (<small>101.8 kB</small>)</li>
-            </ol>
-            <h5><u>⚠️ Special notes about Java</u></h5>
-            There must be a class which must contain a name for the 'main' static methods (functions), this method is
-            the entrance. Your main class name must be 'Main'.
+            <div>
+                <!-- C++ -->
+                <p><span style="font-weight: bold;">g++ (GCC) 11.3.0</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: g++ -x c++ -g -DMOG -O2 -std=gnu++20 -static {0} -o {1}                
+                <pre ># g++ --version<br/>g++ (GCC) 11.3.0<br/>Copyright (C) 2021 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
+                
+                <!-- C -->
+                <p><span style="font-weight: bold;">gcc (GCC) 11.3.0</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: gcc -x c -g -O2 -std=gnu11 -static -lm {0} -o {1}
+                    <pre ># gcc --version<br/>gcc (GCC) 11.3.0<br/>Copyright (C) 2021 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
+                
+                <!-- CSharp -->
+                <p><span style="font-weight: bold;">C# Mono 6.12</span></p>
+                <pre ><span style="font-weight: bold;">Arguments</span>: csc {0}
+                    <pre ># csc<br/>Microsoft (R) Visual C# Compiler version 3.9.0-6.21124.20 (db94f4cc)<br/>Copyright (C) Microsoft Corporation. All rights reserved.</pre>
+<span style="font-weight: bold;">Arguments</span>: mono ./{submission}.cs
+                    <pre ># mono --version<br/>Mono JIT compiler version 6.12.0.205 (tarball Sun Jul 30 10:33:25 UTC 2023)<br/>Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com<br/>&nbsp;TLS:           __thread<br/>&nbsp;SIGSEGV:       normal<br/>&nbsp;Notifications: epoll<br/>&nbsp;Architecture:  amd64<br/>&nbsp;Disabled:      none<br/>&nbsp;Misc:          softdebug<br/>&nbsp;Interpreter:   yes<br/>&nbsp;LLVM:          supported, not enabled.<br/>&nbsp;Suspend:       hybrid<br/>&nbsp;GC:            sgen (concurrent by default)</pre></pre>
+
+                <!-- PyPy -->
+                <p><span style="font-weight: bold;">PyPy 7.3.10</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: pypy {0}
+                    <pre ># pypy --version<br/>Python 3.9.15 (21401ebc2df332b6be6e3d364a985e951a72bbbd, Dec 05 2022, 18:37:07)<br/>[PyPy 7.3.10 with GCC 10.2.1 20210130 (Red Hat 10.2.1-11)]</pre></pre>
+                
+                <!-- CPython -->
+                <p><span style="font-weight: bold;">Python 3.9.18</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: python3 -O {0}
+                    <pre ># python3 -VV<br/>Python 3.9.18 (main, Aug 26 2023, 11:50:23)<br/>[GCC 10.3.1 20211027]</pre></pre>
+                
+                <!-- Java -->
+                <p>
+                    <span style="font-weight: 700;">OpenJDK 17.0.8</span>
+                    <div display="block">
+                        ⚠️ You must have a class named <i>Main</i> that contains the
+                        <i>main</i> static method. This method is the entry point of
+                        your program.
+                    </div>
+                </p>
+                <pre><span style="font-weight: bold;">Arguments</span>: javac -cp ".;*" {0}
+                    <pre># javac --version<br/>javac 17.0.8</pre>
+<span style="font-weight: bold;">Arguments</span>: java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit*1024}M -Xss64m -DMOG=true Main
+                    <pre ># java --version<br/>openjdk 17.0.8 2023-07-18<br/>OpenJDK Runtime Environment (build 17.0.8+7-alpine-r0)<br/>OpenJDK 64-Bit Server VM (build 17.0.8+7-alpine-r0, mixed mode, sharing)</pre></pre>
+
+                <!-- Kotlin -->
+                <p><span style="font-weight: bold;">Kotlin 1.7.21</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: kotlinc -d . {0}
+                    <pre># kotlinc -version<br/>info: kotlinc-jvm 1.7.21 (JRE 17.0.8+7-alpine-r0)</pre>
+<span style="font-weight: bold;">Arguments</span>: kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt
+                    <pre># kotlin -version<br/>Kotlin version 1.7.21-release-272 (JRE 17.0.8+7-alpine-r0)</pre></pre>
+            </div>
+
             <h3>Which kind of input/output can I use?</h3>
             <p>
                 MOG only supports the standard input and output, the system does not allow you manipulate files,
@@ -46,17 +75,17 @@
                 Here is a list with the possible submission results you can get:
             </p>
             <ol>
-                <li><strong>Pending</strong> – Your solution is waiting for judgment, this process is generally not very long.</li>
-                <li><strong>Compiling</strong> – Your code is being compiled.</li>
-                <li><strong>Running</strong> – Your program is running.</li>
-                <li><strong>Accepted</strong> – Your program is correct, congratulations!</li>
-                <li><strong>Wrong Answer</strong> – Your solution didn't output the correct solution.</li>
-                <li><strong>Runtime Error</strong> – Your solution crashed during execution.</li>
-                <li><strong>Time Limit Exceeded</strong> – The running time of your program is beyond the problem time limit.</li>
-                <li><strong>Idleness Limit Exceeded</strong> – Your program waste too much time in idle status (IO, CPU waiting, etc.).</li>
-                <li><strong>Memory Limit Exceeded</strong> – The running memory of your program is beyond the problem memory limit.</li>
-                <li><strong>Compile Error</strong> – Your code couldn't be compiled. You can see the errors at the submission's details.</li>
-                <li><strong>Internal Error</strong> – There was an error on MOG system.</li>
+                <li><strong>Pending</strong> &#x2013; Your solution is waiting for judgment, this process is generally not very long.</li>
+                <li><strong>Compiling</strong> &#x2013; Your code is being compiled.</li>
+                <li><strong>Compilation Error</strong> &#x2013; Your code couldn't be compiled. You can see the errors at the submission's details.</li>
+                <li><strong>Running</strong> &#x2013; Your program is running.</li>
+                <li><strong>Accepted</strong> &#x2013; Your program is correct, congratulations!</li>
+                <li><strong>Wrong Answer</strong> &#x2013; Your solution didn't output the correct solution.</li>
+                <li><strong>Runtime Error</strong> &#x2013; Your solution crashed during execution.</li>
+                <li><strong>Time Limit Exceeded</strong> &#x2013; The running time of your program is beyond the problem time limit.</li>
+                <li><strong>Idleness Limit Exceeded</strong> &#x2013; Your program waste too much time in idle status (IO, CPU waiting, etc.).</li>
+                <li><strong>Memory Limit Exceeded</strong> &#x2013; The running memory of your program is beyond the problem memory limit.</li>
+                <li><strong>Internal Error</strong> &#x2013; There was an error on MOG system.</li>
             </ol>
 
             <h3>Which kind of errors will be penalized during a contest?</h3>
@@ -87,41 +116,44 @@
             <h3>How to solve A+B problem ?</h3>
             <p>Given two small integers $A$ and $B$ what is the result of $A + B$ ?</p>
 
-{#            <small class="uniform-text">ASM</small>#}
-{#            <textarea class="code" data-mode="gas" data-url="{% static 'mog/aplusb/aplusb.asm.txt' %}"></textarea>#}
-
-            <small class="uniform-text">C</small>
-            <textarea class="code" data-mode="text/x-csrc" data-url="{% static 'mog/aplusb/aplusb.c.txt' %}"></textarea>
+            {#<!-- <small class="uniform-text">ASM</small> -->#}
+            {#<!-- <textarea class="code" data-mode="gas" data-url="{% static 'mog/aplusb/aplusb.asm.txt' %}"></textarea> -->#}
 
             <small class="uniform-text">C++</small>
             <textarea class="code" data-mode="text/x-c++src" data-url="{% static 'mog/aplusb/aplusb.cpp.txt' %}"></textarea>
 
+            <small class="uniform-text">C</small>
+            <textarea class="code" data-mode="text/x-csrc" data-url="{% static 'mog/aplusb/aplusb.c.txt' %}"></textarea>
+
             <small class="uniform-text">C#</small>
             <textarea class="code" data-mode="text/x-csharp" data-url="{% static 'mog/aplusb/aplusb.cs.txt' %}"></textarea>
-
-{#            <small class="uniform-text">F#</small>#}
-{#            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.fs.txt' %}"></textarea>#}
 
             <small class="uniform-text">Java</small>
             <textarea class="code" data-mode="text/x-java" data-url="{% static 'mog/aplusb/aplusb.java.txt' %}"></textarea>
 
-            <small class="uniform-text">JavaScript</small>
-            <textarea class="code" data-mode="text/javascript" data-url="{% static 'mog/aplusb/aplusb.js.txt' %}"></textarea>
-
-            <small class="uniform-text">Pascal</small>
-            <textarea class="code" data-mode="text/x-pascal" data-url="{% static 'mog/aplusb/aplusb.pas.txt' %}"></textarea>
-
-            <small class="uniform-text">Python2</small>
-            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py2.txt' %}"></textarea>
-
-            <small class="uniform-text">Python3</small>
-            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py3.txt' %}"></textarea>
-
             <small class="uniform-text">Kotlin</small>
             <textarea class="code" data-mode="text/x-kotlin" data-url="{% static 'mog/aplusb/aplusb.kt.txt' %}"></textarea>
-            {# Looks like FSharp? #}
-            <small class="uniform-text">Tiger</small>
-            <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.tig.txt' %}"></textarea>
+
+            <small class="uniform-text">Python</small>
+            <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py3.txt' %}"></textarea>
+
+            {% comment %}
+            <!-- <small class="uniform-text">F#</small>#} -->
+            <!-- <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.fs.txt' %}"></textarea> -->
+
+            <!-- <small class="uniform-text">JavaScript</small> -->
+            <!-- <textarea class="code" data-mode="text/javascript" data-url="{% static 'mog/aplusb/aplusb.js.txt' %}"></textarea> -->
+
+            <!-- <small class="uniform-text">Pascal</small> -->
+            <!-- <textarea class="code" data-mode="text/x-pascal" data-url="{% static 'mog/aplusb/aplusb.pas.txt' %}"></textarea> -->
+
+            <!-- <small class="uniform-text">Python2</small> -->
+            <!-- <textarea class="code" data-mode="text/x-python" data-url="{% static 'mog/aplusb/aplusb.py2.txt' %}"></textarea> -->
+
+            <!-- Looks like FSharp? -->
+            <!-- <small class="uniform-text">Tiger</small> -->
+            <!-- <textarea class="code" data-mode="text/x-fsharp" data-url="{% static 'mog/aplusb/aplusb.tig.txt' %}"></textarea> -->
+            {% endcomment %}
         </div>
     </div>
 {% endblock %}
