@@ -11,6 +11,22 @@
     {% include 'mog/contest/_left.html' with contest=problem.contest %}
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
+    <style>
+        .test-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-case-header > button {
+            font-size: 10px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="row text-center">
@@ -114,11 +130,27 @@
                 {% for si, so in samples %}
                     <div class="sample-test">
                         <div class="input">
-                            <div class="title">{% trans 'Input' %}</div>
+                            <div class="title test-case-header">
+                                {% trans 'Input' %}
+                                <button
+                                    type="button"
+                                    class="btn btn-default btn-sm pull-right"
+                                    onclick="copyContent(this, '{{ si | escapejs }}')">
+                                    {% trans 'Copy' %}
+                                </button>
+                            </div>
                             <div class="pre"><span class="text">{{ si }}</span></div>
                         </div>
                         <div class="output">
-                            <div class="title">{% trans 'Output' %}</div>
+                            <div class="title test-case-header">
+                                {% trans 'Output' %}
+                                <button
+                                    type="button"
+                                    class="btn btn-default btn-sm pull-right"
+                                    onclick="copyContent(this, '{{ so | escapejs }}')">
+                                    {% trans 'Copy' %}
+                                </button>
+                            </div>
                             <div class="pre"><span class="text">{{ so }}</span></div>
                         </div>
                     </div>
@@ -174,13 +206,18 @@
     {% endif %}
 {% endblock %}
 
-
-{% block styles %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-{% endblock %}
-
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+    <script>
+        function copyContent(el, content) {
+            navigator.clipboard.writeText(content);
+            el.innerText = el.innerText.replace('✓', '') + '✓';
+            setTimeout(() => {
+                el.innerText = el.innerText.replace('✓', '');
+            }, 5000);
+        }
+    </script>
 
     {% include 'mog/includes/mathjax' %}
 {% endblock %}
