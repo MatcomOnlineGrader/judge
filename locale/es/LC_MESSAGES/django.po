@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-23 19:59+0000\n"
+"POT-Creation-Date: 2025-04-08 03:18+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,12 +96,12 @@ msgstr "Problema"
 msgid "Public"
 msgstr "Público"
 
-#: api/models.py:1286 mog/forms.py:222
+#: api/models.py:1286 mog/forms.py:224
 #: mog/templates/mog/contest/clarifications.html:60
 msgid "Question"
 msgstr "Pregunta"
 
-#: api/models.py:1287 mog/forms.py:250
+#: api/models.py:1287 mog/forms.py:252
 #: mog/templates/mog/contest/clarifications.html:61
 #: mog/templates/mog/contest/clarifications.html:120
 msgid "Answer"
@@ -137,40 +137,40 @@ msgstr "Inglés"
 msgid "WARNING: Institution <b>%s</b> was not found"
 msgstr ""
 
-#: mog/forms.py:49 mog/templates/registration/login.html:34
+#: mog/forms.py:50 mog/templates/registration/login.html:34
 msgid "Password"
 msgstr "Contraseña"
 
-#: mog/forms.py:52
+#: mog/forms.py:53
 msgid "Password confirmation"
 msgstr "Confirmación de contraseña"
 
-#: mog/forms.py:118
+#: mog/forms.py:119
 msgid "Start date must be less than end date"
 msgstr "La fecha de inicio debe ser menor que la de finalización."
 
-#: mog/forms.py:126
+#: mog/forms.py:127
 msgid "Frozen time must be greater or equal than death time"
 msgstr ""
 "Duración del tiempo congelado debe ser mayor o igual que el tiempo muerto."
 
-#: mog/forms.py:135
+#: mog/forms.py:136
 msgid "Death time must be less or equal than contest duration"
 msgstr ""
 "La duración del tiempo muerto debe ser menor o igual que la duración de la "
 "competencia."
 
-#: mog/forms.py:245
+#: mog/forms.py:247
 msgid "Problem not included in contest"
 msgstr "Problema no incluído en el concurso"
 
-#: mog/forms.py:269
+#: mog/forms.py:271
 msgid ""
 "Load the ZIP file from Baylor. The file must have the .tab files <i>(School."
 "tab, Site.tab, Team.tab, Person.tab, and TeamPerson.tab)</i>."
 msgstr ""
 
-#: mog/forms.py:278
+#: mog/forms.py:280
 msgid ""
 "Prefix to add to each official user account. Example: <b>2021CFQ</b>."
 "<br>        Users created will be named as <b>2021CFQ_icpc_[#]</b>."
@@ -178,14 +178,14 @@ msgid ""
 "<i>prefix</i> to the same contest and related (warmup and real)</span>"
 msgstr ""
 
-#: mog/forms.py:294
+#: mog/forms.py:296
 msgid ""
 "Load the CSV file with all Guest Teams. The file must have the following "
 "columns: <i>team_name, institution, coach, participant1, participant2, "
 "participant3, and group</i>."
 msgstr ""
 
-#: mog/forms.py:303
+#: mog/forms.py:305
 msgid ""
 "Prefix to add to each guest user account. Example: <b>2021CFQ</b>."
 "<br>        Users created will be named as <b>2021CFQ_guest_[#]</b>."
@@ -193,7 +193,7 @@ msgid ""
 "<i>prefix</i> to the same contest and related (warmup and real)</span>"
 msgstr ""
 
-#: mog/forms.py:316
+#: mog/forms.py:318
 msgid ""
 "Load the CSV file with all User Permissions. The file must have the "
 "following columns: <i>username, role, and granted</i>."
@@ -250,10 +250,10 @@ msgid ""
 "clicking the exclamation icon in the bottom right corner of the website."
 msgstr ""
 "Recientemente hemos migrado el MOG a un nuevo servidor con un evaluador "
-"diferente. Como resultado, algunas funcionalidades, especialmente las relacionadas "
-"con la evaluación de envíos, podrían no funcionar correctamente. Si encuentras "
-"algún problema, por favor repórtalo haciendo clic en el icono de exclamación en "
-"la esquina inferior derecha del sitio web."
+"diferente. Como resultado, algunas funcionalidades, especialmente las "
+"relacionadas con la evaluación de envíos, podrían no funcionar "
+"correctamente. Si encuentras algún problema, por favor repórtalo haciendo "
+"clic en el icono de exclamación en la esquina inferior derecha del sitio web."
 
 #: mog/templates/mog/base.html:265 mog/templates/mog/user/detail.html:15
 #: mog/templates/mog/user/index.html:34
@@ -408,7 +408,7 @@ msgstr "Abierto"
 #: mog/templates/mog/contest/_unregister.html:21
 #: mog/templates/mog/contest/overview.html:92
 #: mog/templates/mog/contest/overview.html:104
-#: mog/templates/mog/problem/detail.html:168
+#: mog/templates/mog/problem/detail.html:200
 #: mog/templates/mog/user/_remove_team.html:22
 msgid "Yes"
 msgstr "Si"
@@ -421,7 +421,7 @@ msgstr "Si"
 #: mog/templates/mog/contest/_unregister.html:20
 #: mog/templates/mog/contest/overview.html:94
 #: mog/templates/mog/contest/overview.html:106
-#: mog/templates/mog/problem/detail.html:167
+#: mog/templates/mog/problem/detail.html:199
 #: mog/templates/mog/user/_remove_team.html:21
 msgid "No"
 msgstr "No"
@@ -521,7 +521,7 @@ msgstr "Posiciones"
 #: mog/templates/mog/contest/_left.html:113
 #: mog/templates/mog/contest/_left.html:117
 #: mog/templates/mog/contest/problems.html:38
-#: mog/templates/mog/problem/detail.html:73
+#: mog/templates/mog/problem/detail.html:89
 #: mog/templates/mog/submit/submit.html:7
 #: mog/templates/mog/submit/submit.html:33
 #: mog/templates/registration/password_change_form.html:9
@@ -991,68 +991,73 @@ msgstr "Creado"
 msgid "No posts written yet!"
 msgstr "No hay publicaciones escritas todavía!"
 
-#: mog/templates/mog/problem/detail.html:25
+#: mog/templates/mog/problem/detail.html:41
 #: mog/templates/mog/problem/edit.html:6 mog/templates/mog/problem/edit.html:16
 msgid "Edit problem"
 msgstr "Editar problema"
 
-#: mog/templates/mog/problem/detail.html:30
+#: mog/templates/mog/problem/detail.html:46
 msgid "Edit tests"
 msgstr "Editar tests"
 
-#: mog/templates/mog/problem/detail.html:35
+#: mog/templates/mog/problem/detail.html:51
 msgid "Edit checker"
 msgstr ""
 
-#: mog/templates/mog/problem/detail.html:41
+#: mog/templates/mog/problem/detail.html:57
 msgid "Remove problem"
 msgstr "Eliminar problema"
 
-#: mog/templates/mog/problem/detail.html:49
+#: mog/templates/mog/problem/detail.html:65
 msgid "Languages"
 msgstr "Lenguajes"
 
-#: mog/templates/mog/problem/detail.html:51
+#: mog/templates/mog/problem/detail.html:67
 #, fuzzy
 #| msgid "Memory limit"
 msgid "Time & Memory limits"
 msgstr "Memoria límite"
 
-#: mog/templates/mog/problem/detail.html:59
+#: mog/templates/mog/problem/detail.html:75
 msgid "All submissions"
 msgstr "Todos los envíos"
 
-#: mog/templates/mog/problem/detail.html:63
+#: mog/templates/mog/problem/detail.html:79
 msgid "Accepted submissions"
 msgstr "Envíos aceptados"
 
-#: mog/templates/mog/problem/detail.html:69
+#: mog/templates/mog/problem/detail.html:85
 msgid "My submissions"
 msgstr "Mis envíos"
 
-#: mog/templates/mog/problem/detail.html:89
-#: mog/templates/mog/problem/detail.html:117
+#: mog/templates/mog/problem/detail.html:105
+#: mog/templates/mog/problem/detail.html:134
 msgid "Input"
 msgstr "Entrada"
 
-#: mog/templates/mog/problem/detail.html:100
-#: mog/templates/mog/problem/detail.html:121
+#: mog/templates/mog/problem/detail.html:116
+#: mog/templates/mog/problem/detail.html:146
 msgid "Output"
 msgstr "Salida"
 
-#: mog/templates/mog/problem/detail.html:111
+#: mog/templates/mog/problem/detail.html:127
 msgid "Sample test(s)"
 msgstr "Caso(s) de ejemplo"
 
-#: mog/templates/mog/problem/detail.html:131
+#: mog/templates/mog/problem/detail.html:139
+#: mog/templates/mog/problem/detail.html:151
+msgid "Copy"
+msgstr "Copiar"
+
+#: mog/templates/mog/problem/detail.html:163
 msgid "Hints"
 msgstr "Pistas"
 
-#: mog/templates/mog/problem/detail.html:152
+#: mog/templates/mog/problem/detail.html:184
 msgid "Delete Problem"
 msgstr "Eliminar problema"
 
-#: mog/templates/mog/problem/detail.html:157
+#: mog/templates/mog/problem/detail.html:189
 msgid ""
 "If you remove this problem all submissions related with it will be removed "
 "too."
@@ -1329,7 +1334,7 @@ msgstr "Ahora usted está registrado. Correo de activación enviado."
 msgid "Or register with"
 msgstr "O regístrese con"
 
-#: mog/views/checker.py:41 mog/views/checker.py:100 mog/views/submission.py:145
+#: mog/views/checker.py:41 mog/views/checker.py:100 mog/views/submission.py:148
 msgid "Empty source code"
 msgstr "Código fuente vacío"
 
@@ -1634,36 +1639,35 @@ msgstr ""
 "El compilador seleccionado está inactivo. Por favor, elige otro para enviar "
 "tu solución."
 
-#: mog/views/submission.py:137
-msgid "Invalid language choice"
-msgstr "Selección de lenguaje inválida"
-
-#: mog/views/submission.py:154
+#: mog/views/submission.py:157
 msgid "You are not allowed to submit to this contest."
 msgstr ""
 
-#: mog/views/submission.py:164
+#: mog/views/submission.py:167
 msgid "You cannot submit because you are not registered in the contest."
 msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
-#: mog/views/submission.py:176
+#: mog/views/submission.py:179
 #, fuzzy
 #| msgid "You cannot submit because you are not registered in the contest."
 msgid "You cannot submit because the contest is still frozen."
 msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
-#: mog/views/submission.py:189
+#: mog/views/submission.py:192
 msgid "Sending same submission twice too quickly."
 msgstr "Enviando solución repetida muy rápdio."
 
-#: mog/views/submission.py:245
+#: mog/views/submission.py:248
 msgid "Cannot rejudge a submission using an inactive compiler."
 msgstr ""
 "No se puede volver a juzgar un envío utilizando un compilador inactivo."
 
-#: mog/views/submission.py:248
+#: mog/views/submission.py:251
 msgid "Cannot rejudge submission: It is currently in grading process."
 msgstr ""
+
+#~ msgid "Invalid language choice"
+#~ msgstr "Selección de lenguaje inválida"
 
 #~ msgid "Asked by"
 #~ msgstr "Preguntado por"
