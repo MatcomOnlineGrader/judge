@@ -164,7 +164,7 @@ class ProblemInContestForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["compilers"].queryset = Compiler.objects.filter(active=False)
+        self.fields["compilers"].queryset = Compiler.objects.filter(active=True)
         for field in ["body", "input", "output", "hints"]:
             self.fields[field].widget.attrs["class"] = "markdown-editor"
 
