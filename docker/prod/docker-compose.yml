@@ -13,7 +13,7 @@ services:
     build:
       context: ../..
       dockerfile: docker/prod/dockerfile
-    command: environ/bin/gunicorn --workers 4 -b :8000 judge.wsgi:application
+    command: environ/bin/gunicorn --workers 4 --statsd-host=statsd_exporter:9125 --statsd-prefix=judge -b :8000 judge.wsgi:application
     volumes:
       - varwww:/var/www/judge
       - problems:/problems
@@ -90,6 +90,9 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+  statsd_exporter:
+    image: prom/statsd-exporter
+
 
 volumes:
   grafana:
