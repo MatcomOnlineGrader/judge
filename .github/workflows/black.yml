@@ -2,13 +2,15 @@ name: Black Python code
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths:
       - '**.py'
+      - '.github/workflows/black.yml'
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths:
       - '**.py'
+      - '.github/workflows/black.yml'
 
 jobs:
   black-python-code:
@@ -26,7 +28,7 @@ jobs:
       - name: Installing Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7.17'
+          python-version: '3.9'
       - name: Installing black
         run: pip install black
       - name: Run black

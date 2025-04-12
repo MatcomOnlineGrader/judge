@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
-from api.models import Submission, Contest, Result, Compiler
+from api.models import Submission, Contest, Result
 from mog.gating import (
     user_is_admin,
     get_all_contest_for_judge,
