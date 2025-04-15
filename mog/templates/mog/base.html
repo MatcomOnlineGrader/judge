@@ -165,6 +165,12 @@
                         <li><a href="{% url 'mog:posts' %}">{% trans 'Posts' %}</a></li>
                         <li><a href="{% url 'mog:submissions' %}">{% trans 'Submissions' %}</a></li>
                         <li><a href="{% url 'mog:faq' %}">{% trans 'FAQ' %}</a></li>
+                        <li>
+                            <a href="https://www.paypal.com/donate/?hosted_button_id=H8DNJ354WNMZC" target="_blank">
+                                <span style="font-size: 1em; vertical-align: middle;">❤️</span>
+                                {% trans 'Donate' %}
+                            </a>
+                        </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         {% block user_login %}
