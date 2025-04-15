@@ -1,7 +1,5 @@
 # Matcom Online Grader
 
-**MOG** is an online judge for the contestants of the ACM-ICPC of the Faculty of Mathematics and Computer Science of the University of Havana
-
 [![](mog/static/mog/images/logo.png)](mog/static/mog/images/logo.png)
 
 ## Local set up using Docker
