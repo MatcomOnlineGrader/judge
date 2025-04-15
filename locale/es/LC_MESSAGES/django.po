@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-08 03:18+0000\n"
+"POT-Creation-Date: 2025-04-15 02:06+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "Institución"
 msgid "Compiler"
 msgstr "Compilador"
 
-#: api/models.py:784 mog/templates/mog/base.html:268
+#: api/models.py:784 mog/templates/mog/base.html:274
 #: mog/templates/mog/problem/index.html:37
 #: mog/templates/mog/problem/index.html:39
 #: mog/templates/mog/problem/index.html:41
@@ -238,11 +238,15 @@ msgstr "Envíos"
 msgid "FAQ"
 msgstr "Ayuda"
 
-#: mog/templates/mog/base.html:223
+#: mog/templates/mog/base.html:171
+msgid "Donate"
+msgstr "Donar"
+
+#: mog/templates/mog/base.html:229
 msgid "Faculty of Mathematics and Computer Science of University of Havana"
 msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
 
-#: mog/templates/mog/base.html:226
+#: mog/templates/mog/base.html:232
 msgid ""
 "We've recently migrated MOG to a new server with a different grader. As a "
 "result, some features—especially those related to submission evaluation—"
@@ -255,26 +259,26 @@ msgstr ""
 "correctamente. Si encuentras algún problema, por favor repórtalo haciendo "
 "clic en el icono de exclamación en la esquina inferior derecha del sitio web."
 
-#: mog/templates/mog/base.html:265 mog/templates/mog/user/detail.html:15
+#: mog/templates/mog/base.html:271 mog/templates/mog/user/detail.html:15
 #: mog/templates/mog/user/index.html:34
 msgid "Rating"
 msgstr "Clasificación"
 
-#: mog/templates/mog/base.html:271 mog/templates/mog/contest/problems.html:37
+#: mog/templates/mog/base.html:277 mog/templates/mog/contest/problems.html:37
 #: mog/templates/mog/contest/standing.html:206
 #: mog/templates/mog/user/detail.html:17 mog/templates/mog/user/index.html:40
 msgid "Solved"
 msgstr "Resueltos"
 
-#: mog/templates/mog/base.html:294
+#: mog/templates/mog/base.html:300
 msgid "Top rated users"
 msgstr "Mejores usuarios"
 
-#: mog/templates/mog/base.html:300
+#: mog/templates/mog/base.html:306
 msgid "Recent posts"
 msgstr "Publicaciones recientes"
 
-#: mog/templates/mog/base.html:333
+#: mog/templates/mog/base.html:339
 msgid "Privacy Policy"
 msgstr "Política de Privacidad"
 
@@ -1334,7 +1338,7 @@ msgstr "Ahora usted está registrado. Correo de activación enviado."
 msgid "Or register with"
 msgstr "O regístrese con"
 
-#: mog/views/checker.py:41 mog/views/checker.py:100 mog/views/submission.py:148
+#: mog/views/checker.py:41 mog/views/checker.py:100 mog/views/submission.py:147
 msgid "Empty source code"
 msgstr "Código fuente vacío"
 
@@ -1639,30 +1643,30 @@ msgstr ""
 "El compilador seleccionado está inactivo. Por favor, elige otro para enviar "
 "tu solución."
 
-#: mog/views/submission.py:157
+#: mog/views/submission.py:156
 msgid "You are not allowed to submit to this contest."
 msgstr ""
 
-#: mog/views/submission.py:167
+#: mog/views/submission.py:166
 msgid "You cannot submit because you are not registered in the contest."
 msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
-#: mog/views/submission.py:179
+#: mog/views/submission.py:178
 #, fuzzy
 #| msgid "You cannot submit because you are not registered in the contest."
 msgid "You cannot submit because the contest is still frozen."
 msgstr "No puede hacer envios porque no estás registrado en la competencia."
 
-#: mog/views/submission.py:192
+#: mog/views/submission.py:191
 msgid "Sending same submission twice too quickly."
 msgstr "Enviando solución repetida muy rápdio."
 
-#: mog/views/submission.py:248
+#: mog/views/submission.py:247
 msgid "Cannot rejudge a submission using an inactive compiler."
 msgstr ""
 "No se puede volver a juzgar un envío utilizando un compilador inactivo."
 
-#: mog/views/submission.py:251
+#: mog/views/submission.py:250
 msgid "Cannot rejudge submission: It is currently in grading process."
 msgstr ""
 
