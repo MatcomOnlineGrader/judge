@@ -46,3 +46,11 @@ docker exec -it $CONTAINER_ID psql -h localhost postgres judge -c \
 # Finally, restore the database from `judge.sql`
 docker exec -i $CONTAINER_ID sh -c 'psql -U judge < /judge.sql'
 ```
+
+## Backup
+
+Make sure `backup.sh` is added as a cron job to run at least once a day:
+
+```bash
+(crontab -l 2>/dev/null; echo "0 0 * * * ~/judge/backup.sh") | crontab -
+```
