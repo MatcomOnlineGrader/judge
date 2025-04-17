@@ -317,8 +317,7 @@
 
             <footer>
                 <div class="center">
-                    <p>&copy; {% now "Y" %} - MOG Version: 3.0 (<strong>BETA</strong>)</p>
-                    <p>Grader Version: 2.0.0.22</p>
+                    <p>&copy; 2016 - {% now "Y" %} Matcom Online Grader (MOG)</p>
                     <p>Server Time: {% now "jS F Y H:i" %}</p>
                     <p>
                         <a href="https://www.facebook.com/MatcomOnlineGrader" target="_blank" style="text-decoration: none;">
@@ -333,6 +332,13 @@
                             {% trans 'Privacy Policy' %}
                         </a>
                     </p>
+                    <div class="d-flex justify-content-center flex-column align-items-center text-center margin-top-25">
+                        <div>{% trans 'Sponsored by' %}</div>
+                        <a href="https://www.clubesdeprogramacioncompetitiva.com">
+                            <img src="{% static 'mog/images/cpc.webp' %}" class="img-fluid" width="256px" height="auto"
+                                alt="Clubes de Programación Competitiva CPC" />
+                        </a>
+                    </div>
                 </div>
             </footer>
         </div>
