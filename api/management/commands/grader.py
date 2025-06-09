@@ -196,7 +196,7 @@ def get_cmd_for_language_safeexec(
         # HACK(leandro): The Java VM is using a lot of resources by default. This is a temporary
         # fix to let submissions to previous problems pass with lower memory limits. We need to
         # fix this ASAP, otherwise, it’s hard to reason about all these limits.
-        memory_limit = memory_limit * 1024 + 529862656
+        memory_limit = (memory_limit + 500) * 1024
         return f"safeexec --nproc 20 --mem {memory_limit} --cpu {time_limit} --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
     elif lang == "kotlin":
         return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
