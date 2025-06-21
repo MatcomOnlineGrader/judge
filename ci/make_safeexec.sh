@@ -20,7 +20,7 @@ build() {
 
 	# Now clone and apply the patches
 	info "Cloning safeexec..."
-	git clone https://github.com/ochko/safeexec || { warn "Error cloning repository, aborting"; exit 1; }
+	git clone https://github.com/MatcomOnlineGrader/safeexec.git || { warn "Error cloning repository, aborting"; exit 1; }
 	cd safeexec
 
 	# Run cmake
