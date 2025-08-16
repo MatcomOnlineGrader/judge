@@ -1,0 +1,31 @@
+# docker build . -f docker/common/dockerfile.web -t judge-web --no-cache && \
+#     docker run -v "$(pwd):/code" -w /code -it --rm judge-web bash
+
+FROM alpine:3.15
+
+RUN apk update && \
+    apk upgrade && \
+    apk add \
+        bash \
+        gcc \
+        musl-dev \
+        postgresql-dev \
+        python3 \
+        python3-dev
+
+WORKDIR /opt
+
+COPY requirements.txt .
+
+RUN python3 -m venv environ && \
+    source environ/bin/activate && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+#----------------------------------------------------------------------------------------------------
+# Cleanup
+#----------------------------------------------------------------------------------------------------
+RUN source environ/bin/activate && \
+    rm requirements.txt && \
+    pip cache purge && \
+    rm -r /var/cache/apk

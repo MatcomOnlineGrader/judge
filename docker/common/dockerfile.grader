@@ -1,0 +1,68 @@
+# docker build ../.. -f dockerfile.grader -t judge-grader && \
+#     docker run -it --rm judge-grader bash
+
+FROM matcomonlinegrader/mog:web-latest
+
+#----------------------------------------------------------------------------------------------------
+# Update the system, and add bash and the glibc compatibility layer, plus git python gcc and java
+#----------------------------------------------------------------------------------------------------
+
+RUN apk update && \
+    apk upgrade && \
+    apk add \
+        bash \
+        cmake \
+        g++ \
+        gcc \
+        gcompat \
+        git \
+        iptables \
+        make \
+        openjdk17-jdk
+
+#----------------------------------------------------------------------------------------------------
+# Install Compilers
+#----------------------------------------------------------------------------------------------------
+
+# Install safeexec
+WORKDIR /tmp/safeexec
+RUN git clone https://github.com/MatcomOnlineGrader/safeexec.git .
+RUN cmake . && \
+    make install
+
+# Install GCC v11.3.0
+WORKDIR /tmp/gcc
+RUN wget https://github.com/MatcomOnlineGrader/gcc-11.3.0/releases/download/master/gcc-11.3.0-x86_64-linux-musl.tar.gz
+RUN tar -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz
+RUN mv gcc-11.3.0 /opt/gcc-11.3.0
+RUN cp -r /usr/include/* /opt/gcc-11.3.0/include && \
+	cp -r /opt/gcc-11.3.0/include/c++/10.3.1 /opt/gcc-11.3.0/include/c++/11.3.0 && \
+	cp -r /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-alpine-linux-musl /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-pc-linux-musl
+
+# Install Kotlin v1.7.21
+WORKDIR /tmp/kotlin
+RUN wget https://github.com/JetBrains/kotlin/releases/download/v1.7.21/kotlin-compiler-1.7.21.zip
+RUN unzip kotlin-compiler-1.7.21.zip
+RUN mv kotlinc /opt/kotlin-1.7.21
+
+# Install PyPy
+WORKDIR /tmp/pypy
+RUN wget https://downloads.python.org/pypy/pypy3.9-v7.3.10-linux64.tar.bz2
+RUN tar xjvf pypy3.9-v7.3.10-linux64.tar.bz2
+RUN mv pypy3.9-v7.3.10-linux64 /opt/pypy-7.3.10
+
+# - Install the C# tools
+# - Compile and save the fix to the bug described in ci/fix_mono.sh
+COPY docker/common/fix_mono.sh /tmp/fix_mono.sh
+RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community/ && \
+	bash /tmp/fix_mono.sh
+
+#----------------------------------------------------------------------------------------------------
+# Cleanup
+#----------------------------------------------------------------------------------------------------
+
+RUN rm -rf /tmp/*
+RUN apk del \
+    cmake \
+    git \
+    make

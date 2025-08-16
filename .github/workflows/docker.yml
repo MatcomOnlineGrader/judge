@@ -1,0 +1,42 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: ["master", "lcastillov/create-grader-standalone-image"]
+    paths:
+      - docker/common/dockerfile.*
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push 'web' docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/common/dockerfile.web
+          push: true
+          tags: |
+            matcomonlinegrader/mog:web-latest
+
+      - name: Build and push 'grader' docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/common/dockerfile.grader
+          push: true
+          tags: |
+            matcomonlinegrader/mog:grader-latest
