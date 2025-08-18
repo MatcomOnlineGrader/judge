@@ -17,8 +17,8 @@ COPY . /code/
 # 5. Test safeexec
 # 6. Create the sandbox dir (where the solution gets executed)
 # 7. Clear PIP and APKcaches
-RUN python3 -m venv environ && \
-	source environ/bin/activate && \
+RUN python3 -m venv /opt/environ && \
+	source /opt/environ/bin/activate && \
 	apk add cmake make jpeg-dev zlib-dev && \
 	pip install --upgrade pip && pip install -r requirements.txt && \
 	bash ci/make_safeexec.sh && \
