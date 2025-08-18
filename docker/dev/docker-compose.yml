@@ -32,11 +32,14 @@ services:
     build:
       context: ../..
       dockerfile: docker/dev/dockerfile.grader
-    command: bash -c "bash grader-firewall.sh && /code/environ/bin/python3 manage.py grader"
+    command: bash -c "bash grader-firewall.sh && /opt/environ/bin/python3 manage.py grader"
     volumes:
+      - ../..:/code
       - problems:/problems
     cap_add:
       - NET_ADMIN
+    ulimits:
+      stack: -1
 
 volumes:
   pgdb:

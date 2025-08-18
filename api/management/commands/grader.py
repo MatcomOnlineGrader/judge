@@ -197,19 +197,19 @@ def get_cmd_for_language_safeexec(
         # fix to let submissions to previous problems pass with lower memory limits. We need to
         # fix this ASAP, otherwise, it’s hard to reason about all these limits.
         memory_limit = (memory_limit + 500) * 1024
-        return f"safeexec --nproc 20 --mem {memory_limit} --cpu {time_limit} --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit} --cpu {time_limit} --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
     elif lang == "kotlin":
-        return f"safeexec --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
     elif lang == "csharp":
-        return f"safeexec --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack 0 --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
         )
-        return f'safeexec --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
+        return f'safeexec --stack 0 --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f"safeexec --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack 0 --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
 def get_cmd_for_language_runexe(
