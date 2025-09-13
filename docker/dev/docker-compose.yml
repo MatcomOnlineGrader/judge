@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge
-      - POSTGRES_PASSWORD=uhdtas
+      - POSTGRES_PASSWORD=${DATABASE_PASS}
     volumes:
       - pgdb:/var/lib/postgresql/data
     ports:
