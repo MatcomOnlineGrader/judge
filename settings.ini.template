@@ -1,0 +1,65 @@
+[debugging]
+DEBUG: true
+DEBUG_TOOLBAR: true
+
+[flags]
+BLOCK_PUBLIC_ACTIONS: false
+
+[database]
+DATABASE_HOST: database
+DATABASE_NAME: judge
+DATABASE_PASS: secret_auto_fillable_placeholder
+DATABASE_PORT: 5432
+DATABASE_USER: judge
+REPLICAS: 0
+
+[secrets]
+SECRET_KEY: secret_not_auto_fillable_placeholder
+PASSWORD_GENERATOR_SECRET_KEY: secret_not_auto_fillable_placeholder
+
+[session]
+USE_REDIS: false
+
+[email]
+EMAIL_USE_TLS: true
+EMAIL_PORT: 587
+EMAIL_HOST: smtp.sendgrid.net
+EMAIL_HOST_USER: apikey
+EMAIL_HOST_PASSWORD: secret_not_auto_fillable_placeholder
+DEFAULT_FROM_EMAIL: noreply@example.com
+EMAIL_TIMEOUT: 20
+
+[others]
+STATIC_ROOT: /var/www/judge/static
+MEDIA_ROOT: /var/www/judge/media
+
+[grader]
+# Location of test cases for all problems. Shared by the webapp
+# and the grader: the webapp needs access to upload test cases,
+# and the grader to grade submissions.
+PROBLEMS_FOLDER: /problems
+# The resources folder contains third-party code and programs
+# used to grade submissions. It is part of the repo and should
+# not grow too large.
+RESOURCES_FOLDER: /code/resources
+# Folder where submissions are executed. Used as the working
+# directory for all runs. Only the grader needs it, so no shared
+# volume is required.
+SANDBOX_FOLDER: /sandbox
+USE_SAFEEXEC: true
+
+[social]
+SOCIAL_AUTH_FACEBOOK_KEY: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_FACEBOOK_SECRET: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_FACEBOOK_SCOPE: email
+SOCIAL_AUTH_GITHUB_KEY: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_GITHUB_SECRET: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_GITHUB_SCOPE: user:email
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_LOCALE: en_US
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS_FIELDS: id, name, email, age_range
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: secret_not_auto_fillable_placeholder
+SOCIAL_AUTH_GOOGLE_SCOPE:
+
+[palantir]
+LOG_REQUESTS: true
