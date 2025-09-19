@@ -20,6 +20,7 @@
             <li><a href="{% url 'mog:feedback_list' %}"><i class="glyphicon glyphicon-exclamation-sign"></i> {% trans 'View feedbacks' %}</a></li>
             {% if user|is_admin %}
             <li><a href="{% url 'mog:view_checker' %}"><i class="glyphicon glyphicon-ok"></i> {% trans 'View checkers' %}</a></li>
+            <li><a href="{% url 'mog:institutions' %}"><i class="glyphicon glyphicon-education"></i> {% trans 'View institutions' %}</a></li>
             {% endif %}
             <li class="divider"></li>
             <li><a href="{% url 'auth_logout' %}?next={% url 'mog:index' %}"><i class="glyphicon glyphicon-off"></i> {% trans 'Logout' %}</a></li>

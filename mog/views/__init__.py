@@ -77,7 +77,7 @@ from .instance import (
     instance_edit_user,
     instance_edit_enable,
 )
-from .institution import institution_list
+from .institution import institution_list, InstitutionListView
 from .feedback import feedback_create, feedback_list, FeedbackView
 from .permissions import contest_permission_edit_granted
 from .checker import CheckerView, view_checker, CreateCheckerView

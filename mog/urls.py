@@ -19,6 +19,11 @@ urlpatterns = [
         r"^api/institution/list/$", views.institution_list, name="api_institution_list"
     ),
     url(
+        r"^institutions/$",
+        views.InstitutionListView.as_view(),
+        name="institutions",
+    ),
+    url(
         r"^api/instance/group/list/$",
         views.instance_group_list,
         name="api_instance_group_list",

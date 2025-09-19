@@ -1,0 +1,96 @@
+{% extends 'mog/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h3 class="title">{% trans 'Institutions' %}</h3>
+  </div>
+
+  <div class="col-md-12">
+    <a href="javascript:;" class="btn btn-link pull-right" data-toggle="modal" data-target="#createInstitutionModal">
+      <i class="glyphicon glyphicon-pencil"></i> {% trans 'Create institution' %}
+    </a>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th class="cell-small"><div class="center">#</div></th>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Website' %}</th>
+          <th class="cell-medium"><div class="center">{% trans 'Country' %}</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inst in institutions %}
+        <tr>
+          <td><div class="center">{{ forloop.counter }}</div></td>
+          <td>{{ inst.name }}</td>
+          <td>
+            {% if inst.url %}
+              <a href="{{ inst.url }}" target="_blank" rel="noopener">{{ inst.url }}</a>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td>
+            <div class="center">
+              {% if inst.country %}
+                <img src="{{ inst.country.flag }}" alt="{{ inst.country.name }}"
+                     title="{{ inst.country.name }}" data-toggle="tooltip"
+                     style="height:16px; width:auto;" />
+              {% else %}
+                —
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">{% trans 'No institutions to show!' %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="createInstitutionModal" tabindex="-1" role="dialog" aria-labelledby="createInstitutionLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="{% url 'mog:institutions' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="createInstitutionLabel">{% trans 'Create Institution' %}</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="id_name">{% trans 'Name' %}</label>
+              <input type="text" id="id_name" name="name" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="id_url">{% trans 'Website' %}</label>
+              <input type="url" id="id_url" name="url" class="form-control" placeholder="https://example.edu" />
+            </div>
+            <div class="form-group">
+              <label for="id_country">{% trans 'Country' %}</label>
+              <select id="id_country" name="country" class="form-control">
+                <option value="">---------</option>
+                {% for country in countries %}
+                <option value="{{ country.id }}">{{ country.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+            <button type="submit" class="btn btn-primary">{% trans 'Create' %}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
