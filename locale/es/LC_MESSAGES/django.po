@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-17 03:46+0000\n"
+"POT-Creation-Date: 2025-09-19 08:21+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,11 +124,11 @@ msgstr "Descripción"
 msgid "Screenshot"
 msgstr "Captura de pantalla"
 
-#: judge/settings.py:255
+#: judge/settings.py:212
 msgid "Spanish"
 msgstr "Español"
 
-#: judge/settings.py:256
+#: judge/settings.py:213
 msgid "English"
 msgstr "Inglés"
 
@@ -278,7 +278,7 @@ msgstr "Publicaciones recientes"
 msgid "Privacy Policy"
 msgstr "Política de Privacidad"
 
-#: mog/templates/mog/base.html:340
+#: mog/templates/mog/base.html:339
 msgid "Sponsored by"
 msgstr "Patrocinado por"
 
@@ -300,6 +300,7 @@ msgstr "Contenido"
 #: mog/templates/mog/comment/_edit_comment.html:25
 #: mog/templates/mog/comment/_remove_comment.html:23
 #: mog/templates/mog/contest/_left.html:306
+#: mog/templates/mog/institution/index.html:86
 #: mog/templates/mog/problem/edit.html:28
 #: mog/templates/mog/user/_create_team.html:51
 #: mog/templates/mog/user/_edit_team.html:45
@@ -368,7 +369,7 @@ msgstr "( Oculto )"
 #: mog/templates/mog/contest/_left.html:146
 #: mog/templates/mog/contest/_register.html:10
 #: mog/templates/mog/contest/_running_contests.html:30
-#: mog/templates/mog/user/_login.html:33
+#: mog/templates/mog/user/_login.html:34
 #: mog/templates/registration/login.html:47
 #: mog/templates/registration/registration_form.html:4
 #: mog/templates/registration/registration_form.html:9
@@ -951,6 +952,43 @@ msgstr ""
 msgid "Read more"
 msgstr "Leer más"
 
+#: mog/templates/mog/institution/index.html:8
+msgid "Institutions"
+msgstr "Instituciones"
+
+#: mog/templates/mog/institution/index.html:13
+msgid "Create institution"
+msgstr "Crear institución"
+
+#: mog/templates/mog/institution/index.html:19
+#: mog/templates/mog/institution/index.html:68
+#: mog/templates/mog/user/_create_team.html:22
+#: mog/templates/mog/user/_edit_team.html:21
+msgid "Name"
+msgstr "Nombre"
+
+#: mog/templates/mog/institution/index.html:20
+#: mog/templates/mog/institution/index.html:72
+msgid "Website"
+msgstr "Sitio web"
+
+#: mog/templates/mog/institution/index.html:21
+#: mog/templates/mog/institution/index.html:76
+msgid "Country"
+msgstr "País"
+
+#: mog/templates/mog/institution/index.html:50
+msgid "No institutions to show!"
+msgstr "¡No hay instituciones para mostrar!"
+
+#: mog/templates/mog/institution/index.html:64
+msgid "Create Institution"
+msgstr "Crear Institución"
+
+#: mog/templates/mog/institution/index.html:87
+msgid "Create"
+msgstr "Crear"
+
 #: mog/templates/mog/message/_message_received.html:18
 msgid "Reply"
 msgstr "Responder"
@@ -1121,11 +1159,6 @@ msgstr "Detalles de la calificación"
 msgid "Create new team"
 msgstr "Crear equipo"
 
-#: mog/templates/mog/user/_create_team.html:22
-#: mog/templates/mog/user/_edit_team.html:21
-msgid "Name"
-msgstr "Nombre"
-
 #: mog/templates/mog/user/_create_team.html:42
 msgid "Add Members"
 msgstr "Agregar miembros"
@@ -1154,11 +1187,15 @@ msgstr ""
 msgid "View checkers"
 msgstr ""
 
-#: mog/templates/mog/user/_login.html:25
+#: mog/templates/mog/user/_login.html:23
+msgid "View institutions"
+msgstr "Ver instituciones"
+
+#: mog/templates/mog/user/_login.html:26
 msgid "Logout"
 msgstr "Salir"
 
-#: mog/templates/mog/user/_login.html:30
+#: mog/templates/mog/user/_login.html:31
 #: mog/templates/registration/login.html:14
 #: mog/templates/registration/login.html:40
 msgid "Login"
@@ -1634,6 +1671,22 @@ msgstr "Se eliminó el registro satisfactoriamente!"
 #: mog/views/instance.py:222
 msgid "Error enabling this user/team: "
 msgstr ""
+
+#: mog/views/institution.py:58
+msgid "Name is required"
+msgstr "Nombre es requerido"
+
+#: mog/views/institution.py:66
+msgid "Invalid country"
+msgstr "País inválido"
+
+#: mog/views/institution.py:74
+msgid "Error creating institution: "
+msgstr "Error creando institución: "
+
+#: mog/views/institution.py:78
+msgid "Institution created"
+msgstr "Institución creada"
 
 #: mog/views/submission.py:127
 msgid ""
