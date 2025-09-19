@@ -21,7 +21,7 @@ RUN python3 -m venv environ && \
 	source environ/bin/activate && \
 	apk add cmake make jpeg-dev zlib-dev && \
 	pip install --upgrade pip && pip install -r requirements.txt && \
-	bash ci/make_safeexec.sh && \
+	bash docker/common/make_safeexec.sh && \
 	apk del cmake make && \
 	safeexec --exec /bin/true && \
 	mkdir /sandbox && \
@@ -50,9 +50,9 @@ RUN cd /opt && \
 	mv kotlinc kotlin-1.7.21
 
 # 14. Install the C# tools
-# 15. Compile and save the fix to the bug described in ci/fix_mono.sh
+# 15. Compile and save the fix to the bug described in docker/common/fix_mono.sh
 RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community/ && \
-	bash ci/fix_mono.sh
+	bash docker/common/fix_mono.sh
 
 # 16. Download PyPy
 # 17. Decompress, cleanup and install

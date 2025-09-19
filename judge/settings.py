@@ -74,11 +74,6 @@ PASSWORD_GENERATOR_SECRET_KEY = config.get("secrets", "PASSWORD_GENERATOR_SECRET
 
 ALLOWED_HOSTS = ["*"]
 
-# REDIRECT: If the server is nor running in the server where the problem's data is
-# stored -> redirect to that server when modifying test cases
-
-DATA_SERVER_URL = config.get("redirect", "DATA_SERVER_URL", fallback=None)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -164,44 +159,6 @@ DEFAULT_DATABASE = {
 DATABASES = {
     "default": DEFAULT_DATABASE,
 }
-
-
-NUMBER_OF_REPLICAS = config.getint("database", "REPLICAS")
-
-# Setup re-only nodes (replicas) that will keep almost every setting
-# the same than the primary database (default) except host, port and
-# database name. We assume that the username/password is the same than
-# the default database. We can always change this to specify more
-# stuffs but trying to keep replica sections in settings.ini small for
-# now.
-#
-# Sections referring to replicas in settings.ini will looks like:
-#
-# [replicaX]
-# DATABASE_NAME: str
-# DATABASE_HOST: str
-# DATABASE_PORT: int
-#
-# Where X is a number and there are exaclty K (K=database.REPLICAS)
-# replica's sections numerated 1, 2, ..., K.
-for k in range(NUMBER_OF_REPLICAS):
-    replica_conf = DEFAULT_DATABASE.copy()
-    replica_name = "replica%d" % (k + 1)  # 1-index
-    replica_conf.update(
-        **{
-            "HOST": config.get(replica_name, "DATABASE_HOST"),
-            "PORT": config.getint(replica_name, "DATABASE_PORT"),
-            "NAME": config.get(replica_name, "DATABASE_NAME"),
-        }
-    )
-    DATABASES[replica_name] = replica_conf
-
-
-if NUMBER_OF_REPLICAS > 0:
-    DATABASE_ROUTERS = [
-        "mog.routers.DefaultRouter",
-    ]
-    MIDDLEWARE.insert(0, "mog.routers.RouterMiddleware")  # first!
 
 
 # Password validation
@@ -379,24 +336,3 @@ CACHES = {
         "LOCATION": "mog-cache",
     }
 }
-
-
-if config.getboolean("session", "USE_REDIS"):
-    SESSION_CACHE_ALIAS = "redis"
-    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    CACHES[SESSION_CACHE_ALIAS] = {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config.get("session", "REDIS_CONNECTION_STRING"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-
-# Settings for the testing environment
-IS_TESTING_ENVIRONMENT = config.getboolean("testing", "TESTING", fallback=False)
-
-if IS_TESTING_ENVIRONMENT:
-    for k in CACHES:
-        CACHES[k] = {
-            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        }
