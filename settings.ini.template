@@ -11,14 +11,10 @@ DATABASE_NAME: judge
 DATABASE_PASS: secret_auto_fillable_placeholder
 DATABASE_PORT: 5432
 DATABASE_USER: judge
-REPLICAS: 0
 
 [secrets]
 SECRET_KEY: secret_not_auto_fillable_placeholder
 PASSWORD_GENERATOR_SECRET_KEY: secret_not_auto_fillable_placeholder
-
-[session]
-USE_REDIS: false
 
 [email]
 EMAIL_USE_TLS: true

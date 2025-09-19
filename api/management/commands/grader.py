@@ -187,7 +187,7 @@ def get_cmd_for_language_safeexec(
     memory_limit: int,
 ) -> str:
     """Get language-specific command, using safeexec"""
-    # note that safeexec should be in PATH, see the ci/make_safeexec.sh script
+    # note that safeexec should be in PATH, see the docker/common/make_safeexec.sh script
     # note2:we need to pipe the data directly, patching safeexec to accept --stdin/--stdout
     #   (like i did a time ago :p ) may lead to some unwanted security issues (RCE/Privilege
     #    escalation/Information diclosure) all because it uses the SUID bit
