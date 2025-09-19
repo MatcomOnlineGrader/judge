@@ -9,7 +9,6 @@ from django.views import View, generic
 from django.views.decorators.http import require_http_methods
 
 from api.models import Contest, Problem, Tag, Checker
-from judge import settings
 from mog.forms import ProblemForm
 from mog.gating import is_admin_or_judge_for_problem, user_is_admin
 from mog.samples import (
@@ -99,8 +98,6 @@ class ProblemTestsView(View):
         problem = get_object_or_404(Problem, pk=problem_id)
         if not is_admin_or_judge_for_problem(request.user, problem):
             return HttpResponseForbidden()
-        if settings.DATA_SERVER_URL:
-            return redirect(settings.DATA_SERVER_URL + request.path)
         return render(
             request,
             "mog/problem/tests.html",
