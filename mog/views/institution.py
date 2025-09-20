@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -36,7 +36,14 @@ class InstitutionListView(View):
         if not user_is_admin(request.user):
             return HttpResponseForbidden()
 
-        institutions = Institution.objects.select_related("country").order_by("name")
+        institutions = (
+            Institution.objects.select_related("country")
+            .annotate(
+                user_count=Count("userprofile", distinct=True),
+                team_count=Count("team", distinct=True),
+            )
+            .order_by("name")
+        )
         countries = Country.objects.all().order_by("name").only("id", "name")
 
         return render(
@@ -46,10 +53,15 @@ class InstitutionListView(View):
         )
 
     @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
+    def post(self, request, institution_id=None, *args, **kwargs):
         if not user_is_admin(request.user):
             return HttpResponseForbidden()
 
+        # Handle institution deletion
+        if institution_id and request.POST.get("_method") == "DELETE":
+            return self.delete(request, institution_id, *args, **kwargs)
+
+        # Handle institution creation (original POST logic)
         name = request.POST.get("name", "").strip()
         url = request.POST.get("url", "").strip()
         country_id = request.POST.get("country")
@@ -76,4 +88,41 @@ class InstitutionListView(View):
             return redirect(reverse("mog:institutions"))
 
         messages.success(request, _("Institution created"), extra_tags="success")
+        return redirect(reverse("mog:institutions"))
+
+    @method_decorator(login_required)
+    def delete(self, request, institution_id, *args, **kwargs):
+        if not user_is_admin(request.user):
+            return HttpResponseForbidden()
+
+        try:
+            institution = Institution.objects.get(pk=institution_id)
+        except Institution.DoesNotExist:
+            messages.error(request, _("Institution not found"), extra_tags="danger")
+            return redirect(reverse("mog:institutions"))
+
+        # Check if institution has users or teams
+        user_count = institution.userprofile_set.count()
+        team_count = institution.team_set.count()
+
+        if user_count > 0 or team_count > 0:
+            messages.error(
+                request,
+                _(
+                    "Cannot delete institution with users or teams. Users: {}, Teams: {}"
+                ).format(user_count, team_count),
+                extra_tags="danger",
+            )
+            return redirect(reverse("mog:institutions"))
+
+        try:
+            institution.delete()
+            messages.success(
+                request, _("Institution deleted successfully"), extra_tags="success"
+            )
+        except Exception as e:
+            messages.error(
+                request, _("Error deleting institution: ") + str(e), extra_tags="danger"
+            )
+
         return redirect(reverse("mog:institutions"))

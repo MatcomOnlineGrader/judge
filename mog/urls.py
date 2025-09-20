@@ -24,6 +24,11 @@ urlpatterns = [
         name="institutions",
     ),
     url(
+        r"^institution/delete/(?P<institution_id>[0-9]+)/$",
+        views.InstitutionListView.as_view(),
+        name="institution_delete",
+    ),
+    url(
         r"^api/instance/group/list/$",
         views.instance_group_list,
         name="api_instance_group_list",

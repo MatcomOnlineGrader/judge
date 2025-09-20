@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-19 08:21+0000\n"
+"POT-Creation-Date: 2025-09-20 07:01+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -205,6 +205,7 @@ msgstr "Inicio"
 
 #: mog/templates/mog/base.html:162 mog/templates/mog/contest/permission.html:62
 #: mog/templates/mog/contest/registration.html:48
+#: mog/templates/mog/institution/index.html:22
 #: mog/templates/mog/user/index.html:12
 msgid "Users"
 msgstr "Usuarios"
@@ -284,6 +285,7 @@ msgstr "Patrocinado por"
 
 #: mog/templates/mog/checker/_actions.html:12
 #: mog/templates/mog/contest/_actions.html:12
+#: mog/templates/mog/institution/index.html:24
 #: mog/templates/mog/user/teams.html:19
 msgid "Actions"
 msgstr "Acciones"
@@ -300,7 +302,8 @@ msgstr "Contenido"
 #: mog/templates/mog/comment/_edit_comment.html:25
 #: mog/templates/mog/comment/_remove_comment.html:23
 #: mog/templates/mog/contest/_left.html:306
-#: mog/templates/mog/institution/index.html:86
+#: mog/templates/mog/institution/index.html:91
+#: mog/templates/mog/institution/index.html:138
 #: mog/templates/mog/problem/edit.html:28
 #: mog/templates/mog/user/_create_team.html:51
 #: mog/templates/mog/user/_edit_team.html:45
@@ -355,6 +358,7 @@ msgstr "Registro"
 #: mog/templates/mog/contest/_running_contests.html:14
 #: mog/templates/mog/contest/overview.html:88
 #: mog/templates/mog/contest/registration.html:77
+#: mog/templates/mog/institution/index.html:23
 #: mog/templates/mog/user/detail.html:20 mog/templates/mog/user/profile.html:57
 msgid "Teams"
 msgstr "Equipos"
@@ -961,31 +965,51 @@ msgid "Create institution"
 msgstr "Crear institución"
 
 #: mog/templates/mog/institution/index.html:19
-#: mog/templates/mog/institution/index.html:68
+#: mog/templates/mog/institution/index.html:120
 #: mog/templates/mog/user/_create_team.html:22
 #: mog/templates/mog/user/_edit_team.html:21
 msgid "Name"
 msgstr "Nombre"
 
 #: mog/templates/mog/institution/index.html:20
-#: mog/templates/mog/institution/index.html:72
+#: mog/templates/mog/institution/index.html:124
 msgid "Website"
 msgstr "Sitio web"
 
 #: mog/templates/mog/institution/index.html:21
-#: mog/templates/mog/institution/index.html:76
+#: mog/templates/mog/institution/index.html:128
 msgid "Country"
 msgstr "País"
 
-#: mog/templates/mog/institution/index.html:50
+#: mog/templates/mog/institution/index.html:57
+msgid "Cannot delete institution with users or teams"
+msgstr "No se puede eliminar institución con usuarios o equipos"
+
+#: mog/templates/mog/institution/index.html:62
+msgid "Delete institution"
+msgstr "Eliminar institución"
+
+#: mog/templates/mog/institution/index.html:77
+msgid "Delete Institution"
+msgstr "Eliminar Institución"
+
+#: mog/templates/mog/institution/index.html:81
+msgid "Are you sure you want to delete the institution"
+msgstr "¿Estás seguro que deseas eliminar la institución"
+
+#: mog/templates/mog/institution/index.html:92
+msgid "Delete"
+msgstr "Eliminar"
+
+#: mog/templates/mog/institution/index.html:102
 msgid "No institutions to show!"
 msgstr "¡No hay instituciones para mostrar!"
 
-#: mog/templates/mog/institution/index.html:64
+#: mog/templates/mog/institution/index.html:116
 msgid "Create Institution"
 msgstr "Crear Institución"
 
-#: mog/templates/mog/institution/index.html:87
+#: mog/templates/mog/institution/index.html:139
 msgid "Create"
 msgstr "Crear"
 
@@ -1672,21 +1696,39 @@ msgstr "Se eliminó el registro satisfactoriamente!"
 msgid "Error enabling this user/team: "
 msgstr ""
 
-#: mog/views/institution.py:58
+#: mog/views/institution.py:66
 msgid "Name is required"
 msgstr "Nombre es requerido"
 
-#: mog/views/institution.py:66
+#: mog/views/institution.py:74
 msgid "Invalid country"
 msgstr "País inválido"
 
-#: mog/views/institution.py:74
+#: mog/views/institution.py:82
 msgid "Error creating institution: "
 msgstr "Error creando institución: "
 
-#: mog/views/institution.py:78
+#: mog/views/institution.py:86
 msgid "Institution created"
 msgstr "Institución creada"
+
+#: mog/views/institution.py:97
+msgid "Institution not found"
+msgstr "Institución no encontrada"
+
+#: mog/views/institution.py:107
+msgid "Cannot delete institution with users or teams. Users: {}, Teams: {}"
+msgstr ""
+"No se puede eliminar institución con usuarios o equipos. Usuarios: {}, "
+"Equipos: {}"
+
+#: mog/views/institution.py:114
+msgid "Institution deleted successfully"
+msgstr "Institución eliminada exitosamente"
+
+#: mog/views/institution.py:116
+msgid "Error deleting institution: "
+msgstr "Error eliminando institución: "
 
 #: mog/views/submission.py:127
 msgid ""
@@ -1722,6 +1764,9 @@ msgstr ""
 #: mog/views/submission.py:250
 msgid "Cannot rejudge submission: It is currently in grading process."
 msgstr ""
+
+#~ msgid "This action cannot be undone."
+#~ msgstr "Esta acción no se puede deshacer."
 
 #~ msgid "Faculty of Mathematics and Computer Science of University of Havana"
 #~ msgstr "Facultad de Matemática Computación de La Universidad de La Habana"
@@ -1764,9 +1809,6 @@ msgstr ""
 
 #~ msgid "IP address"
 #~ msgstr "Dirección IP"
-
-#~ msgid "Delete"
-#~ msgstr "Eliminar"
 
 #~ msgid "or"
 #~ msgstr "o"
