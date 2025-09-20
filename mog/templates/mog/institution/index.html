@@ -15,52 +15,125 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th class="cell-small"><div class="center">#</div></th>
+          <th class="cell-small">
+            <div class="center">#</div>
+          </th>
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Website' %}</th>
-          <th class="cell-medium"><div class="center">{% trans 'Country' %}</div></th>
+          <th class="cell-medium">
+            <div class="center">{% trans 'Country' %}</div>
+          </th>
+          <th class="cell-small">
+            <div class="center">{% trans 'Users' %}</div>
+          </th>
+          <th class="cell-small">
+            <div class="center">{% trans 'Teams' %}</div>
+          </th>
+          <th class="cell-small">
+            <div class="center">{% trans 'Actions' %}</div>
+          </th>
         </tr>
       </thead>
       <tbody>
         {% for inst in institutions %}
         <tr>
-          <td><div class="center">{{ forloop.counter }}</div></td>
+          <td>
+            <div class="center">{{ forloop.counter }}</div>
+          </td>
           <td>{{ inst.name }}</td>
           <td>
             {% if inst.url %}
-              <a href="{{ inst.url }}" target="_blank" rel="noopener">{{ inst.url }}</a>
+            <a href="{{ inst.url }}" target="_blank" rel="noopener">{{ inst.url }}</a>
             {% else %}
-              —
+            —
             {% endif %}
           </td>
           <td>
             <div class="center">
               {% if inst.country %}
-                <img src="{{ inst.country.flag }}" alt="{{ inst.country.name }}"
-                     title="{{ inst.country.name }}" data-toggle="tooltip"
-                     style="height:16px; width:auto;" />
+              <img src="{{ inst.country.flag }}" alt="{{ inst.country.name }}" title="{{ inst.country.name }}"
+                data-toggle="tooltip" style="height:16px; width:auto;" />
               {% else %}
-                —
+              —
+              {% endif %}
+            </div>
+          </td>
+          <td>
+            <div class="center">{{ inst.user_count }}</div>
+          </td>
+          <td>
+            <div class="center">{{ inst.team_count }}</div>
+          </td>
+          <td>
+            <div class="center">
+              {% if inst.user_count > 0 or inst.team_count > 0 %}
+              <a href="#" class="text-muted" disabled data-toggle="tooltip"
+                title="{% trans 'Cannot delete institution with users or teams' %}"
+                style="padding: 2px 6px; font-size: 10px; cursor: not-allowed;">
+                <i class="glyphicon glyphicon-trash"></i>
+              </a>
+              {% else %}
+              <a href="#" data-toggle="modal" data-target="#remove-institution-{{ inst.id }}" class="text-danger"
+                data-toggle="tooltip" title="{% trans 'Delete institution' %}"
+                style="padding: 2px 6px; font-size: 10px;">
+                <i class="glyphicon glyphicon-trash"></i>
+              </a>
               {% endif %}
             </div>
           </td>
         </tr>
+
+        {% if inst.user_count == 0 and inst.team_count == 0 %}
+        <!-- Delete Confirmation Modal for {{ inst.name }} -->
+        <div class="modal fade" id="remove-institution-{{ inst.id }}" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{% trans 'Delete Institution' %}</h4>
+              </div>
+              <div class="modal-body">
+                <p class="text-justify">
+                  {% trans 'Are you sure you want to delete the institution' %} <strong>{{ inst.name }}</strong>?
+                </p>
+                <p class="text-center">
+                  <span class="glyphicon glyphicon-warning-sign"
+                    style="color: orange; font-size: 50px; font-weight: normal;"></span>
+                </p>
+              </div>
+              <div class="modal-footer">
+                <form action="{% url 'mog:institution_delete' inst.id %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                  <button type="submit" class="btn btn-danger">{% trans 'Delete' %}</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
         {% empty %}
         <tr>
-          <td colspan="4">{% trans 'No institutions to show!' %}</td>
+          <td colspan="7">{% trans 'No institutions to show!' %}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <div class="modal fade" id="createInstitutionModal" tabindex="-1" role="dialog" aria-labelledby="createInstitutionLabel">
+  <div class="modal fade" id="createInstitutionModal" tabindex="-1" role="dialog"
+    aria-labelledby="createInstitutionLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <form action="{% url 'mog:institutions' %}" method="post">
           {% csrf_token %}
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="createInstitutionLabel">{% trans 'Create Institution' %}</h4>
           </div>
           <div class="modal-body">
@@ -91,6 +164,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
-
-
