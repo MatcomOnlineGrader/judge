@@ -762,6 +762,7 @@ class UserProfile(models.Model):
     theme = models.CharField(
         max_length=25,
         null=True,
+        blank=True,
         choices=THEME_CHOICES,
         verbose_name=_("Code Editor Theme"),
     )
@@ -773,12 +774,20 @@ class UserProfile(models.Model):
     )
     show_tags = models.BooleanField(default=True, verbose_name=_("Show tags"))
     institution = models.ForeignKey(
-        Institution, null=True, verbose_name=_("Institution"), on_delete=models.SET_NULL
+        Institution,
+        null=True,
+        blank=True,
+        verbose_name=_("Institution"),
+        on_delete=models.SET_NULL,
     )
     teams = models.ManyToManyField(Team, blank=True, related_name="profiles")
     rating_changes = models.ManyToManyField(Contest, through="RatingChange")
     compiler = models.ForeignKey(
-        Compiler, null=True, verbose_name=_("Compiler"), on_delete=models.SET_NULL
+        Compiler,
+        null=True,
+        blank=True,
+        verbose_name=_("Compiler"),
+        on_delete=models.SET_NULL,
     )
     points = models.PositiveIntegerField(
         verbose_name=_("Points"), null=False, default=0
