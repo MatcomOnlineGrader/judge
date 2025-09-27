@@ -193,15 +193,13 @@ def get_cmd_for_language_safeexec(
     #    escalation/Information diclosure) all because it uses the SUID bit
     # note3:Shall we consider only CPU seconds and ignore the delay caused by the syscalls?
     if lang == "java":
-        # HACK(leandro): The Java VM is using a lot of resources by default. This is a temporary
-        # fix to let submissions to previous problems pass with lower memory limits. We need to
-        # fix this ASAP, otherwise, it’s hard to reason about all these limits.
-        memory_limit = (memory_limit + 500) * 1024
-        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit} --cpu {time_limit} --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        cmd = f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        print(cmd)
+        return cmd
     elif lang == "kotlin":
-        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
     elif lang == "csharp":
-        return f"safeexec --stack 0 --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack 0 --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
