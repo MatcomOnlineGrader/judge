@@ -140,6 +140,9 @@
                                 </button>
                             </div>
                             <div class="pre"><span class="text">{{ si }}</span></div>
+                            <div class="overflow-message">
+                                --- {% trans 'Showing first 20 lines (click "Copy" to get full content)' %} ---
+                            </div>
                         </div>
                         <div class="output">
                             <div class="title test-case-header">
@@ -152,6 +155,9 @@
                                 </button>
                             </div>
                             <div class="pre"><span class="text">{{ so }}</span></div>
+                            <div class="overflow-message">
+                                --- {% trans 'Showing first 20 lines (click "Copy" to get full content)' %} ---
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -217,6 +223,15 @@
                 el.innerText = el.innerText.replace('✓', '');
             }, 5000);
         }
+    </script>
+
+    <script>
+        document.querySelectorAll('.sample-test .input, .sample-test .output').forEach(container => {
+            const pre = container.querySelector('.text');
+            if (pre.textContent.split('\n').length > 20) {
+                container.classList.add('has-overflow');
+            }
+        });
     </script>
 
     {% include 'mog/includes/mathjax' %}
