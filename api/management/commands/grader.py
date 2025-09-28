@@ -7,11 +7,8 @@ import os
 import re
 import shutil
 import stat
-import sys
 import time
-from xml.dom import minidom
 
-import colorama
 
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
@@ -19,9 +16,6 @@ from django.db import DatabaseError, transaction, close_old_connections
 
 from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
-
-USE_SAFEEXEC = settings.USE_SAFEEXEC
-RUNEXE_PATH = os.path.join(settings.RESOURCES_FOLDER, "runexe.exe")
 
 
 def update_submission(
@@ -140,35 +134,6 @@ def compile_submission(submission):
     return False
 
 
-def report_progress(submission, current_test, number_of_tests, result, bar_width=50):
-    if USE_SAFEEXEC:
-        log.debug(
-            "Submission #%d -> %s (Ran %d out of %d test cases)",
-            submission.id,
-            result or "(unknown)",
-            current_test,
-            number_of_tests,
-        )
-    else:
-        # Show on
-        pct = 100 * current_test // number_of_tests
-        prg = current_test * bar_width // number_of_tests
-        rmg = bar_width - prg
-        sys.stderr.write(
-            "%d [%s%s] (%d/%d - %d%%)"
-            % (submission.id, "#" * prg, " " * rmg, current_test, number_of_tests, pct)
-        )
-        if result != "accepted" or current_test == number_of_tests:
-            color = {
-                "accepted": colorama.Fore.GREEN,
-                "compilation error": colorama.Fore.BLUE,
-                "internal error": colorama.Fore.BLUE,
-            }.get(result, colorama.Fore.RED)
-            sys.stderr.write("%s [%s]%s\n" % (color, result, colorama.Style.RESET_ALL))
-        else:
-            sys.stderr.write("\r")
-
-
 def mark_as_running(submission: Submission):
     """Marks a submission as running"""
     submission.result = Result.objects.get(name__iexact="running")
@@ -208,60 +173,6 @@ def get_cmd_for_language_safeexec(
     else:
         # Compiled binary
         return f"safeexec --stack 0 --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
-
-
-def get_cmd_for_language_runexe(
-    submission: Submission,
-    compiler: Compiler,
-    language: str,
-    time_limit: int,
-    memory_limit: int,
-) -> str:
-    """Get language specific command, using runexe instead"""
-
-    if language == "java":
-        return (
-            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx%dM -Xss64m -DMOG=true Main'
-            % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
-        )
-    elif language == "kotlin":
-        # Like Java
-        return (
-            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" java -Xms32M -Xmx%dM -Xss64m -DMOG=true MainKt'
-            % (RUNEXE_PATH, time_limit, memory_limit, memory_limit)
-        )
-    elif language in ["python", "javascript", "python2", "python3"]:
-        return (
-            '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" "%s" %s'
-            % (
-                RUNEXE_PATH,
-                time_limit,
-                memory_limit,
-                compiler.path,
-                compiler.arguments.format(
-                    "%d.%s" % (submission.id, compiler.file_extension)
-                ),
-            )
-        )
-    else:
-        return '"%s" -t %ds -m %dM -xml -i "{input-file}" -o "{output-file}" %s' % (
-            RUNEXE_PATH,
-            time_limit,
-            memory_limit,
-            "%d.%s" % (submission.id, compiler.exec_extension),
-        )
-
-
-def get_cmd_for_language(
-    submission: Submission,
-    compiler: Compiler,
-    lang: str,
-    time_limit: int,
-    memory_limit: int,
-) -> str:
-    """Get the language-specific command to execute"""
-    fun = get_cmd_for_language_safeexec if USE_SAFEEXEC else get_cmd_for_language_runexe
-    return fun(submission, compiler, lang, time_limit, memory_limit)
 
 
 def get_tag_value(xml, tag_name):
@@ -330,52 +241,6 @@ def parse_safeexec_output(out: str) -> dict:
     }
 
 
-def run_runexe(
-    cmd: str,
-    input_file: str,
-    submission_folder: str,
-    time_limit: int,
-):
-    """See `run_grader`"""
-    result = dict()
-    ret, out, err = get_exitcode_stdout_stderr(
-        cmd=cmd.format(**{"input-file": input_file, "output-file": "output.txt"}),
-        cwd=submission_folder,
-    )
-
-    # Also check for errors
-    if ret != 0:
-        log.debug(
-            "(Grading) Process exited with non-zero result code (code=%d) stdout=%s, stderr=%s",
-            ret,
-            out,
-            err,
-        )
-
-    # Parse the runexe output
-    xml = minidom.parseString(out.strip())
-    invocation_verdict = get_tag_value(xml, "invocationVerdict")
-    exit_code = int(get_tag_value(xml, "exitCode"))
-    processor_user_mode_time = int(get_tag_value(xml, "processorUserModeTime"))
-    processor_kernel_mode_time = int(get_tag_value(xml, "processorKernelModeTime"))
-    passed_time = int(get_tag_value(xml, "passedTime"))
-    consumed_memory = int(get_tag_value(xml, "consumedMemory"))
-    comment = get_tag_value(xml, "comment") or "<blank>"
-
-    execution_time = processor_user_mode_time
-    execution_time = min(execution_time, time_limit * 1000)
-
-    result["invocation_verdict"] = invocation_verdict
-    result["exit_code"] = exit_code
-    result["processor_user_mode_time"] = processor_user_mode_time
-    result["processor_kernel_mode_time"] = processor_kernel_mode_time
-    result["passed_time"] = passed_time
-    result["consumed_memory"] = consumed_memory
-    result["comment"] = comment
-    result["execution_time"] = execution_time
-    return result, ret, out, err
-
-
 def run_safeexec(
     cmd: str,
     input_file: str,
@@ -412,11 +277,8 @@ def run_grader(
     submission_folder: str,
     time_limit: int,
 ):
-    """Run a single test case in either runexe or safeexec, see: `USE_SAFEEXEC` global variable"""
-    run_the_grader = run_safeexec if USE_SAFEEXEC else run_runexe
-    result, ret, out, err = run_the_grader(
-        cmd, input_file, submission_folder, time_limit
-    )
+    """Run a single test case in safeexec"""
+    result, ret, out, err = run_safeexec(cmd, input_file, submission_folder, time_limit)
     log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
@@ -449,7 +311,9 @@ def grade_submission(submission, number_of_executions):
     memory_limit = problem.memory_limit_for_compiler(compiler)
 
     # Build the command
-    cmd = get_cmd_for_language(submission, compiler, language, time_limit, memory_limit)
+    cmd = get_cmd_for_language_safeexec(
+        submission, compiler, language, time_limit, memory_limit
+    )
     log.debug("Run cmd: %s", cmd)
 
     # Input & output folders
@@ -470,14 +334,13 @@ def grade_submission(submission, number_of_executions):
         try:
             current_test += 1
 
-            # parse runexe output
             for _ in range(number_of_executions):
                 # NOTE: Setting result to accepted here is needed in
                 # case we retry after a TLE/ILE judgment. As a follow
                 # up, we need to revisit the logic of this section and
                 # refactor to make it more readable.
                 result = "accepted"
-                data, ret, out, err = run_grader(
+                data, _, out, err = run_grader(
                     cmd, input_file, submission_folder, time_limit
                 )
                 invocation_verdict = data["invocation_verdict"]
@@ -534,12 +397,6 @@ def grade_submission(submission, number_of_executions):
         except Exception as e:
             log.error("Unexpected error running test case: %s", str(e))
             result = "internal error"
-        report_progress(
-            submission=submission,
-            current_test=current_test,
-            number_of_tests=number_of_tests,
-            result=result,
-        )
         if result != "accepted":
             break
     update_submission(
@@ -590,11 +447,7 @@ class Command(BaseCommand):
         verbosity = {0: log.WARN, 1: log.INFO, 2: log.DEBUG, 3: log.DEBUG}
         log.basicConfig(
             format="%(levelname)s - %(message)s",
-            level=(
-                log.FATAL
-                if not USE_SAFEEXEC
-                else verbosity.get(options["verbosity"], log.INFO)
-            ),
+            level=verbosity.get(options["verbosity"], log.INFO),
         )
         sleep = options.get("sleep")
         number_of_executions = options.get("number_of_executions")
@@ -604,7 +457,6 @@ class Command(BaseCommand):
         if number_of_executions < 1:
             raise CommandError("number_of_executions must to be a positive integer")
         # store compilers
-        colorama.init()
         while True:
             submission = None
             try:
