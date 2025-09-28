@@ -60,9 +60,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 config = RawConfigParser()
 config.read(os.path.join(BASE_DIR, "settings.ini"))
 
-# Use safeexec
-USE_SAFEEXEC = config.getboolean("grader", "USE_SAFEEXEC")
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get("secrets", "SECRET_KEY")
 
@@ -234,7 +231,6 @@ PROBLEMS_FOLDER = config.get("grader", "PROBLEMS_FOLDER")
 SANDBOX_FOLDER = config.get("grader", "SANDBOX_FOLDER")
 
 # Resource folders
-# - runexe.exe
 # - testlib.h versions
 # - testlib4j.jar
 RESOURCES_FOLDER = config.get("grader", "RESOURCES_FOLDER")
