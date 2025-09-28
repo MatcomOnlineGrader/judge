@@ -1,16 +1,12 @@
 import requests
-
-WEBHOOKS = [
-    "https://discordapp.com/api/webhooks/619074191571812352/GurZA2CioYYZsaHktiiWwnaOFlbt2rCYybpHD9TCB7loKEwzl0H8wc0y_zbuAk40mf6c",  # Discord MOG
-    "https://discordapp.com/api/webhooks/619077907956105236/PAyrQ_HllSxm2Har9HvRCS5PnapfYK0jJs3UQXwrGouq6fedP1fpWfeB1tUoUjn28RwY",  # Discord ICPC Caribe
-]
+from django.conf import settings
 
 
 def post_content(content):
     payload = {"embeds": [content]}
 
     with requests.Session() as sess:
-        for webhook in WEBHOOKS:
+        for webhook in settings.DISCORD_CLARIFICATION_WEBHOOKS:
             sess.post(webhook, json=payload)
 
 

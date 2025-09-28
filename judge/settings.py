@@ -336,3 +336,11 @@ CACHES = {
         "LOCATION": "mog-cache",
     }
 }
+
+# This section lists Discord webhooks for sending clarifications, one URL per line
+DISCORD_CLARIFICATION_WEBHOOKS = []
+if config.has_section("webhooks.clarifications"):
+    DISCORD_CLARIFICATION_WEBHOOKS = config.get(
+        "webhooks.clarifications", "DISCORD"
+    ).split("\n")
+    DISCORD_CLARIFICATION_WEBHOOKS = list(filter(None, DISCORD_CLARIFICATION_WEBHOOKS))
