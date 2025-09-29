@@ -4,10 +4,15 @@ FROM alpine:3.15.0
 # layer, plus git python gcc and java
 RUN apk update && apk upgrade && apk add bash gcompat postgresql-dev git python3 python3-dev gcc g++ openjdk17-jdk iptables
 
-# Copy project content in the host machine into the container
-# as /code folder.
+# Copy project content from the host into the container as /code. Set
+# permissions to 750 so only root can read it. The 'judge' user should
+# not access content in this folder, especially settings.ini.
+#
+# NOTE: In development mode, we mount the volume over this workdir, so
+# permissions get overwritten. That's fine.
 WORKDIR /code
 COPY . /code/
+RUN chmod -R 750 /code
 
 # 0. Create a virtual environment and load it
 # 1. Install the build dependencies
@@ -61,3 +66,7 @@ RUN cd /opt && \
         tar xjvf pypy3.9-v7.3.10-linux64.tar.bz2 && \
         rm pypy3.9-v7.3.10-linux64.tar.bz2 && \
         mv pypy3.9-v7.3.10-linux64 pypy-7.3.10
+
+# 18. Create a user named judge to run submissions more securely.
+RUN addgroup -S judge && \
+	adduser -S -G judge judge -s /bin/bash
