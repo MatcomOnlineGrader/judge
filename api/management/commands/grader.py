@@ -245,7 +245,6 @@ def run_safeexec(
     cmd: str,
     input_file: str,
     submission_folder: str,
-    time_limit: int,
 ):
     """See `run_grader`"""
     with open(os.path.join(submission_folder, "output.txt"), "wb") as stdout:
@@ -258,6 +257,7 @@ def run_safeexec(
                 cwd=submission_folder,
                 stdin=stdin,
                 stdout=stdout,
+                user="judge",
             )
 
     # Check for errors
@@ -275,10 +275,9 @@ def run_grader(
     cmd: str,
     input_file: str,
     submission_folder: str,
-    time_limit: int,
 ):
     """Run a single test case in safeexec"""
-    result, ret, out, err = run_safeexec(cmd, input_file, submission_folder, time_limit)
+    result, ret, out, err = run_safeexec(cmd, input_file, submission_folder)
     log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
@@ -340,9 +339,7 @@ def grade_submission(submission, number_of_executions):
                 # up, we need to revisit the logic of this section and
                 # refactor to make it more readable.
                 result = "accepted"
-                data, _, out, err = run_grader(
-                    cmd, input_file, submission_folder, time_limit
-                )
+                data, _, out, err = run_grader(cmd, input_file, submission_folder)
                 invocation_verdict = data["invocation_verdict"]
                 exit_code = data["exit_code"]
                 consumed_memory = data["consumed_memory"]
@@ -500,7 +497,10 @@ class Command(BaseCommand):
                         set_internal_error(
                             submission, "internal error, problem not ready"
                         )
-                    remove_submission_folder(submission)
+                    if not settings.DEBUG:
+                        # If we're in DEBUG mode, leave the submission folder
+                        # to make debugging easier.
+                        remove_submission_folder(submission)
                 else:
                     # we only wait if there was no submission to grade
                     time.sleep(sleep)
