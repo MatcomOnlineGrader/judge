@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-28 19:31+0000\n"
+"POT-Creation-Date: 2025-10-04 05:16+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1117,8 +1117,10 @@ msgstr "Copiar"
 
 #: mog/templates/mog/problem/detail.html:144
 #: mog/templates/mog/problem/detail.html:159
-msgid "Showing first 20 lines (click \"Copy\" to get full content)"
-msgstr "Mostrando las primeras 20 líneas (haz clic en \"Copiar\" para ver el contenido completo)"
+msgid "Showing first 30 lines (click \"Copy\" to get full content)"
+msgstr ""
+"Mostrando las primeras 30 líneas (haz clic en \"Copiar\" para ver el "
+"contenido completo)"
 
 #: mog/templates/mog/problem/detail.html:169
 msgid "Hints"

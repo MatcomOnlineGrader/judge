@@ -48,7 +48,7 @@ textarea {
   padding: 0.25em;
   margin: 0;
   background-color: #efefef;
-  max-height: calc(1.4em * 20); /* 20 lines assuming 1.4em line-height */
+  max-height: calc(1.4em * 30); /* 30 lines assuming 1.4em line-height */
   line-height: 1.4em;
   overflow: hidden;
 }
