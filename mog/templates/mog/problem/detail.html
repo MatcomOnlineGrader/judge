@@ -141,7 +141,7 @@
                             </div>
                             <div class="pre"><span class="text">{{ si }}</span></div>
                             <div class="overflow-message">
-                                --- {% trans 'Showing first 20 lines (click "Copy" to get full content)' %} ---
+                                --- {% trans 'Showing first 30 lines (click "Copy" to get full content)' %} ---
                             </div>
                         </div>
                         <div class="output">
@@ -156,7 +156,7 @@
                             </div>
                             <div class="pre"><span class="text">{{ so }}</span></div>
                             <div class="overflow-message">
-                                --- {% trans 'Showing first 20 lines (click "Copy" to get full content)' %} ---
+                                --- {% trans 'Showing first 30 lines (click "Copy" to get full content)' %} ---
                             </div>
                         </div>
                     </div>
@@ -228,7 +228,7 @@
     <script>
         document.querySelectorAll('.sample-test .input, .sample-test .output').forEach(container => {
             const pre = container.querySelector('.text');
-            if (pre.textContent.split('\n').length > 20) {
+            if (pre.textContent.split('\n').length > 30) {
                 container.classList.add('has-overflow');
             }
         });
