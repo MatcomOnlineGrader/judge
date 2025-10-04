@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-04 05:16+0000\n"
+"POT-Creation-Date: 2025-10-04 05:55+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1123,8 +1123,8 @@ msgstr ""
 "contenido completo)"
 
 #: mog/templates/mog/problem/detail.html:169
-msgid "Hints"
-msgstr "Pistas"
+msgid "Notes"
+msgstr "Notas"
 
 #: mog/templates/mog/problem/detail.html:190
 msgid "Delete Problem"
@@ -1771,6 +1771,9 @@ msgstr ""
 #: mog/views/submission.py:250
 msgid "Cannot rejudge submission: It is currently in grading process."
 msgstr ""
+
+#~ msgid "Hints"
+#~ msgstr "Pistas"
 
 #~ msgid "This action cannot be undone."
 #~ msgstr "Esta acción no se puede deshacer."
