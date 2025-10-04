@@ -18,6 +18,10 @@ from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 
 
+# https://github.com/MatcomOnlineGrader/safeexec/blob/22cd436f2d384d2a933428c5f5f8240c406f08db/safeexec.c#L38C20-L38C27
+LARGECONST = 4194304  # 4GiB
+
+
 def update_submission(
     submission, execution_time, memory_used, result_name, judgement_details
 ):
@@ -158,21 +162,20 @@ def get_cmd_for_language_safeexec(
     #    escalation/Information diclosure) all because it uses the SUID bit
     # note3:Shall we consider only CPU seconds and ignore the delay caused by the syscalls?
     if lang == "java":
-        cmd = f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
-        print(cmd)
+        cmd = f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
         return cmd
     elif lang == "kotlin":
-        return f"safeexec --stack 0 --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
     elif lang == "csharp":
-        return f"safeexec --stack 0 --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
         )
-        return f'safeexec --stack 0 --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
+        return f'safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f"safeexec --stack 0 --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
 def get_tag_value(xml, tag_name):
@@ -257,10 +260,7 @@ def run_safeexec(
                 cwd=submission_folder,
                 stdin=stdin,
                 stdout=stdout,
-                # TODO(lcastillov): safeexec is failing to setuid/setgid in certain
-                # cases (example/ sid 182764). I couldn’t figure out how to give this
-                # user the right capabilities, so let’s disable it for now.
-                # user="judge",
+                user="judge",
             )
 
     # Check for errors
