@@ -257,7 +257,10 @@ def run_safeexec(
                 cwd=submission_folder,
                 stdin=stdin,
                 stdout=stdout,
-                user="judge",
+                # TODO(lcastillov): safeexec is failing to setuid/setgid in certain
+                # cases (example/ sid 182764). I couldn’t figure out how to give this
+                # user the right capabilities, so let’s disable it for now.
+                # user="judge",
             )
 
     # Check for errors
