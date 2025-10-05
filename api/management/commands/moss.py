@@ -42,12 +42,14 @@ class Command(BaseCommand):
             "--exclude-problems",
             nargs="+",
             type=str,
+            default=[],
             help="Problems to exclude, usually when solutions look alike.",
         )
         parser.add_argument(
             "--users",
             nargs="+",
             type=int,
+            default=[],
             help="User IDs that we want to include in the search anyway",
         )
         parser.add_argument(
