@@ -13,7 +13,9 @@ services:
     build:
       context: ../..
       dockerfile: docker/prod/dockerfile
-    command: environ/bin/gunicorn --workers 4 --statsd-host=statsd_exporter:9125 --statsd-prefix=judge -b :8000 judge.wsgi:application
+    # --timeout 120: gevent worker heartbeat timeout. Must exceed nginx's proxy_read_timeout (90s)
+    # so nginx returns a 504 before gunicorn kills the worker.
+    command: environ/bin/gunicorn --workers 4 --worker-class gevent --worker-connections 1000 --timeout 120 --statsd-host=statsd_exporter:9125 --statsd-prefix=judge -b :8000 judge.wsgi:application
     volumes:
       - varwww:/var/www/judge
       - problems:/problems
