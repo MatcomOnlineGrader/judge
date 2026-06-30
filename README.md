@@ -30,6 +30,23 @@ Matcom Online Grader (MOG) is a competitive programming platform designed for ho
 
 This will set up the development environment using Docker containers.
 
+#### Apple Silicon (arm64) Macs
+
+The grader image is x86_64-only (it bundles a custom gcc 11.3.0 toolchain), so it
+is built and run as `linux/amd64` under emulation. This requires:
+
+- **buildx** — `updev.sh` registers Homebrew's plugin automatically; install it
+  with `brew install docker-buildx` if it's missing.
+- **Rosetta emulation, not QEMU** — QEMU crashes the compiler. If you use
+  [Colima](https://github.com/abiosoft/colima), start it with Rosetta:
+
+  ```bash
+  colima start --vz-rosetta --cpu 4 --memory 6
+  ```
+
+  Docker Desktop users should enable *Settings → General → Use Rosetta for
+  x86/amd64 emulation*.
+
 ## Contributing
 
 We welcome contributions! Join our Discord community to discuss features, report bugs, or get help with development.

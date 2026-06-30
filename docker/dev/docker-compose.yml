@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   database:
     image: postgres:11.5
@@ -11,6 +9,13 @@ services:
       - pgdb:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    # Wait until Postgres actually accepts connections, not just until the
+    # container starts, so dependents don't race the database on startup.
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U judge -d judge']
+      interval: 3s
+      timeout: 3s
+      retries: 20
   api:
     build:
       context: ../..
@@ -27,8 +32,13 @@ services:
     ports:
       - '8000:8000'
     depends_on:
-      - database
+      database:
+        condition: service_healthy
   grader:
+    # The grader image installs an x86_64-only gcc toolchain (and PyPy/Mono),
+    # so it must be built and run as linux/amd64 to match production. On arm64
+    # hosts (Apple Silicon) this runs under emulation.
+    platform: linux/amd64
     build:
       context: ../..
       dockerfile: docker/common/dockerfile.grader
@@ -36,6 +46,9 @@ services:
     volumes:
       - ../..:/code
       - problems:/problems
+    depends_on:
+      database:
+        condition: service_healthy
     cap_add:
       - NET_ADMIN
     ulimits:

@@ -1,4 +1,7 @@
-FROM alpine:3.15.0
+# This image installs an x86_64-only gcc 11.3.0 toolchain (plus PyPy/Mono), so
+# it must be built as linux/amd64. Pinning the platform here lets it build on
+# arm64 hosts (Apple Silicon) under emulation, matching the production arch.
+FROM --platform=linux/amd64 alpine:3.15.0
 
 # Update the system, and add bash and the glibc compatibility
 # layer, plus git python gcc and java
