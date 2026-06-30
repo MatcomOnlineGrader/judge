@@ -381,10 +381,23 @@ def grade_submission(submission, number_of_executions):
                     comment = out or err
                     if rc != 0:
                         result = "wrong answer"
+                if result == "internal error":
+                    # Log the raw safeexec stderr (`err`). When safeexec can't
+                    # run the submission (e.g. it isn't setuid-root so it fails
+                    # to setgid/setuid into the `judge` user) its output isn't
+                    # the expected 4-line format, parse_safeexec_output falls
+                    # back to FAIL, and we land here. Without `err` this is
+                    # silent and impossible to diagnose from the grader output.
+                    log.error(
+                        "Internal error grading submission #%d on input %s: "
+                        "parsed=%s, safeexec stderr=%r",
+                        submission.id,
+                        input_file,
+                        json.dumps(data),
+                        err,
+                    )
                 if result not in ["time limit exceeded", "idleness limit exceeded"]:
                     break  # abort retry of the test if is not time related
-                if result == "internal error":
-                    log.error("Internal error ocurred: %s,", json.dumps(data))
 
             maximum_execution_time = max(maximum_execution_time, execution_time)
             maximum_consumed_memory = max(maximum_consumed_memory, consumed_memory)

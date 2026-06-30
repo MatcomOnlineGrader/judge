@@ -22,16 +22,24 @@ RUN chmod -R 750 /code
 # 2. Install all python dependencies.
 # 3. Make safeexec
 # 4. Uninstall cmake and make
-# 5. Test safeexec
-# 6. Create the sandbox dir (where the solution gets executed)
-# 7. Clear PIP and APKcaches
+# 5. Ensure safeexec is setuid-root so it can drop privileges into the
+#    'judge' user at runtime (the upstream install doesn't always preserve
+#    the bit, e.g. under arm64/Rosetta emulation).
+# 6. Create the 'judge' user that runs submissions.
+# 7. Test safeexec AS 'judge' (not root) so a missing setuid bit fails the
+#    build here instead of silently turning every submission into an
+#    Internal Error at runtime.
+# 8. Create the sandbox dir (where the solution gets executed)
+# 9. Clear PIP and APK caches
 RUN python3 -m venv /opt/environ && \
 	source /opt/environ/bin/activate && \
 	apk add cmake make jpeg-dev zlib-dev && \
 	pip install --upgrade pip && pip install -r requirements.txt && \
 	bash docker/common/make_safeexec.sh && \
 	apk del cmake make && \
-	safeexec --exec /bin/true && \
+	chmod u+s /usr/local/bin/safeexec && \
+	addgroup -S judge && adduser -S -G judge judge -s /bin/bash && \
+	su judge -c "cd /tmp && safeexec --exec /bin/true" && \
 	mkdir /sandbox && \
 	pip cache purge && rm -r /var/cache/apk
 
@@ -69,7 +77,3 @@ RUN cd /opt && \
         tar xjvf pypy3.9-v7.3.10-linux64.tar.bz2 && \
         rm pypy3.9-v7.3.10-linux64.tar.bz2 && \
         mv pypy3.9-v7.3.10-linux64 pypy-7.3.10
-
-# 18. Create a user named judge to run submissions more securely.
-RUN addgroup -S judge && \
-	adduser -S -G judge judge -s /bin/bash
