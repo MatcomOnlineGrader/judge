@@ -8,8 +8,8 @@
 set -euo pipefail  # Exit on error, undefined variables, and pipe failures
 
 # Configuration
-DB_CONTAINER_NAME="dev_database"
-API_CONTAINER_NAME="dev_api"
+DB_CONTAINER_NAME="dev-database"
+API_CONTAINER_NAME="dev-api"
 DB_NAME="judge"
 DB_USER="judge"
 SQL_FILE="judge.sql"
@@ -31,17 +31,17 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Logging functions
+# Logging functions (write to stderr so they don't pollute command substitution)
 log_info() {
-    echo -e "${GREEN}[INFO]${NC} $1"
+    echo -e "${GREEN}[INFO]${NC} $1" >&2
 }
 
 log_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
+    echo -e "${YELLOW}[WARN]${NC} $1" >&2
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
 # Function to check if file exists in the restore folder
@@ -64,9 +64,14 @@ get_container_id() {
     local container_id
     
     container_id=$(docker ps -q --filter "name=$container_name" 2>/dev/null)
-    
+
     if [[ -z "$container_id" ]]; then
         log_error "Container '$container_name' not found or not running!"
+        exit 1
+    fi
+
+    if [[ $(echo "$container_id" | wc -l) -gt 1 ]]; then
+        log_error "Multiple containers match '$container_name'; refusing to guess."
         exit 1
     fi
     
