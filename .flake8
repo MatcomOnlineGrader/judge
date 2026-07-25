@@ -2,4 +2,3 @@
 extend-ignore = E501,E722,E203
 per-file-ignores =
     ./manage.py:F401
-    ./api/models.py:W605

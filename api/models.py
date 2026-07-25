@@ -1,6 +1,6 @@
 import os
 import re
-import cgi
+import html
 import uuid
 import json
 
@@ -20,7 +20,7 @@ from django.conf import settings
 from django.utils.deconstruct import deconstructible
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from mog.tasks import report_clarification
 from mog.gating import (
@@ -1070,13 +1070,13 @@ class Comment(models.Model):
         if not self.pk or (self.initial_body_value != self.body):
             matches = map(
                 lambda match: (match.start(), match.end()),
-                list(re.finditer("@[\S]+", self.body, re.S)),
+                list(re.finditer(r"@[\S]+", self.body, re.S)),
             )
             self.html = ""
             last_index, users = 0, set()
             for s, e in matches:
                 if not last_index:
-                    self.html = cgi.escape(self.body[:s], quote=True)
+                    self.html = html.escape(self.body[:s], quote=True)
                 username = self.body[(s + 1) : e]
                 try:
                     user = User.objects.get(username=username)
@@ -1086,9 +1086,9 @@ class Comment(models.Model):
                     ).strip()
                     self.html += " " + url
                 except:
-                    self.html += cgi.escape(self.body[s:e], quote=True)
+                    self.html += html.escape(self.body[s:e], quote=True)
                 last_index = e
-            self.html += cgi.escape(self.body[last_index:], quote=True)
+            self.html += html.escape(self.body[last_index:], quote=True)
             # notify users about this comment
             for user in users:
                 send_mail(
