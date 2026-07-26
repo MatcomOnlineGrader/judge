@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 from configparser import RawConfigParser
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 def get_array_from_config(configuration, section, option, target=str):
@@ -71,13 +71,46 @@ PASSWORD_GENERATOR_SECRET_KEY = config.get("secrets", "PASSWORD_GENERATOR_SECRET
 
 ALLOWED_HOSTS = ["*"]
 
+# CSRF trusted origins. Django 4.0+ requires each entry to include the scheme
+# (e.g. "https://matcomgrader.com") and validates the Origin/Referer of unsafe
+# requests (POST/PUT/...) against this list. Production needs it — login,
+# registration and admin POSTs arrive over HTTPS behind a proxy, which 4.0's
+# stricter CSRF rejects unless the origin is trusted. Local dev needs nothing
+# (same-origin http://localhost POSTs pass without it). Configured per
+# environment via settings.ini ([security] CSRF_TRUSTED_ORIGINS, comma
+# separated); an absent or empty option falls back to [].
+if config.has_option("security", "CSRF_TRUSTED_ORIGINS"):
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip()
+        for origin in get_array_from_config(config, "security", "CSRF_TRUSTED_ORIGINS")
+        if origin.strip()
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = []
+
+# Trust the X-Forwarded-Proto header that the prod nginx sets
+# (`proxy_set_header X-Forwarded-Proto $scheme;`) so Django knows a request that
+# arrived over HTTPS at the TLS terminator is secure. Without this, request.is_secure()
+# is False behind the proxy, so request.scheme is "http", the CSRF "good origin" is
+# computed as http://<host> and every HTTPS POST is rejected; secure cookies / redirects
+# / HSTS also misbehave. Safe because clients can't reach gunicorn directly — nginx always
+# overwrites this header with $scheme, so it can't be spoofed. In local dev (runserver,
+# no proxy) the header is absent, so this is a no-op.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
+
+# Keep the historical integer primary keys. Django 3.2+ defaults new models to
+# BigAutoField unless this is set; pinning AutoField preserves the existing
+# schema (no PK-altering migrations) and silences the models.W042 checks.
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "mog.apps.MogConfig",
     "palantir.apps.PalantirConfig",
     "frontend.apps.FrontendConfig",
+    "django_registration",
     "social_django",
     "captcha",
     "django.contrib.humanize",
@@ -144,7 +177,7 @@ WSGI_APPLICATION = "judge.wsgi.application"
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DEFAULT_DATABASE = {
-    "ENGINE": "django.db.backends.postgresql_psycopg2",
+    "ENGINE": "django.db.backends.postgresql",
     "HOST": config.get("database", "DATABASE_HOST"),
     "PORT": config.getint("database", "DATABASE_PORT"),
     "NAME": config.get("database", "DATABASE_NAME"),
@@ -186,8 +219,9 @@ TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
-USE_L10N = False
-
+# USE_L10N was removed in Django 5.0 (localized formatting is always on). We ran
+# with it False before; for LANGUAGE_CODE="en-us" the localized formats match the
+# old non-localized defaults, so display is effectively unchanged.
 USE_TZ = True
 
 
@@ -236,7 +270,13 @@ SANDBOX_FOLDER = config.get("grader", "SANDBOX_FOLDER")
 RESOURCES_FOLDER = config.get("grader", "RESOURCES_FOLDER")
 
 # Email configuration
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# In local development there is normally no working SMTP server (settings.ini
+# ships placeholder credentials), so print emails — account activation links,
+# password resets, etc. — to the console instead of failing to send them.
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = config.getboolean("email", "EMAIL_USE_TLS")
 EMAIL_HOST = config.get("email", "EMAIL_HOST")
 EMAIL_PORT = config.getint("email", "EMAIL_PORT")

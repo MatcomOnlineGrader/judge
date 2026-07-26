@@ -2,13 +2,16 @@ version: "3.8"
 
 services:
   database:
-    image: postgres:11.5
+    image: postgres:16
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge
       - POSTGRES_PASSWORD=uhdtas
     volumes:
-      - pgdb:/var/lib/postgresql/data
+      # PG 16 lives in a NEW volume so the old PG 11 data (`pgdb`) stays intact
+      # for instant rollback. Roll back by reverting image->postgres:11.5 and
+      # this mount->pgdb, then `up`. Delete `pgdb` only after PG 16 is confirmed good.
+      - pgdb16:/var/lib/postgresql/data
   api:
     build:
       context: ../..
@@ -98,6 +101,7 @@ services:
 
 volumes:
   grafana:
-  pgdb:
+  pgdb:      # PG 11 data — kept for rollback; remove once PG 16 is confirmed good
+  pgdb16:    # PG 16 data (restore target for the 11 -> 16 upgrade)
   problems:
   varwww:

@@ -10,7 +10,7 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from api.models import Submission, Compiler, Problem, Result
 from mog.helpers import filter_submissions, get_paginator

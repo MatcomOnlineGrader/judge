@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:11.5
+    image: postgres:16
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge

@@ -23,8 +23,13 @@
             <li><a href="{% url 'mog:institutions' %}"><i class="glyphicon glyphicon-education"></i> {% trans 'View institutions' %}</a></li>
             {% endif %}
             <li class="divider"></li>
-            <li><a href="{% url 'auth_logout' %}?next={% url 'mog:index' %}"><i class="glyphicon glyphicon-off"></i> {% trans 'Logout' %}</a></li>
+            <li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;"><i class="glyphicon glyphicon-off"></i> {% trans 'Logout' %}</a></li>
         </ul>
+        {# Django 5.0's LogoutView is POST-only (GET returns 405); the menu link above submits this hidden form. Kept outside the <ul> so the link stays a direct child of <li> and keeps its Bootstrap dropdown styling. #}
+        <form id="logout-form" method="post" action="{% url 'auth_logout' %}" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'mog:index' %}">
+        </form>
     </li>
 {% else %}
     <li>

@@ -1,4 +1,4 @@
-FROM alpine:3.15.0
+FROM alpine:3.20.10
 
 # Upgrade installed packages (busybox and few others) before doing anything else
 # And install bash, GNU Libc Compatibility layer, Python 3 (including dev files), Jpeg Dev files (for Pillow) and Zlib,

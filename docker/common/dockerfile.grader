@@ -17,6 +17,18 @@ WORKDIR /code
 COPY . /code/
 RUN chmod -R 750 /code
 
+# Download a standalone CPython 3.12 (musl, amd64) used ONLY to run the Django
+# grader app (manage.py grader), which needs Python >=3.10 for Django 5.x. The
+# system python3 (the advertised contestant runtime, 3.9.18) is deliberately
+# left untouched: contestant submissions run their own compilers via grader.py
+# (Compiler.path / hardcoded absolute paths), never this venv. Same
+# download-a-toolchain pattern as gcc/kotlin/pypy below.
+RUN cd /opt && \
+	wget https://github.com/astral-sh/python-build-standalone/releases/download/20260718/cpython-3.12.13+20260718-x86_64-unknown-linux-musl-install_only.tar.gz -O python-3.12.tar.gz && \
+	tar xzf python-3.12.tar.gz && \
+	mv /opt/python /opt/python-3.12 && \
+	rm python-3.12.tar.gz
+
 # 0. Create a virtual environment and load it
 # 1. Install the build dependencies
 # 2. Install all python dependencies.
@@ -31,10 +43,10 @@ RUN chmod -R 750 /code
 #    Internal Error at runtime.
 # 8. Create the sandbox dir (where the solution gets executed)
 # 9. Clear PIP and APK caches
-RUN python3 -m venv /opt/environ && \
+RUN /opt/python-3.12/bin/python3 -m venv /opt/environ && \
 	source /opt/environ/bin/activate && \
 	apk add cmake make jpeg-dev zlib-dev && \
-	pip install --upgrade pip && pip install -r requirements.txt && \
+	pip install --upgrade pip && CC=gcc CXX=g++ pip install -r requirements.txt && \
 	bash docker/common/make_safeexec.sh && \
 	apk del cmake make && \
 	chmod u+s /usr/local/bin/safeexec && \
