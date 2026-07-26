@@ -13,9 +13,7 @@ cryptography==49.0.0
 defusedxml==0.6.0
 dill==0.4.1
 django-debug-toolbar==4.4.6
-django-ranged-response==0.2.0
 django-registration==5.1.0
-django-simple-captcha==0.6.3
 Django==5.2.16
 flake8==7.3.0
 gunicorn==23.0.0

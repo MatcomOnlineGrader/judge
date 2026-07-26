@@ -14,6 +14,8 @@ all of which already exist in this project.
 from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
 
+from mog.forms import TurnstilePasswordResetForm
+
 urlpatterns = [
     path("login/", auth_views.LoginView.as_view(), name="auth_login"),
     path("logout/", auth_views.LogoutView.as_view(), name="auth_logout"),
@@ -32,7 +34,8 @@ urlpatterns = [
     path(
         "password/reset/",
         auth_views.PasswordResetView.as_view(
-            success_url=reverse_lazy("auth_password_reset_done")
+            form_class=TurnstilePasswordResetForm,
+            success_url=reverse_lazy("auth_password_reset_done"),
         ),
         name="auth_password_reset",
     ),

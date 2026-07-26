@@ -1,0 +1,31 @@
+{% extends "mog/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Activate account' %}{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="well well-lg text-center">
+                {% if activation_error %}
+                    {# Valid signature but activation still failed (already active / bad username) #}
+                    <p class="text-danger">{{ activation_error.message }}</p>
+                    <i class="glyphicon glyphicon-remove" style="color: red; font-size: 100px;"></i>
+                {% elif form.activation_key.errors %}
+                    {# Missing / expired / tampered key (only after POST — the form is unbound on GET) #}
+                    <p class="text-danger">{{ form.activation_key.errors.0 }}</p>
+                    <i class="glyphicon glyphicon-remove" style="color: red; font-size: 100px;"></i>
+                {% else %}
+                    <p>{% trans "Click below to activate your account." %}</p>
+                    <form method="post" action=".">
+                        {% csrf_token %}
+                        {{ form.activation_key.as_hidden }}
+                        <button type="submit" class="btn btn-primary btn-block">
+                            {% trans 'Activate account' %}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
