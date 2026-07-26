@@ -63,5 +63,15 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: secret_not_auto_fillable_placeholder
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: secret_not_auto_fillable_placeholder
 SOCIAL_AUTH_GOOGLE_SCOPE:
 
+[turnstile]
+# Cloudflare Turnstile keys for the registration and password-reset forms.
+# The site key is public
+# (it ships in the page HTML); the secret is not — fill it in locally and never
+# commit it (settings.ini is git-ignored). Get the pair from the Cloudflare
+# dashboard → Turnstile. If this section is omitted the app falls back to
+# Cloudflare's public test keys, which always pass (dev/CI only).
+TURNSTILE_SITEKEY: 0x4AAAAAAD98T_15Yq29Q51o
+TURNSTILE_SECRET: secret_not_auto_fillable_placeholder
+
 [palantir]
 LOG_REQUESTS: true

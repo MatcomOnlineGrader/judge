@@ -112,7 +112,6 @@ INSTALLED_APPS = [
     "frontend.apps.FrontendConfig",
     "django_registration",
     "social_django",
-    "captcha",
     "django.contrib.humanize",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -363,6 +362,20 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.user.user_details",
     # Set avatar to user.
     "mog.pipeline.associate_avatar",
+)
+
+# Cloudflare Turnstile guards the registration and password-reset forms
+# (replaces the old image captcha, which was on registration only).
+# Both keys come from the [turnstile] section of settings.ini (git-ignored).
+# The site key is public (it ships in the page HTML); the secret is not — keep
+# it out of version control. If the section is absent (e.g. an old settings.ini)
+# the fallbacks are Cloudflare's public "always passes" test keys, so local dev
+# and CI still work without any configuration.
+TURNSTILE_SITEKEY = config.get(
+    "turnstile", "TURNSTILE_SITEKEY", fallback="1x00000000000000000000AA"
+)
+TURNSTILE_SECRET = config.get(
+    "turnstile", "TURNSTILE_SECRET", fallback="1x0000000000000000000000000000000AA"
 )
 
 # Cache settings

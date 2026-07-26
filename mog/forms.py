@@ -1,7 +1,7 @@
 import json
 
-from captcha.fields import CaptchaField
 from django import forms
+from django.contrib.auth.forms import PasswordResetForm
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_registration.forms import RegistrationFormUniqueEmail
@@ -17,6 +17,7 @@ from api.models import (
     UserFeedback,
     UserProfile,
 )
+from mog.turnstile import TurnstileField
 from mog.utils import secure_html
 
 
@@ -235,8 +236,20 @@ class MOGRegistrationForm(RegistrationFormUniqueEmail):
         return email
 
 
-class MOGRegistrationFormWithCaptcha(MOGRegistrationForm):
-    captcha = CaptchaField()
+class MOGRegistrationFormWithTurnstile(MOGRegistrationForm):
+    # action= is rendered as data-action on the cf-turnstile div (Spin telemetry).
+    turnstile = TurnstileField(label="", action="turnstile-spin-v2")
+
+
+class TurnstilePasswordResetForm(PasswordResetForm):
+    """Django's password-reset form guarded by Turnstile.
+
+    /password/reset/ sends an outbound email per submission, so it's a bot
+    abuse vector (email bombing, SendGrid quota/reputation). Turnstile gates
+    the POST; the underlying PasswordResetForm behavior is unchanged (it only
+    emails addresses that actually exist and are active)."""
+
+    turnstile = TurnstileField(label="", action="turnstile-spin-v2")
 
 
 class ClarificationForm(forms.ModelForm):

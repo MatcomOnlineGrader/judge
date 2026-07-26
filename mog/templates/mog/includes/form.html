@@ -1,9 +1,9 @@
 {% load filters %}
 
 {% for field in form %}
-    {% if field.label == 'Captcha' %}
-        {# Hack to render captcha field #}
-        {% include 'mog/includes/_captcha_field.html' with field=field %}
+    {% if field.name == 'turnstile' %}
+        {# Cloudflare Turnstile renders its own widget (no label/form-control) #}
+        {% include 'mog/includes/_turnstile_field.html' with field=field %}
     {% else %}
         {# All other fields #}
         <div class="form-group">

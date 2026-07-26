@@ -20,13 +20,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django_registration.backends.activation.views import RegistrationView
 
-from mog.forms import MOGRegistrationFormWithCaptcha
+from mog.forms import MOGRegistrationFormWithTurnstile
 
 urlpatterns = [
-    path(r"captcha/", include("captcha.urls")),
     path(
         r"register/",
-        RegistrationView.as_view(form_class=MOGRegistrationFormWithCaptcha),
+        RegistrationView.as_view(form_class=MOGRegistrationFormWithTurnstile),
         name="registration_register",
     ),
     path(r"", include("judge.auth_urls")),
