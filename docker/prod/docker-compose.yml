@@ -1,11 +1,24 @@
 version: "3.8"
 
-# CPU pinning (host has 10 vCPUs: 0-9). Cores 8-9 belong to the grader alone so
-# its timings don't depend on web/DB load; every other service uses
-# *other_cores. Both sides are needed, or Docker would still schedule other
-# containers on the grader's cores. Re-derive with `nproc` if the host changes.
+# CPU pinning (host has 10 vCPUs: 0-9). Cores 8 and 9 belong to the two graders,
+# one each, so their timings don't depend on web/DB load; every other service
+# uses *other_cores. Both sides are needed, or Docker would still schedule other
+# containers on the graders' cores. Re-derive with `nproc` if the host changes.
 # (`deploy.resources` is ignored outside Swarm, hence `cpuset`.)
 x-other-cores: &other_cores "0-7"
+
+# Shared by both graders. Each one gives safeexec its own range of user ids
+# (SAFEEXEC_UIDS) so submissions from different graders never share a user id,
+# and with it the per-user --nproc limit (see parse_uids in grader.py).
+x-grader: &grader
+  image: judge-grader
+  command: bash -c "bash grader-firewall.sh && /opt/environ/bin/python3 manage.py grader"
+  volumes:
+    - problems:/problems
+  cap_add:
+    - NET_ADMIN
+  ulimits:
+    stack: -1
 
 services:
   database:
@@ -34,17 +47,20 @@ services:
     depends_on:
       - database
   grader:
+    <<: *grader
+    # Builds the judge-grader image both graders run.
     build:
       context: ../..
       dockerfile: docker/common/dockerfile.grader
-    cpuset: "8-9"
-    command: bash -c "bash grader-firewall.sh && /opt/environ/bin/python3 manage.py grader"
-    volumes:
-      - problems:/problems
-    cap_add:
-      - NET_ADMIN
-    ulimits:
-      stack: -1
+    cpuset: "8"
+    environment:
+      - SAFEEXEC_UIDS=10000-19999
+  grader-2:
+    <<: *grader
+    pull_policy: never
+    cpuset: "9"
+    environment:
+      - SAFEEXEC_UIDS=20000-29999
   ######################################################################
   # Monitoring
   ######################################################################

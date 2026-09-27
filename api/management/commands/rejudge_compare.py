@@ -41,10 +41,12 @@ import time
 from collections import Counter
 
 from django.core.management import BaseCommand, CommandError
-from django.db import OperationalError, transaction
+from django.db import transaction
 from prettytable import PrettyTable, TableStyle
 
 from api.models import Contest, Result, Submission
+
+from .grader import retry_on_deadlock
 
 MAX_RANGE = 10000
 MAX_LISTED_IDS = 30
@@ -179,28 +181,6 @@ def wait_for_grader(ids, timeout, poll, on_progress):
             remaining = left
             on_progress(len(ids) - left)
     return remaining
-
-
-def is_deadlock(error):
-    """True if a database error is Postgres' "deadlock detected" (40P01)."""
-    return getattr(error.__cause__, "pgcode", None) == "40P01"
-
-
-def retry_on_deadlock(fn, attempts=5, delay=0.5):
-    """Run fn(), running it again if Postgres aborts it with a deadlock.
-
-    Changing a submission's result fires a database trigger that updates the
-    problem's points and every user who submitted to it (db_scripts/), so it
-    can deadlock with the grader saving results at the same time. Postgres
-    rolls back one of the two transactions, which is then safe to run again.
-    """
-    for attempt in range(1, attempts + 1):
-        try:
-            return fn()
-        except OperationalError as e:
-            if not is_deadlock(e) or attempt == attempts:
-                raise
-            time.sleep(delay * attempt)
 
 
 def resolve_statuses(values, known_names):

@@ -83,3 +83,50 @@ class SafeexecCommandTestCase(SimpleTestCase):
                     self.assertEqual(_flag(cmd, "cpu"), time_limit)
                     self.assertEqual(_flag(cmd, "clock"), get_clock_limit(time_limit))
                     self.assertGreater(_flag(cmd, "clock"), _flag(cmd, "cpu"))
+
+
+class ParseUidsTestCase(SimpleTestCase):
+    def test_range(self):
+        from api.management.commands.grader import parse_uids
+
+        self.assertEqual(parse_uids("10000-19999"), (10000, 19999))
+        self.assertEqual(parse_uids("20000-20000"), (20000, 20000))
+
+    def test_unset_means_safeexec_default(self):
+        from api.management.commands.grader import parse_uids
+
+        self.assertIsNone(parse_uids(None))
+        self.assertIsNone(parse_uids(""))
+
+    def test_rejects_what_safeexec_would_reject(self):
+        from api.management.commands.grader import parse_uids
+
+        for bad in ("10000", "a-b", "19999-10000", "100-200", "60000-70000", "1-2-3"):
+            with self.subTest(value=bad):
+                with self.assertRaises(ValueError):
+                    parse_uids(bad)
+
+
+class SafeexecUidsTestCase(SafeexecCommandTestCase):
+    def test_every_language_passes_the_range(self):
+        for lang in self.LANGUAGES:
+            with self.subTest(lang=lang):
+                cmd = get_cmd_for_language_safeexec(
+                    SimpleNamespace(id=42),
+                    SimpleNamespace(
+                        path="/usr/bin/python3",
+                        arguments="{0}",
+                        file_extension="py",
+                        exec_extension="exe",
+                    ),
+                    lang,
+                    1,
+                    64,
+                    (10000, 19999),
+                )
+                self.assertTrue(cmd.startswith("safeexec --uids 10000 19999 "))
+
+    def test_no_range_leaves_the_command_as_before(self):
+        for lang in self.LANGUAGES:
+            with self.subTest(lang=lang):
+                self.assertNotIn("--uids", self._cmd(lang))
