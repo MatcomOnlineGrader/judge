@@ -1,0 +1,12 @@
+# Files neither image needs. Both images build from the repo root (see
+# docker/prod/docker-compose.yml), so this applies to the api and the grader.
+# The grader uses docker/common/dockerfile.grader.dockerignore instead, which
+# repeats these and excludes more.
+.git
+.github
+**/.claude
+**/__pycache__
+**/*.pyc
+**/node_modules
+**/.DS_Store
+docker/prod/grafana.env
