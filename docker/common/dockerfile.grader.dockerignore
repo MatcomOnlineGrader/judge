@@ -1,0 +1,15 @@
+# Used instead of the root .dockerignore when building dockerfile.grader
+# (BuildKit picks up <Dockerfile name>.dockerignore next to the Dockerfile).
+# Keep the shared entries in sync with the root .dockerignore.
+.git
+.github
+**/.claude
+**/__pycache__
+**/*.pyc
+**/node_modules
+**/.DS_Store
+docker/prod/grafana.env
+
+# The website's static files (about 31,000 files). The grader never serves or
+# collects them, and copying them made every grader image build much slower.
+mog/static
