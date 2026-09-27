@@ -1,8 +1,16 @@
 version: "3.8"
 
+# CPU pinning (host has 10 vCPUs: 0-9). Cores 8-9 belong to the grader alone so
+# its timings don't depend on web/DB load; every other service uses
+# *other_cores. Both sides are needed, or Docker would still schedule other
+# containers on the grader's cores. Re-derive with `nproc` if the host changes.
+# (`deploy.resources` is ignored outside Swarm, hence `cpuset`.)
+x-other-cores: &other_cores "0-7"
+
 services:
   database:
     image: postgres:16
+    cpuset: *other_cores
     environment:
       - POSTGRES_DB=judge
       - POSTGRES_USER=judge
@@ -16,6 +24,7 @@ services:
     build:
       context: ../..
       dockerfile: docker/prod/dockerfile
+    cpuset: *other_cores
     command: environ/bin/gunicorn --workers 4 --statsd-host=statsd_exporter:9125 --statsd-prefix=judge -b :8000 judge.wsgi:application
     volumes:
       - varwww:/var/www/judge
@@ -28,6 +37,7 @@ services:
     build:
       context: ../..
       dockerfile: docker/common/dockerfile.grader
+    cpuset: "8-9"
     command: bash -c "bash grader-firewall.sh && /opt/environ/bin/python3 manage.py grader"
     volumes:
       - problems:/problems
@@ -40,6 +50,7 @@ services:
   ######################################################################
   prometheus:
     image: prom/prometheus:latest
+    cpuset: *other_cores
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./web-config.yml:/etc/prometheus/web-config.yml
@@ -64,6 +75,7 @@ services:
     restart: unless-stopped
   grafana:
     image: grafana/grafana:latest
+    cpuset: *other_cores
     ports:
       - "3000:3000"
     env_file:
@@ -82,12 +94,15 @@ services:
     restart: unless-stopped
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter:latest
+    cpuset: *other_cores
     environment:
       - DATA_SOURCE_NAME=postgresql://judge:uhdtas@database:5432/judge?sslmode=disable
     depends_on:
       - database
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
+    # host network/pid namespaces don't exempt it from the cgroup cpuset
+    cpuset: *other_cores
     command:
       - '--path.rootfs=/host'
     network_mode: host
@@ -97,6 +112,7 @@ services:
       - '/:/host:ro,rslave'
   statsd_exporter:
     image: prom/statsd-exporter
+    cpuset: *other_cores
 
 
 volumes:

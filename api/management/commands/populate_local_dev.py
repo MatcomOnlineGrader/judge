@@ -73,12 +73,43 @@ USERS = [
     },
 ]
 
+# One compiler per branch of grader.get_cmd_for_language_safeexec, mirroring
+# the arguments published on the FAQ page (mog/templates/mog/faq.html).
+#
+# Paths the grader hands to `safeexec --exec` (Python and PyPy run through
+# `compiler.path`) must be absolute: safeexec starts programs with execve(),
+# which does not search PATH. Kotlin and PyPy are not on PATH at all, and bare
+# `g++`/`gcc` would resolve to Alpine's 10.3.1 instead of the advertised 11.3.0.
 COMPILERS = [
+    {
+        "language": "c++",
+        "name": "c++",
+        "arguments": "-x c++ -g -DMOG -O2 -std=gnu++20 -static {0} -o {1}",
+        "path": "/opt/gcc-11.3.0/bin/g++",
+        "file_extension": "cpp",
+        "exec_extension": "exe",
+    },
+    {
+        "language": "c",
+        "name": "c",
+        "arguments": "-x c -g -O2 -std=gnu11 -static -lm {0} -o {1}",
+        "path": "/opt/gcc-11.3.0/bin/gcc",
+        "file_extension": "c",
+        "exec_extension": "exe",
+    },
     {
         "language": "python",
         "name": "python",
         "arguments": "-O {0}",
-        "path": "python",
+        "path": "/usr/bin/python3",
+        "file_extension": "py",
+        "exec_extension": "exe",
+    },
+    {
+        "language": "python",
+        "name": "pypy",
+        "arguments": "{0}",
+        "path": "/opt/pypy-7.3.10/bin/pypy",
         "file_extension": "py",
         "exec_extension": "exe",
     },
@@ -91,11 +122,19 @@ COMPILERS = [
         "exec_extension": "exe",
     },
     {
-        "language": "c++",
-        "name": "c++",
-        "arguments": "-static -fno-optimize-sibling-calls -fno-strict-aliasing -DMOG -lm -s -x c++ -Wl,--stack=268435456 -O2 -std=c++11 -D__USE_MINGW_ANSI_STDIO=0 {0} -o {1}",
-        "path": "g++",
-        "file_extension": "cpp",
+        "language": "kotlin",
+        "name": "kotlin",
+        "arguments": "-d . {0}",
+        "path": "/opt/kotlin-1.7.21/bin/kotlinc",
+        "file_extension": "kt",
+        "exec_extension": "class",
+    },
+    {
+        "language": "csharp",
+        "name": "c#",
+        "arguments": "{0}",
+        "path": "csc",
+        "file_extension": "cs",
         "exec_extension": "exe",
     },
 ]
@@ -222,7 +261,11 @@ def create_aplusb():
         title="A+B",
         body="A+B",
         time_limit=1,
-        memory_limit=1024,
+        # The grader passes `--stack` 4 GiB. Under amd64 emulation (Apple
+        # Silicon) that stack is mapped eagerly and counted as memory, so any
+        # limit below ~4.5 GB turns every C/C++ submission into Memory Limit
+        # Exceeded. Natively it costs nothing.
+        memory_limit=8192,
         position=1,
         contest_id=Contest.objects.get(name="test01").id,
         checker=Checker.objects.get(name="wcmp"),
@@ -286,6 +329,12 @@ class Command(BaseCommand):
             default=False,
             help="Rollback all changes done by this command.",
         )
+        parser.add_argument(
+            "--recreate",
+            action="store_true",
+            default=False,
+            help="Reset, then populate again from scratch. Implies --no-dry.",
+        )
 
     def handle(self, *args, **options):
         print(
@@ -299,25 +348,35 @@ class Command(BaseCommand):
             print("MOG_LOCAL_DEV=1")
             exit(1)
 
-        dry = not options["no_dry"]
-        reset = options["reset"]
+        if options["recreate"]:
+            self.populate(dry=False, reset=True)
+            self.populate(dry=False, reset=False)
+        else:
+            self.populate(dry=not options["no_dry"], reset=options["reset"])
+
+    def populate(self, dry, reset):
         _apply = partial(apply, dry=dry, reset=reset)
 
-        # Copy / Delete testlib.h
+        # Copy / Delete testlib.h. In the dev environment RESOURCES_FOLDER
+        # points at the repo's own `resources/` directory (see
+        # settings.ini.template), so source and destination are the same file:
+        # copying raises SameFileError and deleting would remove a file tracked
+        # in git. In that case there is nothing to do either way.
+        src = Path("resources") / "testlib.h"
+        dst = Path(settings.RESOURCES_FOLDER) / "testlib.h"
+        in_place = dst.exists() and src.resolve() == dst.resolve()
+        suffix = " (in the repo, left alone)" if in_place else ""
         if reset:
-            try:
-                print("Delete: testlib.h")
-                if not dry:
-                    os.unlink(Path(settings.RESOURCES_FOLDER) / "testlib.h")
-            except FileNotFoundError:
-                pass
+            print("Delete: testlib.h" + suffix)
+            if not dry and not in_place:
+                try:
+                    os.unlink(dst)
+                except FileNotFoundError:
+                    pass
         else:
-            print("Create: testlib.h")
-            if not dry:
-                copy2(
-                    Path("resources") / "testlib.h",
-                    Path(settings.RESOURCES_FOLDER) / "testlib.h",
-                )
+            print("Create: testlib.h" + suffix)
+            if not dry and not in_place:
+                copy2(src, dst)
 
         if reset:
             # Problem needs to be removed first, otherwise it is removed on cascade mode.
