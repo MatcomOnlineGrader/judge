@@ -21,6 +21,25 @@ from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 # https://github.com/MatcomOnlineGrader/safeexec/blob/22cd436f2d384d2a933428c5f5f8240c406f08db/safeexec.c#L38C20-L38C27
 LARGECONST = 4194304  # 4GiB
 
+# `--cpu` (RLIMIT_CPU) counts only CPU the program burns, so it is the real
+# limit. `--clock` is wall-clock time, which also counts time spent waiting on a
+# busy host; it is only a loose backstop for programs that hang without using
+# CPU. Keeping them equal made fast solutions TLE whenever the host was busy.
+CLOCK_LIMIT_MULTIPLIER = 4
+CLOCK_LIMIT_EXTRA_SECONDS = 5  # 1s -> 9s, 10s -> 45s
+
+# A TLE that used less than this share of its CPU limit was most likely a
+# wall-clock kill caused by host contention. Only used for logging.
+SUSPICIOUS_CPU_FRACTION = 0.7
+
+
+def get_clock_limit(time_limit: int) -> int:
+    """Wall-clock backstop for `time_limit` seconds of CPU; see above.
+
+    int(): per-compiler limits come from free-form JSON and may be strings.
+    """
+    return int(time_limit) * CLOCK_LIMIT_MULTIPLIER + CLOCK_LIMIT_EXTRA_SECONDS
+
 
 def update_submission(
     submission, execution_time, memory_used, result_name, judgement_details
@@ -160,22 +179,24 @@ def get_cmd_for_language_safeexec(
     # note2:we need to pipe the data directly, patching safeexec to accept --stdin/--stdout
     #   (like i did a time ago :p ) may lead to some unwanted security issues (RCE/Privilege
     #    escalation/Information diclosure) all because it uses the SUID bit
-    # note3:Shall we consider only CPU seconds and ignore the delay caused by the syscalls?
+    # note3:only --cpu is the real time limit; --clock is a loose backstop (see
+    #   CLOCK_LIMIT_MULTIPLIER).
+    clock_limit = get_clock_limit(time_limit)
     if lang == "java":
-        cmd = f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        cmd = f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
         return cmd
     elif lang == "kotlin":
-        return f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
     elif lang == "csharp":
-        return f"safeexec --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
         )
-        return f'safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec "{compiler.path}" {fmt_args}'
+        return f'safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f"safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {time_limit} --exec ./{submission.id}.{compiler.exec_extension}"
+        return f"safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
 def get_tag_value(xml, tag_name):
@@ -352,7 +373,20 @@ def grade_submission(submission, number_of_executions):
                     "TIME_LIMIT_EXCEEDED",
                     "IDLENESS_LIMIT_EXCEEDED",
                 ]:
-                    execution_time = time_limit * 1000
+                    # Log-only: a wall-clock kill looks like any other TLE.
+                    cpu_limit_ms = time_limit * 1000
+                    if execution_time < SUSPICIOUS_CPU_FRACTION * cpu_limit_ms:
+                        log.warning(
+                            "Submission #%d case #%d: %s but only used %d ms of CPU "
+                            "against a %d ms limit; likely a wall-clock kill caused "
+                            "by host contention rather than a slow solution",
+                            submission.id,
+                            current_test,
+                            invocation_verdict,
+                            execution_time,
+                            cpu_limit_ms,
+                        )
+                    execution_time = cpu_limit_ms
 
                 if invocation_verdict != "SUCCESS":
                     comment = result = {
