@@ -12,7 +12,12 @@ import time
 
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
-from django.db import DatabaseError, transaction, close_old_connections
+from django.db import (
+    DatabaseError,
+    OperationalError,
+    transaction,
+    close_old_connections,
+)
 
 from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
@@ -41,6 +46,53 @@ def get_clock_limit(time_limit: int) -> int:
     return int(time_limit) * CLOCK_LIMIT_MULTIPLIER + CLOCK_LIMIT_EXTRA_SECONDS
 
 
+def parse_uids(value):
+    """Parse a SAFEEXEC_UIDS value like "10000-19999" into (10000, 19999).
+
+    safeexec runs each submission as a pseudo-random user id from this range,
+    seeded with the time and its pid. Two grader containers have their own pid
+    numbering and start runs in step, so with the same range they often pick
+    the same id and share its per-user process limit (--nproc): two Java
+    submissions then fail to start their threads. Giving every grader its own
+    range (see docker-compose.yml) keeps them apart. Returns None if unset.
+    """
+    if not value:
+        return None
+    try:
+        low, high = (int(part) for part in value.split("-"))
+    except ValueError:
+        raise ValueError("SAFEEXEC_UIDS must look like 10000-19999, got %r" % value)
+    # The bounds safeexec itself accepts.
+    if not 500 <= low <= high < 65536:
+        raise ValueError(
+            "SAFEEXEC_UIDS must be within 500-65535 with low <= high, got %r" % value
+        )
+    return low, high
+
+
+def is_deadlock(error):
+    """True if a database error is Postgres' "deadlock detected" (40P01)."""
+    return getattr(error.__cause__, "pgcode", None) == "40P01"
+
+
+def retry_on_deadlock(fn, attempts=5, delay=0.5):
+    """Run fn(), running it again if Postgres aborts it with a deadlock.
+
+    Changing a submission's result fires a database trigger that updates the
+    problem's points and every user who submitted to it (db_scripts/), so
+    concurrent result changes (another grader, a rejudge) can deadlock.
+    Postgres rolls back one of the two transactions, which is then safe to
+    run again.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return fn()
+        except OperationalError as e:
+            if not is_deadlock(e) or attempt == attempts:
+                raise
+            time.sleep(delay * attempt)
+
+
 def update_submission(
     submission, execution_time, memory_used, result_name, judgement_details
 ):
@@ -48,7 +100,7 @@ def update_submission(
     submission.memory_used = memory_used
     submission.result = Result.objects.get(name__iexact=result_name)
     submission.judgement_details = judgement_details
-    submission.save()
+    retry_on_deadlock(submission.save)
 
 
 def set_internal_error(submission, judgement_details=None):
@@ -103,7 +155,7 @@ def compile_submission(submission):
     compiler = submission.compiler
 
     submission.result = Result.objects.get(name__iexact="compiling")
-    submission.save()
+    retry_on_deadlock(submission.save)
 
     submission_folder = os.path.join(settings.SANDBOX_FOLDER, str(submission.id))
     src_file = "%d.%s" % (submission.id, compiler.file_extension)
@@ -160,7 +212,7 @@ def compile_submission(submission):
 def mark_as_running(submission: Submission):
     """Marks a submission as running"""
     submission.result = Result.objects.get(name__iexact="running")
-    submission.save()
+    retry_on_deadlock(submission.save)
 
 
 def get_submission_folder(submission: Submission) -> str:
@@ -173,6 +225,7 @@ def get_cmd_for_language_safeexec(
     lang: str,
     time_limit: int,
     memory_limit: int,
+    uids=None,
 ) -> str:
     """Get language-specific command, using safeexec"""
     # note that safeexec should be in PATH, see the docker/common/make_safeexec.sh script
@@ -182,21 +235,23 @@ def get_cmd_for_language_safeexec(
     # note3:only --cpu is the real time limit; --clock is a loose backstop (see
     #   CLOCK_LIMIT_MULTIPLIER).
     clock_limit = get_clock_limit(time_limit)
+    # The user id range safeexec picks from; see parse_uids.
+    safeexec = "safeexec --uids %d %d" % uids if uids else "safeexec"
     if lang == "java":
-        cmd = f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        cmd = f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
         return cmd
     elif lang == "kotlin":
-        return f"safeexec --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
     elif lang == "csharp":
-        return f"safeexec --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"{safeexec} --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)
         )
-        return f'safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec "{compiler.path}" {fmt_args}'
+        return f'{safeexec} --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec "{compiler.path}" {fmt_args}'
     else:
         # Compiled binary
-        return f"safeexec --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec ./{submission.id}.{compiler.exec_extension}"
+        return f"{safeexec} --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
 def get_tag_value(xml, tag_name):
@@ -306,7 +361,7 @@ def run_grader(
     return result, ret, out or "", err or ""
 
 
-def grade_submission(submission, number_of_executions):
+def grade_submission(submission, number_of_executions, uids=None):
     log.info(f"Grading submission: %d", submission.id)
     mark_as_running(submission)
 
@@ -335,7 +390,7 @@ def grade_submission(submission, number_of_executions):
 
     # Build the command
     cmd = get_cmd_for_language_safeexec(
-        submission, compiler, language, time_limit, memory_limit
+        submission, compiler, language, time_limit, memory_limit, uids
     )
     log.debug("Run cmd: %s", cmd)
 
@@ -503,6 +558,12 @@ class Command(BaseCommand):
             raise CommandError("sleep argument must to be positive")
         if number_of_executions < 1:
             raise CommandError("number_of_executions must to be a positive integer")
+        try:
+            uids = parse_uids(os.environ.get("SAFEEXEC_UIDS"))
+        except ValueError as e:
+            raise CommandError(str(e))
+        if uids:
+            log.info("Running submissions with user ids %d-%d", *uids)
         # store compilers
         while True:
             submission = None
@@ -512,13 +573,10 @@ class Command(BaseCommand):
                 # other graders
                 with transaction.atomic():
                     # if the next line returns a submission no other process can modify it until this block is finished
-                    # nowait=True means that if we try to get a pending submission that is blocked by another process
-                    # we don't want to wait for it, because this submission wont be pending anymore
-                    # if the submission is blocked the no_wait=True will make the method to raise an exception
-                    # this exception will be captured bellow... if the submission is null nothing will happen and
-                    # we will continue to the next pending submission
+                    # skip_locked=True skips pending submissions another grader has locked (it is about to mark
+                    # them compiling), so several graders take different submissions instead of erroring
                     submission = (
-                        Submission.objects.select_for_update(nowait=True)
+                        Submission.objects.select_for_update(skip_locked=True)
                         .select_related("compiler", "problem")
                         .filter(result__name__iexact="pending")
                         .order_by("id")
@@ -537,7 +595,7 @@ class Command(BaseCommand):
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
                         if compile_submission(submission):
-                            grade_submission(submission, number_of_executions)
+                            grade_submission(submission, number_of_executions, uids)
                     else:
                         log.error(
                             "There was a problem with the problem folder %s for submission #%d",
