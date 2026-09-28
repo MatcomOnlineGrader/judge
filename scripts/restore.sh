@@ -44,18 +44,36 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
-# Function to check if file exists in the restore folder
-check_file_exists() {
+# Function to locate a backup file in the restore folder. Accepts both the
+# plain name (judge.sql) and the day-rotated name backup.sh produces
+# (judge.<weekday>.sql). Prints the full path of the file found.
+find_backup_file() {
     local filename="$1"
-    local filepath="$RESTORE_FOLDER/$filename"
-    
-    if [[ ! -f "$filepath" ]]; then
-        log_error "Required file '$filename' not found in '$RESTORE_FOLDER'!"
-        log_error "Expected path: $filepath"
+    local stem="${filename%%.*}"
+    local ext="${filename#*.}"
+    local matches=()
+
+    if [[ -f "$RESTORE_FOLDER/$filename" ]]; then
+        matches=("$RESTORE_FOLDER/$filename")
+    else
+        shopt -s nullglob
+        matches=("$RESTORE_FOLDER/$stem".[1-7]."$ext")
+        shopt -u nullglob
+    fi
+
+    if [[ ${#matches[@]} -eq 0 ]]; then
+        log_error "Required file '$filename' (or '$stem.<N>.$ext') not found in '$RESTORE_FOLDER'!"
         exit 1
     fi
-    
-    log_info "Found file: $filepath"
+
+    if [[ ${#matches[@]} -gt 1 ]]; then
+        log_error "Multiple backups match '$stem.<N>.$ext' in '$RESTORE_FOLDER'; keep only one:"
+        printf '  %s\n' "${matches[@]}" >&2
+        exit 1
+    fi
+
+    log_info "Found file: ${matches[0]}"
+    echo "${matches[0]}"
 }
 
 # Function to get container ID
@@ -90,16 +108,16 @@ execute_psql() {
 # Function to restore database
 restore_database() {
     local container_id="$1"
-    local sql_path="$RESTORE_FOLDER/$SQL_FILE"
+    local sql_path
     
     log_info "Starting database restoration process..."
     
-    # Check if SQL file exists
-    check_file_exists "$SQL_FILE"
+    # Locate SQL file
+    sql_path=$(find_backup_file "$SQL_FILE")
     
     # Copy SQL file to container
-    log_info "Copying $SQL_FILE to container..."
-    docker cp "$sql_path" "$container_id:/"
+    log_info "Copying $(basename "$sql_path") to container..."
+    docker cp "$sql_path" "$container_id:/$SQL_FILE"
     
     # Disconnect all clients and drop database
     log_info "Disconnecting clients from database '$DB_NAME'..."
@@ -131,16 +149,17 @@ restore_database() {
 # Function to restore media files
 restore_media() {
     local container_id="$1"
-    local media_path="$RESTORE_FOLDER/$MEDIA_FILE"
+    local media_path
     
     log_info "Starting media files restoration..."
     
-    # Check if media file exists
-    check_file_exists "$MEDIA_FILE"
+    # Locate media file
+    media_path=$(find_backup_file "$MEDIA_FILE")
     
     # Copy and extract media files
-    log_info "Copying and extracting $MEDIA_FILE..."
-    docker cp "$media_path" "$container_id:/var/www/judge/"
+    log_info "Copying and extracting $(basename "$media_path")..."
+    docker exec "$container_id" mkdir -p /var/www/judge/media
+    docker cp "$media_path" "$container_id:/var/www/judge/$MEDIA_FILE"
     docker exec "$container_id" tar -xzf "/var/www/judge/$MEDIA_FILE" -C /var/www/judge/media
     docker exec "$container_id" rm "/var/www/judge/$MEDIA_FILE"
     
@@ -150,16 +169,16 @@ restore_media() {
 # Function to restore problems
 restore_problems() {
     local container_id="$1"
-    local problems_path="$RESTORE_FOLDER/$PROBLEMS_FILE"
+    local problems_path
     
     log_info "Starting problems restoration..."
     
-    # Check if problems file exists
-    check_file_exists "$PROBLEMS_FILE"
+    # Locate problems file
+    problems_path=$(find_backup_file "$PROBLEMS_FILE")
     
     # Copy and extract problems
-    log_info "Copying and extracting $PROBLEMS_FILE..."
-    docker cp "$problems_path" "$container_id:/"
+    log_info "Copying and extracting $(basename "$problems_path")..."
+    docker cp "$problems_path" "$container_id:/$PROBLEMS_FILE"
     docker exec "$container_id" tar -xzf "/$PROBLEMS_FILE" -C /problems
     docker exec "$container_id" rm "/$PROBLEMS_FILE"
     
@@ -203,7 +222,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     echo "Arguments:"
     echo "  FOLDER_PATH    Path to folder containing restore files (default: current directory)"
     echo ""
-    echo "Required files in folder:"
+    echo "Required files in folder (plain or day-rotated, e.g. judge.2.sql):"
     echo "  - $SQL_FILE"
     echo "  - $MEDIA_FILE" 
     echo "  - $PROBLEMS_FILE"
