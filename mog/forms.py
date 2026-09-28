@@ -262,9 +262,10 @@ class ClarificationForm(forms.ModelForm):
     def __init__(self, contest=None, *args, **kwargs):
         super(ClarificationForm, self).__init__(*args, **kwargs)
         self.contest = contest or self.instance.contest
-        self.fields["problem"].choices = [(None, "----- General -----")]
-        for problem in self.contest.problems.order_by("position"):
-            self.fields["problem"].choices.append((problem.pk, problem.full_title))
+        self.fields["problem"].choices = [(None, "----- General -----")] + [
+            (problem.pk, problem.full_title)
+            for problem in self.contest.problems.order_by("position")
+        ]
         self.fields["problem"].initial = (
             self.instance.problem if self.instance else None
         )
