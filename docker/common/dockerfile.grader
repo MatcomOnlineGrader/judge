@@ -96,5 +96,27 @@ RUN /opt/python-3.12/bin/python3 -m venv /opt/environ && \
 	mkdir /sandbox && \
 	pip cache purge && rm -r /var/cache/apk
 
+# isolate (https://github.com/ioi/isolate), the sandbox `manage.py grader
+# --isolate` runs submissions in. Its config is docker/isolate/isolate.cf,
+# which reaches the image with the project code below.
+# - Alpine 3.15's headers predate quotactl_fd (only used for disk quotas,
+#   which we don't use), so its x86_64 number is passed in.
+# - libcap and libseccomp stay installed: isolate links against them.
+# - isolate boxes only see /usr, /bin, /lib and /opt, so the Mono fix (see
+#   docker/common/fix_mono.sh) moves from / to /usr/local/lib. It's done
+#   here, not in fix_mono.sh: changing docker/common rebuilds the layers
+#   above, and with them Mono, which comes from Alpine's edge repository.
+RUN mv /fixmono.so /usr/local/lib/fixmono.so && \
+	sed -i 's|/fixmono.so|/usr/local/lib/fixmono.so|' /usr/local/bin/csc /usr/local/bin/mono && \
+	apk add --no-cache libcap libseccomp && \
+	apk add --no-cache --virtual .isolate-build make libcap-dev libseccomp-dev && \
+	cd /tmp && \
+	git clone -c advice.detachedHead=false --depth 1 --branch v2.7 https://github.com/ioi/isolate.git && \
+	make -C isolate isolate CONFIG=/code/docker/isolate/isolate.cf CFLAGS_EXTRA=-DSYS_quotactl_fd=443 && \
+	install -m 755 isolate/isolate /usr/local/bin/isolate && \
+	rm -rf isolate && \
+	apk del .isolate-build && \
+	isolate --version
+
 # Copy the rest of the project last (see the note at WORKDIR above).
 COPY --chmod=750 . /code/

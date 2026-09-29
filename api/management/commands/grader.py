@@ -47,7 +47,9 @@ SUSPICIOUS_CPU_FRACTION = 0.7
 # compilation error the contestant sees, and a pathological source could hang
 # the grader.
 SAFEEXEC = "/usr/local/bin/safeexec"
-SAFEEXEC_DEFAULT_UIDS = (5000, 65535)  # safeexec's own default range
+# Where compiles pick a user id without SAFEEXEC_UIDS: safeexec's own default
+# range (5000-65535), short of isolate's box users (60000+, see isolate.cf).
+SAFEEXEC_DEFAULT_UIDS = (5000, 59999)
 COMPILE_CPU_LIMIT = 60  # seconds, for each compiler process
 COMPILE_CLOCK_LIMIT = 120  # seconds
 COMPILE_MEMORY_LIMIT = 2048  # MiB
@@ -60,6 +62,24 @@ COMPILE_FSIZE = 512  # MiB
 # Compilers that run on a VM. They reserve far more address space than they
 # use, so --space (RLIMIT_AS) would break them; the JVM caps its own heap.
 VM_COMPILED_LANGUAGES = {"java", "kotlin", "csharp"}
+
+# With `grader --isolate`, every test runs safeexec, exactly as without it, but
+# inside an isolate box (https://github.com/ioi/isolate, configured in
+# docker/isolate/): a filesystem with only the system, the toolchains in /opt
+# and the submission's own files; no network; and a cgroup that caps the
+# memory of everything the submission runs. safeexec still sets the limits
+# and measures time and memory, so verdicts and timings don't change.
+ISOLATE = "/usr/local/bin/isolate"
+ISOLATE_SETUP = os.path.join(settings.BASE_DIR, "docker", "isolate", "setup-cgroups.sh")
+ISOLATE_FIRST_UID = 60000  # first_uid in isolate.cf: box N runs as 60000+N
+ISOLATE_BOXES = 1000  # num_boxes in isolate.cf
+ISOLATE_META = "isolate.meta"  # isolate's report, in the submission folder
+# The box's own limits, above safeexec's so they only catch what safeexec
+# can't: a submission that stops or kills safeexec, or memory safeexec
+# doesn't see (it only watches the process it starts).
+ISOLATE_EXTRA_SECONDS = 5
+ISOLATE_EXTRA_MEMORY = 64  # MiB: safeexec itself, and the output file's cache
+ISOLATE_PROCESSES = 64  # safeexec and the submission; --nproc limits the latter
 
 
 class StopRequest:
@@ -121,6 +141,25 @@ def parse_uids(value):
             "SAFEEXEC_UIDS must be within 500-65535 with low <= high, got %r" % value
         )
     return low, high
+
+
+def parse_box_id(value):
+    """Parse an ISOLATE_BOX value like "1": the isolate box this grader uses.
+
+    Defaults to 0. Box N runs as user id 60000+N (docker/isolate/isolate.cf),
+    so, as with SAFEEXEC_UIDS, every grader on a host needs its own.
+    """
+    if not value:
+        return 0
+    try:
+        box_id = int(value)
+    except ValueError:
+        raise ValueError("ISOLATE_BOX must be a number, got %r" % value)
+    if not 0 <= box_id < ISOLATE_BOXES:
+        raise ValueError(
+            "ISOLATE_BOX must be within 0-%d, got %r" % (ISOLATE_BOXES - 1, value)
+        )
+    return box_id
 
 
 def is_deadlock(error):
@@ -411,6 +450,38 @@ def get_cmd_for_language_safeexec(
         return f"{safeexec} --stack {LARGECONST} --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --exec ./{submission.id}.{compiler.exec_extension}"
 
 
+def get_cmd_for_language_isolate(
+    submission: Submission,
+    compiler: Compiler,
+    lang: str,
+    time_limit: int,
+    memory_limit: int,
+    box_id: int,
+    meta_file: str,
+) -> str:
+    """get_cmd_for_language_safeexec's command, run in isolate box `box_id`
+    (see ISOLATE), which writes its own report to `meta_file`.
+
+    safeexec runs as the box's user: in a box it can't switch to another one,
+    and doesn't need to. Its limits and report are exactly as without isolate;
+    the box's limits are only a backstop, above them.
+    """
+    box_uid = ISOLATE_FIRST_UID + box_id
+    safeexec = get_cmd_for_language_safeexec(
+        submission, compiler, lang, time_limit, memory_limit, (box_uid, box_uid)
+    )
+    backstop = get_clock_limit(time_limit) + ISOLATE_EXTRA_SECONDS
+    # isolate doesn't search PATH for the program; env does, and then becomes
+    # safeexec.
+    return (
+        f"{ISOLATE} --cg --box-id={box_id} --silent --time={backstop}"
+        f" --wall-time={backstop} --cg-mem={(memory_limit + ISOLATE_EXTRA_MEMORY) * 1024}"
+        f" --processes={ISOLATE_PROCESSES} --dir=/opt"
+        f" --env=PATH=/usr/local/bin:/usr/bin:/bin --env=HOME=/box"
+        f" --meta={meta_file} --run -- /usr/bin/env {safeexec}"
+    )
+
+
 def get_tag_value(xml, tag_name):
     element = xml.getElementsByTagName(tag_name)[0].firstChild
     return element.nodeValue if element else None
@@ -481,6 +552,7 @@ def run_safeexec(
     cmd: str,
     input_file: str,
     submission_folder: str,
+    user="judge",
 ):
     """See `run_grader`"""
     with open(os.path.join(submission_folder, "output.txt"), "wb") as stdout:
@@ -493,7 +565,7 @@ def run_safeexec(
                 cwd=submission_folder,
                 stdin=stdin,
                 stdout=stdout,
-                user="judge",
+                user=user,
             )
 
     # Check for errors
@@ -507,18 +579,89 @@ def run_safeexec(
     return parse_safeexec_output(err), ret, out, err
 
 
+def read_isolate_meta(meta_file: str) -> dict:
+    """isolate's report (its --meta file); empty if it wrote none."""
+    meta = {}
+    with contextlib.suppress(FileNotFoundError):
+        with open(meta_file) as f:
+            meta = dict(line.rstrip("\n").split(":", 1) for line in f if ":" in line)
+    return meta
+
+
+def get_box_verdict(meta: dict):
+    """How the isolate box stopped the run, from isolate's report: None if
+    safeexec finished on its own and its report stands."""
+    # Checked first: when the box's memory cap kills the submission, safeexec
+    # still finishes, and reports a time limit or runtime error.
+    if meta.get("cg-oom-killed"):
+        return "MEMORY_LIMIT_EXCEEDED"
+    status = meta.get("status")  # absent when safeexec exited with 0
+    if status is None and meta.get("exitcode") == "0":
+        return None
+    if status == "TO":
+        return "TIME_LIMIT_EXCEEDED"
+    if status == "SG":
+        # Nothing but the submission, running as the same user, kills
+        # safeexec.
+        return "RUNTIME_ERROR"
+    # safeexec or isolate failed, or isolate wrote no report at all.
+    return "INTERNAL_ERROR"
+
+
+def cleanup_isolate_box(box_id: int):
+    get_exitcode_stdout_stderr(f"{ISOLATE} --cg --box-id={box_id} --cleanup", cwd="/")
+
+
+def init_isolate_box(box_id: int, files):
+    """A fresh isolate box `box_id`, holding only `files`."""
+    cleanup_isolate_box(box_id)
+    code, out, err = get_exitcode_stdout_stderr(
+        f"{ISOLATE} --cg --box-id={box_id} --init", cwd="/"
+    )
+    if code != 0:
+        raise RuntimeError("isolate --init failed: %s" % err)
+    for path in files:
+        shutil.copy(path, os.path.join(out.strip(), "box"))
+
+
 def run_grader(
     cmd: str,
     input_file: str,
     submission_folder: str,
+    box_id=None,
+    box_files=(),
 ):
-    """Run a single test case in safeexec"""
-    result, ret, out, err = run_safeexec(cmd, input_file, submission_folder)
+    """Run a single test case in safeexec: inside isolate box `box_id` (see
+    ISOLATE), holding the submission's `box_files`, if given"""
+    if box_id is None:
+        result, ret, out, err = run_safeexec(cmd, input_file, submission_folder)
+    else:
+        # A fresh box every run: nothing a run leaves behind reaches the next.
+        init_isolate_box(box_id, box_files)
+        meta_file = os.path.join(submission_folder, ISOLATE_META)
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(meta_file)  # Never read the previous run's report.
+        # safeexec already runs as the box's user; its report reaches
+        # isolate's stderr.
+        result, ret, out, err = run_safeexec(
+            cmd, input_file, submission_folder, user=None
+        )
+        meta = read_isolate_meta(meta_file)
+        box_verdict = get_box_verdict(meta)
+        if box_verdict:
+            result.update(
+                invocation_verdict=box_verdict,
+                exit_code=1,
+                execution_time=ceil(float(meta.get("time", 0)) * 1000),
+                consumed_memory=int(meta.get("cg-mem", 0)) * 1024,  # KiB
+            )
     log.debug("Submission ran: %s", json.dumps(result))
     return result, ret, out or "", err or ""
 
 
-def grade_submission(submission, number_of_executions, uids=None):
+def grade_submission(submission, number_of_executions, uids=None, box_id=None):
+    """Grade under safeexec: inside isolate box `box_id` (see ISOLATE), or
+    with user ids from `uids` if it's None."""
     log.info(f"Grading submission: %d", submission.id)
     mark_as_running(submission)
 
@@ -528,6 +671,14 @@ def grade_submission(submission, number_of_executions, uids=None):
     compiler = submission.compiler
     language = compiler.language.lower()
     submission_folder = get_submission_folder(submission)
+
+    # What an isolate box gets: the submission's source and what the compiler
+    # made. Listed now, before the checker's files join them.
+    box_files = [
+        entry.path
+        for entry in os.scandir(submission_folder)
+        if entry.is_file(follow_symlinks=False) and entry.name != "compile_errors.txt"
+    ]
 
     # The checker
     checker_command = compile_checker(checker, submission_folder)
@@ -543,12 +694,19 @@ def grade_submission(submission, number_of_executions, uids=None):
 
     # The memory limits
     time_limit = problem.time_limit_for_compiler(compiler)
-    memory_limit = problem.memory_limit_for_compiler(compiler)
+    # int(): per-compiler limits come from free-form JSON and may be strings.
+    memory_limit = int(problem.memory_limit_for_compiler(compiler))
 
     # Build the command
-    cmd = get_cmd_for_language_safeexec(
-        submission, compiler, language, time_limit, memory_limit, uids
-    )
+    if box_id is None:
+        cmd = get_cmd_for_language_safeexec(
+            submission, compiler, language, time_limit, memory_limit, uids
+        )
+    else:
+        meta_file = os.path.join(submission_folder, ISOLATE_META)
+        cmd = get_cmd_for_language_isolate(
+            submission, compiler, language, time_limit, memory_limit, box_id, meta_file
+        )
     log.debug("Run cmd: %s", cmd)
 
     # Input & output folders
@@ -575,7 +733,9 @@ def grade_submission(submission, number_of_executions, uids=None):
                 # up, we need to revisit the logic of this section and
                 # refactor to make it more readable.
                 result = "accepted"
-                data, _, out, err = run_grader(cmd, input_file, submission_folder)
+                data, _, out, err = run_grader(
+                    cmd, input_file, submission_folder, box_id, box_files
+                )
                 invocation_verdict = data["invocation_verdict"]
                 exit_code = data["exit_code"]
                 consumed_memory = data["consumed_memory"]
@@ -701,6 +861,12 @@ class Command(BaseCommand):
             default="2",
             help="Number of executions to prevent TLE",
         )
+        parser.add_argument(
+            "--isolate",
+            action="store_true",
+            help="Run safeexec inside isolate box ISOLATE_BOX (default 0). "
+            "See ISOLATE in grader.py.",
+        )
 
     def handle(self, *args, **options):
         verbosity = {0: log.WARN, 1: log.INFO, 2: log.DEBUG, 3: log.DEBUG}
@@ -721,6 +887,20 @@ class Command(BaseCommand):
             raise CommandError(str(e))
         if uids:
             log.info("Running submissions with user ids %d-%d", *uids)
+        box_id = None
+        if options["isolate"]:
+            # Graders on the same host need different boxes: a box's user id
+            # (and its process limit) is shared across containers.
+            try:
+                box_id = parse_box_id(os.environ.get("ISOLATE_BOX"))
+            except ValueError as e:
+                raise CommandError(str(e))
+            code, out, err = get_exitcode_stdout_stderr(
+                f"sh {ISOLATE_SETUP}", cwd=settings.BASE_DIR
+            )
+            if code != 0:
+                raise CommandError("Could not set up cgroups for isolate: %s" % err)
+            log.info("Running submissions in isolate box %d", box_id)
         stop = StopRequest()
         while True:
             submission = None
@@ -759,7 +939,11 @@ class Command(BaseCommand):
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
                         if compile_submission(submission, uids):
-                            grade_submission(submission, number_of_executions, uids)
+                            grade_submission(
+                                submission, number_of_executions, uids, box_id
+                            )
+                            if box_id is not None:
+                                cleanup_isolate_box(box_id)
                     else:
                         log.error(
                             "There was a problem with the problem folder %s for submission #%d",
