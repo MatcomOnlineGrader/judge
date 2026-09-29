@@ -51,8 +51,6 @@ services:
     volumes:
       - varwww:/var/www/judge
       - problems:/problems
-    ports:
-      - "8000:8000"
     depends_on:
       - database
   nginx:
@@ -63,9 +61,14 @@ services:
       # and media files from uploads through the api.
       - varwww:/var/www/judge:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # Cloudflare Origin CA certificate and key (origin.pem, origin.key)
+      - /etc/matcomgrader/ssl:/etc/nginx/ssl:ro
+    # The only published ports: everything else is reached through nginx.
+    # Docker's published ports bypass ufw, so the other services must not
+    # publish any.
     ports:
-      # Only reachable from the host, where the host nginx forwards to it
-      - "127.0.0.1:8081:80"
+      - "80:80"
+      - "443:443"
     depends_on:
       - api
     restart: unless-stopped
@@ -109,14 +112,10 @@ services:
       # $ docker network inspect prod_default | jq .[0].IPAM.Config.[0].Subnet
       # $ sudo ufw allow from 172.18.0.0/16 to any port 9100 proto tcp
       - "host.docker.internal:host-gateway"
-    ports:
-      - "9090:9090"
     restart: unless-stopped
   grafana:
     image: grafana/grafana:latest
     cpuset: *other_cores
-    ports:
-      - "3000:3000"
     env_file:
       # docker/prod/grafana.env
       # -----------------------
