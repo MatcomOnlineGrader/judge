@@ -55,6 +55,20 @@ services:
       - "8000:8000"
     depends_on:
       - database
+  nginx:
+    image: nginx:stable-alpine
+    cpuset: *other_cores
+    volumes:
+      # Read-only: static files come from collectstatic in the api container
+      # and media files from uploads through the api.
+      - varwww:/var/www/judge:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      # Only reachable from the host, where the host nginx forwards to it
+      - "127.0.0.1:8081:80"
+    depends_on:
+      - api
+    restart: unless-stopped
   grader:
     <<: *grader
     # Builds the judge-grader image both graders run.
