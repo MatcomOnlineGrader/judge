@@ -5,10 +5,12 @@ import json
 import logging as log
 from math import ceil
 import os
+import random
 import re
 import shutil
 import signal
 import stat
+import subprocess
 import time
 
 
@@ -24,7 +26,6 @@ from django.db import (
 from api.models import Submission, Result, Compiler
 from .__utils import compress_output_lines, get_exitcode_stdout_stderr
 
-
 # https://github.com/MatcomOnlineGrader/safeexec/blob/22cd436f2d384d2a933428c5f5f8240c406f08db/safeexec.c#L38C20-L38C27
 LARGECONST = 4194304  # 4GiB
 
@@ -38,6 +39,27 @@ CLOCK_LIMIT_EXTRA_SECONDS = 5  # 1s -> 9s, 10s -> 45s
 # A TLE that used less than this share of its CPU limit was most likely a
 # wall-clock kill caused by host contention. Only used for logging.
 SUSPICIOUS_CPU_FRACTION = 0.7
+
+# Compilers run on the contestant's source, so they get the same treatment as
+# the submission itself: safeexec, as an unprivileged user that can't read
+# /code (settings.ini), with limits. Before this they ran as root without
+# limits, so an `#include` of a root-only file echoed its lines back in the
+# compilation error the contestant sees, and a pathological source could hang
+# the grader.
+SAFEEXEC = "/usr/local/bin/safeexec"
+SAFEEXEC_DEFAULT_UIDS = (5000, 65535)  # safeexec's own default range
+COMPILE_CPU_LIMIT = 60  # seconds, for each compiler process
+COMPILE_CLOCK_LIMIT = 120  # seconds
+COMPILE_MEMORY_LIMIT = 2048  # MiB
+# gcc runs cc1plus, as and ld; kotlinc and csc are scripts that start the JVM
+# or Mono; and every JVM/Mono thread counts as a process too.
+COMPILE_NPROC = 128
+# Largest file a compiler may write. -static binaries are ~8 MiB, which is
+# already safeexec's default --fsize.
+COMPILE_FSIZE = 512  # MiB
+# Compilers that run on a VM. They reserve far more address space than they
+# use, so --space (RLIMIT_AS) would break them; the JVM caps its own heap.
+VM_COMPILED_LANGUAGES = {"java", "kotlin", "csharp"}
 
 
 class StopRequest:
@@ -181,9 +203,109 @@ def compile_checker(checker, cwd):
     return compile_checker(checker, cwd)
 
 
-def compile_submission(submission):
+def kill_processes_of(uid):
+    """SIGKILL every process running as `uid`.
+
+    safeexec only kills the process it started, so a compiler that hits a
+    limit leaves its children (gcc's cc1plus and ld, the JVM under kotlinc)
+    running, burning the CPU the next submission is timed on. `kill -1` run as
+    that user reaches all of them in one call.
+    """
+    subprocess.run(["kill", "-KILL", "-1"], user=uid, stderr=subprocess.DEVNULL)
+
+
+def get_compile_cmd(compiler_path, arguments, language, uid, errors_file):
+    """safeexec command that runs a compiler as `uid`; see COMPILE_CPU_LIMIT.
+
+    The compiler's stderr goes to `errors_file`; safeexec's own report is
+    what the command writes to stderr.
+    """
+    memory = COMPILE_MEMORY_LIMIT * 1024
+    # --stack 0 sets no limit: compilers keep the grader's own (unlimited)
+    # stack, as they had before.
+    limits = (
+        f"--uids {uid} {uid} --cpu {COMPILE_CPU_LIMIT} --clock {COMPILE_CLOCK_LIMIT}"
+        f" --mem {memory} --vmrss --nproc {COMPILE_NPROC}"
+        f" --fsize {COMPILE_FSIZE * 1024} --stack 0"
+    )
+    if language not in VM_COMPILED_LANGUAGES:
+        # --mem only watches the process safeexec starts (the gcc driver), so
+        # cap every process, cc1plus included.
+        limits += f" --space {memory}"
+    return f'{SAFEEXEC} {limits} --error "{errors_file}" --exec "{compiler_path}" {arguments}'
+
+
+def collect_build_outputs(build_folder, submission_folder):
+    """Move what the compiler wrote into the submission folder, owned by root.
+
+    The compile user owned the build folder, so only plain files are taken (a
+    symlink could point anywhere), none may replace a file already in the
+    submission folder, and each gets root ownership and plain permissions.
+    """
+    for entry in os.scandir(build_folder):
+        target = os.path.join(submission_folder, entry.name)
+        if not entry.is_file(follow_symlinks=False) or os.path.lexists(target):
+            continue
+        os.rename(entry.path, target)
+        os.chown(target, 0, 0, follow_symlinks=False)
+        os.chmod(target, 0o755)
+    shutil.rmtree(build_folder, onerror=on_remove_error)
+
+
+def run_compiler(compiler, language, submission_folder, src_file, exe_file, uids=None):
+    """Compile `src_file` into `exe_file` as an unprivileged user under safeexec.
+
+    Returns safeexec's report (see parse_safeexec_output) and the compiler's
+    output. What the compiler wrote ends up in the submission folder.
+    """
+    # A uid from the grader's range (see parse_uids). safeexec would pick one
+    # itself; picking it here lets us kill whatever the compile leaves behind.
+    uid = random.randint(*(uids or SAFEEXEC_DEFAULT_UIDS))
+    build_folder = os.path.join(submission_folder, "build")
+    os.mkdir(build_folder, 0o700)
+    os.chown(build_folder, uid, uid)
+    shutil.copyfile(
+        os.path.join(submission_folder, src_file), os.path.join(build_folder, src_file)
+    )
+
+    env = json.loads(compiler.env) if compiler.env else dict(os.environ)
+    # Keep the compiler's scratch files in the build folder, the only place
+    # the compile user can write besides /tmp.
+    env.update(HOME=build_folder, TMPDIR=build_folder)
+    # safeexec starts programs with execve(), which does not search PATH, and
+    # some compilers are stored by name (javac, csc).
+    compiler_path = shutil.which(compiler.path, path=env.get("PATH", os.defpath))
+    if not compiler_path:
+        raise RuntimeError("compiler %r not found" % compiler.path)
+
+    errors_file = os.path.join(submission_folder, "compile_errors.txt")
+    cmd = get_compile_cmd(
+        compiler_path,
+        compiler.arguments.format(src_file, exe_file),
+        language,
+        uid,
+        errors_file,
+    )
+    try:
+        # safeexec switches to `uid` but never calls setgroups(), so started
+        # from root the compiler would keep root's supplementary groups (gid
+        # 0 among them) and could read root:root files like settings.ini
+        # (750). Start it with none.
+        _, out, report = get_exitcode_stdout_stderr(
+            cmd, cwd=build_folder, env=env, extra_groups=[]
+        )
+    finally:
+        kill_processes_of(uid)
+    with open(errors_file, "rb") as f:
+        errors = f.read().decode("utf-8", errors="replace")
+    collect_build_outputs(build_folder, submission_folder)
+    return report, out + errors
+
+
+def compile_submission(submission, uids=None):
     log.debug("Compiling submission #%d", submission.id)
     compiler = submission.compiler
+    language = compiler.language.lower()
 
     submission.result = Result.objects.get(name__iexact="compiling")
     retry_on_deadlock(submission.save)
@@ -192,44 +314,48 @@ def compile_submission(submission):
     src_file = "%d.%s" % (submission.id, compiler.file_extension)
     exe_file = "%d.%s" % (submission.id, compiler.exec_extension)
 
-    if compiler.language.lower() == "java":
+    if language == "java":
         src_file = "Main.java"
         exe_file = "Main.class"
-    elif compiler.language.lower() == "kotlin":
+    elif language == "kotlin":
         src_file = "Main.kt"
         exe_file = "MainKt.class"
 
     with open(os.path.join(submission_folder, src_file), "wb") as f:
         f.write(submission.source.encode("utf8"))
 
-    if compiler.language.lower() in ["python", "javascript"]:
+    if language in ["python", "javascript"]:
         return True
 
     try:
-        env = json.loads(compiler.env) if compiler.env else None
-        code, out, err = get_exitcode_stdout_stderr(
-            cmd='"%s" %s'
-            % (compiler.path, compiler.arguments.format(src_file, exe_file)),
-            cwd=submission_folder,
-            env=env,
+        report, output = run_compiler(
+            compiler, language, submission_folder, src_file, exe_file, uids
         )
-
-        if code != 0:
-            # Some error ocurred
-            log.warning(
-                "Compiler exited with non-zero code (%d), stdout: %s, stderr: %s",
-                code,
-                out,
-                err,
+        if parse_safeexec_output(report)["invocation_verdict"] in (
+            "FAIL",
+            "INTERNAL_ERROR",
+        ):
+            # safeexec couldn't run the compiler at all.
+            log.error(
+                "Could not run the compiler for submission #%d, safeexec: %r",
+                submission.id,
+                report,
             )
+            set_internal_error(submission, "internal error during compilation phase")
+            return False
 
-        if os.path.exists(os.path.join(submission_folder, exe_file)):
-            return True
-
-        details = ""
-        details = details + out if out else details
-        details = details + err if err else details
-        set_compilation_error(submission, details)
+        # First line of safeexec's report: "OK", "Command exited with non-zero
+        # status (1)", or the limit that stopped the compiler.
+        verdict = report.splitlines()[0].strip()
+        if verdict == "OK" or verdict.startswith("Command exited"):
+            if os.path.exists(os.path.join(submission_folder, exe_file)):
+                return True
+        else:
+            log.warning(
+                "Compiler for submission #%d stopped: %s", submission.id, verdict
+            )
+            output = (output + "\n\nCompilation stopped: %s" % verdict).strip()
+        set_compilation_error(submission, output)
     except Exception as e:
         log.error(
             "Internal error during compilation, submission: #%d, error: %s",
@@ -632,7 +758,7 @@ class Command(BaseCommand):
                     # ready to grade the new submission
                     create_submission_folder(submission)
                     if check_problem_folder(submission.problem):
-                        if compile_submission(submission):
+                        if compile_submission(submission, uids):
                             grade_submission(submission, number_of_executions, uids)
                     else:
                         log.error(
