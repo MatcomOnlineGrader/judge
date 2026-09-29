@@ -10,12 +10,19 @@ def get_exitcode_stdout_stderr(
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE,
     user=None,
+    extra_groups=None,
 ):
     if user:
         cmd = f"su -s /bin/ash {user} -c " + shlex.quote(cmd)
     args = shlex.split(cmd)
     proc = subprocess.Popen(
-        args, stdin=stdin, stdout=stdout, stderr=stderr, cwd=cwd, env=env
+        args,
+        stdin=stdin,
+        stdout=stdout,
+        stderr=stderr,
+        cwd=cwd,
+        env=env,
+        extra_groups=extra_groups,
     )
     out, err = proc.communicate()
     exitcode = proc.returncode
