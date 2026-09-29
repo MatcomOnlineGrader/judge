@@ -10,9 +10,18 @@ x-other-cores: &other_cores "0-7"
 # Shared by both graders. Each one gives safeexec its own range of user ids
 # (SAFEEXEC_UIDS) so submissions from different graders never share a user id,
 # and with it the per-user --nproc limit (see parse_uids in grader.py).
+#
+# Stopping a grader is graceful: on `docker stop` it finishes the submission in
+# hand, takes no new ones, and exits (see StopRequest in grader.py). `exec`
+# makes the grader the process that receives the stop signal instead of bash;
+# `init` adds a tiny init that forwards it and reaps finished processes.
+# stop_grace_period is how long Docker waits before killing it anyway, so keep
+# it well above the slowest submission.
 x-grader: &grader
   image: judge-grader
-  command: bash -c "bash grader-firewall.sh && /opt/environ/bin/python3 manage.py grader"
+  command: bash -c "bash grader-firewall.sh && exec /opt/environ/bin/python3 manage.py grader"
+  init: true
+  stop_grace_period: 10m
   volumes:
     - problems:/problems
   cap_add:
