@@ -1,11 +1,13 @@
 # flake8: noqa: F841
 
+import contextlib
 import json
 import logging as log
 from math import ceil
 import os
 import re
 import shutil
+import signal
 import stat
 import time
 
@@ -36,6 +38,35 @@ CLOCK_LIMIT_EXTRA_SECONDS = 5  # 1s -> 9s, 10s -> 45s
 # A TLE that used less than this share of its CPU limit was most likely a
 # wall-clock kill caused by host contention. Only used for logging.
 SUSPICIOUS_CPU_FRACTION = 0.7
+
+
+class StopRequest:
+    """Turns SIGTERM (docker stop) and SIGINT (Ctrl+C) into a graceful stop:
+    the grader finishes the submission it is grading, takes no new ones, and
+    exits."""
+
+    def __init__(self):
+        self.requested = False
+        signal.signal(signal.SIGTERM, self._on_signal)
+        signal.signal(signal.SIGINT, self._on_signal)
+
+    def _on_signal(self, signum, frame):
+        log.info(
+            "Received %s; stopping after the current submission",
+            signal.Signals(signum).name,
+        )
+        self.requested = True
+
+    @contextlib.contextmanager
+    def held(self):
+        """Delay stop signals until the block ends, so it runs entirely
+        before or entirely after a stop is requested."""
+        stop_signals = {signal.SIGTERM, signal.SIGINT}
+        previous = signal.pthread_sigmask(signal.SIG_BLOCK, stop_signals)
+        try:
+            yield
+        finally:
+            signal.pthread_sigmask(signal.SIG_SETMASK, previous)
 
 
 def get_clock_limit(time_limit: int) -> int:
@@ -564,31 +595,38 @@ class Command(BaseCommand):
             raise CommandError(str(e))
         if uids:
             log.info("Running submissions with user ids %d-%d", *uids)
-        # store compilers
+        stop = StopRequest()
         while True:
             submission = None
             try:
                 # this block takes the first available pending submission and change its status to Compiling
                 # this will be an atomic transaction and the select_for_update method will block the submission for
                 # other graders
-                with transaction.atomic():
-                    # if the next line returns a submission no other process can modify it until this block is finished
-                    # skip_locked=True skips pending submissions another grader has locked (it is about to mark
-                    # them compiling), so several graders take different submissions instead of erroring
-                    submission = (
-                        Submission.objects.select_for_update(skip_locked=True)
-                        .select_related("compiler", "problem")
-                        .filter(result__name__iexact="pending")
-                        .order_by("id")
-                        .first()
-                    )
-                    if submission:
-                        log.debug(
-                            "Received submission #%d, marking as 'compiling' and proceed",
-                            submission.id,
+                # Stop signals wait until the claim is committed: a grader that
+                # was asked to stop never claims another submission
+                with stop.held():
+                    if stop.requested:
+                        break
+                    with transaction.atomic():
+                        # if the next line returns a submission no other process can modify it until this block is finished
+                        # skip_locked=True skips pending submissions another grader has locked (it is about to mark
+                        # them compiling), so several graders take different submissions instead of erroring
+                        submission = (
+                            Submission.objects.select_for_update(skip_locked=True)
+                            .select_related("compiler", "problem")
+                            .filter(result__name__iexact="pending")
+                            .order_by("id")
+                            .first()
                         )
-                        submission.result = Result.objects.get(name__iexact="compiling")
-                        submission.save()
+                        if submission:
+                            log.debug(
+                                "Received submission #%d, marking as 'compiling' and proceed",
+                                submission.id,
+                            )
+                            submission.result = Result.objects.get(
+                                name__iexact="compiling"
+                            )
+                            submission.save()
 
                 if submission:
                     # ready to grade the new submission
@@ -622,3 +660,4 @@ class Command(BaseCommand):
                 close_old_connections()
                 if submission:
                     set_pending(submission.id)
+        log.info("Grader stopped")
