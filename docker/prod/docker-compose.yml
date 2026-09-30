@@ -9,7 +9,8 @@ x-other-cores: &other_cores "0-7"
 
 # Shared by both graders. Each one gives safeexec its own range of user ids
 # (SAFEEXEC_UIDS) so submissions from different graders never share a user id,
-# and with it the per-user --nproc limit (see parse_uids in grader.py).
+# and with it the per-user --nproc limit (see parse_uids in grader.py). For the
+# same reason, each one has its own isolate box (ISOLATE_BOX, see parse_box_id).
 #
 # Stopping a grader is graceful: on `docker stop` it finishes the submission in
 # hand, takes no new ones, and exits (see StopRequest in grader.py). `exec`
@@ -17,15 +18,27 @@ x-other-cores: &other_cores "0-7"
 # `init` adds a tiny init that forwards it and reaps finished processes.
 # stop_grace_period is how long Docker waits before killing it anyway, so keep
 # it well above the slowest submission.
+#
+# `--isolate` runs every test's safeexec inside an isolate box (see ISOLATE in
+# grader.py). The dev grader can't: isolate doesn't run under Apple Silicon's
+# amd64 emulation.
 x-grader: &grader
   image: judge-grader
-  command: bash -c "bash grader-firewall.sh && exec /opt/environ/bin/python3 manage.py grader"
+  command: bash -c "bash grader-firewall.sh && exec /opt/environ/bin/python3 manage.py grader --isolate"
   init: true
   stop_grace_period: 10m
   volumes:
     - problems:/problems
+  # NET_ADMIN: grader-firewall.sh, and isolate brings up loopback in each
+  # box's network namespace. SYS_ADMIN and no AppArmor profile: isolate
+  # (`manage.py grader --isolate`) mounts each box's filesystem, and
+  # docker/isolate/setup-cgroups.sh remounts /sys/fs/cgroup writable; Docker's
+  # AppArmor profile forbids every mount. Docker's seccomp filter stays on.
   cap_add:
     - NET_ADMIN
+    - SYS_ADMIN
+  security_opt:
+    - apparmor=unconfined
   ulimits:
     stack: -1
 
@@ -81,12 +94,14 @@ services:
     cpuset: "8"
     environment:
       - SAFEEXEC_UIDS=10000-19999
+      - ISOLATE_BOX=0
   grader-2:
     <<: *grader
     pull_policy: never
     cpuset: "9"
     environment:
       - SAFEEXEC_UIDS=20000-29999
+      - ISOLATE_BOX=1
   ######################################################################
   # Monitoring
   ######################################################################
