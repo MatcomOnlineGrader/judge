@@ -3,6 +3,7 @@
 {% load filters %}
 {% load humanize %}
 {% load i18n %}
+{% load l10n %}
 
 {% block title %}{{ contest.name }} | {% trans 'Standing' %}{% endblock %}
 
@@ -78,7 +79,7 @@
             {% if user_instance %}
                 {% if user_instance.is_running %}
                     <h5 class="title">
-                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ user_instance.relative_time|format_seconds }}</span>
+                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds|unlocalize }}">{{ user_instance.relative_time|format_seconds }}</span>
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ user_instance.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}
@@ -98,7 +99,7 @@
             {% else %}
                 {% if contest.is_running %}
                     <h5 class="title">
-                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds }}">{{ contest.relative_time|format_seconds }}</span>
+                        <span class="time-update" data-enabled="on" data-delta="+1" data-upper="{{ contest.duration.total_seconds|unlocalize }}">{{ contest.relative_time|format_seconds }}</span>
                         /
                         -<span class="time-update" data-enabled="on" data-delta="-1">{{ contest.remaining_time|format_seconds }}</span>
                         {% if contest.is_death_time %}

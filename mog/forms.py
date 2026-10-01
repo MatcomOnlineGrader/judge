@@ -103,6 +103,13 @@ class ContestForm(forms.ModelForm):
             "closed",
             "allow_teams",
         ]
+        # Must match the datetimepicker format in contest/create.html and
+        # contest/edit.html; otherwise Django renders the localized format
+        # (d/m/Y in Spanish), which the picker misparses.
+        widgets = {
+            "start_date": forms.DateTimeInput(format="%Y-%m-%d %H:%M:%S"),
+            "end_date": forms.DateTimeInput(format="%Y-%m-%d %H:%M:%S"),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

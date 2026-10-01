@@ -3,6 +3,7 @@
 {% load static %}
 {% load filters %}
 {% load i18n %}
+{% load l10n %}
 {% load security %}
 
 {% block styles %}
@@ -135,7 +136,7 @@
     {% if contest.is_coming %}
         <script type="text/javascript" src="{% static 'mog/plugins/flipclock/js/flipclock.min.js' %}"></script>
         <script type="text/javascript">
-            var clock = $('.clock').FlipClock({{ contest.seconds_until_start }}, {
+            var clock = $('.clock').FlipClock({{ contest.seconds_until_start|unlocalize }}, {
                 clockFace: 'DailyCounter',
                 countdown: true,
                 callbacks: {
