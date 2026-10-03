@@ -11,7 +11,11 @@ from api.models import (
     User,
 )
 
-from mog.baylor.utils import generate_secret_password, generate_username
+from mog.baylor.utils import (
+    generate_secret_password,
+    generate_username,
+    set_passwords,
+)
 
 
 class BaylorTeam:
@@ -213,10 +217,9 @@ class ProcessImportBaylor:
             result += self.persons[member_id] + "\n"
         return result
 
-    def create_user(self, username, password, institution):
+    def create_user(self, username, institution):
         default = {"username": username, "email": username + "@mog.com"}
         user = User.objects.create(**default)
-        user.set_password(password)
         user.profile.institution_id = institution.id if institution else None
         user.profile.institution = institution
         user.profile.email_notifications = False
@@ -255,6 +258,7 @@ class ProcessImportBaylor:
 
         id = 1
         registered = 0
+        passwords = []
 
         with transaction.atomic():
             for team in teams:
@@ -311,15 +315,13 @@ class ProcessImportBaylor:
                         username = generate_username(prefix_icpc, id)
 
                     mog_user = self.create_user(
-                        username, "", self.institutions[team.institution_id]
+                        username, self.institutions[team.institution_id]
                     )
                     mog_team = Team.objects.create(name=team.name, icpcid=icpcid)
                     mog_user.profile.teams.add(mog_team)
                     created = True
 
-                password = generate_secret_password(mog_user.id)
-                mog_user.set_password(password)
-                mog_user.save()
+                passwords.append((mog_user, generate_secret_password(mog_user.id)))
 
                 mog_team.description = self.get_description_of_team(team)
                 mog_team.institution = self.institutions[team.institution_id]
@@ -346,6 +348,8 @@ class ProcessImportBaylor:
                     )
 
                 id += 1
+
+            set_passwords(passwords)
 
         self.messages.append(
             {
