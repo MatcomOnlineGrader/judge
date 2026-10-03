@@ -74,6 +74,20 @@ C_AC = r"""
 int main(void) { long long a, b; scanf("%lld %lld", &a, &b); printf("%lld\n", a + b); return 0; }
 """
 
+# Calls libm at run time (sin and floor of an input value), so it only links
+# if -lm comes after the source: with -static, the linker searches a library
+# only for the symbols still missing when it reaches it.
+C_LIBM_AC = r"""
+#include <math.h>
+#include <stdio.h>
+int main(void) {
+    long long a, b;
+    scanf("%lld %lld", &a, &b);
+    printf("%lld\n", a + b + (long long)floor(sin((double)a) * 0.0));
+    return 0;
+}
+"""
+
 PY_AC = "a, b = map(int, input().split())\nprint(a + b)\n"
 
 PY_TLE = "while True:\n    pass\n"
@@ -95,6 +109,26 @@ public class Main {
         Scanner in = new Scanner(System.in);
         long a = in.nextLong(), b = in.nextLong();
         System.out.println(a + b);
+    }
+}
+"""
+
+# Java runs with -Xms equal to the memory limit (as at the World Finals), so
+# the JVM commits the whole heap when it starts. Allocates ~500 MB of
+# short-lived arrays so the collector runs too.
+JAVA_GARBAGE_AC = r"""
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        long a = in.nextLong(), b = in.nextLong();
+        long sink = 0;
+        for (int i = 0; i < 500; i++) {
+            int[] block = new int[256 * 1024];
+            block[i % block.length] = i;
+            sink += block[(i * 7) % block.length];
+        }
+        System.out.println(a + b + (sink - sink));
     }
 }
 """
@@ -134,11 +168,12 @@ CASES = [
     ("cpp-re", "c++", CPP_RE, "Runtime Error"),
     ("cpp-ce", "c++", CPP_CE, "Compilation Error"),
     ("c-ac", "c", C_AC, "Accepted"),
-    ("python-ac", "python", PY_AC, "Accepted"),
-    ("python-tle", "python", PY_TLE, "Time Limit Exceeded"),
-    ("python-sleep-ac", "python", PY_SLEEP_AC, "Accepted"),
+    ("c-libm-ac", "c", C_LIBM_AC, "Accepted"),
     ("pypy-ac", "pypy", PY_AC, "Accepted"),
+    ("pypy-tle", "pypy", PY_TLE, "Time Limit Exceeded"),
+    ("pypy-sleep-ac", "pypy", PY_SLEEP_AC, "Accepted"),
     ("java-ac", "java", JAVA_AC, "Accepted"),
+    ("java-garbage-ac", "java", JAVA_GARBAGE_AC, "Accepted"),
     ("java-sleep-tle", "java", JAVA_SLEEP_TLE, "Time Limit Exceeded"),
     ("kotlin-ac", "kotlin", KOTLIN_AC, "Accepted"),
     ("csharp-ac", "c#", CSHARP_AC, "Accepted"),

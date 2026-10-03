@@ -1,18 +1,21 @@
-# This image installs an x86_64-only gcc 11.3.0 toolchain (plus PyPy/Mono), so
-# it must be built as linux/amd64. Pinning the platform here lets it build on
-# arm64 hosts (Apple Silicon) under emulation, matching the production arch.
-FROM --platform=linux/amd64 alpine:3.15.0
+# The contestant toolchains match the ICPC World Finals programming
+# environment (https://docs.icpc.global/worldfinals-programming-environment/):
+# Ubuntu 24.04 with gcc/g++ 13.2.0, OpenJDK 21.0.4, Kotlin 1.9.24 and PyPy
+# 7.3.15 (Python 3.9.18). The compiler rows in the database and the run
+# commands in grader.py use the same arguments as the World Finals.
+#
+# The image is x86_64 (linux/amd64), like production. Pinning the platform
+# here lets it build on arm64 hosts (Apple Silicon) under emulation.
+FROM --platform=linux/amd64 ubuntu:24.04
 
-# Update the system, and add bash and the glibc compatibility
-# layer, plus git python gcc and java
-RUN apk update && apk upgrade && apk add bash gcompat postgresql-dev git python3 python3-dev gcc g++ openjdk17-jdk iptables
+ENV DEBIAN_FRONTEND=noninteractive
 
 # /code holds the project. Permissions are 750 so only root can read it: the
 # 'judge' user must not access it, especially settings.ini.
 #
 # Steps are ordered from least to most often changed, so Docker can reuse the
-# layers above whatever changed: the toolchains (Python, gcc, Kotlin, Mono,
-# PyPy) first, then the Python dependencies from requirements.txt, and the
+# layers above whatever changed: the toolchains (gcc, PyPy, Java, Kotlin,
+# Mono) first, then the Python dependencies from requirements.txt, and the
 # project code last. A code change only redoes the final copy, and a
 # requirements.txt change only redoes the pip step.
 #
@@ -22,55 +25,74 @@ WORKDIR /code
 RUN chmod 750 /code
 COPY --chmod=750 docker/common/ /code/docker/common/
 
-# Download a standalone CPython 3.12 (musl, amd64) used ONLY to run the Django
-# grader app (manage.py grader), which needs Python >=3.10 for Django 5.x. The
-# system python3 (the advertised contestant runtime, 3.9.18) is deliberately
-# left untouched: contestant submissions run their own compilers via grader.py
-# (Compiler.path / hardcoded absolute paths), never this venv. Same
-# download-a-toolchain pattern as gcc/kotlin/pypy below.
+# System tools, the C/C++ toolchain and PyPy.
+# - gcc/g++ are pinned to 13.2.0, the World Finals version and the one in
+#   Ubuntu 24.04's release pocket; noble-updates has moved on to 13.3.0. Every
+#   package built from the gcc-13 source is pinned so apt can't mix versions.
+# - pypy3 is Ubuntu's own build, "PyPy 7.3.15 with GCC 13.2.0 providing Python
+#   3.9.18", exactly the World Finals one.
+# - python3 (CPython 3.12) only runs the Django grader app (manage.py grader)
+#   from the /opt/environ venv. It isn't offered to contestants.
+# - procps provides `kill`, which the grader uses to clean up after compilers.
+ARG GCC_VERSION=13.2.0-23ubuntu4
+RUN apt-get update && apt-get upgrade -y && \
+	apt-get install -y --no-install-recommends \
+		bash ca-certificates curl gnupg git unzip procps iptables \
+		libc6-dev \
+		gcc-13=$GCC_VERSION g++-13=$GCC_VERSION cpp-13=$GCC_VERSION \
+		gcc-13-base=$GCC_VERSION libgcc-13-dev=$GCC_VERSION libstdc++-13-dev=$GCC_VERSION \
+		gcc-13-x86-64-linux-gnu=$GCC_VERSION g++-13-x86-64-linux-gnu=$GCC_VERSION \
+		cpp-13-x86-64-linux-gnu=$GCC_VERSION \
+		gcc g++ \
+		pypy3 \
+		python3 python3-dev python3-venv libpq-dev libjpeg-dev zlib1g-dev && \
+	apt-mark hold gcc-13 g++-13 cpp-13 gcc-13-base libgcc-13-dev libstdc++-13-dev \
+		gcc-13-x86-64-linux-gnu g++-13-x86-64-linux-gnu cpp-13-x86-64-linux-gnu && \
+	rm -rf /var/lib/apt/lists/*
+
+# OpenJDK 21.0.4. Ubuntu only ships 21.0.3 (release) and newer updates, so this
+# is the Eclipse Temurin build of the same release. `java` and `javac` are
+# linked into /usr/bin: grader.py runs /usr/bin/java, the Java compiler row
+# uses /usr/bin/javac, and checkers are compiled with `javac` from PATH.
 RUN cd /opt && \
-	wget https://github.com/astral-sh/python-build-standalone/releases/download/20260718/cpython-3.12.13+20260718-x86_64-unknown-linux-musl-install_only.tar.gz -O python-3.12.tar.gz && \
-	tar xzf python-3.12.tar.gz && \
-	mv /opt/python /opt/python-3.12 && \
-	rm python-3.12.tar.gz
+	curl -fsSL -o jdk.tar.gz "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.4%2B7/OpenJDK21U-jdk_x64_linux_hotspot_21.0.4_7.tar.gz" && \
+	echo "51fb4d03a4429c39d397d3a03a779077159317616550e4e71624c9843083e7b9  jdk.tar.gz" | sha256sum -c - && \
+	tar xzf jdk.tar.gz && \
+	rm jdk.tar.gz && \
+	mv jdk-21.0.4+7 jdk-21.0.4 && \
+	ln -s /opt/jdk-21.0.4/bin/java /usr/bin/java && \
+	ln -s /opt/jdk-21.0.4/bin/javac /usr/bin/javac
 
-# 8. Download gcc v11.3.0 from github
-# 9. Install in /opt
-# 10.Cleanup
-RUN cd / && \
-	wget https://github.com/MatcomOnlineGrader/gcc-11.3.0/releases/download/master/gcc-11.3.0-x86_64-linux-musl.tar.gz && \
-	mkdir /opt/gcc-11.3.0 && \
-	tar -C /opt -xzvf gcc-11.3.0-x86_64-linux-musl.tar.gz && \
-	rm gcc-11.3.0-x86_64-linux-musl.tar.gz && \
-	cp -r /usr/include/* /opt/gcc-11.3.0/include && \
-	cp -r /opt/gcc-11.3.0/include/c++/10.3.1 /opt/gcc-11.3.0/include/c++/11.3.0 && \
-	cp -r /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-alpine-linux-musl /opt/gcc-11.3.0/include/c++/11.3.0/x86_64-pc-linux-musl
-
-# 11. Install java 17
-# 12. Download kotlin 1.7.21
-# 13. Unzip kotlin
+# Kotlin 1.9.24, which runs on the JDK above.
 RUN cd /opt && \
-	apk add openjdk17 && \
-	wget https://github.com/JetBrains/kotlin/releases/download/v1.7.21/kotlin-compiler-1.7.21.zip && \
-	unzip kotlin-compiler-1.7.21.zip && \
-	rm kotlin-compiler-1.7.21.zip && \
-	mv kotlinc kotlin-1.7.21
+	curl -fsSL -o kotlin.zip https://github.com/JetBrains/kotlin/releases/download/v1.9.24/kotlin-compiler-1.9.24.zip && \
+	unzip -q kotlin.zip && \
+	rm kotlin.zip && \
+	mv kotlinc kotlin-1.9.24
 
-# 14. Install the C# tools
-# 15. Compile and save the fix to the bug described in docker/common/fix_mono.sh
-RUN apk add mono --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community/ && \
-	bash docker/common/fix_mono.sh
+# C# (not part of the World Finals): Mono 6.12 from the Mono project. Ubuntu's
+# own Mono is 6.8 and has no `csc`. Their newest build is for Ubuntu 20.04
+# (focal), and installs on 24.04.
+RUN curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF" | \
+		gpg --dearmor -o /usr/share/keyrings/mono.gpg && \
+	echo "deb [signed-by=/usr/share/keyrings/mono.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" \
+		> /etc/apt/sources.list.d/mono.list && \
+	apt-get update && \
+	apt-get install -y --no-install-recommends mono-devel && \
+	rm -rf /var/lib/apt/lists/*
 
-# 16. Download PyPy
-# 17. Decompress, cleanup and install
-RUN cd /opt && \
-        wget https://downloads.python.org/pypy/pypy3.9-v7.3.10-linux64.tar.bz2 && \
-        tar xjvf pypy3.9-v7.3.10-linux64.tar.bz2 && \
-        rm pypy3.9-v7.3.10-linux64.tar.bz2 && \
-        mv pypy3.9-v7.3.10-linux64 pypy-7.3.10
+# Fail the build if any toolchain isn't the advertised version.
+RUN g++ --version | head -1 | grep -q " 13\.2\.0$" && \
+	gcc --version | head -1 | grep -q " 13\.2\.0$" && \
+	pypy3 --version 2>&1 | grep -q "PyPy 7\.3\.15" && \
+	pypy3 --version 2>&1 | grep -q "^Python 3\.9\.18" && \
+	java -version 2>&1 | grep -q '"21\.0\.4"' && \
+	javac -version 2>&1 | grep -q "^javac 21\.0\.4$" && \
+	/opt/kotlin-1.9.24/bin/kotlinc -version 2>&1 | grep -q "kotlinc-jvm 1\.9\.24" && \
+	mono --version | head -1 | grep -q "version 6\.12\."
 
 COPY --chmod=750 requirements.txt /code/
-# 0. Create a virtual environment and load it
+# 0. Create a virtual environment
 # 1. Install the build dependencies
 # 2. Install all python dependencies.
 # 3. Make safeexec
@@ -83,39 +105,33 @@ COPY --chmod=750 requirements.txt /code/
 #    build here instead of silently turning every submission into an
 #    Internal Error at runtime.
 # 8. Create the sandbox dir (where the solution gets executed)
-# 9. Clear PIP and APK caches
-RUN /opt/python-3.12/bin/python3 -m venv /opt/environ && \
-	source /opt/environ/bin/activate && \
-	apk add cmake make jpeg-dev zlib-dev && \
-	pip install --upgrade pip && CC=gcc CXX=g++ pip install -r requirements.txt && \
+# 9. Clear PIP and APT caches
+RUN python3 -m venv /opt/environ && \
+	apt-get update && \
+	apt-get install -y --no-install-recommends cmake make && \
+	/opt/environ/bin/pip install --upgrade pip && \
+	CC=gcc CXX=g++ /opt/environ/bin/pip install -r requirements.txt && \
 	bash docker/common/make_safeexec.sh && \
-	apk del cmake make && \
+	apt-get purge -y cmake make && \
 	chmod u+s /usr/local/bin/safeexec && \
-	addgroup -S judge && adduser -S -G judge judge -s /bin/bash && \
+	groupadd --system judge && useradd --system --gid judge --shell /bin/bash judge && \
 	su judge -c "cd /tmp && safeexec --exec /bin/true" && \
 	mkdir /sandbox && \
-	pip cache purge && rm -r /var/cache/apk
+	/opt/environ/bin/pip cache purge && rm -rf /var/lib/apt/lists/*
 
 # isolate (https://github.com/ioi/isolate), the sandbox `manage.py grader
 # --isolate` runs submissions in. Its config is docker/isolate/isolate.cf,
-# which reaches the image with the project code below.
-# - Alpine 3.15's headers predate quotactl_fd (only used for disk quotas,
-#   which we don't use), so its x86_64 number is passed in.
-# - libcap and libseccomp stay installed: isolate links against them.
-# - isolate boxes only see /usr, /bin, /lib and /opt, so the Mono fix (see
-#   docker/common/fix_mono.sh) moves from / to /usr/local/lib. It's done
-#   here, not in fix_mono.sh: changing docker/common rebuilds the layers
-#   above, and with them Mono, which comes from Alpine's edge repository.
-RUN mv /fixmono.so /usr/local/lib/fixmono.so && \
-	sed -i 's|/fixmono.so|/usr/local/lib/fixmono.so|' /usr/local/bin/csc /usr/local/bin/mono && \
-	apk add --no-cache libcap libseccomp && \
-	apk add --no-cache --virtual .isolate-build make libcap-dev libseccomp-dev && \
+# which reaches the image with the project code below. Boxes only see /usr,
+# /bin, /lib and /opt, which hold every toolchain above.
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends make libcap-dev libseccomp-dev && \
 	cd /tmp && \
 	git clone -c advice.detachedHead=false --depth 1 --branch v2.7 https://github.com/ioi/isolate.git && \
-	make -C isolate isolate CONFIG=/code/docker/isolate/isolate.cf CFLAGS_EXTRA=-DSYS_quotactl_fd=443 && \
+	make -C isolate isolate CONFIG=/code/docker/isolate/isolate.cf && \
 	install -m 755 isolate/isolate /usr/local/bin/isolate && \
 	rm -rf isolate && \
-	apk del .isolate-build && \
+	apt-get purge -y make libcap-dev libseccomp-dev && \
+	rm -rf /var/lib/apt/lists/* && \
 	isolate --version
 
 # Copy the rest of the project last (see the note at WORKDIR above).
