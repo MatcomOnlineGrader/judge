@@ -69,6 +69,10 @@ DEBUG = config.getboolean("debugging", "DEBUG")
 # SECURITY WARNING: used to generate default password for a team, keep the secret key secure!
 PASSWORD_GENERATOR_SECRET_KEY = config.get("secrets", "PASSWORD_GENERATOR_SECRET_KEY")
 
+# Userid of our MOSS account, used by `manage.py moss`. The repo is public, so it
+# lives only in settings.ini; without it the command refuses to run.
+MOSS_USERID = config.get("moss", "MOSS_USERID", fallback="")
+
 ALLOWED_HOSTS = ["*"]
 
 # CSRF trusted origins. Django 4.0+ requires each entry to include the scheme

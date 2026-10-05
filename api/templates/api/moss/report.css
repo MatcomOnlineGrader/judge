@@ -1,0 +1,25 @@
+/* Pico (from a CDN, see report.html) does most of the styling. These rules
+   come after it, and keep the report readable if it doesn't load. */
+
+/* Pico grows the font up to 131% on wide screens: too big for these tables */
+:root { --pico-font-size: 100%; }
+html { font-family: system-ui, sans-serif; }
+
+table { border-collapse: collapse; }
+th, td { border-bottom: 1px solid var(--pico-table-border-color, #ddd); padding: 0.375rem 0.75rem; text-align: left; vertical-align: top; }
+tbody tr:hover > td { background: var(--pico-table-row-stripped-background-color, #f6f6f6); }
+.summary th, .nowrap { white-space: nowrap; }
+.summary th { font-weight: 600; }
+
+.confidential { background: #fdecea; border: 2px solid #d93025; border-radius: 4px; color: #a50e0e; font-weight: bold; padding: 12px 16px; }
+
+/* Minor rows: hidden until the judge ticks the switch before their table, or follows a link to one */
+tr.minor { display: none; }
+.toggle:checked ~ * tr.minor, tr.minor:target { display: table-row; }
+tr:target { outline: 3px solid #f0a000; }
+
+/* Sortable columns (see report.js), with an arrow for the one the table is sorted by */
+th.sortable { cursor: pointer; white-space: nowrap; }
+th.sortable::after { content: " \2195"; color: #999; }
+th[data-order="desc"]::after { content: " \25BC"; color: inherit; }
+th[data-order="asc"]::after { content: " \25B2"; color: inherit; }

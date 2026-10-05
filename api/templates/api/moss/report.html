@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% comment %}
+The report of `manage.py moss`: a single file with everything it needs (its
+style and script included), so it works wherever it's opened. Only Pico's
+stylesheet comes from a CDN, and the report still works without it. Mind the
+whitespace: a line break between inline elements shows up as a space.
+{% endcomment %}
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{# no-referrer: following a link (or loading Pico) mustn't reveal the report's URL to that site. #}
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Confidential - MOSS report: {{ contest.name }}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css" integrity="sha384-L1dWfspMTHU/ApYnFiMz2QID/PlP1xCW9visvBdbEkOLkSSWsP6ZJWhPw6apiXxU" crossorigin="anonymous">
+<style>
+{% include "api/moss/report.css" %}
+</style>
+</head>
+<body>
+<main class="container-fluid">
+<p class="confidential">Confidential: don't share this report. It contains sensitive information: teams, their submissions, and links to their code.</p>
+<h1>MOSS report: {{ contest.name }}</h1>
+
+<table class="summary">
+<tbody>
+<tr><th>Contest</th><td><a href="{{ contest_url }}">{{ contest.name }}</a>, from {{ contest.start_date|date:date_format }} to {{ contest.end_date|date:date_format }}</td></tr>
+<tr><th>Generated</th><td>{{ generated|date:date_format }}. MOSS deletes its results on {{ expires|date:date_format }}.</td></tr>
+<tr><th>Submissions</th><td>Accepted submissions sent during the contest by registered teams{% if exclude_guests %} (except guest teams){% endif %}.<br>Virtual participants and submissions after the contest aren't taken into account.</td></tr>
+{% if users %}
+<tr><th>Users</th><td>Also every submission (whatever its verdict) during the contest by {% for user in users %}{% if not forloop.first %}, {% endif %}<a href="{{ mog_url }}/user/{{ user.pk }}">{{ user.username }}</a>{% if user.pk in absent %} (none){% endif %}{% endfor %}.</td></tr>
+{% endif %}
+<tr><th>Excluded problems</th><td>{{ exclude_problems|join:", "|default:"None" }}</td></tr>
+<tr><th>Compared</th><td>{% for group, files, url, found in compared %}{% if not forloop.first %}<br>{% endif %}{{ group }}: {{ files }} submission{{ files|pluralize }}, <a href="{{ url }}">MOSS results</a>{% if found >= max_matches %} (MOSS lists at most {{ max_matches }} matches, there may be more){% endif %}{% endfor %}</td></tr>
+{% if failed or single or unsupported %}
+<tr><th>Not compared</th><td>
+{% for group, files, error in failed %}<div>{{ group }}: {{ files }} submission{{ files|pluralize }}, MOSS failed: {{ error }}</div>{% endfor %}
+{% if single %}<div>{{ single|join:", " }}: only one submission</div>{% endif %}
+{% for compiler, count in unsupported %}<div>{{ compiler }}: {{ count }} submission{{ count|pluralize }}, MOSS doesn't support the language</div>{% endfor %}
+</td></tr>
+{% endif %}
+<tr><th>Team pairs</th><td>{{ pairs|length }} pair{{ pairs|length|pluralize }} with similar code, {{ multi }} of them on more than one problem.</td></tr>
+<tr><th>Matches</th><td>{{ matches|length }} match{{ matches|length|pluralize:"es" }} between different teams, most lines in common first.<br>Left out {{ same_team }} match{{ same_team|pluralize:"es" }} between submissions of the same team.</td></tr>
+<tr><th>MOSS</th><td>Code that appears in more than {{ max_shared }} submissions of the same problem and language (e.g. common templates) is ignored.</td></tr>
+</tbody>
+</table>
+
+{% comment %}
+Rows with class "minor" are hidden until the judge ticks the switch before
+their table (see the style), or follows a link to one of them.
+{% endcomment %}
+<section id="pairs">
+<h2>Team pairs</h2>
+<p>Pairs of teams with similar code: the ones matching on more problems first, then the ones with more lines in common. Click a column with arrows to sort by it.</p>
+{% if hidden_pairs %}
+<input type="checkbox" role="switch" id="all-pairs" class="toggle"><label for="all-pairs">Show {{ hidden_pairs }} more pairs (one problem, fewer than {{ min_lines }} lines in common)</label>
+{% endif %}
+<div class="overflow-auto">
+<table>
+<thead><tr><th>Team 1</th><th>Team 2</th><th class="sortable" data-order="desc">Problems</th><th class="sortable">Lines in common</th><th>Matches</th></tr></thead>
+<tbody>
+{% for pair in pairs %}
+<tr{% if pair.minor %} class="minor"{% endif %}>{% for team in pair.teams %}<td>{{ team.name }}</td>{% endfor %}<td>{{ pair.problems }}</td><td>{{ pair.lines }}</td><td>{% for match in pair.matches %}{% if not forloop.first %}, {% endif %}<a href="#{{ match.id }}">{{ match.problem }}: {{ match.lines }} lines</a>{% endfor %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="matches">
+<h2>Matches</h2>
+<p>Every match between submissions of different teams, most lines in common first. Click a column with arrows to sort by it.</p>
+{% if hidden_matches %}
+<input type="checkbox" role="switch" id="all-matches" class="toggle"><label for="all-matches">Show {{ hidden_matches }} more matches (fewer than {{ min_lines }} lines in common)</label>
+{% endif %}
+<div class="overflow-auto">
+<table>
+<thead><tr><th>#</th><th>Team 1</th><th>Team 2</th><th>Submission 1</th><th>Submission 2</th><th>Problem</th><th class="sortable" data-order="desc">Lines in common</th><th class="sortable">AVG Coverage (%)</th><th>MOSS</th></tr></thead>
+<tbody>
+{% for match in matches %}
+<tr{% if match.minor %} class="minor"{% endif %} id="{{ match.id }}"><td>{{ forloop.counter }}</td>{% for submission in match.submissions %}<td><a href="{{ mog_url }}/user/{{ submission.user.pk }}">{{ submission.team.name }}</a></td>{% endfor %}{% for submission in match.submissions %}<td class="nowrap"><a href="{{ mog_url }}/submission/{{ submission.id }}">{{ submission.id }} ({{ submission.coverage }}%)</a></td>{% endfor %}<td>{{ match.problem }}</td><td>{{ match.lines }}</td><td>{{ match.coverage|floatformat:2 }}</td><td><a href="{{ match.url }}">Compare</a></td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</section>
+</main>
+
+<script>
+{% include "api/moss/report.js" %}
+</script>
+</body>
+</html>

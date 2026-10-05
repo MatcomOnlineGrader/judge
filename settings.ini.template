@@ -73,5 +73,10 @@ SOCIAL_AUTH_GOOGLE_SCOPE:
 TURNSTILE_SITEKEY: 0x4AAAAAAD98T_15Yq29Q51o
 TURNSTILE_SECRET: secret_not_auto_fillable_placeholder
 
+[moss]
+# Userid from the script MOSS mails you when you register
+# (https://theory.stanford.edu/~aiken/moss/). Only `manage.py moss` needs it.
+MOSS_USERID:
+
 [palantir]
 LOG_REQUESTS: true
