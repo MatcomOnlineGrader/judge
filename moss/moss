@@ -164,7 +164,8 @@ $usage = "usage: moss [-x] [-l language] [-d] [-b basefile1] ... [-b basefilen] 
 #
 # The userid is used to authenticate your queries to the server; don't change it!
 #
-$userid=544713462;
+# `manage.py moss` passes the userid from settings.ini, to keep it out of the repo.
+$userid = $ENV{MOSS_USERID} or die "MOSS_USERID is not set. $noreq\n";
 
 #
 # Process the command line options.  This is done in a non-standard
