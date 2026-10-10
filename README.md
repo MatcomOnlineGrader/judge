@@ -32,8 +32,8 @@ This will set up the development environment using Docker containers.
 
 #### Apple Silicon (arm64) Macs
 
-The grader image is x86_64-only (it bundles a custom gcc 11.3.0 toolchain), so it
-is built and run as `linux/amd64` under emulation. This requires:
+The grader image is x86_64, like production, so it is built and run as
+`linux/amd64` under emulation. This requires:
 
 - **buildx** — `updev.sh` registers Homebrew's plugin automatically; install it
   with `brew install docker-buildx` if it's missing.

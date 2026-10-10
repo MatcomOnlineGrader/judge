@@ -28,9 +28,7 @@ Institution:
   - Earth
 
 Compilers:
-  - Python
-  - C++
-  - Java
+  - C++, C, PyPy, Java, Kotlin and C#
 """
 
 import os
@@ -74,50 +72,42 @@ USERS = [
 ]
 
 # One compiler per branch of grader.get_cmd_for_language_safeexec, mirroring
-# the arguments published on the FAQ page (mog/templates/mog/faq.html).
+# the arguments published on the FAQ page (mog/templates/mog/faq.html), which
+# are the ICPC World Finals ones.
 #
-# Paths the grader hands to `safeexec --exec` (Python and PyPy run through
+# Paths the grader hands to `safeexec --exec` (PyPy runs through
 # `compiler.path`) must be absolute: safeexec starts programs with execve(),
-# which does not search PATH. Kotlin and PyPy are not on PATH at all, and bare
-# `g++`/`gcc` would resolve to Alpine's 10.3.1 instead of the advertised 11.3.0.
+# which does not search PATH.
 COMPILERS = [
     {
         "language": "c++",
         "name": "c++",
-        "arguments": "-x c++ -g -DMOG -O2 -std=gnu++20 -static {0} -o {1}",
-        "path": "/opt/gcc-11.3.0/bin/g++",
+        "arguments": "-x c++ -g -O2 -std=gnu++20 -static {0} -o {1}",
+        "path": "/usr/bin/g++",
         "file_extension": "cpp",
         "exec_extension": "exe",
     },
     {
         "language": "c",
         "name": "c",
-        "arguments": "-x c -g -O2 -std=gnu11 -static -lm {0} -o {1}",
-        "path": "/opt/gcc-11.3.0/bin/gcc",
+        "arguments": "-x c -g -O2 -std=gnu11 -static {0} -lm -o {1}",
+        "path": "/usr/bin/gcc",
         "file_extension": "c",
-        "exec_extension": "exe",
-    },
-    {
-        "language": "python",
-        "name": "python",
-        "arguments": "-O {0}",
-        "path": "/usr/bin/python3",
-        "file_extension": "py",
         "exec_extension": "exe",
     },
     {
         "language": "python",
         "name": "pypy",
         "arguments": "{0}",
-        "path": "/opt/pypy-7.3.10/bin/pypy",
+        "path": "/usr/bin/pypy3",
         "file_extension": "py",
         "exec_extension": "exe",
     },
     {
         "language": "java",
         "name": "java",
-        "arguments": '-cp ".;*" {0}',
-        "path": "javac",
+        "arguments": "-encoding UTF-8 -sourcepath . -d . {0}",
+        "path": "/usr/bin/javac",
         "file_extension": "java",
         "exec_extension": "exe",
     },
@@ -125,7 +115,7 @@ COMPILERS = [
         "language": "kotlin",
         "name": "kotlin",
         "arguments": "-d . {0}",
-        "path": "/opt/kotlin-1.7.21/bin/kotlinc",
+        "path": "/opt/kotlin-1.9.24/bin/kotlinc",
         "file_extension": "kt",
         "exec_extension": "class",
     },
