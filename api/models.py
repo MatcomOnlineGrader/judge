@@ -546,7 +546,8 @@ class Problem(models.Model):
                     self.time_limit_for_compiler(compiler),
                     self.memory_limit_for_compiler(compiler),
                 )
-                for compiler in self.compilers.all()
+                # Inactive compilers can't be chosen, so only active ones show.
+                for compiler in self.compilers.filter(active=True)
             ]
         )
 
