@@ -433,13 +433,15 @@ def get_cmd_for_language_safeexec(
     clock_limit = get_clock_limit(time_limit)
     # The user id range safeexec picks from; see parse_uids.
     safeexec = "safeexec --uids %d %d" % uids if uids else "safeexec"
+    # Java and Kotlin run with the ICPC World Finals runtime flags
+    # (https://docs.icpc.global/worldfinals-programming-environment/).
     if lang == "java":
-        cmd = f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit}M -Xss64m -DMOG=true Main"
+        cmd = f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xss64m -Xms{memory_limit}m -Xmx{memory_limit}m Main"
         return cmd
     elif lang == "kotlin":
-        return f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /opt/kotlin-1.7.21/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt"
+        return f"{safeexec} --stack {LARGECONST} --nproc 20 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /opt/kotlin-1.9.24/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xss64m -J-Xms{memory_limit}m -J-Xmx{memory_limit}m MainKt"
     elif lang == "csharp":
-        return f"{safeexec} --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/local/bin/mono ./{submission.id}.{compiler.exec_extension}"
+        return f"{safeexec} --stack {LARGECONST} --nproc 6 --mem {memory_limit*1024} --cpu {time_limit} --clock {clock_limit} --vmrss --exec /usr/bin/mono ./{submission.id}.{compiler.exec_extension}"
     elif lang in ["python", "javascript", "python2", "python3"]:
         fmt_args = compiler.arguments.format(
             "%d.%s" % (submission.id, compiler.file_extension)

@@ -12,3 +12,11 @@ class ProblemTestCase(FixturedTestCase):
             contest=self.past_contest,
         )
         self.assertEqual(problem.points, 10)
+
+    def test_compilers2str_lists_only_active_compilers(self):
+        self.py2.active = False
+        self.py2.save()
+        details = self.problem1.compilers2str
+        self.assertIn(self.cpp.name, details)
+        self.assertIn(self.py3.name, details)
+        self.assertNotIn(self.py2.name, details)

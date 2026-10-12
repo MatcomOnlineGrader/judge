@@ -35,9 +35,8 @@ services:
       database:
         condition: service_healthy
   grader:
-    # The grader image installs an x86_64-only gcc toolchain (and PyPy/Mono),
-    # so it must be built and run as linux/amd64 to match production. On arm64
-    # hosts (Apple Silicon) this runs under emulation.
+    # The grader image is x86_64, like production, so it is built and run as
+    # linux/amd64. On arm64 hosts (Apple Silicon) this runs under emulation.
     platform: linux/amd64
     build:
       context: ../..

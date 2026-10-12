@@ -5,7 +5,7 @@ fi
 
 database_pass=$(awk -F ":" '/DATABASE_PASS/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}' settings.ini)
 
-# The grader image is x86_64-only (custom gcc 11.3.0 toolchain). On arm64 hosts
+# The grader image is x86_64, like production. On arm64 hosts
 # (Apple Silicon) it must be cross-built as linux/amd64 under emulation, which
 # requires BuildKit and the buildx plugin. Docker Desktop ships buildx; Homebrew
 # installs it but doesn't register it as a Docker CLI plugin, so wire it up here.

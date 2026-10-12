@@ -13,56 +13,53 @@
         <div class="col-md-12">
             <h3>Which programming languages can I use?</h3>
             <p>
-                The system supports the following programming languages:
+                The system supports the following programming languages. Except for C#, the compilers,
+                their versions and their arguments are the ones of the
+                <a href="https://docs.icpc.global/worldfinals-programming-environment/">ICPC World Finals</a>.
             </p>
             <div>
                 <!-- C++ -->
-                <p><span style="font-weight: bold;">g++ (GCC) 11.3.0</span></p>
-                <pre><span style="font-weight: bold;">Arguments</span>: g++ -x c++ -g -DMOG -O2 -std=gnu++20 -static {0} -o {1}                
-                <pre ># g++ --version<br/>g++ (GCC) 11.3.0<br/>Copyright (C) 2021 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
-                
+                <p><span style="font-weight: bold;">g++ (GCC) 13.2.0</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: g++ -x c++ -g -O2 -std=gnu++20 -static {0} -o {1}
+                <pre ># g++ --version<br/>g++ (Ubuntu 13.2.0-23ubuntu4) 13.2.0<br/>Copyright (C) 2023 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
+
                 <!-- C -->
-                <p><span style="font-weight: bold;">gcc (GCC) 11.3.0</span></p>
-                <pre><span style="font-weight: bold;">Arguments</span>: gcc -x c -g -O2 -std=gnu11 -static -lm {0} -o {1}
-                    <pre ># gcc --version<br/>gcc (GCC) 11.3.0<br/>Copyright (C) 2021 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
-                
+                <p><span style="font-weight: bold;">gcc (GCC) 13.2.0</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: gcc -x c -g -O2 -std=gnu11 -static {0} -lm -o {1}
+                    <pre ># gcc --version<br/>gcc (Ubuntu 13.2.0-23ubuntu4) 13.2.0<br/>Copyright (C) 2023 Free Software Foundation, Inc.<br/>This is free software; see the source for copying conditions.  There is NO<br/>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre></pre>
+
                 <!-- CSharp -->
                 <p><span style="font-weight: bold;">C# Mono 6.12</span></p>
                 <pre ><span style="font-weight: bold;">Arguments</span>: csc {0}
                     <pre ># csc<br/>Microsoft (R) Visual C# Compiler version 3.9.0-6.21124.20 (db94f4cc)<br/>Copyright (C) Microsoft Corporation. All rights reserved.</pre>
 <span style="font-weight: bold;">Arguments</span>: mono ./{submission}.cs
-                    <pre ># mono --version<br/>Mono JIT compiler version 6.12.0.205 (tarball Sun Jul 30 10:33:25 UTC 2023)<br/>Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com<br/>&nbsp;TLS:           __thread<br/>&nbsp;SIGSEGV:       normal<br/>&nbsp;Notifications: epoll<br/>&nbsp;Architecture:  amd64<br/>&nbsp;Disabled:      none<br/>&nbsp;Misc:          softdebug<br/>&nbsp;Interpreter:   yes<br/>&nbsp;LLVM:          supported, not enabled.<br/>&nbsp;Suspend:       hybrid<br/>&nbsp;GC:            sgen (concurrent by default)</pre></pre>
+                    <pre ># mono --version<br/>Mono JIT compiler version 6.12.0.200 (tarball Tue Jul 11 21:37:50 UTC 2023)<br/>Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com<br/>&nbsp;TLS:           __thread<br/>&nbsp;SIGSEGV:       altstack<br/>&nbsp;Notifications: epoll<br/>&nbsp;Architecture:  amd64<br/>&nbsp;Disabled:      none<br/>&nbsp;Misc:          softdebug<br/>&nbsp;Interpreter:   yes<br/>&nbsp;LLVM:          yes(610)<br/>&nbsp;Suspend:       hybrid<br/>&nbsp;GC:            sgen (concurrent by default)</pre></pre>
 
                 <!-- PyPy -->
-                <p><span style="font-weight: bold;">PyPy 7.3.10</span></p>
-                <pre><span style="font-weight: bold;">Arguments</span>: pypy {0}
-                    <pre ># pypy --version<br/>Python 3.9.15 (21401ebc2df332b6be6e3d364a985e951a72bbbd, Dec 05 2022, 18:37:07)<br/>[PyPy 7.3.10 with GCC 10.2.1 20210130 (Red Hat 10.2.1-11)]</pre></pre>
-                
-                <!-- CPython -->
-                <p><span style="font-weight: bold;">Python 3.9.18</span></p>
-                <pre><span style="font-weight: bold;">Arguments</span>: python3 -O {0}
-                    <pre ># python3 -VV<br/>Python 3.9.18 (main, Aug 26 2023, 11:50:23)<br/>[GCC 10.3.1 20211027]</pre></pre>
-                
+                <p><span style="font-weight: bold;">PyPy 7.3.15</span></p>
+                <pre><span style="font-weight: bold;">Arguments</span>: pypy3 {0}
+                    <pre ># pypy3 --version<br/>Python 3.9.18 (7.3.15+dfsg-1build3, Apr 01 2024, 03:12:48)<br/>[PyPy 7.3.15 with GCC 13.2.0]</pre></pre>
+
                 <!-- Java -->
                 <p>
-                    <span style="font-weight: 700;">OpenJDK 17.0.8</span>
+                    <span style="font-weight: 700;">OpenJDK 21.0.4</span>
                     <div display="block">
                         ⚠️ You must have a class named <i>Main</i> that contains the
                         <i>main</i> static method. This method is the entry point of
                         your program.
                     </div>
                 </p>
-                <pre><span style="font-weight: bold;">Arguments</span>: javac -cp ".;*" {0}
-                    <pre># javac --version<br/>javac 17.0.8</pre>
-<span style="font-weight: bold;">Arguments</span>: java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xms32m -Xmx{memory_limit*1024}M -Xss64m -DMOG=true Main
-                    <pre ># java --version<br/>openjdk 17.0.8 2023-07-18<br/>OpenJDK Runtime Environment (build 17.0.8+7-alpine-r0)<br/>OpenJDK 64-Bit Server VM (build 17.0.8+7-alpine-r0, mixed mode, sharing)</pre></pre>
+                <pre><span style="font-weight: bold;">Arguments</span>: javac -encoding UTF-8 -sourcepath . -d . {0}
+                    <pre># javac --version<br/>javac 21.0.4</pre>
+<span style="font-weight: bold;">Arguments</span>: java -Dfile.encoding=UTF-8 -XX:+UseSerialGC -Xss64m -Xms{memory_limit}m -Xmx{memory_limit}m Main
+                    <pre ># java --version<br/>openjdk 21.0.4 2024-07-16 LTS<br/>OpenJDK Runtime Environment Temurin-21.0.4+7 (build 21.0.4+7-LTS)<br/>OpenJDK 64-Bit Server VM Temurin-21.0.4+7 (build 21.0.4+7-LTS, mixed mode, sharing)</pre></pre>
 
                 <!-- Kotlin -->
-                <p><span style="font-weight: bold;">Kotlin 1.7.21</span></p>
+                <p><span style="font-weight: bold;">Kotlin 1.9.24</span></p>
                 <pre><span style="font-weight: bold;">Arguments</span>: kotlinc -d . {0}
-                    <pre># kotlinc -version<br/>info: kotlinc-jvm 1.7.21 (JRE 17.0.8+7-alpine-r0)</pre>
-<span style="font-weight: bold;">Arguments</span>: kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xms32M -J-Xmx{memory_limit*1024}M -J-Xss64m -J-DMOG=true MainKt
-                    <pre># kotlin -version<br/>Kotlin version 1.7.21-release-272 (JRE 17.0.8+7-alpine-r0)</pre></pre>
+                    <pre># kotlinc -version<br/>info: kotlinc-jvm 1.9.24 (JRE 21.0.4+7-LTS)</pre>
+<span style="font-weight: bold;">Arguments</span>: kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xss64m -J-Xms{memory_limit}m -J-Xmx{memory_limit}m MainKt
+                    <pre># kotlin -version<br/>Kotlin version 1.9.24-release-822 (JRE 21.0.4+7-LTS)</pre></pre>
             </div>
 
             <h3>Which kind of input/output can I use?</h3>

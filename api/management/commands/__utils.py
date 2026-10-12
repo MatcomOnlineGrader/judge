@@ -13,7 +13,7 @@ def get_exitcode_stdout_stderr(
     extra_groups=None,
 ):
     if user:
-        cmd = f"su -s /bin/ash {user} -c " + shlex.quote(cmd)
+        cmd = f"su -s /bin/sh {user} -c " + shlex.quote(cmd)
     args = shlex.split(cmd)
     proc = subprocess.Popen(
         args,
